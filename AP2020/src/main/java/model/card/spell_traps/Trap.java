@@ -11,7 +11,7 @@ public class Trap extends Card {
 
     public Trap(String trapName) {
         ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(trapName);
-        if (temp == null) return;
+        if (temp == null || temp.size() != 4) return;
         trapType = csvInfoGetter.getTrapType(temp.get(1));
         cardName = trapName;
         description = temp.get(2);
