@@ -154,7 +154,14 @@ public class User {
     class sortDeckByName implements Comparator<Deck> {
         @Override
         public int compare(Deck deck1, Deck deck2) {
-            return deck1.getDeckName().compareTo(deck2.getDeckName());
+            String tempName1 = deck1.getDeckName(), tempName2 = deck2.getDeckName();
+            if (tempName1.equals(tempName2)) return 0;
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add(tempName1);
+            temp.add(tempName2);
+            Collections.sort(temp);
+            if (temp.get(0).equals(tempName1)) return 1;
+            return -1;
         }
     }
 }
