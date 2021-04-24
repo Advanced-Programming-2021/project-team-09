@@ -27,7 +27,9 @@ public class ProfileController {
         LoginMenuController.logout();
     }
 
- 
 
+    public CurrentMenu showCurrentMenu(){
+        return CurrentMenu.PROFILE_MENU;
+    }
 
 }

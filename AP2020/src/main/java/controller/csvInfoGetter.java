@@ -98,7 +98,7 @@ public class csvInfoGetter {
         return null;
     }
 
-    public int getPriceByCardName(String cardName) {
+    public static int getPriceByCardName(String cardName) {
         List<String[]> temp = readFromFile(monsterFileName);
         if (temp == null) {
             return -1;
