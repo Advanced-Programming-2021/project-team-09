@@ -2,6 +2,7 @@ package model.card.spell_traps;
 
 import controller.*;
 import model.card.Card;
+import model.card.CardType;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class Trap extends Card {
         cardName = trapName;
         description = temp.get(2);
         limit = csvInfoGetter.getLimitation(temp.get(3));
+        cardType = CardType.TRAP;
     }
 
     public Limitation getLimit(){

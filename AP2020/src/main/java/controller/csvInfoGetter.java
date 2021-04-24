@@ -3,11 +3,10 @@ package controller;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import model.card.*;
+import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterType;
-import model.card.spell_traps.Limitation;
-import model.card.spell_traps.SpellType;
-import model.card.spell_traps.TrapType;
+import model.card.spell_traps.*;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -153,14 +152,14 @@ public class csvInfoGetter {
         if (temp == null) {
             return false;
         }
-        for (String[] tempStringArray : temp)
-            if (cardName.equals(tempStringArray[0])) return true;
+        for (int i = 1; i < temp.size(); i++)
+            if (cardName.equals(temp.get(i)[0])) return true;
         temp = readFromFile(spellTrapFileName);
         if (temp == null) {
             return false;
         }
-        for (String[] tempStringArray : temp)
-            if (cardName.equals(tempStringArray[0])) return true;
+        for (int i = 1; i < temp.size(); i++)
+            if (cardName.equals(temp.get(i)[0])) return true;
         return false;
     }
 
@@ -180,5 +179,24 @@ public class csvInfoGetter {
             }
         }
         return outputArraylist;
+    }
+
+    public static Card getCardByName(String cardName) {
+        List<String[]> temp = readFromFile(monsterFileName);
+        if (temp != null) {
+            for (int i = 1; i < temp.size(); i++) {
+                if (temp.get(i)[0].equals(cardName)) return new Monster(cardName);
+            }
+        }
+        temp = readFromFile(spellTrapFileName);
+        if (temp != null) {
+            for (int i = 1; i < temp.size(); i++) {
+                if (temp.get(i)[0].equals(cardName)) {
+                    if (temp.get(i)[1].equalsIgnoreCase("trap")) return new Trap(cardName);
+                    return new Spell(cardName);
+                }
+            }
+        }
+        return null;
     }
 }
