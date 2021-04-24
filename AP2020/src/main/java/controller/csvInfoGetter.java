@@ -2,7 +2,12 @@ package controller;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import model.*;
+import model.card.*;
+import model.card.monster.MonsterCardType;
+import model.card.monster.MonsterType;
+import model.card.spell_traps.Limitation;
+import model.card.spell_traps.SpellType;
+import model.card.spell_traps.TrapType;
 
 import java.io.FileReader;
 import java.io.IOException;

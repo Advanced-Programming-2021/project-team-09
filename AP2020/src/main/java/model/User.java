@@ -1,7 +1,7 @@
 package model;
 
-import com.google.gson.Gson;
-import com.squareup.moshi.JsonWriter;
+import model.card.Card;
+import model.deck.Deck;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class User {
         this.nickname = nickname;
         this.cards = new ArrayList<>();
         this.decks = new ArrayList<>();
-        activeDeck = null;
+        activeDeck  = null;
     }
 
     public boolean isPasswordCorrect(String password) {
@@ -35,6 +35,7 @@ public class User {
     public void activeDeck(String deckName) {
         if (getDeckByName(deckName) != null)
             activeDeck = getDeckByName(deckName);
+        else activeDeck = null;
     }
 
     public Deck getDeckByName(String deckName) {
@@ -84,10 +85,11 @@ public class User {
         return balance >= amount;
     }
 
-    public void addCardToMainDeck(Card card, String deckName) {
+    public void addCardToMainDeck(String cardName, String deckName) {
         Deck deck = getDeckByName(deckName);
-        if (deck.canAddCardByName(card.getCardName()))
-            deck.addCardToMainDeck(card);
+        if (deck.canAddCardByName(cardName)) {
+
+        }
     }
 
     public void addCardToSideDeck(Card card, String deckName) {
@@ -96,6 +98,26 @@ public class User {
             deck.addCardToSideDeck(card);
     }
 
+
+    public void removeCardFromMainDeck(String cardName,String deckName){
+        if (doesDeckExist(deckName)){
+            Deck deck = getDeckByName(deckName);
+            if (deck.doesMainDeckHasCard(cardName)) {
+                Card card = deck.removeCardFromMainDeck(cardName);
+                cards.add(card);
+            }
+        }
+    }
+
+    public void removeCardFromSideDeck(String cardName,String deckName){
+        if (doesDeckExist(deckName)){
+            Deck deck = getDeckByName(deckName);
+            if (deck.doesSideDeckHasCard(cardName)) {
+                Card card = deck.removeCardFromSideDeck(cardName);
+                cards.add(card);
+            }
+        }
+    }
 
     public void removeDeck(String deckName) {
         Deck deck = getDeckByName(deckName);
@@ -118,6 +140,17 @@ public class User {
         return decks;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     class sortDeckBYName implements Comparator<Deck> {
         @Override
@@ -125,12 +158,5 @@ public class User {
             return deck1.getDeckName().compareTo(deck2.getDeckName());
         }
     }
-
-    public static void main(String[] args) {
-        User user = new User("ali", "al", "1234");
-        System.out.println(new Gson().toJson(user));
-
-    }
-
 
 }
