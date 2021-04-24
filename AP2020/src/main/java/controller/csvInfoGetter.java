@@ -18,7 +18,7 @@ public class csvInfoGetter {
 
     public static ArrayList<String> trapAndSpellReadFromCSV(String cardName) {
         ArrayList<String> tempArraylist = new ArrayList<String>();
-        List<String[]> listOfStrings = readFromFile("src\\resources\\SpellTrap.csv");
+        List<String[]> listOfStrings = readFromFile("src\\resources\\card-infos\\SpellTrap.csv");
         if (listOfStrings == null) {
             return null;
         }
@@ -35,7 +35,7 @@ public class csvInfoGetter {
 
     public static ArrayList<String> monsterReadFromCSV(String monsterName) {
         ArrayList<String> tempArraylist = new ArrayList<String>();
-        List<String[]> listOfStrings = readFromFile("src\\resources\\Monster.csv");
+        List<String[]> listOfStrings = readFromFile("src\\resources\\card-infos\\Monster.csv");
         if (listOfStrings == null) {
             return null;
         }
@@ -97,7 +97,7 @@ public class csvInfoGetter {
     }
 
     public int getPriceByCardName(String cardName) {
-        List<String[]> temp = readFromFile("src\\resources\\Monster.csv");
+        List<String[]> temp = readFromFile("src\\resources\\card-infos\\Monster.csv");
         if (temp == null) {
             return -1;
         }
@@ -108,7 +108,7 @@ public class csvInfoGetter {
                 }
             }
         }
-        temp = readFromFile("src\\resources\\SpellTrap.csv");
+        temp = readFromFile("src\\resources\\card-infos\\SpellTrap.csv");
         if (temp == null) {
             return -1;
         }
@@ -143,5 +143,21 @@ public class csvInfoGetter {
         else if (spellName.equalsIgnoreCase("ritual")) return SpellType.RITUAL;
         else if (spellName.equalsIgnoreCase("equip")) return SpellType.EQUIP;
         return null;
+    }
+
+    public static boolean cardNameExists(String cardName) {
+        List<String[]> temp = readFromFile("src\\resources\\card-infos\\Monster.csv");
+        if (temp == null) {
+            return false;
+        }
+        for (String[] tempStringArray : temp)
+            if (cardName.equals(tempStringArray[0])) return true;
+        temp = readFromFile("src\\resources\\card-infos\\SpellTrap.csv");
+        if (temp == null) {
+            return false;
+        }
+        for (String[] tempStringArray : temp)
+            if (cardName.equals(tempStringArray[0])) return true;
+        return false;
     }
 }
