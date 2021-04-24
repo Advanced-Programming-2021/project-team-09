@@ -85,11 +85,10 @@ public class User {
         return balance >= amount;
     }
 
-    public void addCardToMainDeck(String cardName, String deckName) {
+    public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
-        if (deck.canAddCardByName(cardName)) {
-
-        }
+        if (deck.canAddCardByName(card.getCardName()))
+            deck.addCardToSideDeck(card);
     }
 
     public void addCardToSideDeck(Card card, String deckName) {
@@ -136,7 +135,7 @@ public class User {
     public ArrayList<Deck> sortDeck() {
         ArrayList<Deck> decks = (ArrayList<Deck>) this.decks.clone();
         decks.remove(activeDeck);
-        Collections.sort(decks, new sortDeckBYName());
+        Collections.sort(decks, new sortDeckByName());
         return decks;
     }
 
@@ -152,11 +151,10 @@ public class User {
         return password;
     }
 
-    class sortDeckBYName implements Comparator<Deck> {
+    class sortDeckByName implements Comparator<Deck> {
         @Override
         public int compare(Deck deck1, Deck deck2) {
             return deck1.getDeckName().compareTo(deck2.getDeckName());
         }
     }
-
 }
