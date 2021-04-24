@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class csvInfoGetter {
-    private static String monsterFileName, spellTrapFileName;
-    static {
-        String monsterFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\Monster.csv":"src/resources/card-infos/Monster.csv";
-        String spellTrapFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\SpellTrap.csv":"src/resources/card-infos/SpellTrap.csv";
-    }
+    //private static String monsterFileName, spellTrapFileName;
+    private static final String monsterFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\Monster.csv":"src/resources/card-infos/Monster.csv";
+    private static final String spellTrapFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\SpellTrap.csv":"src/resources/card-infos/SpellTrap.csv";
+
     public static ArrayList<String> trapAndSpellReadFromCSV(String cardName) {
         ArrayList<String> tempArraylist = new ArrayList<String>();
         List<String[]> listOfStrings = readFromFile(spellTrapFileName);
@@ -45,7 +44,7 @@ public class csvInfoGetter {
         }
         for (String[] temp : listOfStrings) {
             if (temp[0].equalsIgnoreCase(monsterName)) {
-                for (int i = 1; i < 7; i++) {
+                for (int i = 1; i <= 7; i++) {
                     tempArraylist.add(temp[i]);
                 }
                 return tempArraylist;
@@ -163,5 +162,23 @@ public class csvInfoGetter {
         for (String[] tempStringArray : temp)
             if (cardName.equals(tempStringArray[0])) return true;
         return false;
+    }
+
+    public static ArrayList<String> getCardNames() {
+        System.out.println(monsterFileName);
+        ArrayList<String> outputArraylist = new ArrayList<String>();
+        List<String[]> temp = readFromFile(monsterFileName);
+        if (temp != null) {
+            for (int i = 1; i < temp.size(); i++) {
+                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[7]);
+            }
+        }
+        temp = readFromFile(spellTrapFileName);
+        if (temp != null) {
+            for (int i = 1; i < temp.size(); i++) {
+                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[3]);
+            }
+        }
+        return outputArraylist;
     }
 }

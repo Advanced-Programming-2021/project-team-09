@@ -12,7 +12,7 @@ public class Spell extends Card {
 
     public Spell(String spellName) {
         ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(spellName);
-        if (temp == null) return;
+        if (temp == null || temp.size() != 4) return;
         spellType = csvInfoGetter.getSpellType(temp.get(1));
         cardName = spellName;
         description = temp.get(2);

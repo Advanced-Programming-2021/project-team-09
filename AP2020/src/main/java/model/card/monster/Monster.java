@@ -18,7 +18,7 @@ public class Monster extends Card {
 
     public Monster(String monsterName){
         ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(monsterName);
-        if (temp == null || temp.size() != 8){
+        if (temp == null || temp.size() != 7){
             return;
         }
         level = Integer.parseInt(temp.get(0));
