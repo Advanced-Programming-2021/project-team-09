@@ -1,5 +1,9 @@
 package model;
 
+import model.card.Card;
+import model.deck.Deck;
+import model.deck.Graveyard;
+
 public class Board {
     private Cell[] monsterZone = new Cell[5];
     private Cell[] spellZone = new Cell[5];
@@ -21,12 +25,14 @@ public class Board {
     }
     public Card getCardFromDeck(){
         //TODO
+        return null;
     }
     public Card removeCardFromMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if(monsterZone[i].getCard().equals(card)){
-                return monsterZone[i].removeCard();
+            if (monsterZone[i].getCard() != card) {
+                continue;
             }
+            return monsterZone[i].removeCard();
         }
         return null;
     }
@@ -51,5 +57,6 @@ public class Board {
     }
     public int getSumLevel(){
         //TODO
+        return 1;
     }
 }
