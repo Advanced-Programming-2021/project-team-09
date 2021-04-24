@@ -14,6 +14,7 @@ public class ShopController {
         if(csvInfoGetter.cardNameExists(cardName)){
             if(csvInfoGetter.getPriceByCardName(cardName)<=user.getBalance()){
                 user.addCard(csvInfoGetter.getCardByName(cardName));
+                user.decreaseBalance(csvInfoGetter.getPriceByCardName(cardName));
                 ReadAndWriteDataBase.updateUser(user);
             }
             else System.out.println("not enough money");
