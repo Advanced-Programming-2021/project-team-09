@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         String fileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\SpellTrap.csv":"src/resources/card-infos/SpellTrap.csv";
         try {
-            CSVReader reader = new CSVReader(new FileReader("src\\resources\\card-infos\\SpellTrap.csv"));
+            CSVReader reader = new CSVReader(new FileReader(fileName));
             List<String[]> temp = reader.readAll();
             for (String[] a : temp) System.out.println(a[0] + ".");
 

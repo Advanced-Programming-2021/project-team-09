@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ReadAndWriteDataBase {
-    public  static final String usersAddr = "src/resources/Users/";
+    public static final String usersAddr = System.getProperty("os.name").startsWith("Windows") ? "src\\resources\\Users\\" : "src/resources/Users/";
 
     public static User getUser(String usersAddr) {
         FileReader fileReader = getUserFileByUserAddr(usersAddr);
@@ -26,12 +26,12 @@ public class ReadAndWriteDataBase {
         } else return null;
     }
 
-    public static void writeUserToUsersDirectory(User user){
+    public static void writeUserToUsersDirectory(User user) {
         try {
             FileWriter fileWriter = new FileWriter(usersAddr + user.getUsername() + ".json");
-            new Gson().toJson(user,fileWriter);
+            new Gson().toJson(user, fileWriter);
             fileWriter.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("ERROR 404");
         }
     }
@@ -55,8 +55,9 @@ public class ReadAndWriteDataBase {
         return users;
     }
 
-    public static void updateUser(User user){
+    public static void updateUser(User user) {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
+
 
 }
