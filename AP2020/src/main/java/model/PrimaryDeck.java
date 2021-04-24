@@ -60,8 +60,9 @@ public abstract class PrimaryDeck {
 
     public abstract String toString();
 
-    public boolean isValid(){
-        return true;
+    public boolean isValid() {
+        if (cards.size() <= maxCapacity && cards.size() >= minCapacity) return true;
+        return false;
     }
 
     public ArrayList<Card> getCards(){
@@ -92,5 +93,7 @@ public abstract class PrimaryDeck {
         cards.add(min, tempMax);
         cards.add(max, tempMin);
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.Gson;
 import com.squareup.moshi.JsonWriter;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class User {
 
     public Deck getDeckByName(String deckName) {
         for (Deck deck : decks) {
-            if (deck.getName().equals(deckName)) return deck;
+            if (deck.getDeckName().equals(deckName)) return deck;
         }
         return null;
     }
@@ -79,24 +80,31 @@ public class User {
         return balance;
     }
 
-    public void removeDeck(String deckName) {
-        Deck deck = getDeckByName(deckName);
-        if (deck != null) {
-            //ToDo decks be completed
-            decks.remove(deck);
-        }
-    }
-
     public boolean hasEnoughBalance(int amount) {
         return balance >= amount;
     }
 
-    public void addCardToDeck(Card card, String deckName) {
+    public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
+        if (deck.canAddCardByName(card.getCardName()))
+            deck.addCardToMainDeck(card);
     }
 
-    public void removeCardFromDeck(Card card, String deckName) {
+    public void addCardToSideDeck(Card card, String deckName) {
+        Deck deck = getDeckByName(deckName);
+        if (deck.canAddCardByName(card.getCardName()))
+            deck.addCardToSideDeck(card);
+    }
 
+
+    public void removeDeck(String deckName) {
+        Deck deck = getDeckByName(deckName);
+        if (deck != null) {
+            ArrayList<Card> cardsOdThisDeck = deck.getAllCards();
+            cards.addAll(cardsOdThisDeck);
+            decks.remove(deck);
+            if (deck == activeDeck) activeDeck = null;
+        }
     }
 
     public boolean doesDeckExist(String deckName) {
@@ -111,14 +119,18 @@ public class User {
     }
 
 
-
     class sortDeckBYName implements Comparator<Deck> {
         @Override
         public int compare(Deck deck1, Deck deck2) {
-            return deck1.getName().compareTo(deck2.getName());
+            return deck1.getDeckName().compareTo(deck2.getDeckName());
         }
     }
 
+    public static void main(String[] args) {
+        User user = new User("ali", "al", "1234");
+        System.out.println(new Gson().toJson(user));
+
+    }
 
 
 }

@@ -15,8 +15,5 @@ public class SideDeck extends PrimaryDeck{
         return "Deck: " + deckName + "\nSide Deck: \n" + PrimaryDeck.sortCardsInDecks(cards);
     }
 
-    public boolean isValid() {
-        if (cards.size() <= maxCapacity && cards.size() >= minCapacity) return true;
-        return false;
-    }
+
 }
