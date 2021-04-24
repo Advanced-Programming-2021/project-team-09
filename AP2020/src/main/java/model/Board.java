@@ -1,6 +1,7 @@
 package model;
 
 import model.card.Card;
+import model.card.monster.Monster;
 import model.deck.Deck;
 import model.deck.Graveyard;
 
@@ -12,51 +13,64 @@ public class Board {
     private Deck deck;
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if(!monsterZone[i].isOccupied()) monsterZone[i].addCard(card);
+            if(!monsterZone[i].isOccupied() && monsterZone[i].getCard().isMonster()) monsterZone[i].addCard(card);
         }
     }
     public void addCardToSpellZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if(!spellZone[i].isOccupied()) spellZone[i].addCard(card);
+            if(!spellZone[i].isOccupied() && monsterZone[i].getCard().isSpell()) spellZone[i].addCard(card);
         }
     }
     public void sendToGraveYard(Card card){
-        //TODO
+        graveyard.addCard(card);
     }
     public Card getCardFromDeck(){
-        //TODO
-        return null;
+        return  deck.getAllCards().get(0);
     }
     public Card removeCardFromMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if (monsterZone[i].getCard() != card) {
                 continue;
             }
+            sendToGraveYard(monsterZone[i].getCard());
             return monsterZone[i].removeCard();
         }
         return null;
     }
     public Card removeCardFromSpellZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if (spellZone[i].getCard().equals(card)) {
-                return spellZone[i].removeCard();
+            if (spellZone[i].getCard() != card) {
+                continue;
             }
+            sendToGraveYard(spellZone[i].getCard());
+            return spellZone[i].removeCard();
         }
         return null;
     }
     public Card removeCardFromGraveYard(Card card){
-        //TODO
-        return card;
+        return graveyard.removeCard(card.getCardName());
     }
     public void addCardToFieldZone(Card card){
-        if (!fieldZone.isOccupied()) fieldZone.addCard(card);
+        if (!fieldZone.isOccupied())
+            fieldZone.addCard(card);
+        else {
+            removeCardFromFieldZone(fieldZone.getCard());
+            fieldZone.addCard(card);
+        }
     }
     public Card removeCardFromFieldZone(Card card){
-        if (fieldZone.getCard().equals(card)) return fieldZone.removeCard();
+        if (fieldZone.getCard() == card) {
+            sendToGraveYard(fieldZone.getCard());
+            return fieldZone.removeCard();
+        }
         return null;
     }
-    public int getSumLevel(){
-        //TODO
-        return 1;
+    public int getSumLevel(Integer[] cellNumbers){
+        int sumLevel = 0;
+        for (int i = 0; i < cellNumbers.length; i++) {
+            Monster monster =(Monster)monsterZone[cellNumbers[i]].getCard();
+            sumLevel += monster.getLevel();
+        }
+        return sumLevel;
     }
 }
