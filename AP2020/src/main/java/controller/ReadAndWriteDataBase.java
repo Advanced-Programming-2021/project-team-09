@@ -30,10 +30,10 @@ public class ReadAndWriteDataBase {
     public static void writeUserToUsersDirectory(User user){
         try {
             FileWriter fileWriter = new FileWriter(usersAddr + user.getUsername() + ".json");
-            new Gson().toJson(user,fileWriter);
+            new Gson().toJson(user,fileWriter); // todo serialize nulls
             fileWriter.close();
         } catch (IOException e){
-            System.out.println("ERROR 404");
+            System.out.println("ERROR 404"); // todo remove println in controller : mir
         }
     }
 
@@ -50,6 +50,7 @@ public class ReadAndWriteDataBase {
         ArrayList<User> users = new ArrayList<>();
         File usersDirectory = new File(usersAddr);
         userAddrs = usersDirectory.list();
+        if (userAddrs == null) return users;
         for (String userAddr : userAddrs) {
             users.add(ReadAndWriteDataBase.getUser(userAddr));
         }

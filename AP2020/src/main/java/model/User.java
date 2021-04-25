@@ -1,7 +1,9 @@
 package model;
 
+import controller.responses.DeckMenuResponses;
 import model.card.Card;
 import model.deck.Deck;
+import controller.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,7 +90,7 @@ public class User {
     public void addCardToMainDeck(String cardName, String deckName) {
         Deck deck = getDeckByName(deckName);
         if (deck.canAddCardByName(cardName)) {
-
+            deck.addCardToMainDeck(csvInfoGetter.getCardByName(cardName));
         }
     }
 
@@ -98,12 +100,11 @@ public class User {
             deck.addCardToSideDeck(card);
     }
 
-
-    public void removeCardFromMainDeck(String cardName,String deckName){
-        if (doesDeckExist(deckName)){
+    /*public void removeCardFromMainDeck(String cardName,String deckName){
+        if (doesDeckExist(deckName)){ //  todo ina bayad pak shan
             Deck deck = getDeckByName(deckName);
             if (deck.doesMainDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromMainDeck(cardName);
+                Card card = deck.removeCardFromMainDeck(cardName); // todo in bayad dorost she
                 cards.add(card);
             }
         }
@@ -113,11 +114,11 @@ public class User {
         if (doesDeckExist(deckName)){
             Deck deck = getDeckByName(deckName);
             if (deck.doesSideDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromSideDeck(cardName);
+                Card card = deck.removeCardFromSideDeck(cardName); // todo in bayad dorost she
                 cards.add(card);
             }
         }
-    }
+    }*/
 
     public void removeDeck(String deckName) {
         Deck deck = getDeckByName(deckName);
@@ -133,7 +134,7 @@ public class User {
         return getDeckByName(deckName) != null;
     }
 
-    public ArrayList<Deck> sortDeck() {
+    public ArrayList<Deck> getSortedDecks() {
         ArrayList<Deck> decks = (ArrayList<Deck>) this.decks.clone();
         decks.remove(activeDeck);
         Collections.sort(decks, new sortDeckByName());
@@ -156,14 +157,12 @@ public class User {
         @Override
         public int compare(Deck deck1, Deck deck2) {
             String tempName1 = deck1.getDeckName(), tempName2 = deck2.getDeckName();
-            if (tempName1.equals(tempName2)) return 0;
-            ArrayList<String> temp = new ArrayList<>();
-            temp.add(tempName1);
-            temp.add(tempName2);
-            Collections.sort(temp);
-            if (temp.get(0).equals(tempName1)) return 1;
-            return -1;
+            return DeckMenuController.compareStrings(tempName1, tempName2);
         }
+    }
+
+    public ArrayList<Card> getCards() {
+        return this.cards;
     }
 
 }
