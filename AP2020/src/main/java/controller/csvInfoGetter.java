@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class csvInfoGetter {
-    //private static String monsterFileName, spellTrapFileName;
     private static final String monsterFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\Monster.csv":"src/resources/card-infos/Monster.csv";
     private static final String spellTrapFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\SpellTrap.csv":"src/resources/card-infos/SpellTrap.csv";
 
@@ -55,7 +54,9 @@ public class csvInfoGetter {
     private static List<String[]> readFromFile(String fileName) {
         try {
             CSVReader reader = new CSVReader(new FileReader(fileName));
-            return reader.readAll();
+            List<String[]> output = reader.readAll();
+            reader.close();
+            return output;
 
         } catch (IOException | CsvException e) {
             return null;
