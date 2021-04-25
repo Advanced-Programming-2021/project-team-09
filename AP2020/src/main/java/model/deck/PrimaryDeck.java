@@ -98,6 +98,10 @@ public abstract class PrimaryDeck {
         cards.add(max, tempMin);
     }
 
+    public int getNumberOfAllCards() {
+        return cards.size();
+    }
+
 
 
 }

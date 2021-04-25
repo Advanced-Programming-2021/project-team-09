@@ -29,9 +29,9 @@ public class Deck {
         return mainDeck.getCardCount(cardName) + sideDeck.getCardCount(cardName);
     }
 
-    public boolean canAddCardByName(String cardName) { // todo in male controllere bayad pak she
+    public boolean canAddCardByName(String cardName) {
         return getNumberOfCardsByName(cardName) < 3;
-    }
+    } // todo in control hesab mishe
 
     public Card removeCardFromMainDeck(String cardName){
         if (doesMainDeckHasCard(cardName))
@@ -85,5 +85,28 @@ public class Deck {
 
     public String showSideDeck() {
         return sideDeck.toString();
+    }
+
+    public MainDeck getMainDeck() {
+        return this.mainDeck;
+    }
+
+    public SideDeck getSideDeck() {
+        return this.sideDeck;
+    }
+
+    public boolean isValid() {
+        HashMap<String, Integer> temp = new HashMap<>();
+        ArrayList<Card> tempCards = mainDeck.cards;
+        tempCards.addAll(sideDeck.cards);
+        for (Card card : tempCards) {
+            if (temp.containsKey(card.getCardName())) {
+                temp.put(card.getCardName(), temp.get(card.getCardName()) + 1);
+            } else {
+                temp.put(card.getCardName(), 1);
+            }
+        }
+        for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
+        return mainDeck.isValid() && sideDeck.isValid();
     }
 }
