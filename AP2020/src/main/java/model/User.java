@@ -18,7 +18,7 @@ public class User {
     private ArrayList<Card> cards;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
-
+    
     public User(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
@@ -100,11 +100,11 @@ public class User {
             deck.addCardToSideDeck(card);
     }
 
-    /*public void removeCardFromMainDeck(String cardName,String deckName){
-        if (doesDeckExist(deckName)){ //  todo ina bayad pak shan
+    public void removeCardFromMainDeck(String cardName,String deckName){
+        if (doesDeckExist(deckName)){
             Deck deck = getDeckByName(deckName);
             if (deck.doesMainDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromMainDeck(cardName); // todo in bayad dorost she
+                Card card = deck.removeCardFromMainDeck(cardName);
                 cards.add(card);
             }
         }
@@ -114,11 +114,11 @@ public class User {
         if (doesDeckExist(deckName)){
             Deck deck = getDeckByName(deckName);
             if (deck.doesSideDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromSideDeck(cardName); // todo in bayad dorost she
+                Card card = deck.removeCardFromSideDeck(cardName);
                 cards.add(card);
             }
         }
-    }*/
+    }
 
     public void removeDeck(String deckName) {
         Deck deck = getDeckByName(deckName);
@@ -164,5 +164,4 @@ public class User {
     public ArrayList<Card> getCards() {
         return this.cards;
     }
-
 }

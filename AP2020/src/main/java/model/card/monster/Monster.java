@@ -15,7 +15,6 @@ public class Monster extends Card {
     private MonsterCardType monsterCardType;
     private Attribute attribute;
 
-
     public Monster(String monsterName){
         ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(monsterName);
         if (temp == null || temp.size() != 7){

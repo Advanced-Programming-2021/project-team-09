@@ -50,6 +50,7 @@ public class Board {
     public Card removeCardFromGraveYard(Card card){
         return graveyard.removeCard(card.getCardName());
     }
+
     public void addCardToFieldZone(Card card){
         if (!fieldZone.isOccupied())
             fieldZone.addCard(card);
