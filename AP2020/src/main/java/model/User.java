@@ -1,6 +1,5 @@
 package model;
 
-import controller.responses.DeckMenuResponses;
 import model.card.Card;
 import model.deck.Deck;
 import controller.*;
@@ -87,10 +86,10 @@ public class User {
         return balance >= amount;
     }
 
-    public void addCardToMainDeck(String cardName, String deckName) {
+    public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
-        if (deck.canAddCardByName(cardName)) {
-            deck.addCardToMainDeck(csvInfoGetter.getCardByName(cardName));
+        if (deck.canAddCardByName(card.getCardName())) {
+           deck.addCardToSideDeck(card);
         }
     }
 

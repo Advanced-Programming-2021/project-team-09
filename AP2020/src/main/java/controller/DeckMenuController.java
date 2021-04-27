@@ -1,5 +1,5 @@
 package controller;
-import controller.responses.DeckMenuResponses;
+import view.responses.DeckMenuResponses;
 import model.*;
 import model.deck.*;
 import model.card.*;
@@ -48,10 +48,11 @@ public class DeckMenuController {
         if (!csvInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
-        if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;
+        if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
         if (!deck.canAddCardByName(cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
         primaryDeck.removeCard(cardName);
         user.addCard(csvInfoGetter.getCardByName(cardName));
+        //ToDo bug!
         return DeckMenuResponses.SUCCESSFUL;
     }
 

@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import view.responses.LoginMenuResponses;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -38,23 +39,23 @@ public class LoginMenuController {
     }
 
 
-    public static String createUser(String username , String nickname, String password) {
-        if (doesUsernameExists(username)) return "user with username " + username + " already Exists";
-        else if (doesNicknameExists(nickname)) return "user with nickname " + nickname + " already Exists";
+    public static LoginMenuResponses createUser(String username , String nickname, String password) {
+        if (doesUsernameExists(username)) return LoginMenuResponses.USER_WITH_THIS_USERNAME_EXITS;
+        else if (doesNicknameExists(nickname)) return LoginMenuResponses.USER_WITH_THIS_NICKNAME_EXITS;
         else {
             User user = new User(username,password,nickname);
             ReadAndWriteDataBase.writeUserToUsersDirectory(user);
-            return "user created successfully!";
+            return LoginMenuResponses.USER_CREATED_SUCCESSFULLY;
         }
     }
 
-    public static String login(String username , String password){
+    public static LoginMenuResponses login(String username , String password){
         if (doesUsernameExists(username)) {
             if (isPasswordCorrect(username, password)) {
                 setCurrentUser(username);
-                return "user logged in successfully!";
-            } else return "Username and password didn't match";
-        } else return "there isn't a user with this username!";
+                return LoginMenuResponses.USER_LOGIN_SUCCESSFUL;
+            } else return LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH;
+        } else return LoginMenuResponses.THERE_IS_NOT_A_USER_WITH_THIS_USERNAME;
     }
 
 
@@ -67,7 +68,6 @@ public class LoginMenuController {
     public static User getCurrentUser() {
         return currentUser;
     }
-
 
     public static void setCurrentUser(String username){
         currentUser = ReadAndWriteDataBase.getUser(username+".json");

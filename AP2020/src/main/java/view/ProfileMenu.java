@@ -1,51 +1,52 @@
 package view;
 
+import controller.ProfileController;
+import view.regexes.ProfileMenuRegex;
+import view.regexes.RegexFunctions;
+import view.responses.ProfileMenuResponses;
+
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu {
-    private final Scanner scanner =new Scanner(System.in);
-    private static ProfileMenu profileMenu = new ProfileMenu();
-    private Matcher matcher;
-    private ProfileMenu(){
+    private final Scanner scanner;
+    private static ProfileMenu profileMenu;
 
+    private ProfileMenu(Scanner scanner){
+        this.scanner = scanner;
     }
-    public static ProfileMenu getProfileMenu(){
+
+    public static ProfileMenu getProfileMenu(Scanner scanner){
+        if (profileMenu == null) {
+            profileMenu = new ProfileMenu(scanner);
+        }
         return profileMenu;
     }
 
+
     public void changePassword(String command){
+       String[] passwords = getOldAndNewPassword(command);
+       ProfileMenuResponses response = ProfileController.changePassword(passwords[0],passwords[1]);
+       respond(response);
 
     }
     public void changeNickname(String command){
-
+       Matcher matcher = RegexFunctions.getRightMatcherForChangeNickname(command);
     }
     public void run(){
-        while (true){
-            String command = scanner.nextLine();
-            if (command.equalsIgnoreCase("menu exit")) return;
-            if(ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changeNicknameRegex).matches())
-                changeNickname(command);
-            if(ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changeNicknameRegexShort).matches())
-                changeNickname(command);
-            if(ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changePasswordRegexType1).matches())
-                changePassword(command);
-            if(ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changePasswordRegexType1Short).matches())
-                changePassword(command);
-            if (ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changePasswordRegexType2).matches())
-                changePassword(command);
-            if(ProfileMenuRegex.getCommandMatcher(command, ProfileMenuRegex.changePasswordRegexType2Short).matches())
-                changePassword(command);
-        }
-    }
-    public void response(){
 
     }
-    enum Responses{
-        NICKNAME_CHANGED_SUCCESSFULLY,
-        USER_WITH_NICKNAME_ALREADY_EXISTS,
-        PASSWORD_CHANGED_SUCCESSFULLY,
-        CURRENT_PASSWORD_IS_INVALID,
-        PLEASE_ENTER_A_NEW_PASSWORD
+    public void respond(ProfileMenuResponses response){
+    }
+
+    public String[] getOldAndNewPassword(String command){
+        String[] passwords = new String[2];
+        Matcher matcher = RegexFunctions.getRightMatcherForChangePassword(command);
+        if (matcher.find()) {
+            passwords[1] = matcher.group("newPassword");
+            passwords[0] = matcher.group("currentPassword");
+            return passwords;
+        }
+        return null;
     }
 }

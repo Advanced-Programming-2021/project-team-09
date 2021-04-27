@@ -1,4 +1,4 @@
-package controller.responses;
+package view.responses;
 
 public enum DeckMenuResponses {
     SUCCESSFUL,
@@ -6,5 +6,7 @@ public enum DeckMenuResponses {
     DECK_DOESNT_EXIST,
     CARD_DOESNT_EXIST,
     MAIN_DECK_IS_FULL,
+    SIDE_DECK_IS_FULL,
     CANT_ADD_MORE_OF_THIS_CARD,
+    InvalidCommand,
 }
