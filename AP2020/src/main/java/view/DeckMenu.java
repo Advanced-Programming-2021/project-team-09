@@ -60,7 +60,7 @@ public class DeckMenu {
                 activeDeck(command);
             else if (command.matches("back"))
                 return;
-            else respond(DeckMenuResponses.InvalidCommand);
+            else respond(DeckMenuResponses.INVALID_COMMAND);
         }
     }
 
@@ -174,7 +174,7 @@ public class DeckMenu {
             System.out.println("main deck is full!");
         else if (response.equals(DeckMenuResponses.SIDE_DECK_IS_FULL))
             System.out.println("side deck is full!");
-        else if (response.equals(DeckMenuResponses.InvalidCommand))
+        else if (response.equals(DeckMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
     }
 

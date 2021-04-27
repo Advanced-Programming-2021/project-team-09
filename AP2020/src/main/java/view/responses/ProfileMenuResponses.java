@@ -6,4 +6,5 @@ public enum ProfileMenuResponses {
         PASSWORD_CHANGED_SUCCESSFULLY,
         CURRENT_PASSWORD_IS_INVALID,
         PLEASE_ENTER_A_NEW_PASSWORD,
+        INVALID_COMMAND,
         }
