@@ -26,9 +26,6 @@ public class DeckMenu {
         System.out.println(message);
     }
 
-    private void showCard(String command) {
-
-    }
 
     public void run() {
         String command;
@@ -44,8 +41,6 @@ public class DeckMenu {
                 showSideDeck(command);
             else if (command.matches(DeckMenuRegex.showAllDecksRegex))
                 showAllDecks();
-            else if (command.matches(DeckMenuRegex.showCardRegex))
-                showCard(command);
             else if (command.matches(DeckMenuRegex.showAllCardsRegex))
                 showAllCards();
             else if (command.matches(DeckMenuRegex.addCardToMainDeckRegex))
@@ -177,6 +172,5 @@ public class DeckMenu {
         else if (response.equals(DeckMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
     }
-
 
 }

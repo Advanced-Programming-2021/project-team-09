@@ -109,7 +109,7 @@ public class DeckMenuController {
                 String tempName1 = c1.getCardName(), tempName2 = c2.getCardName();
                 return compareStrings(tempName1, tempName2);
             }
-        });
+        }); //ToDo
         for (Card card : cards) outputString.append(card.getCardName() + " : " + card.getDescription() + "\n");
         return outputString.toString();
     }

@@ -2,9 +2,9 @@ package view;
 
 import controller.ProfileController;
 import view.regexes.ProfileMenuRegex;
-import view.regexes.RegexFunctions;
 import view.responses.ProfileMenuResponses;
 
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
@@ -25,14 +25,13 @@ public class ProfileMenu {
 
 
     public void changePassword(String command) {
-        String[] passwords = getOldAndNewPassword(command);
-        ProfileMenuResponses response = ProfileController.changePassword(passwords[0], passwords[1]);
+        HashMap<String,String> passwords = getOldAndNewPassword(command);
+        ProfileMenuResponses response = ProfileController.changePassword(passwords.get("currentPassword"), passwords.get("newPassword"));
         respond(response);
-
     }
 
     public void changeNickname(String command) {
-        Matcher matcher = RegexFunctions.getRightMatcherForChangeNickname(command);
+        Matcher matcher = ProfileMenuRegex.getRightMatcherForChangeNickname(command);
         if (matcher.find()) {
             String newNickname = matcher.group("nickName");
             ProfileMenuResponses response = ProfileController.changeNickname(newNickname);
@@ -73,12 +72,12 @@ public class ProfileMenu {
             System.out.println("invalid command!");
     }
 
-    public String[] getOldAndNewPassword(String command) {
-        String[] passwords = new String[2];
-        Matcher matcher = RegexFunctions.getRightMatcherForChangePassword(command);
+    public HashMap<String,String> getOldAndNewPassword(String command) {
+        HashMap<String,String> passwords = new HashMap<>();
+        Matcher matcher = ProfileMenuRegex.getRightMatcherForChangePassword(command);
         if (matcher.find()) {
-            passwords[1] = matcher.group("newPassword");
-            passwords[0] = matcher.group("currentPassword");
+            passwords.put("newPassword",matcher.group("newPassword"));
+            passwords.put("currentPassword",matcher.group("currentPassword"));
             return passwords;
         }
         return null;
