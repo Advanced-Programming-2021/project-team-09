@@ -16,7 +16,7 @@ public class ProfileMenu {
         this.scanner = scanner;
     }
 
-    public static ProfileMenu getProfileMenu(Scanner scanner) {
+    public static ProfileMenu getInstance(Scanner scanner) {
         if (profileMenu == null) {
             profileMenu = new ProfileMenu(scanner);
         }
@@ -82,4 +82,5 @@ public class ProfileMenu {
         }
         return null;
     }
+
 }

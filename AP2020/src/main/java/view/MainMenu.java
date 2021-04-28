@@ -1,5 +1,6 @@
 package view;
 
+import controller.LoginMenuController;
 import view.regexes.RegexFunctions;
 import view.responses.MainMenuResponses;
 
@@ -32,56 +33,54 @@ public class MainMenu {
             else respond(MainMenuResponses.INVALID_COMMAND);
         }
     }
-    private void gotoMenu(String command){
-        Matcher matcher = RegexFunctions.getCommandMatcher(command,"^menu enter (?<menuName>\\w+)$");
+
+    private void gotoMenu(String command) {
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, "^menu enter (?<menuName>\\w+)$");
         if (matcher.find()) {
             String menuName = matcher.group("menuName");
-            System.out.println(menuName);
             try {
-                Method method = MainMenu.class.getMethod(menuName);
-                method.invoke(MainMenu.class);
-            } catch (NoSuchMethodException e) {
+                Method method = MainMenu.class.getDeclaredMethod(menuName);
+                method.invoke(this);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 respond(MainMenuResponses.INVALID_MENU);
-                System.out.println("f");
-            } catch (InvocationTargetException e){
-                System.out.println("ff");
-            } catch (IllegalAccessException e){
-                System.out.println("ee");
             }
         }
-
     }
+
     private void respond(MainMenuResponses response){
-        System.out.println("e");
+
     }
 
     private void shopMenu(){
 
     }
-    private void scoreboard(){
+
+    public void scoreboard(){
         ScoreboardMenu scoreboardMenu = ScoreboardMenu.getInstance(scanner);
         scoreboardMenu.run();
     }
+
     private void profile(){
-
+        ProfileMenu profileMenu = ProfileMenu.getInstance(scanner);
+        profileMenu.run();
     }
+
     private void deck(){
-
+        DeckMenu deckMenu = DeckMenu.getInstance(scanner);
+        deckMenu.run();
     }
+
     private void importexport(){
 
     }
+
     private void duel(){
 
     }
+
     private void logout(){
-
+        LoginMenuController.logout();
+        respond(MainMenuResponses.LOGOUT_SUCCESSFUL);
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        MainMenu mainMenu = MainMenu.getInstance(scanner);
-        mainMenu.run();
-
-    }
 }

@@ -1,18 +1,37 @@
 package view;
 
+import controller.ScoreboardController;
+
 import java.util.Scanner;
 
 public class ScoreboardMenu {
     private final Scanner scanner;
     private static ScoreboardMenu scoreboardMenu;
+
     public void run(){
-        System.out.println("hehe");
+        String command;
+        while (true){
+            command = scanner.nextLine().trim().toLowerCase();
+            if (command.equals("exit menu"))
+                return;
+            else if (command.matches("show scoreboard"))
+                showScoreBoard();
+            else System.out.println("invalid command");
+        }
     }
+
     public static ScoreboardMenu getInstance(Scanner scanner){
         if (scoreboardMenu == null) scoreboardMenu = new ScoreboardMenu(scanner);
         return scoreboardMenu;
     }
+
     private ScoreboardMenu (Scanner scanner){
         this.scanner = scanner;
     }
+
+    private void showScoreBoard(){
+        String scoreboard = ScoreboardController.getScoreBoard();
+        System.out.println(scoreboard);
+    }
+
 }

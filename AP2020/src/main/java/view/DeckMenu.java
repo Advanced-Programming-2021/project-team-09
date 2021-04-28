@@ -17,7 +17,7 @@ public class DeckMenu {
         this.scanner = scanner;
     }
 
-    public static DeckMenu getDeckMenu(Scanner scanner) {
+    public static DeckMenu getInstance(Scanner scanner) {
         if (deckMenu == null) deckMenu = new DeckMenu(scanner);
         return deckMenu;
     }
