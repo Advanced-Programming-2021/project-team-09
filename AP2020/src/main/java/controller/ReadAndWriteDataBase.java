@@ -26,7 +26,6 @@ public class ReadAndWriteDataBase {
         } else return null;
     }
 
-
     public static void writeUserToUsersDirectory(User user){
         try {
             FileWriter fileWriter = new FileWriter(usersAddr + user.getUsername() + ".json");

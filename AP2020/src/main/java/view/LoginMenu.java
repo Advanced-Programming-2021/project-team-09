@@ -21,7 +21,7 @@ public class LoginMenu {
             loginMenu = new LoginMenu();
         return loginMenu;
     }
-    
+
     public void run() {
         String command;
         while (true) {
@@ -30,7 +30,7 @@ public class LoginMenu {
                 login(command);
             else if (LoginMenuRegex.doesItCreateUserCommand(command))
                 createUser(command);
-            else if (command.matches("exit"))
+            else if (command.matches("exit menu"))
                 return;
             else respond(LoginMenuResponses.INVALID_COMMAND);
         }
@@ -43,7 +43,8 @@ public class LoginMenu {
         String password = data.get("password");
         LoginMenuResponses response = LoginMenuController.login(username, password);
         respond(response);
-        MainMenu.run();
+        MainMenu mainMenu = MainMenu.getInstance(scanner);
+        mainMenu.run();
     }
 
     private void createUser(String command) {
@@ -56,7 +57,20 @@ public class LoginMenu {
     }
 
     private void respond(LoginMenuResponses response) {
-
+        if (response.equals(LoginMenuResponses.INVALID_COMMAND))
+            System.out.println("invalid command!");
+        else if (response.equals(LoginMenuResponses.USER_LOGIN_SUCCESSFUL))
+            System.out.println("user login successful!");
+        else if (response.equals(LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH))
+            System.out.println("password and username didnt match! try again");
+        else if (response.equals(LoginMenuResponses.THERE_IS_NOT_A_USER_WITH_THIS_USERNAME))
+            System.out.println("There is not a user with this username!");
+        else if (response.equals(LoginMenuResponses.USER_CREATED_SUCCESSFULLY))
+            System.out.println("user created successfully!");
+        else if (response.equals(LoginMenuResponses.USER_WITH_THIS_NICKNAME_EXITS))
+            System.out.println("user with this nickname already exists!");
+        else if (response.equals(LoginMenuResponses.USER_WITH_THIS_USERNAME_EXITS))
+            System.out.println("user with this username already exists!");
     }
 
     private HashMap<String, String> parseLoginData(String command) {

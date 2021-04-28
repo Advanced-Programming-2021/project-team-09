@@ -53,7 +53,7 @@ public class DeckMenu {
                 removeCardFromSideDeck(command);
             else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
-            else if (command.matches("back"))
+            else if (command.matches("exit menu"))
                 return;
             else respond(DeckMenuResponses.INVALID_COMMAND);
         }

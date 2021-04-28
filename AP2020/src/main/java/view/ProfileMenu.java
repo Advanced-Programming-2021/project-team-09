@@ -51,7 +51,7 @@ public class ProfileMenu {
                     command.matches(ProfileMenuRegex.changePasswordRegexType1Short) ||
                     command.matches(ProfileMenuRegex.changePasswordRegexType2Short))
                 changePassword(command);
-            else if (command.matches("back"))
+            else if (command.matches("exit menu"))
                 return;
             else respond(ProfileMenuResponses.INVALID_COMMAND);
         }
