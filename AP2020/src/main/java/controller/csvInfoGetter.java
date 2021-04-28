@@ -165,7 +165,6 @@ public class csvInfoGetter {
     }
 
     public static ArrayList<String> getCardNames() {
-        System.out.println(monsterFileName);
         ArrayList<String> outputArraylist = new ArrayList<String>();
         List<String[]> temp = readFromFile(monsterFileName);
         if (temp != null) {

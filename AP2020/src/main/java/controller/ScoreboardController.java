@@ -18,7 +18,7 @@ public class ScoreboardController {
         ArrayList<User> users = sortUsers();
         AsciiTable asciiTable = new AsciiTable();
         asciiTable.addRule();
-        asciiTable.addRow("rank","username","nickname","score");
+        asciiTable.addRow("Rank","Username","Nickname","Score");
         asciiTable.addRule();
         int i = 1;
         for (User user : users){

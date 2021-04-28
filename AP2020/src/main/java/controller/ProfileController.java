@@ -23,14 +23,4 @@ public class ProfileController {
             return ProfileMenuResponses.NICKNAME_CHANGED_SUCCESSFULLY;
         } else return ProfileMenuResponses.USER_WITH_NICKNAME_ALREADY_EXISTS;
     }
-
-//    public static void logout(){
-//        LoginMenuController.logout();
-//    } ToDo
-
-
-    public CurrentMenu showCurrentMenu(){
-        return CurrentMenu.PROFILE_MENU;
-    }
-
 }
