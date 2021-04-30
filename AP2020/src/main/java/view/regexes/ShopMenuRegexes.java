@@ -1,8 +1,6 @@
 package view.regexes;
 
-import java.util.regex.Matcher;
-
-public class ShopMenuRegexes {
+abstract public class ShopMenuRegexes {
     public static String[] shopShowCardsRegex = new String[2];
     public static final String shopCardRegex = "^shop buy (?<cardName>.+)$";
 

@@ -28,8 +28,10 @@ public class MainMenu {
             command = scanner.nextLine().trim().toLowerCase();
             if (command.matches("^menu enter (?<menuName>\\w+)$"))
                 gotoMenu(command);
-            else if (command.matches("logout"))
+            else if (command.matches("logout")){
                 logout();
+                return;
+            }
             else respond(MainMenuResponses.INVALID_COMMAND);
         }
     }
@@ -52,7 +54,8 @@ public class MainMenu {
     }
 
     private void shopMenu(){
-
+        ShopMenu shopMenu = ShopMenu.getInstance(scanner);
+        shopMenu.run();
     }
 
     public void scoreboard(){

@@ -40,7 +40,7 @@ public class ShopMenu {
         else if (response.equals(ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE))
             System.out.println("user has not enough balance to buy this card");
         else if (response.equals(ShopMenuResponses.SUCCESSFUL))
-            System.out.println("card had been buyed successfully!");
+            System.out.println("card had been bought successfully!");
         else if (response.equals(ShopMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
     }
