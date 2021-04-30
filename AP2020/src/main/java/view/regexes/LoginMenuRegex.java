@@ -23,10 +23,10 @@ abstract public class LoginMenuRegex {
     }
 
     static {
-        loginRegex[0] = "^user login --password (?<password>.+) --username (?<username.+>)$";
-        loginRegex[1] = "^user login --username (?<username.+>) --password (?<password>.+)$";
-        loginRegex[2] = "^user login -u (?<username.+>) -p (?<password>.+)$";
-        loginRegex[3] = "^user login -p (?<password>.+) -u (?<username.+>)$";
+        loginRegex[0] = "^user login --password (?<password>.+) --username (?<username>.+)$";
+        loginRegex[1] = "^user login --username (?<username>.+) --password (?<password>.+)$";
+        loginRegex[2] = "^user login -u (?<username>.+) -p (?<password>.+)$";
+        loginRegex[3] = "^user login -p (?<password>.+) -u (?<username>.+)$";
     }
 
     public static String[] getLoginRegex(){

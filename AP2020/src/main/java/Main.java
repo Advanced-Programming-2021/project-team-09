@@ -11,10 +11,9 @@ import org.jetbrains.annotations.TestOnly;
 import view.LoginMenu;
 import java.util.Properties;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        LoginMenu.getInstance().run();
     }
 }
