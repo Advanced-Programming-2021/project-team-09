@@ -130,7 +130,7 @@ public class DeckMenuController {
         if (!arrayContainsCard(cardName, primaryDeck.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         primaryDeck.removeCard(cardName);
         user.addCard(csvInfoGetter.getCardByName(cardName));
-        return DeckMenuResponses.SUCCESSFUL;
+        return DeckMenuResponses.SUCCESSFUL; // todo remove card
     }
 
     private static String deckToString(Deck deck) {
