@@ -10,7 +10,7 @@ abstract public class LoginMenuRegex {
         createUserRegex[0] = "^user create --username (?<username>.+) --nickname (?<nickname>.+) --password (?<password>.+)$";
         createUserRegex[1] = "^user create --nickname (?<nickname>.+) --username (?<username>.+) --password (?<password>.+)$";
         createUserRegex[2] = "^user create --nickname (?<nickname>.+) --password (?<password>.+) --username (?<username>.+)$";
-        createUserRegex[3] = "^user create --password (?<password>.+  --nickname (?<nickname>.+) --username (?<username>.+)$";
+        createUserRegex[3] = "^user create --password (?<password>.+) --nickname (?<nickname>.+) --username (?<username>.+)$";
         createUserRegex[4] = "^user create --password (?<password>.+) --username (?<username>.+) --nickname (?<nickname>.+)$";
         createUserRegex[5] = "^user create --username (?<username>.+) --password (?<password>.+) --nickname (?<nickname>.+)$";
 

@@ -10,13 +10,13 @@ import java.util.regex.Matcher;
 
 public class LoginMenu {
     private Scanner scanner;
-    private LoginMenu loginMenu;
+    private static LoginMenu loginMenu;
 
     private LoginMenu() {
         scanner = new Scanner(System.in);
     }
 
-    public LoginMenu getInstance() {
+    public static LoginMenu getInstance() {
         if (loginMenu == null)
             loginMenu = new LoginMenu();
         return loginMenu;
