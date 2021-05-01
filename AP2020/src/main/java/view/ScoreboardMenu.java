@@ -16,6 +16,8 @@ public class ScoreboardMenu {
                 return;
             else if (command.matches("show scoreboard"))
                 showScoreBoard();
+            else if (command.matches("help"))
+                showHelp();
             else System.out.println("invalid command");
         }
     }
@@ -32,6 +34,13 @@ public class ScoreboardMenu {
     private void showScoreBoard(){
         String scoreboard = ScoreboardController.getScoreBoard();
         System.out.println(scoreboard);
+    }
+
+    public void showHelp() {
+        String help = "scoreboard show\n";
+        help += "menu show-current\n";
+        help += "menu exit";
+        System.out.println(help);
     }
 
 }

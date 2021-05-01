@@ -13,4 +13,5 @@ abstract public class DeckMenuRegex {
     public static final String showAllCardsRegex = "^deck show --cards$";
     public static final String showMainDeckRegex = "^deck show --deck-name (?<deckName>\\w+)$";
     public static final String showSideDeckRegex = "^deck show --deck-name (?<deckName>\\w+) --side$";
+    public static final String showHelp = "^help$";
 }

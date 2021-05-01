@@ -29,6 +29,8 @@ public class ShopMenu {
                 showAllCards();
             else if (command.matches(ShopMenuRegexes.shopCardRegex))
                 buyCard(command);
+            else if (command.matches(ShopMenuRegexes.showHelp))
+                showHelp();
             else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
@@ -57,5 +59,13 @@ public class ShopMenu {
     private void showAllCards () {
         String allCardsInfo = ShopController.showAllCards();
         System.out.println(allCardsInfo);
+    }
+
+    public void showHelp() {
+        String help = "shop buy <card name>\n";
+        help += "shop show --all\n";
+        help += "menu show-current";
+        help += "menu exit";
+        System.out.println(help);
     }
 }

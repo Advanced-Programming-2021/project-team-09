@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 abstract public class LoginMenuRegex {
     private static final String[] createUserRegex = new String[12];
     private static final String[] loginRegex = new String[4];
+    public static final String showHelp = "^help$";
 
     static {
         createUserRegex[0] = "^user create --username (?<username>.+) --nickname (?<nickname>.+) --password (?<password>.+)$";

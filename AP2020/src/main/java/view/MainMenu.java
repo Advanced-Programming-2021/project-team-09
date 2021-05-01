@@ -32,6 +32,7 @@ public class MainMenu {
                 logout();
                 return;
             }
+            else if (command.matches("help")) showHelp();
             else respond(MainMenuResponses.INVALID_COMMAND);
         }
     }
@@ -84,6 +85,14 @@ public class MainMenu {
     private void logout(){
         LoginMenuController.logout();
         respond(MainMenuResponses.LOGOUT_SUCCESSFUL);
+    }
+
+    public void showHelp() {
+        String help = "user logout\n";
+        help += "menu show-current\n";
+        help += "menu enter <menu name>\n";
+        help += "menu exit";
+        System.out.println(help);
     }
 
 }

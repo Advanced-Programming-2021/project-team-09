@@ -51,6 +51,7 @@ public class ProfileMenu {
                     command.matches(ProfileMenuRegex.changePasswordRegexType1Short) ||
                     command.matches(ProfileMenuRegex.changePasswordRegexType2Short))
                 changePassword(command);
+            else if (command.matches(ProfileMenuRegex.showHelp)) showHelp();
             else if (command.matches("exit menu"))
                 return;
             else respond(ProfileMenuResponses.INVALID_COMMAND);
@@ -81,6 +82,14 @@ public class ProfileMenu {
             return passwords;
         }
         return null;
+    }
+
+    public void showHelp() {
+        String help = "profile change --nickname <nickname>\n";
+        help += "profile change --password --current <current password> --new <new password>\n";
+        help += "menu show-current\n";
+        help += "menu exit";
+        System.out.println(help);
     }
 
 }

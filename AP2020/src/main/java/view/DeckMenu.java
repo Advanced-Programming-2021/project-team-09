@@ -53,6 +53,8 @@ public class DeckMenu {
                 removeCardFromSideDeck(command);
             else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
+            else if (command.matches(DeckMenuRegex.showHelp))
+                showHelp();
             else if (command.matches("exit menu"))
                 return;
             else respond(DeckMenuResponses.INVALID_COMMAND);
@@ -171,6 +173,19 @@ public class DeckMenu {
             System.out.println("side deck is full!");
         else if (response.equals(DeckMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
+    }
+
+    public void showHelp() {
+        String help = "deck create <deckname>\n";
+        help += "deck set-activate <deckname>\n";
+        help += "deck add-card --card <card name> --deck <deck name> --side(optional)\n";
+        help += "deck rm-card --card <card name> --deck <deck name> --side(optional)\n";
+        help += "deck show --all\n";
+        help += "deck show --deck-name <deck name> --side(opttional)\n";
+        help += "deck show --cards\n";
+        help += "menu show-current\n";
+        help += "menu exit";
+        System.out.println(help);
     }
 
 }

@@ -3,6 +3,7 @@ package view.regexes;
 abstract public class ShopMenuRegexes {
     public static String[] shopShowCardsRegex = new String[2];
     public static final String shopCardRegex = "^shop buy (?<cardName>.+)$";
+    public static final String showHelp = "^help$";
 
     static {
         shopShowCardsRegex[0] = "^shop show --all$";

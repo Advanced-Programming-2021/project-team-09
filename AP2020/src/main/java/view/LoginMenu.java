@@ -30,6 +30,7 @@ public class LoginMenu {
                 login(command);
             else if (LoginMenuRegex.doesItCreateUserCommand(command))
                 createUser(command);
+            else if (command.matches(LoginMenuRegex.showHelp)) showHelp();
             else if (command.matches("exit menu"))
                 return;
             else respond(LoginMenuResponses.INVALID_COMMAND);
@@ -92,6 +93,13 @@ public class LoginMenu {
             parsedInfo.put("nickname", matcher.group("nickname"));
         }
         return parsedInfo;
+    }
+
+    public void showHelp() {
+        String help = "user create --username <username> --nickname <nickname> --password <password>\n";
+        help += "user login --username <username> --password <password>\n";
+        help += "menu show-current\n";
+        System.out.println(help);
     }
 
 }
