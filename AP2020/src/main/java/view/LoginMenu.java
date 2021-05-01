@@ -30,7 +30,8 @@ public class LoginMenu {
                 login(command);
             else if (LoginMenuRegex.doesItCreateUserCommand(command))
                 createUser(command);
-            else if (command.matches(LoginMenuRegex.showHelp)) showHelp();
+            else if (command.matches("help"))
+                showHelp();
             else if(command.matches("menu show-current"))
                 respond(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU);
             else if (command.matches("exit menu"))
@@ -46,8 +47,10 @@ public class LoginMenu {
         String password = data.get("password");
         LoginMenuResponses response = LoginMenuController.login(username, password);
         respond(response);
-        MainMenu mainMenu = MainMenu.getInstance(scanner);
-        mainMenu.run();
+        if (response.equals(LoginMenuResponses.USER_LOGIN_SUCCESSFUL)) {
+            MainMenu mainMenu = MainMenu.getInstance(scanner);
+            mainMenu.run();
+        }
     }
 
     private void createUser(String command) {

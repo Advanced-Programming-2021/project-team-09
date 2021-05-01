@@ -55,7 +55,7 @@ public class LoginMenuController {
                 setCurrentUser(username);
                 return LoginMenuResponses.USER_LOGIN_SUCCESSFUL;
             } else return LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH;
-        } else return LoginMenuResponses.THERE_IS_NOT_A_USER_WITH_THIS_USERNAME;
+        } else return LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH;
     }
 
 
