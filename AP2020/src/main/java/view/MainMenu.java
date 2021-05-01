@@ -28,6 +28,8 @@ public class MainMenu {
             command = scanner.nextLine().trim().toLowerCase();
             if (command.matches("^menu enter (?<menuName>\\w+)$"))
                 gotoMenu(command);
+            else if(command.matches("menu show-current"))
+                respond(MainMenuResponses.CURRENT_MENU_MAIN_MENU);
             else if (command.matches("logout")){
                 logout();
                 return;
@@ -51,7 +53,14 @@ public class MainMenu {
     }
 
     private void respond(MainMenuResponses response){
-
+        if(response.equals(MainMenuResponses.CURRENT_MENU_MAIN_MENU))
+            System.out.println("you are in main menu");
+        else if(response.equals(MainMenuResponses.INVALID_COMMAND))
+            System.out.println("invalid command!");
+        else if(response.equals(MainMenuResponses.INVALID_MENU))
+            System.out.println("menu navigation is not possible");
+        else if(response.equals(MainMenuResponses.LOGOUT_SUCCESSFUL))
+            System.out.println("user logged out successfully!");
     }
 
     private void shopMenu(){

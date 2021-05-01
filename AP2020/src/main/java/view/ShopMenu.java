@@ -31,6 +31,8 @@ public class ShopMenu {
                 buyCard(command);
             else if (command.matches(ShopMenuRegexes.showHelp))
                 showHelp();
+            else if (command.matches("menu show-current"))
+                respond(ShopMenuResponses.CURRENT_MENU_SHOP_MENU);
             else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
@@ -45,6 +47,8 @@ public class ShopMenu {
             System.out.println("card had been bought successfully!");
         else if (response.equals(ShopMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
+        else if (response.equals(ShopMenuResponses.CURRENT_MENU_SHOP_MENU))
+            System.out.println("you are in shop menu");
     }
 
     private void buyCard (String command) {
