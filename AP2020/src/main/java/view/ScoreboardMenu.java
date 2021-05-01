@@ -16,6 +16,8 @@ public class ScoreboardMenu {
                 return;
             else if (command.matches("show scoreboard"))
                 showScoreBoard();
+            else if (command.matches("menu show-current"))
+                System.out.println("you are in score board menu");
             else System.out.println("invalid command");
         }
     }

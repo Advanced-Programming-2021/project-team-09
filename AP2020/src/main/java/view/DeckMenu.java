@@ -53,6 +53,8 @@ public class DeckMenu {
                 removeCardFromSideDeck(command);
             else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
+            else if (command.matches("menu show-current"))
+                respond(DeckMenuResponses.CURRENT_MENU_DECK_MENU);
             else if (command.matches("exit menu"))
                 return;
             else respond(DeckMenuResponses.INVALID_COMMAND);
@@ -169,6 +171,8 @@ public class DeckMenu {
             System.out.println("main deck is full!");
         else if (response.equals(DeckMenuResponses.SIDE_DECK_IS_FULL))
             System.out.println("side deck is full!");
+        else if (response.equals(DeckMenuResponses.CURRENT_MENU_DECK_MENU))
+            System.out.println("you are in deck menu");
         else if (response.equals(DeckMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
     }

@@ -51,6 +51,8 @@ public class ProfileMenu {
                     command.matches(ProfileMenuRegex.changePasswordRegexType1Short) ||
                     command.matches(ProfileMenuRegex.changePasswordRegexType2Short))
                 changePassword(command);
+            else if (command.matches("menu show-current"))
+                respond(ProfileMenuResponses.CURRENT_MENU_PROFILE_MENU);
             else if (command.matches("exit menu"))
                 return;
             else respond(ProfileMenuResponses.INVALID_COMMAND);
@@ -70,6 +72,8 @@ public class ProfileMenu {
             System.out.println("nickname changed successfully!");
         else if (response.equals(ProfileMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
+        else if (response.equals(ProfileMenuResponses.CURRENT_MENU_PROFILE_MENU))
+            System.out.println("you are in profile menu");
     }
 
     public HashMap<String,String> getOldAndNewPassword(String command) {

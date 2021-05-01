@@ -5,4 +5,5 @@ public enum ShopMenuResponses {
     USER_HAS_NOT_ENOUGH_BALANCE,
     SUCCESSFUL,
     INVALID_COMMAND,
+    CURRENT_MENU_SHOP_MENU
 }
