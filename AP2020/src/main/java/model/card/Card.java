@@ -1,5 +1,20 @@
 package model.card;
 
+import model.card.monster.Monster;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+
+@JsonTypeInfo(use = Id.NAME)
+@JsonSubTypes({
+        @Type(name = "Monster",value = Monster.class),
+        @Type(name = "Spell",value = Spell.class),
+        @Type(name = "Trap",value = Trap.class),
+})
 
 public abstract class Card {
     protected String cardName;

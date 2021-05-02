@@ -2,22 +2,21 @@ package controller;
 
 import com.google.gson.Gson;
 import model.User;
+import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ReadAndWriteDataBase {
-    public  static final String usersAddr = "src/resources/Users/";
+    public static final String usersAddr = "src/resources/Users/";
 
     public static User getUser(String usersAddr) {
         FileReader fileReader = getUserFileByUserAddr(usersAddr);
         if (fileReader != null) {
-            Gson gson = new Gson();
-            User user = gson.fromJson(fileReader, User.class);
+            ObjectMapper mapper = new ObjectMapper();
+            User user;
             try {
+                user = mapper.readValue(fileReader,User.class);
                 fileReader.close();
             } catch (IOException e) {
                 return null;
@@ -26,12 +25,14 @@ public class ReadAndWriteDataBase {
         } else return null;
     }
 
-    public static void writeUserToUsersDirectory(User user){
+
+    public static void writeUserToUsersDirectory(User user) {
         try {
             FileWriter fileWriter = new FileWriter(usersAddr + user.getUsername() + ".json");
-            new Gson().toJson(user,fileWriter); // todo serialize nulls
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(fileWriter, user);
             fileWriter.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("ERROR 404"); // todo remove println in controller : mir
         }
     }
@@ -56,7 +57,7 @@ public class ReadAndWriteDataBase {
         return users;
     }
 
-    public static void updateUser(User user){
+    public static void updateUser(User user) {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
 
