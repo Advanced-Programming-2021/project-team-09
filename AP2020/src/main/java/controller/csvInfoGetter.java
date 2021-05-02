@@ -107,7 +107,7 @@ public class csvInfoGetter {
         for (String[] tempStringArray : temp) {
             for (String tempString : tempStringArray) {
                 if (tempString.equalsIgnoreCase(cardName)) {
-                    return Integer.parseInt(tempStringArray[7]);
+                    return Integer.parseInt(tempStringArray[8]);
                 }
             }
         }
@@ -169,13 +169,13 @@ public class csvInfoGetter {
         List<String[]> temp = readFromFile(monsterFileName);
         if (temp != null) {
             for (int i = 1; i < temp.size(); i++) {
-                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[7]);
+                outputArraylist.add(temp.get(i)[0]);
             }
         }
         temp = readFromFile(spellTrapFileName);
         if (temp != null) {
             for (int i = 1; i < temp.size(); i++) {
-                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[3]);
+                outputArraylist.add(temp.get(i)[0]);
             }
         }
         return outputArraylist;

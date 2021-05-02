@@ -63,7 +63,7 @@ public class MainMenu {
             System.out.println("user logged out successfully!");
     }
 
-    private void shopMenu(){
+    private void shop(){
         ShopMenu shopMenu = ShopMenu.getInstance(scanner);
         shopMenu.run();
     }

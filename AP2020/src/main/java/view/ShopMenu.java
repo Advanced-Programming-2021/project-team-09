@@ -24,7 +24,7 @@ public class ShopMenu {
     public void run(){
         String command;
         while (true){
-            command = scanner.nextLine().trim().toLowerCase();
+            command = scanner.nextLine().trim();
             if (ShopMenuRegexes.isItShowAllCards(command))
                 showAllCards();
             else if (command.matches(ShopMenuRegexes.shopCardRegex))
@@ -33,6 +33,9 @@ public class ShopMenu {
                 showHelp();
             else if (command.matches("menu show-current"))
                 respond(ShopMenuResponses.CURRENT_MENU_SHOP_MENU);
+            else if (command.matches("menu exit")) {
+                return;
+            }
             else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
