@@ -16,6 +16,7 @@ public class DeckMenuController {
         Deck tempDeck = user.getDeckByName(deckName);
         if (tempDeck != null) return DeckMenuResponses.DECK_ALREADY_EXISTS;
         user.createDeck(deckName);
+        ReadAndWriteDataBase.updateUser(user);
         return DeckMenuResponses.SUCCESSFUL;
     }
 
@@ -23,6 +24,7 @@ public class DeckMenuController {
         User user = LoginMenuController.getCurrentUser();
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         user.removeDeck(deckName);
+        ReadAndWriteDataBase.updateUser(user);
         return DeckMenuResponses.SUCCESSFUL;
     }
 
@@ -30,6 +32,7 @@ public class DeckMenuController {
         User user = LoginMenuController.getCurrentUser();
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         user.activeDeck(deckName);
+        ReadAndWriteDataBase.updateUser(user);
         return DeckMenuResponses.SUCCESSFUL;
     }
 
@@ -50,9 +53,9 @@ public class DeckMenuController {
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
         if (!deck.canAddCardByName(cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
-        primaryDeck.removeCard(cardName);
-        user.addCard(csvInfoGetter.getCardByName(cardName));
-        //ToDo bug!
+        Card card = user.removeCard(cardName);
+        primaryDeck.addCard(card);
+        ReadAndWriteDataBase.updateUser(user);
         return DeckMenuResponses.SUCCESSFUL;
     }
 
@@ -129,9 +132,10 @@ public class DeckMenuController {
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         if (!csvInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, primaryDeck.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
-        primaryDeck.removeCard(cardName);
-        user.addCard(csvInfoGetter.getCardByName(cardName));
-        return DeckMenuResponses.SUCCESSFUL; //ToDo
+        Card card = primaryDeck.removeCard(cardName);
+        user.addCard(card);
+        ReadAndWriteDataBase.updateUser(user);
+        return DeckMenuResponses.SUCCESSFUL;
     }
 
     private static String deckToString(Deck deck) {

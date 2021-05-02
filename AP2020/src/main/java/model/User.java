@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.card.Card;
 import model.deck.Deck;
 import controller.*;
@@ -28,7 +29,45 @@ public class User {
         this.decks = new ArrayList<>();
         activeDeck  = null;
     }
+    public User(){
 
+    }
+
+    public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck = activeDeck;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    public void setDecks(ArrayList<Deck> decks) {
+        this.decks = decks;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public ArrayList<Deck> getDecks(){
+        return decks;
+    }
     public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
     }
@@ -48,6 +87,20 @@ public class User {
 
     public void addCard(Card card) {
         cards.add(card);
+    }
+
+    public Card removeCard(String cardName){
+        Card card = getCardByName(cardName);
+        cards.remove(card);
+        return card;
+    }
+    @JsonIgnore
+    public Card getCardByName(String cardName) {
+        ArrayList<Card> cards = getCards();
+        for (Card card : cards) {
+            if (card.getCardName().equals(cardName)) return card;
+        }
+        return null;
     }
 
     public void createDeck(String deckName) {
@@ -133,6 +186,7 @@ public class User {
         return getDeckByName(deckName) != null;
     }
 
+    @JsonIgnore
     public ArrayList<Deck> getSortedDecks() {
         ArrayList<Deck> decks = (ArrayList<Deck>) this.decks.clone();
         decks.remove(activeDeck);
@@ -163,4 +217,5 @@ public class User {
     public ArrayList<Card> getCards() {
         return this.cards;
     }
+
 }

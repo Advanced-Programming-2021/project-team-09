@@ -1,28 +1,31 @@
 package controller;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import model.Board;
 import model.User;
-import org.codehaus.jackson.map.ObjectMapper;
+import model.card.Card;
+import model.card.monster.Monster;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ReadAndWriteDataBase {
     public static final String usersAddr = "src/resources/Users/";
 
     public static User getUser(String usersAddr) {
-        FileReader fileReader = getUserFileByUserAddr(usersAddr);
-        if (fileReader != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            User user;
-            try {
-                user = mapper.readValue(fileReader,User.class);
-                fileReader.close();
-            } catch (IOException e) {
-                return null;
-            }
-            return user;
-        } else return null;
+        File file = getUserFileByUserAddr(usersAddr);
+        ObjectMapper mapper = new ObjectMapper();
+        User user;
+        try {
+            user = mapper.readValue(file,User.class);
+        } catch (IOException e) {
+            return null;
+        }
+        return user;
     }
 
 
@@ -37,12 +40,8 @@ public class ReadAndWriteDataBase {
         }
     }
 
-    public static FileReader getUserFileByUserAddr(String userAddr) {
-        try {
-            return new FileReader(usersAddr + userAddr);
-        } catch (IOException e) {
-            return null;
-        }
+    public static File getUserFileByUserAddr(String userAddr) {
+        return new File(usersAddr + userAddr);
     }
 
     public static ArrayList<User> getAllUsers() {
@@ -60,5 +59,7 @@ public class ReadAndWriteDataBase {
     public static void updateUser(User user) {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
+
+
 
 }

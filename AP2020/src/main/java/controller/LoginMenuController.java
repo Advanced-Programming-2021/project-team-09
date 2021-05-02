@@ -3,6 +3,7 @@ package controller;
 import model.User;
 import view.responses.LoginMenuResponses;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,15 +12,13 @@ public class LoginMenuController {
     static User currentUser;
 
     public static boolean doesUsernameExists(String username) {
-        FileReader fileReader = ReadAndWriteDataBase.getUserFileByUserAddr(username + ".json");
-        if (fileReader != null) {
-            try {
-                fileReader.close();
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        } else return false;
+        try {
+            FileReader fileReader = new FileReader(ReadAndWriteDataBase.getUserFileByUserAddr(username + ".json"));
+            fileReader.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
 
     }
 

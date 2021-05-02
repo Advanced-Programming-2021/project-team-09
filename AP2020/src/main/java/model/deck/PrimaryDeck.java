@@ -1,5 +1,6 @@
 package model.deck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public abstract class PrimaryDeck {
         return cards.size() < maxCapacity;
     }
 
+    @JsonIgnore
     public int getCardCount(String cardName){
         int temp = 0;
         for (Card tempCard : cards) if (tempCard.getCardName().equals(cardName)) temp++;
@@ -64,6 +66,7 @@ public abstract class PrimaryDeck {
 
     public abstract String toString();
 
+    @JsonIgnore
     public boolean isValid() {
         if (cards.size() <= maxCapacity && cards.size() >= minCapacity) return true;
         return false;
@@ -98,10 +101,18 @@ public abstract class PrimaryDeck {
         cards.add(max, tempMin);
     }
 
+    @JsonIgnore
     public int getNumberOfAllCards() {
         return cards.size();
     }
 
 
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
 
 }
