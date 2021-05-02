@@ -17,7 +17,7 @@ public class DeckMenu {
         this.scanner = scanner;
     }
 
-    public static DeckMenu getDeckMenu(Scanner scanner) {
+    public static DeckMenu getInstance(Scanner scanner) {
         if (deckMenu == null) deckMenu = new DeckMenu(scanner);
         return deckMenu;
     }
@@ -53,7 +53,11 @@ public class DeckMenu {
                 removeCardFromSideDeck(command);
             else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
-            else if (command.matches("back"))
+            else if (command.matches(DeckMenuRegex.showHelp))
+                showHelp();
+            else if (command.matches("menu show-current"))
+                respond(DeckMenuResponses.CURRENT_MENU_DECK_MENU);
+            else if (command.matches("exit menu"))
                 return;
             else respond(DeckMenuResponses.INVALID_COMMAND);
         }
@@ -169,8 +173,23 @@ public class DeckMenu {
             System.out.println("main deck is full!");
         else if (response.equals(DeckMenuResponses.SIDE_DECK_IS_FULL))
             System.out.println("side deck is full!");
+        else if (response.equals(DeckMenuResponses.CURRENT_MENU_DECK_MENU))
+            System.out.println("you are in deck menu");
         else if (response.equals(DeckMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
+    }
+
+    public void showHelp() {
+        String help = "deck create <deckname>\n";
+        help += "deck set-activate <deckname>\n";
+        help += "deck add-card --card <card name> --deck <deck name> --side(optional)\n";
+        help += "deck rm-card --card <card name> --deck <deck name> --side(optional)\n";
+        help += "deck show --all\n";
+        help += "deck show --deck-name <deck name> --side(opttional)\n";
+        help += "deck show --cards\n";
+        help += "menu show-current\n";
+        help += "menu exit";
+        System.out.println(help);
     }
 
 }

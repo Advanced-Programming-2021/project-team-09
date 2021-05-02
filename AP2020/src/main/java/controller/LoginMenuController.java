@@ -32,36 +32,34 @@ public class LoginMenuController {
     }
 
     public static boolean isPasswordCorrect(String username, String password) {
-        if (doesUsernameExists(username)){
+        if (doesUsernameExists(username)) {
             User user = ReadAndWriteDataBase.getUser(username + ".json");
             return user.getPassword().equals(password);
         } else return false;
     }
 
 
-    public static LoginMenuResponses createUser(String username , String nickname, String password) {
+    public static LoginMenuResponses createUser(String username, String nickname, String password) {
         if (doesUsernameExists(username)) return LoginMenuResponses.USER_WITH_THIS_USERNAME_EXITS;
         else if (doesNicknameExists(nickname)) return LoginMenuResponses.USER_WITH_THIS_NICKNAME_EXITS;
         else {
-            User user = new User(username,password,nickname);
+            User user = new User(username, password, nickname);
             ReadAndWriteDataBase.writeUserToUsersDirectory(user);
             return LoginMenuResponses.USER_CREATED_SUCCESSFULLY;
         }
     }
 
-    public static LoginMenuResponses login(String username , String password){
+    public static LoginMenuResponses login(String username, String password) {
         if (doesUsernameExists(username)) {
             if (isPasswordCorrect(username, password)) {
                 setCurrentUser(username);
                 return LoginMenuResponses.USER_LOGIN_SUCCESSFUL;
             } else return LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH;
-        } else return LoginMenuResponses.THERE_IS_NOT_A_USER_WITH_THIS_USERNAME;
+        } else return LoginMenuResponses.PASSWORD_AND_USERNAME_DIDNT_MATCH;
     }
 
 
-
-
-    public static void logout(){
+    public static void logout() {
         currentUser = null;
     }
 
@@ -69,10 +67,7 @@ public class LoginMenuController {
         return currentUser;
     }
 
-    public static void setCurrentUser(String username){
-        currentUser = ReadAndWriteDataBase.getUser(username+".json");
-    }
-    public CurrentMenu showCurrentMenu(){
-        return CurrentMenu.LOGIN_MENU;
+    public static void setCurrentUser(String username) {
+        currentUser = ReadAndWriteDataBase.getUser(username + ".json");
     }
 }

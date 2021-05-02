@@ -1,37 +1,48 @@
 package view;
 
+import controller.ScoreboardController;
+
 import java.util.Scanner;
 
-import view.responses.ScoreboardMenuResponses;
 public class ScoreboardMenu {
-    private static ScoreboardMenu scoreboardMenu;
     private final Scanner scanner;
-    private String scoreboard;
-    private ScoreboardMenu(Scanner scanner){
-        this.scanner = scanner;
-    }
-    public static ScoreboardMenu getScoreboardMenu(Scanner scanner){
-        if(scoreboardMenu == null) scoreboardMenu = new ScoreboardMenu(scanner);
-        return scoreboardMenu;
-    }
+    private static ScoreboardMenu scoreboardMenu;
 
     public void run(){
         String command;
         while (true){
-            command = scanner.nextLine().trim();
-            if(command.matches("scoreboard show")) showScoreBoard();
-            else if(command.matches("back")) return;
-            else respond(ScoreboardMenuResponses.INVALID_COMMAND);
+            command = scanner.nextLine().trim().toLowerCase();
+            if (command.equals("exit menu"))
+                return;
+            else if (command.matches("show scoreboard"))
+                showScoreBoard();
+            else if (command.matches("help"))
+                showHelp();
+            else if (command.matches("menu show-current"))
+                System.out.println("you are in score board menu");
+            else System.out.println("invalid command");
         }
     }
-    public void showScoreBoard(){
-        //what the fuck is wrong with you??? //TODO
-        respond(ScoreboardMenuResponses.SHOWING_SCOREBOARD);
+
+    public static ScoreboardMenu getInstance(Scanner scanner){
+        if (scoreboardMenu == null) scoreboardMenu = new ScoreboardMenu(scanner);
+        return scoreboardMenu;
     }
 
-    public void respond(ScoreboardMenuResponses response){
-        if(response.equals(ScoreboardMenuResponses.INVALID_COMMAND)) System.out.println("invalid command!");
-        else if(response.equals(ScoreboardMenuResponses.SHOWING_SCOREBOARD))
-            System.out.println(scoreboard);
+    private ScoreboardMenu (Scanner scanner){
+        this.scanner = scanner;
     }
+
+    private void showScoreBoard(){
+        String scoreboard = ScoreboardController.getScoreBoard();
+        System.out.println(scoreboard);
+    }
+
+    public void showHelp() {
+        String help = "scoreboard show\n";
+        help += "menu show-current\n";
+        help += "menu exit";
+        System.out.println(help);
+    }
+
 }
