@@ -1,5 +1,6 @@
 package model.card;
 
+import model.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;
@@ -41,7 +42,9 @@ public abstract class Card {
     public boolean isTrap(){
         return cardType == CardType.TRAP;
     }
+    public void destroy(Game game){
 
+    }
     public abstract String toString();
 
 }

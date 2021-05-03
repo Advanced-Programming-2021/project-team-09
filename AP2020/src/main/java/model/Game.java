@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Game {
     private User player;
     private User rival;
+    private User winner;
     private Deck playerDeck;
     private Deck rivalDeck;
     private ArrayList<Card> playerHandCards;
@@ -16,12 +17,14 @@ public class Game {
     private int playerLifePoint;
     private int rivalLifePoint;
     private int phaseCounter;
+    private int roundCounter;
     private boolean canSummonCard;
     private Board playerBoard;
     private Board rivalBoard;
     private boolean canRivalActiveSpell;
 
     public Game(User player, User rival){
+        winner = null;
         this.player = player;
         this.rival = rival;
         playerDeck = (Deck)player.getActiveDeck().clone();
@@ -30,7 +33,6 @@ public class Game {
         rivalBoard = new Board();
     }
     public void changeTurn(){
-        //age ba temp moshkel dare mitonim ba wrapperClass swap konim;
         phaseCounter = 0;
         User tempUser;
         tempUser = player;
@@ -48,6 +50,8 @@ public class Game {
         tempDeck = playerDeck;
         playerDeck = rivalDeck;
         rivalDeck = tempDeck;
+
+        roundCounter++;
     }
     //todo board bayad User begire be nazaram!
     public void playerDrawCard(){
@@ -87,20 +91,23 @@ public class Game {
         return amount <= counter;
     }
     public void increaseHealth(int amount){
-        if(playerLifePoint + amount >= 8000) playerLifePoint = 8000;
-        else playerLifePoint+=amount;
+        playerLifePoint+=amount;
     }
     public void decreaseHealth(int amount){
-        //todo nabayad winner moshakhas konim??
-        if(playerLifePoint - amount <= 0) playerLifePoint = 0;
+        if(playerLifePoint - amount <= 0) {
+            playerLifePoint = 0;
+            setWinner(rival);
+        }
         else playerLifePoint -= amount;
     }
     public void increaseRivalHealth(int amount){
-        if (rivalLifePoint + amount >= 8000) rivalLifePoint = 8000;
-        else rivalLifePoint += amount;
+        rivalLifePoint += amount;
     }
     public void decreaseRivalHealth(int amount){
-        if (rivalLifePoint - amount <= 0) rivalLifePoint = 0;
+        if (rivalLifePoint - amount <= 0) {
+            rivalLifePoint = 0;
+            setWinner(player);
+        }
         else rivalLifePoint -= amount;
     }
     public String getGraveyardPlayer(){
@@ -109,11 +116,9 @@ public class Game {
     public String getGraveyardRival(){
         return rivalBoard.getGraveyard().toString();
     }
-    public void directAttack(int[] cellNumbers){
-        for (int i = 0; i < cellNumbers.length; i++) {
-            Monster tempMonster = (Monster) playerBoard.getMonsterZone(cellNumbers[i]).getCard();
-            decreaseRivalHealth(tempMonster.getAttack());
-        }
+    public void directAttack(int cellNumber){
+        Monster tempMonster = (Monster) playerBoard.getMonsterZone(cellNumber).getCard();
+        decreaseRivalHealth(tempMonster.getAttack());
     }
     public void changePhase(){
         phaseCounter++;
@@ -123,6 +128,27 @@ public class Game {
             if(card.equals(playerHandCards.get(i)))
                 playerHandCards.remove(i);
         }
+    }
+    public void summonMonster(Card card){
+        if(!isMonsterZoneFull()){
+            playerBoard.addCardToMonsterZone(card);
+        }
+    }
+    public void summonSpell(Card card){
+        if (!isSpellZoneFull()){
+            playerBoard.addCardToSpellZone(card);
+        }
+
+    }
+    public void setWinner(User user){
+        this.winner =user;
+    }
+    public boolean hasWinner(){
+        return winner!= null;
+    }
+    public User getWinner(){
+        if(hasWinner()) return winner;
+        else return null;
     }
     //todo methods!
     public void activeEffect(int cellNumber){
@@ -137,17 +163,11 @@ public class Game {
     public boolean canRitualSummon(){
         return false;
     }
-    public void attack(int numberOfAttackers, int numberOfDefenders){
+    public void attack(int numberOfAttackersCell, int numberOfDefendersCell){
 
     }
     public String showTable(){
         return null;
-    }
-    public void summonMonster(Card card){
-
-    }
-    public void summonSpell(Card card){
-
     }
     public boolean canSummon(){
         return false;
