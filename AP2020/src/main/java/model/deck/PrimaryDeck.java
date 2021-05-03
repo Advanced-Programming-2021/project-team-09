@@ -1,6 +1,8 @@
 package model.deck;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import model.User;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -8,13 +10,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
+
 public abstract class PrimaryDeck {
     protected ArrayList<Card> cards;
+    @JsonIgnore
     protected int maxCapacity;
+    @JsonIgnore
     protected int minCapacity;
+    @JsonIgnore
     protected String deckName;
 
     public boolean hasCapacity(){
+        if (cards == null) System.out.println("fik");
         return cards.size() < maxCapacity;
     }
 
@@ -64,7 +71,7 @@ public abstract class PrimaryDeck {
         return temp.toString();
     }
 
-    public abstract String toString();
+    public abstract String toString(String deckName);
 
     @JsonIgnore
     public boolean isValid() {
@@ -115,4 +122,7 @@ public abstract class PrimaryDeck {
         this.cards = cards;
     }
 
+    public String getDeckName() {
+        return deckName;
+    }
 }

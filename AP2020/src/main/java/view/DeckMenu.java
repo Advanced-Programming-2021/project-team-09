@@ -30,7 +30,7 @@ public class DeckMenu {
     public void run() {
         String command;
         while (true) {
-            command = scanner.nextLine().trim().toLowerCase();
+            command = scanner.nextLine().trim();
             if (command.matches(DeckMenuRegex.creatDeckRegex))
                 creatDeck(command);
             else if (command.matches(DeckMenuRegex.deleteDeckRegex))

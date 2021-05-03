@@ -38,7 +38,8 @@ public class DeckMenuController {
 
     public static DeckMenuResponses addCardToMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
-        return addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getMainDeck(), user.getDeckByName(deckName));
+        DeckMenuResponses response = DeckMenuController.addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getMainDeck(), user.getDeckByName(deckName));
+        return response;
     }
 
     public static DeckMenuResponses addCardToSideDeck(String deckName, String cardName) {
@@ -46,7 +47,7 @@ public class DeckMenuController {
         return addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getSideDeck(), user.getDeckByName(deckName));
     }
 
-    private static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
+    public static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
         User user = LoginMenuController.getCurrentUser();
         if (!csvInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
@@ -146,4 +147,11 @@ public class DeckMenuController {
         return outputString.toString();
     }
 
+    public static void main(String[] args) {
+        LoginMenuController.login("sia","1234");
+        User user = LoginMenuController.getCurrentUser();
+        Deck deck = user.getDeckByName("fave");
+        System.out.println(addCardToSideDeck("fave","Magnum Shield"));
+        System.out.println(addCardToDeck("fave","Magnum Shield",deck.getMainDeck(),deck));
+    }
 }

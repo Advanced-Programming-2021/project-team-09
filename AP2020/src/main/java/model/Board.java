@@ -25,8 +25,8 @@ public class Board {
         graveyard.addCard(card);
     }
 
-    public Card getCardFromDeck(){
-        return  null;//ToDo!
+    public Card drawCardFromMainDeck(){
+        return deck.getMainDeck().getCards().get(0);
     }
 
     public Card removeCardFromMonsterZone(Card card){

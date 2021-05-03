@@ -10,6 +10,10 @@ public class Graveyard extends PrimaryDeck {
 
     }
 
+    public String toString(String deckName) {
+        return null;
+    }
+
     public String toString() {
         if (cards.size() == 0) {
             return "Graveyard is Empty";
