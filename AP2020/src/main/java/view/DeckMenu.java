@@ -95,7 +95,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.addCardToMainDeck(cardName, deckName);
+            DeckMenuResponses response = DeckMenuController.addCardToMainDeck( deckName,cardName);
             respond(response);
         }
     }
@@ -105,7 +105,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.addCardToSideDeck(cardName, deckName);
+            DeckMenuResponses response = DeckMenuController.addCardToSideDeck(deckName, cardName);
             respond(response);
         }
     }
@@ -115,7 +115,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(cardName, deckName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(deckName,cardName);
             respond(response);
         }
     }
@@ -125,7 +125,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(cardName, deckName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(deckName,cardName);
             respond(response);
         }
     }
@@ -181,6 +181,7 @@ public class DeckMenu {
 
     public void showHelp() {
         String help = "deck create <deckname>\n";
+        help += "deck delete <deckname>\n";
         help += "deck set-activate <deckname>\n";
         help += "deck add-card --card <card name> --deck <deck name> --side(optional)\n";
         help += "deck rm-card --card <card name> --deck <deck name> --side(optional)\n";

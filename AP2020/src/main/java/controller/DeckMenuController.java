@@ -38,7 +38,9 @@ public class DeckMenuController {
 
     public static DeckMenuResponses addCardToMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
-        DeckMenuResponses response = DeckMenuController.addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getMainDeck(), user.getDeckByName(deckName));
+        PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
+        Deck deck = user.getDeckByName(deckName);
+        DeckMenuResponses response = DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck,deck);
         return response;
     }
 
