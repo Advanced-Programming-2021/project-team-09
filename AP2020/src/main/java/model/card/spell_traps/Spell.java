@@ -1,24 +1,28 @@
 package model.card.spell_traps;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import controller.*;
 import model.card.Card;
 import model.card.CardType;
 
 import java.util.ArrayList;
 
-
+@JsonIgnoreProperties({"description","cardType","cardID","spellType","limit"})
 public class Spell extends Card {
     private SpellType spellType;
     private Limitation limit;
 
-    public Spell(String spellName) {
-        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(spellName);
+    public Spell(String cardName) {
+        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(cardName);
         if (temp == null || temp.size() != 4) return;
         spellType = csvInfoGetter.getSpellType(temp.get(1));
-        cardName = spellName;
+        this.cardName = cardName;
         description = temp.get(2);
         limit = csvInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
+    }
+    public Spell(){
+
     }
 
     public Limitation getLimit(){

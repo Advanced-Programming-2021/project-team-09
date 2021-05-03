@@ -33,7 +33,7 @@ public class ProfileMenu {
     public void changeNickname(String command) {
         Matcher matcher = ProfileMenuRegex.getRightMatcherForChangeNickname(command);
         if (matcher.find()) {
-            String newNickname = matcher.group("nickName");
+            String newNickname = matcher.group("nickname");
             ProfileMenuResponses response = ProfileController.changeNickname(newNickname);
             respond(response);
         }

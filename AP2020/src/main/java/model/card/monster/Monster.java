@@ -1,9 +1,12 @@
 package model.card.monster;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import controller.*;
 import model.card.*;
 
 import java.util.ArrayList;
-
+@JsonIgnoreProperties ({"description","cardType","cardID","level","attack","permanentAttack","permanentDefense","defense","monsterEffectType","monsterType","monsterCardType","attribute","numberOfTributes"})
 public class Monster extends Card {
     protected int level;
     private int attack;
@@ -15,9 +18,9 @@ public class Monster extends Card {
     private MonsterCardType monsterCardType;
     private Attribute attribute;
 
-    public Monster(String monsterName){
-        ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(monsterName);
-        if (temp == null || temp.size() != 7){
+    public Monster(String cardName) {
+        ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(cardName);
+        if (temp == null || temp.size() != 7) {
             return;
         }
         level = Integer.parseInt(temp.get(0));
@@ -29,9 +32,12 @@ public class Monster extends Card {
         permanentAttack = attack;
         permanentDefense = defense;
         description = temp.get(6);
-        this.cardName = monsterName;
+        this.cardName = cardName;
         this.cardType = CardType.MONSTER;
-}
+    }
+
+    public Monster(){
+    }
 
     public int getNumberOfTributes() {
         if (level == 5 || level == 6) return 1;
@@ -39,11 +45,11 @@ public class Monster extends Card {
         return 0;
     }
 
-    public int getLevel(){
+    public int getLevel() {
         return this.level;
     }
 
-    public void increaseLevel(int level){ // todo bekar nemiad fek konam
+    public void increaseLevel(int level) { // todo bekar nemiad fek konam
         this.level += level;
     }
 
@@ -91,6 +97,7 @@ public class Monster extends Card {
         return this.attribute;
     }
 
+    @JsonIgnore
     public boolean isMonsterRitual() {
         return monsterCardType == MonsterCardType.RITUAL;
     }
@@ -99,15 +106,15 @@ public class Monster extends Card {
         return this.monsterEffectType != MonsterEffectType.NONE;
     }
 
-    public void setMonsterEffectType(MonsterEffectType monsterEffectType){
+    public void setMonsterEffectType(MonsterEffectType monsterEffectType) {
         this.monsterEffectType = monsterEffectType;
     }
 
-    public void setCardID(String cardID){
+    public void setCardID(String cardID) {
         this.cardID = cardID;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder temp = new StringBuilder();
         temp.append("Name: " + cardName + "\n");
         temp.append("Level: " + level + "\n");

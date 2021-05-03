@@ -1,47 +1,47 @@
 package controller;
 
-import com.google.gson.Gson;
-import model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import model.Board;
+import model.User;
+import model.card.Card;
+import model.card.monster.Monster;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
+
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ReadAndWriteDataBase {
-    public  static final String usersAddr = "src/resources/Users/";
+    public static final String usersAddr = "src/resources/Users/";
 
     public static User getUser(String usersAddr) {
-        FileReader fileReader = getUserFileByUserAddr(usersAddr);
-        if (fileReader != null) {
-            Gson gson = new Gson();
-            User user = gson.fromJson(fileReader, User.class);
-            try {
-                fileReader.close();
-            } catch (IOException e) {
-                return null;
-            }
-            return user;
-        } else return null;
+        File file = getUserFileByUserAddr(usersAddr);
+        ObjectMapper mapper = new ObjectMapper();
+        User user;
+        try {
+            user = mapper.readValue(file,User.class);
+        } catch (IOException e) {
+            return null;
+        }
+        return user;
     }
 
-    public static void writeUserToUsersDirectory(User user){
+
+    public static void writeUserToUsersDirectory(User user) {
         try {
             FileWriter fileWriter = new FileWriter(usersAddr + user.getUsername() + ".json");
-            new Gson().toJson(user,fileWriter); // todo serialize nulls
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(fileWriter, user);
             fileWriter.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("ERROR 404"); // todo remove println in controller : mir
         }
     }
 
-    public static FileReader getUserFileByUserAddr(String userAddr) {
-        try {
-            return new FileReader(usersAddr + userAddr);
-        } catch (IOException e) {
-            return null;
-        }
+    public static File getUserFileByUserAddr(String userAddr) {
+        return new File(usersAddr + userAddr);
     }
 
     public static ArrayList<User> getAllUsers() {
@@ -56,8 +56,10 @@ public class ReadAndWriteDataBase {
         return users;
     }
 
-    public static void updateUser(User user){
+    public static void updateUser(User user) {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
+
+
 
 }
