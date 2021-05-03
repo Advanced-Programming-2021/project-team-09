@@ -57,7 +57,7 @@ public class DeckMenu {
                 showHelp();
             else if (command.matches("menu show-current"))
                 respond(DeckMenuResponses.CURRENT_MENU_DECK_MENU);
-            else if (command.matches("exit menu"))
+            else if (command.matches("menu exit"))
                 return;
             else respond(DeckMenuResponses.INVALID_COMMAND);
         }
