@@ -81,4 +81,5 @@ public class Cell {
     public Boolean isSelected() {
         return isSelected;
     }
+
 }

@@ -27,6 +27,9 @@ public class Board {
     public Cell getMonsterZone(int cellNumber){
         return monsterZone[cellNumber];
     }
+    public Cell getSpellZone(int cellNumber){
+        return spellZone[cellNumber];
+    }
 
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {

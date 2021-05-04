@@ -38,23 +38,43 @@ public class Game {
 
     public void changeTurn(){
         phaseCounter = 0;
+
         User tempUser;
         tempUser = player;
         player = rival;
         rival = tempUser;
+        //increasing roundCounter in occupied cells
+        for (int i = 0; i < 5; i++) {
+            if (playerBoard.getMonsterZone(i).isOccupied())
+                playerBoard.getMonsterZone(i).increaseRoundCounter();
+            if (playerBoard.getSpellZone(i).isOccupied())
+                playerBoard.getSpellZone(i).increaseRoundCounter();
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (rivalBoard.getMonsterZone(i).isOccupied())
+                rivalBoard.getMonsterZone(i).increaseRoundCounter();
+            if (rivalBoard.getSpellZone(i).isOccupied())
+                rivalBoard.getSpellZone(i).increaseRoundCounter();
+        }
+
         Board tempBoard;
         tempBoard = playerBoard;
         playerBoard = rivalBoard;
         rivalBoard = tempBoard;
+
         ArrayList<Card> tempCard;
         tempCard = playerHandCards;
         playerHandCards = rivalHandCards;
         rivalHandCards = tempCard;
+
         Deck tempDeck;
         tempDeck = playerDeck;
         playerDeck = rivalDeck;
         rivalDeck = tempDeck;
+
         roundCounter++;
+
     }
     //todo board bayad User begire be nazaram!
 
@@ -157,6 +177,10 @@ public class Game {
         if(hasWinner()) return winner;
         else return null;
     }
+    public void ritualSummon(int handNumber, int spellZoneNumber) {
+        summonMonster(playerHandCards.get(handNumber));
+        playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
+    }
     //todo methods!
     public void activeEffect(int cellNumber){
 
@@ -174,7 +198,7 @@ public class Game {
 
     }
     public String showTable(){
-
+        return null;
     }
 
     public Graveyard getGraveyard() {
@@ -186,11 +210,6 @@ public class Game {
     public void summonWithTribute(Card card){
 
     }
-    public void ritualSummon(Card card) {
-
-    }
-
-
     public Board getPlayerBoard() {
         return playerBoard;
     }
@@ -229,6 +248,5 @@ public class Game {
 
     public Deck getRivalDeck() {
         return rivalDeck;
-
     }
 }
