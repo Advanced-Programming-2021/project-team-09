@@ -67,12 +67,14 @@ public class Game {
 
     public void playerDrawCard() {
         if (playerHasCapacityToDraw())
-            playerHandCards.add(playerBoard.drawCardFromMainDeck());
+            playerHandCards.add(playerDeck.getMainDeck().getCards().get(0));
     }
-
+    public void addCardToHand(Card card){
+        playerHandCards.add(card);
+    }
     public void rivalDrawCard() {
         if (rivalHasCapacityToDraw())
-            rivalHandCards.add(rivalBoard.drawCardFromMainDeck());
+            rivalHandCards.add(rivalDeck.getMainDeck().getCards().get(0));
     }
 
     public boolean playerHasCapacityToDraw() {

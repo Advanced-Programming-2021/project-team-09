@@ -10,7 +10,6 @@ public class Board {
     private Cell[] spellZone = new Cell[5];
     private Cell fieldZone = new Cell();
     private Graveyard graveyard = new Graveyard();
-    private Deck deck;
 
     public boolean isMonsterZoneFull() {
         for (int i = 0; i < 5; i++) {
@@ -46,9 +45,6 @@ public class Board {
         graveyard.addCard(card);
     }
 
-    public Card drawCardFromMainDeck() {
-        return deck.getMainDeck().getCards().get(0);
-    }
 
     public Card removeCardFromMonsterZone(Card card) {
         for (int i = 0; i < 5; i++) {

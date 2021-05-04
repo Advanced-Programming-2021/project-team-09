@@ -10,7 +10,9 @@ public class CardEffectsView {
         return 0;
     }
     static public void respond(CardEffectsResponses response) {
-
+    }
+    static public int getNumberOfCardInHand(){
+        return 0;
     }
     static public int[] getCellNumbers(int count) {
         return null;
