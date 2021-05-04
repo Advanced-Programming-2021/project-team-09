@@ -3,7 +3,7 @@ package model.card.spell_traps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import controller.*;
 import model.card.Card;
-import model.card.CardType;
+import model.card.MonsterCardType;
 
 import java.util.ArrayList;
 @JsonIgnoreProperties({"description","cardType","cardID","trapType","limit"})
@@ -18,7 +18,7 @@ public class Trap extends Card {
         this.cardName = cardName;
         description = temp.get(2);
         limit = csvInfoGetter.getLimitation(temp.get(3));
-        cardType = CardType.TRAP;
+        cardType = MonsterCardType.TRAP;
     }
 
     public Trap(){
