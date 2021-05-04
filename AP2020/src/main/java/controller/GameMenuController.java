@@ -10,6 +10,7 @@ import model.card.monster.Monster;
 import model.deck.MainDeck;
 import view.responses.GameMenuResponses;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -116,6 +117,7 @@ public class GameMenuController {
         return tempCards.get(cardNumber - 1);
     }
 
+
     public GameMenuResponses summonStatus(int cardNumberInHand) {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1) return GameMenuResponses.INVALID_SELECTION;
@@ -130,6 +132,11 @@ public class GameMenuController {
         // todo more conditions
     }
 
+    private boolean canNormalSummon(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.NORMAL_SUMMON) return true;
+        return false;
+    }
+
     private GameMenuResponses canTributeSummon(Monster monster) {
         Cell[] monsterCells = game.getPlayerBoard().getMonsterZone();
         int numMonsters = 0;
@@ -139,6 +146,7 @@ public class GameMenuController {
         else
             return numMonsters >= 1 ? GameMenuResponses.SUCCESSFUL : GameMenuResponses.NOT_ENOUGH_MONSTERS;
     }
+
 
 
     public GameMenuResponses attackStatus(int cellNumberAttacker, int cellNumberDefender) {
@@ -160,6 +168,7 @@ public class GameMenuController {
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : cells) if (!cell.isOccupied()) return GameMenuResponses.NO_MONSTER_ON_THIS_ADDRESS;
         return GameMenuResponses.SUCCESSFUL;
+
     }
 
     public void tribute(int[] cellNumbers) {

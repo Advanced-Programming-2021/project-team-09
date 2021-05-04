@@ -6,5 +6,4 @@ public enum CardFeatures {
     SUMMON_EFFECT,
     FLIP_EFFECT,
 
-
 }

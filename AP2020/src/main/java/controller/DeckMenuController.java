@@ -149,11 +149,4 @@ public class DeckMenuController {
         return outputString.toString();
     }
 
-    public static void main(String[] args) {
-        LoginMenuController.login("sia","1234");
-        User user = LoginMenuController.getCurrentUser();
-        Deck deck = user.getDeckByName("fave");
-        System.out.println(addCardToSideDeck("fave","Magnum Shield"));
-        System.out.println(addCardToDeck("fave","Magnum Shield",deck.getMainDeck(),deck));
-    }
 }

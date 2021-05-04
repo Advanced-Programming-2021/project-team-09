@@ -17,7 +17,4 @@ public enum GameMenuResponses {
     CANT_FLIP_SUMMON,
     ALREADY_ATTACKED,
 
-
-
-
 }
