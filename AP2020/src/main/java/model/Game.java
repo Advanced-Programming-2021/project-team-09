@@ -24,14 +24,17 @@ public class Game {
     private Board playerBoard;
     private Board rivalBoard;
     private boolean canRivalActiveSpell;
-    private ArrayList<EffectLimitations> limitations;
+    private Limits playerLimits;
+    private Limits rivalLimits;
 
     public Game(User player, User rival) throws CloneNotSupportedException {
         winner = null;
         this.player = player;
         this.rival = rival;
-        playerDeck = (Deck)player.getActiveDeck().clone();
-        rivalDeck = (Deck)rival.getActiveDeck().clone();
+        //playerDeck = (Deck)player.getActiveDeck().clone();
+        //rivalDeck = (Deck)rival.getActiveDeck().clone();
+        playerLimits = new Limits();
+        rivalLimits = new Limits();
         playerBoard = new Board();
         rivalBoard = new Board();
     }
@@ -73,6 +76,10 @@ public class Game {
         playerDeck = rivalDeck;
         rivalDeck = tempDeck;
 
+        Limits tempLimits;
+        tempLimits = playerLimits;
+        playerLimits = rivalLimits;
+        rivalLimits = tempLimits;
         roundCounter++;
 
     }
@@ -219,6 +226,7 @@ public class Game {
         table.append("\n");
         table.append(player.getNickname()).append(":").append(playerLP);
         return table.toString();
+        return null;
     }
 
     private String monsterStateToString(Cell cell) {
@@ -344,5 +352,13 @@ public class Game {
 
     public void summonWithTribute(Card card){
 
+    }
+
+    public Limits getPlayerLimits() {
+        return playerLimits;
+    }
+
+    public Limits getRivalLimits() {
+        return rivalLimits;
     }
 }

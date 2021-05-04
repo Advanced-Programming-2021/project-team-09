@@ -6,4 +6,8 @@ public enum GameMenuResponses {
     SUCCESSFUL,
     CARD_IS_HIDDEN,
     NO_CARD_IS_SELECTED,
+    SPELL_ZONE_IS_FULL,
+    MONSTER_ZONE_IS_FULL,
+    NOT_ENOUGH_MONSTERS,
+
 }

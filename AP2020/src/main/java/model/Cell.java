@@ -6,13 +6,11 @@ public class Cell {
     private Card card;
     private State state;
     private int roundCounter;
-    private boolean isSelected;
 
     public Cell() {
         card = null;
         state = null;
         roundCounter = 0;
-        isSelected = false;
     }
 
     public boolean isOccupied() {
