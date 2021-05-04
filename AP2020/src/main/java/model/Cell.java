@@ -6,6 +6,8 @@ public class Cell {
     private Card card;
     private State state;
     private int roundCounter;
+    private boolean changedPosition;
+    private boolean canAttack;// for monster cards
 
     public Cell() {
         card = null;
@@ -26,7 +28,9 @@ public class Cell {
     }
     public void addCard(Card card) {
         this.card = card;
-    } // todo state hichvaqt dorost nemishe
+        changedPosition = false;
+        roundCounter++;
+    }
 
     public Card getCard() {
         return this.card;
@@ -63,5 +67,23 @@ public class Cell {
     public void setState(State state) {
         this.state = state;
     }
+
+    public boolean isChangedPosition() {
+        return changedPosition;
+    }
+
+    public void setChangedPosition(boolean changedPosition) {
+        this.changedPosition = changedPosition;
+    }
+
+    public void setCanAttack(boolean canAttack) {
+        this.canAttack = canAttack;
+    }
+
+    public boolean canAttack() {
+        return canAttack;
+    }
+
+
 
 }
