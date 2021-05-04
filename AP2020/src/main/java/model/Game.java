@@ -1,3 +1,4 @@
+
 package model;
 
 import model.card.Card;
@@ -15,8 +16,8 @@ public class Game {
     private Deck rivalDeck;
     private ArrayList<Card> playerHandCards;
     private ArrayList<Card> rivalHandCards;
-    private int playerLifePoint;
-    private int rivalLifePoint;
+    private int playerLP;
+    private int rivalLP;
     private int phaseCounter;
     private int roundCounter;
     private boolean canSummonCard;
@@ -92,24 +93,24 @@ public class Game {
         return amount <= counter;
     }
     public void increaseHealth(int amount){
-        playerLifePoint+=amount;
+        playerLP +=amount;
     }
     public void decreaseHealth(int amount){
-        if(playerLifePoint - amount <= 0) {
-            playerLifePoint = 0;
+        if(playerLP - amount <= 0) {
+            playerLP = 0;
             setWinner(rival);
         }
-        else playerLifePoint -= amount;
+        else playerLP -= amount;
     }
     public void increaseRivalHealth(int amount){
-        rivalLifePoint += amount;
+        rivalLP += amount;
     }
     public void decreaseRivalHealth(int amount){
-        if (rivalLifePoint - amount <= 0) {
-            rivalLifePoint = 0;
+        if (rivalLP - amount <= 0) {
+            rivalLP = 0;
             setWinner(player);
         }
-        else rivalLifePoint -= amount;
+        else rivalLP -= amount;
     }
     public String getGraveyardPlayer(){
         return playerBoard.getGraveyard().toString();
@@ -210,7 +211,49 @@ public class Game {
     public void summonWithTribute(Card card){
 
     }
-    public void ritualSummon(Card card){
+    public void ritualSummon(Card card) {
+
+    }
+
+
+    public Board getPlayerBoard() {
+        return playerBoard;
+    }
+
+    public Board getRivalBoard() {
+        return rivalBoard;
+    }
+
+    public User getPlayer() {
+        return player;
+    }
+
+    public User getRival () {
+        return rival;
+    }
+
+    public int getRivalLP() {
+        return rivalLP;
+    }
+
+    public int getPlayerLP() {
+        return playerLP;
+    }
+
+    public ArrayList<Card> getPlayerHandCards() {
+        return playerHandCards;
+    }
+
+    public ArrayList<Card> getRivalHandCards() {
+        return rivalHandCards;
+    }
+
+    public Deck getPlayerDeck() {
+        return playerDeck;
+    }
+
+    public Deck getRivalDeck() {
+        return rivalDeck;
 
     }
 }

@@ -27,9 +27,7 @@ public class Board {
     public Cell getMonsterZone(int cellNumber){
         return monsterZone[cellNumber];
     }
-    public Graveyard getGraveyard(){
-        return  this.graveyard;
-    }
+
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if(!monsterZone[i].isOccupied() && monsterZone[i].getCard().isMonster()) monsterZone[i].addCard(card);
@@ -92,5 +90,21 @@ public class Board {
             sumLevel += monster.getLevel();
         }
         return sumLevel;
+    }
+
+    public Cell[] getMonsterZone() {
+        return monsterZone;
+    }
+
+    public Cell[] getSpellZone() {
+        return spellZone;
+    }
+
+    public Graveyard getGraveyard() {
+        return this.graveyard;
+    }
+
+    public Cell getFieldZone() {
+        return fieldZone;
     }
 }
