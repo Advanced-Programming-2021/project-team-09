@@ -177,26 +177,6 @@ public class Game {
         if(hasWinner()) return winner;
         else return null;
     }
-    public void ritualSummon(int handNumber, int spellZoneNumber) {
-        summonMonster(playerHandCards.get(handNumber));
-        playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
-    }
-    //todo methods!
-    public void activeEffect(int cellNumber){
-
-    }
-    public void activeEffectRival(int cellNumber){
-
-    }
-    public boolean canRivalActiveSpell(){
-        return false;
-    }
-    public boolean canRitualSummon(){
-        return false;
-    }
-    public void attack(int numberOfAttackersCell, int numberOfDefendersCell){
-
-    }
     public String showTable(){
         StringBuilder table = new StringBuilder();
         table.append(rival.getNickname()).append(":").append(rivalLP).append("\n");
@@ -249,15 +229,6 @@ public class Game {
         return "DH  ";
     }
 
-    public Graveyard getGraveyard() {
-        return null;
-    }
-    public boolean canSummon(){
-        return false;
-    }
-    public void summonWithTribute(Card card){
-
-    }
     public Board getPlayerBoard() {
         return playerBoard;
     }
@@ -296,5 +267,82 @@ public class Game {
 
     public Deck getRivalDeck() {
         return rivalDeck;
+    }
+
+    public void ritualSummon(int handNumber, int spellZoneNumber) {
+        if(canRitualSummon(handNumber, spellZoneNumber)){
+        summonMonster(playerHandCards.get(handNumber));
+        playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
+        }
+    }
+
+    public boolean canRitualSummon(int handNumber, int spellZoneNumber){
+        return playerHandCards.get(handNumber) != null && playerBoard.getSpellZone(spellZoneNumber).isOccupied();
+    }
+    public void attack(int numberOfAttackersCell, int numberOfDefendersCell){
+        Monster playerMonster = (Monster) playerBoard.getMonsterZone(numberOfAttackersCell).getCard();
+        Monster rivalMonster = (Monster) rivalBoard.getMonsterZone(numberOfDefendersCell).getCard();
+        State rivalCardState = rivalBoard.getMonsterZone(numberOfDefendersCell).getState();
+        int playerMonsterAttack = playerMonster.getAttack();
+        int rivalMonsterAttack = rivalMonster.getAttack();
+        int rivalMonsterDefence = rivalMonster.getDefense();
+        if(rivalCardState.equals(State.FACE_UP_ATTACK)){
+            if(playerMonsterAttack > rivalMonsterAttack){
+                decreaseRivalHealth(playerMonsterAttack - rivalMonsterAttack);
+                rivalBoard.removeCardFromMonsterZone(rivalMonster);
+            }
+            else if(playerMonsterAttack == rivalMonsterAttack){
+                //nothing happens
+            }
+            else {
+                decreaseHealth(rivalMonsterAttack - playerMonsterAttack);
+                playerBoard.removeCardFromMonsterZone(playerMonster);
+            }
+        }
+        else if(rivalCardState.equals(State.FACE_UP_DEFENCE)){
+            if(playerMonsterAttack > rivalMonsterDefence){
+                //destroy happens, we dont have any method for that yet!!
+            }
+            else if(playerMonsterAttack == rivalMonsterDefence){
+                //nothing happens
+            }
+            else{
+                decreaseHealth(rivalMonsterDefence - playerMonsterAttack);
+            }
+        }
+        else if (rivalCardState.equals(State.FACE_DOWN_DEFENCE)){
+            //same as DO just different RESPONSES!!
+            if(playerMonsterAttack > rivalMonsterDefence){
+                //destroy happens, we dont have any method for that yet!!
+            }
+            else if(playerMonsterAttack == rivalMonsterDefence){
+                //nothing happens
+            }
+            else{
+                decreaseHealth(rivalMonsterDefence - playerMonsterAttack);
+            }
+        }
+    }
+    //todo methods!
+
+    public void activeEffect(int cellNumber){
+
+    }
+    public void activeEffectRival(int cellNumber){
+
+    }
+    public boolean canRivalActiveSpell(){
+        return false;
+    }
+
+    public Graveyard getGraveyard() {
+        return null;
+    }
+    public boolean canSummon(){
+        return false;
+    }
+
+    public void summonWithTribute(Card card){
+
     }
 }
