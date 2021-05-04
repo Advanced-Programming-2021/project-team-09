@@ -13,8 +13,8 @@ public class MonsterEffectController {
         if (doesCardBelongsToPlayer(game,card)) limits = game.getPlayerLimits();
         else limits = game.getRivalLimits();
         limits.increaseATKAddition(400);
-        int 
-
+        int cellNumber = getCellNumberOfMonster(game,card);
+        limits.banAttackingToCell(cellNumber);
     }
 
     public void BattleOX(){

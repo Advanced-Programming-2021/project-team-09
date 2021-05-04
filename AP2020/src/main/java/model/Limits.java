@@ -20,6 +20,7 @@ public class Limits {
     HashMap<MonsterCardType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
 
+
     public void addLimit(EffectLimitations limitation) {
         limitations.add(limitation);
     }

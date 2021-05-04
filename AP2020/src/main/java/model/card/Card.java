@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
+import model.EffectLimitations;
 import model.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;
+
+import java.util.ArrayList;
 
 @JsonTypeInfo(use = Id.NAME)
 @JsonSubTypes({
@@ -22,6 +25,13 @@ public abstract class Card {
     protected String description;
     protected MonsterCardType cardType;
     protected String cardID;
+    protected ArrayList<CardFeatures> features = new ArrayList<>();
+
+
+    @JsonIgnore
+    public ArrayList<CardFeatures> getFeatures() {
+        return features;
+    }
 
     @JsonIgnore
     public String getDescription(){
