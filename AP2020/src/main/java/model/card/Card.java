@@ -64,6 +64,14 @@ public abstract class Card {
     public void destroy(Game game){
 
     }
+
+    public void activeEffect(Game game) {
+
+    }
+
     public abstract String toString();
 
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+    }
 }

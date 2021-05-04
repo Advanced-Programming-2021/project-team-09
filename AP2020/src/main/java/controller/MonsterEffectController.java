@@ -1,10 +1,9 @@
 package controller;
 
-import model.Board;
-import model.Cell;
-import model.Game;
-import model.Limits;
+import model.*;
 import model.card.Card;
+import model.card.monster.Monster;
+import model.card.monster.MonsterEffectType;
 import model.deck.Graveyard;
 import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
@@ -98,61 +97,73 @@ public class MonsterEffectController {
 
     public void ManEaterBug(Game game, Card card) {
         Board board;
-        if (doesCardBelongsToPlayer(game,card)) board = game.getRivalBoard();
+        if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
         else board = game.getPlayerBoard();
-
-        int cellNumber = CardEffectsView.getCellNumber() - 1;
-        if (!isCellNumberValid(cellNumber)) CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-        else {
-            Cell cell = board.getMonsterZone(cellNumber);
-            if (cell.isOccupied()) {
-                board.removeCardFromMonsterZone(cell.getCard());
-            } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+        while (true) {
+            int cellNumber = CardEffectsView.getCellNumber() - 1;
+            if (!isCellNumberValid(cellNumber)) CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+            else {
+                Cell cell = board.getMonsterZone(cellNumber);
+                if (cell.isOccupied()) {
+                    board.removeCardFromMonsterZone(cell.getCard());
+                    return;
+                } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+            }
         }
     }
 
-    public void GateGuardian(Game game,Card card) {
+    public void GateGuardian(Game game, Card card) {
         Board board;
-        if (doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
-        int[] cellNumbers = CardEffectsView.getCellNumbers(3);
-        if (isCellNumberValid(cellNumbers[0]) &&
-            isCellNumberValid(cellNumbers[1]) &&
-            isCellNumberValid(cellNumbers[2])) {
-            Cell[] cells = new Cell[3];
-            cells[0] = board.getMonsterZone(cellNumbers[0]);
-            cells[1] = board.getMonsterZone(cellNumbers[1]);
-            cells[2] = board.getMonsterZone(cellNumbers[2]);
-            if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
-                for (int i =0 ; i < cells.length; ++i) {
-                    board.removeCardFromMonsterZone(cells[i].getCard());
-                    board.addCardToMonsterZone(card);
-                }
-            }
+        while (true) {
+            int[] cellNumbers = CardEffectsView.getCellNumbers(3);
+            if (isCellNumberValid(cellNumbers[0]) &&
+                    isCellNumberValid(cellNumbers[1]) &&
+                    isCellNumberValid(cellNumbers[2])) {
+                Cell[] cells = new Cell[3];
+                cells[0] = board.getMonsterZone(cellNumbers[0]);
+                cells[1] = board.getMonsterZone(cellNumbers[1]);
+                cells[2] = board.getMonsterZone(cellNumbers[2]);
+                if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
+                    for (int i = 0; i < cells.length; ++i) {
+                        board.removeCardFromMonsterZone(cells[i].getCard());
+                        board.addCardToMonsterZone(card);
+                    }
+                    return;
+                } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+            } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
         }
     }
 
     public void Scanner(Game game, Card card) {
         Board board;
-        if (doesCardBelongsToPlayer(game,card)) board = game.getRivalBoard();
+        if (!card.getCardName().equals("Scanner")) card.destroy(game);
+        if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
         else board = game.getPlayerBoard();
         Graveyard graveyard = board.getGraveyard();
-        Card card1 = CardEffectsView.getCarFromGraveyard(graveyard);
-        if (card1 == null) return;
-        
-
+        Card card1;
+        while (true) {
+            card1 = CardEffectsView.getCarFromGraveyard(graveyard);
+            if (card1 == null) return;
+            else if (!(card1 instanceof Monster)) CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+            else break;
+        }
+        Monster monster = (Monster) card;
+        Monster monster1 = (Monster) card1;
+        DuplicateMonster(monster, monster1);
+        if (getStateOfCard(game,card).equals(State.FACE_UP_ATTACK) || getStateOfCard(game,card).equals(State.FACE_UP_DEFENCE)) {
+            if (monster.getMonsterEffectType().equals(MonsterEffectType.CONTINUOUS)) monster.activeEffect(game);
+        }
     }
 
-    public void Bitron() {
-
-    }
 
     public void Marshmallon() {
 
     }
 
     public void BeastKingBarbaros() {
-
+        
     }
 
     public void Texchanger() {
@@ -227,7 +238,7 @@ public class MonsterEffectController {
         for (Cell cell : cells) {
             if (cell.getCard().equals(card)) return true;
         }
-        for(Card card1 : game.getPlayerHandCards()) {
+        for (Card card1 : game.getPlayerHandCards()) {
             if (card1.equals(card)) return true;
         }
         return false;
@@ -235,6 +246,30 @@ public class MonsterEffectController {
 
     public boolean isCellNumberValid(int cellNumber) {
         return cellNumber >= 0 && cellNumber < 5;
+    }
+
+    public State getStateOfCard(Game game, Card card) {
+        State state;
+        Board board;
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
+        else board = game.getRivalBoard();
+        for (Cell cell : board.getMonsterZone()) {
+            if (cell.getCard().equals(card)) return cell.getState();
+        }
+        for (Cell cell : board.getSpellZone()) {
+            if (cell.getCard().equals(card)) return cell.getState();
+        }
+        return null;
+    }
+
+    private void DuplicateMonster(Monster monster, Monster originalMonster) {
+        monster.setMonsterEffectType(originalMonster.getMonsterEffectType());
+        monster.setMonsterType(originalMonster.getMonsterType());
+        monster.setAttack(originalMonster.getAttack());
+        monster.setDefense(originalMonster.getDefense());
+        monster.setLevel(originalMonster.getLevel());
+        monster.setMonsterCardType(originalMonster.getMonsterCardType());
+        monster.setCardName(originalMonster.getCardName());
     }
 
 }
