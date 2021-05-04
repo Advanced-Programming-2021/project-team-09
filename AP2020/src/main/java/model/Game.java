@@ -3,6 +3,7 @@ package model;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.deck.Deck;
+import model.deck.Graveyard;
 
 import java.util.ArrayList;
 
@@ -167,6 +168,40 @@ public class Game {
 
     }
     public String showTable(){
+
+    public void decreaseHealth(int amount) {
+
+    }
+
+    public void increaseRivalHealth(int amount) {
+
+    }
+
+    public void decreaseRivalHealth(int amount) {
+
+    }
+
+    public void activeEffect(int cellNumber) {
+
+    }
+
+    public void activeEffectRival(int cellNumber) {
+
+    }
+
+    public boolean canRivalActiveSpell() {
+        return false;
+    }
+
+    public void changePhase() {
+
+    }
+
+    public boolean canRitualSummon() {
+        return false;
+    }
+
+    public Graveyard getGraveyard() {
         return null;
     }
     public boolean canSummon(){
