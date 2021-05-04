@@ -1,101 +1,215 @@
 package model;
 
 import model.card.Card;
+import model.card.monster.Monster;
 import model.deck.Deck;
 
 import java.util.ArrayList;
 
 public class Game {
-    User player;
-    User rival;
-    Deck playerDeck;
-    Deck rivalPlayer;
-    ArrayList<Card> playersHandCards;
-    ArrayList<Card> rivalsHandCards;
-    int playerLP;
-    int rivalLP;
-    int phaseCounter;
-    boolean canSummonCard;
-    boolean canRivalActiveSpell;
-    Board playerBoard;
-    Board rivalBoard;
-    public void playerDrawCard() {
 
+    private User player;
+    private User rival;
+    private User winner;
+    private Deck playerDeck;
+    private Deck rivalDeck;
+    private ArrayList<Card> playerHandCards;
+    private ArrayList<Card> rivalHandCards;
+    private int playerLifePoint;
+    private int rivalLifePoint;
+    private int phaseCounter;
+    private int roundCounter;
+    private boolean canSummonCard;
+    private Board playerBoard;
+    private Board rivalBoard;
+    private boolean canRivalActiveSpell;
+
+    public Game(User player, User rival) {
+        winner = null;
+        this.player = player;
+        this.rival = rival;
+        playerDeck = (Deck) player.getActiveDeck().clone();
+        rivalDeck = (Deck) rival.getActiveDeck().clone();
+        playerBoard = new Board();
+        rivalBoard = new Board();
+    }
+
+    public void changeTurn() {
+        phaseCounter = 0;
+        User tempUser;
+        tempUser = player;
+        player = rival;
+        rival = tempUser;
+        Board tempBoard;
+        tempBoard = playerBoard;
+        playerBoard = rivalBoard;
+        rivalBoard = tempBoard;
+        ArrayList<Card> tempCard;
+        tempCard = playerHandCards;
+        playerHandCards = rivalHandCards;
+        rivalHandCards = tempCard;
+        Deck tempDeck;
+        tempDeck = playerDeck;
+        playerDeck = rivalDeck;
+        rivalDeck = tempDeck;
+
+        roundCounter++;
+    }
+
+    //todo board bayad User begire be nazaram!
+    public void playerDrawCard() {
+        if (playerHasCapacityToDraw())
+            playerHandCards.add(playerBoard.drawCardFromMainDeck());
     }
 
     public void rivalDrawCard() {
-
+        if (rivalHasCapacityToDraw())
+            rivalHandCards.add(rivalBoard.drawCardFromMainDeck());
     }
-    public void changeTurn() {
 
+    public boolean playerHasCapacityToDraw() {
+        return getNumberOfCardsInHand() < 5;
     }
+
+    public boolean rivalHasCapacityToDraw() {
+        return getNumberOfCardsInHandFromRival() < 5;
+    }
+
     public int getNumberOfCardsInHand() {
-        return 0;
+        return playerHandCards.size();
     }
-    public int getNumberOfCardsInHandRival() {
-        return 0;
+
+    public int getNumberOfCardsInHandFromRival() {
+        return rivalHandCards.size();
     }
-    public boolean hasCapacityToDraw() {
-        return true;
+
+    public boolean isMonsterZoneFull() {
+        return playerBoard.isMonsterZoneFull();
     }
-   public boolean isMonsterZoneFull() {
-        return true;
+
+    public boolean isSpellZoneFull() {
+        return playerBoard.isSpellZoneFull();
     }
-   public boolean isSpellZoneFull() {
-        return true;
+
+    public void changePosition(State state, int cellNumber) {
+        playerBoard.getMonsterZone(cellNumber).setState(state);
     }
+
     public boolean isThereEnoughMonstersToTribute(int amount) {
-        return true;
+        int counter = 0;
+        for (int i = 0; i < 5; i++) {
+            if (playerBoard.getMonsterZone(i).isOccupied()) counter++;
+        }
+        return amount <= counter;
     }
+
+    public void increaseHealth(int amount) {
+        playerLifePoint += amount;
+    }
+
+    public void decreaseHealth(int amount) {
+        if (playerLifePoint - amount <= 0) {
+            playerLifePoint = 0;
+            setWinner(rival);
+        } else playerLifePoint -= amount;
+    }
+
+    public void increaseRivalHealth(int amount) {
+        rivalLifePoint += amount;
+    }
+
+    public void decreaseRivalHealth(int amount) {
+        if (rivalLifePoint - amount <= 0) {
+            rivalLifePoint = 0;
+            setWinner(player);
+        } else rivalLifePoint -= amount;
+    }
+
+    public String getGraveyardPlayer() {
+        return playerBoard.getGraveyard().toString();
+    }
+
+    public String getGraveyardRival() {
+        return rivalBoard.getGraveyard().toString();
+    }
+
+    public void directAttack(int cellNumber) {
+        Monster tempMonster = (Monster) playerBoard.getMonsterZone(cellNumber).getCard();
+        decreaseRivalHealth(tempMonster.getAttack());
+    }
+
+    public void changePhase() {
+        phaseCounter++;
+    }
+
+    public void removeCardFromPlayerHand(Card card) {
+        for (int i = 0; i < 5; i++) {
+            if (card.equals(playerHandCards.get(i)))
+                playerHandCards.remove(i);
+        }
+    }
+
     public void summonMonster(Card card) {
-
+        if (!isMonsterZoneFull()) {
+            playerBoard.addCardToMonsterZone(card);
+        }
     }
+
     public void summonSpell(Card card) {
-
-    }
-    public boolean canSummon() {
-        return false;
-    }
-    public void summonWithTribute(Card card) {
-
-    }
-    public void ritualSummon (Card card) {
+        if (!isSpellZoneFull()) {
+            playerBoard.addCardToSpellZone(card);
+        }
 
     }
 
-    public void changePosition (State state, int cellNumber) {
-
-    }
-    public void attack (int numberOfAttacker, int numberOfDefender) {
-
+    public void setWinner(User user) {
+        this.winner = user;
     }
 
-    public void directAttack (int numberOfAttacker) {
-
+    public boolean hasWinner() {
+        return winner != null;
     }
-    public void increaseHealth (int amount) {
 
+    public User getWinner() {
+        if (hasWinner()) return winner;
+        else return null;
     }
-    public void decreaseHealth (int amount) {
 
-    }
+    //todo methods!
     public void activeEffect(int cellNumber) {
 
     }
+
     public void activeEffectRival(int cellNumber) {
 
     }
-    public void changePhase() {
+
+    public boolean canRivalActiveSpell() {
+        return false;
+    }
+
+    public boolean canRitualSummon() {
+        return false;
+    }
+
+    public void attack(int numberOfAttackersCell, int numberOfDefendersCell) {
 
     }
-    public boolean canRitualSummon() {
-        return true;
-    }
-    public Deck getPlayersGraveYard() {
+
+    public String showTable() {
         return null;
     }
-    public Deck getRivalsGraveYard() {
-        return null;
+
+    public boolean canSummon() {
+        return false;
+    }
+
+    public void summonWithTribute(Card card) {
+
+    }
+
+    public void ritualSummon(Card card) {
+
     }
 
 }
