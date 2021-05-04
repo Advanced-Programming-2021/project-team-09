@@ -87,12 +87,12 @@ public class Game {
 
     public void playerDrawCard(){
         if (playerHasCapacityToDraw())
-            playerHandCards.add(playerBoard.drawCardFromMainDeck());
+            playerHandCards.add(playerDeck.getMainDeck().getCards().get(0));
     }
 
     public void rivalDrawCard(){
         if (rivalHasCapacityToDraw())
-            rivalHandCards.add(rivalBoard.drawCardFromMainDeck());
+            rivalHandCards.add(rivalDeck.getMainDeck().getCards().get(0));
     }
 
     public boolean playerHasCapacityToDraw(){
@@ -226,7 +226,6 @@ public class Game {
         table.append("\n");
         table.append(player.getNickname()).append(":").append(playerLP);
         return table.toString();
-        return null;
     }
 
     private String monsterStateToString(Cell cell) {

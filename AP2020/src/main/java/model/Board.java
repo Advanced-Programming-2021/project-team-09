@@ -10,7 +10,6 @@ public class Board {
     private Cell[] spellZone = new Cell[5];
     private Cell fieldZone = new Cell();
     private Graveyard graveyard = new Graveyard();
-    private Deck deck;
 
     public boolean isMonsterZoneFull(){
         for (int i = 0; i < 5; i++) {
@@ -33,20 +32,18 @@ public class Board {
 
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if(!monsterZone[i].isOccupied() && monsterZone[i].getCard().isMonster()) monsterZone[i].addCard(card);
+            if(!monsterZone[i].isOccupied() && card.isMonster()) monsterZone[i].addCard(card);
         }
     }
     public void addCardToSpellZone(Card card){
         for (int i = 0; i < 5; i++) {
-            if(!spellZone[i].isOccupied() && monsterZone[i].getCard().isSpell()) spellZone[i].addCard(card);
+            if(!spellZone[i].isOccupied() && card.isSpell()) spellZone[i].addCard(card);
         }
     }
     public void sendToGraveYard(Card card){
         graveyard.addCard(card);
     }
-    public Card drawCardFromMainDeck(){
-        return  deck.getMainDeck().getCards().get(0);
-    }
+
     public Card removeCardFromMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if (monsterZone[i].getCard() != card) {
