@@ -1,10 +1,11 @@
 package controller;
 
-import model.*;
+import model.Cell;
+import model.Game;
+import model.State;
 import model.card.Card;
-import model.deck.Deck;
+import model.card.monster.Monster;
 import model.deck.MainDeck;
-import view.responses.DeckMenuResponses;
 import view.responses.GameMenuResponses;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class GameMenuController {
         this.game = game;
     }
 
-    public String showTable () {
+    public String showTable() {
         return game.showTable();
     }
 
@@ -27,7 +28,8 @@ public class GameMenuController {
 
     public GameMenuResponses canSelectMonsterFromPlayer(int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
-        if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
+        if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied())
+            return GameMenuResponses.NO_CARD_FOUND;
         return GameMenuResponses.SUCCESSFUL;
     }
 
@@ -95,7 +97,7 @@ public class GameMenuController {
         Card tempCard = tempDeck.getCards().get(0);
         tempDeck.removeCard(tempCard.getCardName());
         tempHand.add(tempCard);
-        return  tempCard.getCardName();
+        return tempCard.getCardName();
     } // todo phase haro enum konim
 
     public GameMenuResponses canSelectCardFromHand(int cardNumber) {
@@ -111,15 +113,34 @@ public class GameMenuController {
         return tempCards.get(cardNumber - 1);
     }
 
-    public GameMenuResponses canSummon() {
-        return null;
+    public GameMenuResponses canSummon(Card card) {
+        if (!card.isMonster())
+            return game.isSpellZoneFull() ? GameMenuResponses.SPELL_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
+        Monster tempMonster = (Monster) card;
+        if (tempMonster.getLevel() > 4) return canTributeSummon(tempMonster);
+        return game.isMonsterZoneFull() ? GameMenuResponses.MONSTER_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
+        // todo more conditions
     }
 
-    public void summon (Card card) {
+    private GameMenuResponses canTributeSummon(Monster monster) {
+        Cell[] monsterCells = game.getPlayerBoard().getMonsterZone();
+        int numMonsters = 0;
+        for (Cell cell : monsterCells) if (cell.isOccupied()) numMonsters++;
+        if (monster.getLevel() > 6)
+            return numMonsters >= 2 ? GameMenuResponses.SUCCESSFUL : GameMenuResponses.NOT_ENOUGH_MONSTERS;
+        else
+            return numMonsters >= 1 ? GameMenuResponses.SUCCESSFUL : GameMenuResponses.NOT_ENOUGH_MONSTERS;
+    }
+
+    public void tribute(int[] cellNumbers) {
 
     }
 
-    public void setMonsterCard (Card card) {
+    public void summon(Card card) {
+
+    }
+
+    public void setMonsterCard(Card card) {
 
     }
 
@@ -127,7 +148,7 @@ public class GameMenuController {
 
     }
 
-    public void setSpellCard (Card card) {
+    public void setSpellCard(Card card) {
 
     }
 
@@ -147,15 +168,15 @@ public class GameMenuController {
 
     }
 
-    public void specialSummon (Card card) {
+    public void specialSummon(Card card) {
 
     }
 
-    public void showGraveYard () {
+    public void showGraveYard() {
 
     }
 
-    public void showCard (Card card) {
+    public void showCard(Card card) {
 
     }
 
