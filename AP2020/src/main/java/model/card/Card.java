@@ -25,12 +25,18 @@ public abstract class Card {
     protected String description;
     protected MonsterCardType cardType;
     protected String cardID;
+    @JsonIgnore
     protected ArrayList<CardFeatures> features;
 
 
     @JsonIgnore
     public ArrayList<CardFeatures> getFeatures() {
         return features;
+    }
+
+    @JsonIgnore
+    public void setFeatures(ArrayList<CardFeatures> features) {
+        this.features = features;
     }
 
     @JsonIgnore

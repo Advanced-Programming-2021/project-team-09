@@ -158,12 +158,13 @@ public class MonsterEffectController {
     }
 
 
-    public void Marshmallon() {
-
+    public void Marshmallon(Game game,Card card) {
+        if (doesCardBelongsToPlayer(game,card)) game.decreaseRivalHealth(1000);
+        else game.decreaseHealth(1000);
     }
 
-    public void BeastKingBarbaros() {
-        
+    public void BeastKingBarbaros(Game game,Card card) {
+
     }
 
     public void Texchanger() {
