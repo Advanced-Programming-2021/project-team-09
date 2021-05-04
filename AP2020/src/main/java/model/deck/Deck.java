@@ -6,7 +6,7 @@ import model.card.Card;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Deck {
+public class Deck implements Cloneable{
     private MainDeck mainDeck;
     private SideDeck sideDeck;
     private String deckName;
@@ -16,6 +16,10 @@ public class Deck {
         this.deckName = deckName;
         mainDeck = new MainDeck(deckName);
         sideDeck = new SideDeck(deckName);
+    }
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+        return super.clone();
     }
 
     public void addCardToMainDeck(Card card) {
@@ -129,5 +133,5 @@ public class Deck {
         for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
         return mainDeck.isValid() && sideDeck.isValid();
     }
-//todo clone public
+
 }
