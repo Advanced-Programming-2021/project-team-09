@@ -33,7 +33,7 @@ public class Deck {
 
     public boolean canAddCardByName(String cardName) {
         return getNumberOfCardsByName(cardName) < 3;
-    } // todo in control hesab mishe
+    } //// todo in control hesab mishe
 
     public Card removeCardFromMainDeck(String cardName) {
         if (doesMainDeckHasCard(cardName))

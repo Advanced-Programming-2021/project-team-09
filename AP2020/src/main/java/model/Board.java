@@ -93,4 +93,20 @@ public class Board {
         }
         return sumLevel;
     }
+
+    public Cell[] getMonsterZone() {
+        return monsterZone;
+    }
+
+    public Cell[] getSpellZone() {
+        return spellZone;
+    }
+
+    public Graveyard getGraveyard() {
+        return this.graveyard;
+    }
+
+    public Cell getFieldZone() {
+        return fieldZone;
+    }
 }

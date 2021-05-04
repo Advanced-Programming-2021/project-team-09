@@ -6,6 +6,14 @@ public class Cell {
     private Card card;
     private State state;
     private int roundCounter;
+    private boolean isSelected;
+
+    public Cell() {
+        card = null;
+        state = null;
+        roundCounter = 0;
+        isSelected = false;
+    }
 
     public boolean isOccupied() {
         return this.card != null;
@@ -17,14 +25,13 @@ public class Cell {
         this.roundCounter = 0;
         this.state = null;
         return returningCard;
-
     }
     public void setState(State state){
         this.state = state;
     }
     public void addCard(Card card) {
         this.card = card;
-    }
+    } // todo state hichvaqt dorost nemishe
 
     public Card getCard() {
         return this.card;
@@ -52,5 +59,29 @@ public class Cell {
 
     public void increaseRoundCounter() {
         this.roundCounter++;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public void deselect() {
+        this.isSelected = false;
+    }
+
+    public void select() {
+        this.isSelected = true;
+    }
+
+    public Boolean isSelected() {
+        return isSelected;
     }
 }
