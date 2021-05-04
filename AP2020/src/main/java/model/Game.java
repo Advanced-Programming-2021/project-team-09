@@ -30,8 +30,8 @@ public class Game {
         winner = null;
         this.player = player;
         this.rival = rival;
-        playerDeck = (Deck)player.getActiveDeck().clone();
-        rivalDeck = (Deck)rival.getActiveDeck().clone();
+        playerDeck = (Deck)player.getActiveDeck();//.clone();
+        rivalDeck = (Deck)rival.getActiveDeck();//.clone();
         playerBoard = new Board();
         rivalBoard = new Board();
     }
@@ -174,7 +174,7 @@ public class Game {
 
     }
     public String showTable(){
-
+        return null;
     }
 
     public Graveyard getGraveyard() {
