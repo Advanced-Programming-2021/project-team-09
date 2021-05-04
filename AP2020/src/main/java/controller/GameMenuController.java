@@ -204,14 +204,16 @@ public class GameMenuController {
     public GameMenuResponses canSelectCardFromHand(int cardNumber) {
         ArrayList<Card> tempCards = game.getPlayerHandCards();
         if (cardNumber > tempCards.size()) return GameMenuResponses.INVALID_SELECTION;
+        return null;
     }
 
     public Card selectCardFromHand(int cardNumber) {
-
+        return null;
     }
 
     public GameMenuResponses canSummon() {
         if (getSelectedCell() == null) return GameMenuResponses.NO_CARD_IS_SELECTED;
+        return null;
     }
 
     public void summon (Card card) {

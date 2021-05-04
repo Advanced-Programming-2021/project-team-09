@@ -20,5 +20,4 @@ public enum EffectLimitations {
     SPELL_CASTER_MINUS_DEF_200,
     SPELL_CASTER_PLUS_ATK_400,
     HAS_DRAW_PHASE,
-    
 }

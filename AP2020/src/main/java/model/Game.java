@@ -23,6 +23,7 @@ public class Game {
     private Board playerBoard;
     private Board rivalBoard;
     private boolean canRivalActiveSpell;
+    private ArrayList<EffectLimitations> limitations;
 
     public Game(User player, User rival){
         winner = null;
@@ -33,6 +34,7 @@ public class Game {
         playerBoard = new Board();
         rivalBoard = new Board();
     }
+
     public void changeTurn(){
         phaseCounter = 0;
         User tempUser;
@@ -51,21 +53,24 @@ public class Game {
         tempDeck = playerDeck;
         playerDeck = rivalDeck;
         rivalDeck = tempDeck;
-
         roundCounter++;
     }
     //todo board bayad User begire be nazaram!
+
     public void playerDrawCard(){
         if (playerHasCapacityToDraw())
             playerHandCards.add(playerBoard.drawCardFromMainDeck());
     }
+
     public void rivalDrawCard(){
         if (rivalHasCapacityToDraw())
             rivalHandCards.add(rivalBoard.drawCardFromMainDeck());
     }
+
     public boolean playerHasCapacityToDraw(){
         return getNumberOfCardsInHand() < 5;
     }
+
     public boolean rivalHasCapacityToDraw(){
         return getNumberOfCardsInHandFromRival() < 5;
     }
