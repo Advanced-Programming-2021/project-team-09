@@ -9,5 +9,6 @@ public enum GameMenuResponses {
     SPELL_ZONE_IS_FULL,
     MONSTER_ZONE_IS_FULL,
     NOT_ENOUGH_MONSTERS,
+    THIS_CARD_CANT_NORMAL_SUMMON,
 
 }

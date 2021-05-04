@@ -4,10 +4,12 @@ import model.Cell;
 import model.Game;
 import model.State;
 import model.card.Card;
+import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.deck.MainDeck;
 import view.responses.GameMenuResponses;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -113,13 +115,19 @@ public class GameMenuController {
         return tempCards.get(cardNumber - 1);
     }
 
-    public GameMenuResponses canSummon(Card card) {
+    public GameMenuResponses canSummon(int cardNumberInHand) {
+        if (!canNormalSummon(card.getFeatures())) return GameMenuResponses.THIS_CARD_CANT_NORMAL_SUMMON;
         if (!card.isMonster())
             return game.isSpellZoneFull() ? GameMenuResponses.SPELL_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
         Monster tempMonster = (Monster) card;
         if (tempMonster.getLevel() > 4) return canTributeSummon(tempMonster);
         return game.isMonsterZoneFull() ? GameMenuResponses.MONSTER_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
         // todo more conditions
+    }
+
+    private boolean canNormalSummon(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.NORMAL_SUMMON) return true;
+        return false;
     }
 
     private GameMenuResponses canTributeSummon(Monster monster) {
@@ -130,6 +138,10 @@ public class GameMenuController {
             return numMonsters >= 2 ? GameMenuResponses.SUCCESSFUL : GameMenuResponses.NOT_ENOUGH_MONSTERS;
         else
             return numMonsters >= 1 ? GameMenuResponses.SUCCESSFUL : GameMenuResponses.NOT_ENOUGH_MONSTERS;
+    }
+
+    public GameMenuResponses canAttack(Card card) {
+
     }
 
     public void tribute(int[] cellNumbers) {
