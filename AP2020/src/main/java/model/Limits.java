@@ -13,10 +13,13 @@ public class Limits {
 
     int atkAddition = 0;
     int defAddition = 0;
+    int attackBound = -1;
+
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
     HashMap<MonsterCardType, Integer> fieldZoneATKAddition = new HashMap<>();
     HashMap<MonsterCardType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
+
     public void addLimit(EffectLimitations limitation) {
         limitations.add(limitation);
     }
@@ -93,4 +96,11 @@ public class Limits {
         cantAttackCells.remove(cellNumber);
     }
 
+    public void setAttackBound(int attackBound){
+        this.attackBound = attackBound;
+    }
+
+    public int getAttackBound() {
+        return attackBound;
+    }
 }

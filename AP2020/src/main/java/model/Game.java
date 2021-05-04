@@ -31,8 +31,8 @@ public class Game {
         winner = null;
         this.player = player;
         this.rival = rival;
-        playerDeck = (Deck)player.getActiveDeck().clone();
-        rivalDeck = (Deck)rival.getActiveDeck().clone();
+        //playerDeck = (Deck)player.getActiveDeck().clone();
+        //rivalDeck = (Deck)rival.getActiveDeck().clone();
         playerLimits = new Limits();
         rivalLimits = new Limits();
         playerBoard = new Board();
@@ -237,5 +237,13 @@ public class Game {
     public Deck getRivalDeck() {
         return rivalDeck;
 
+    }
+
+    public Limits getPlayerLimits() {
+        return playerLimits;
+    }
+
+    public Limits getRivalLimits() {
+        return rivalLimits;
     }
 }
