@@ -175,36 +175,6 @@ public class Game {
     }
     public String showTable(){
 
-    public void decreaseHealth(int amount) {
-
-    }
-
-    public void increaseRivalHealth(int amount) {
-
-    }
-
-    public void decreaseRivalHealth(int amount) {
-
-    }
-
-    public void activeEffect(int cellNumber) {
-
-    }
-
-    public void activeEffectRival(int cellNumber) {
-
-    }
-
-    public boolean canRivalActiveSpell() {
-        return false;
-    }
-
-    public void changePhase() {
-
-    }
-
-    public boolean canRitualSummon() {
-        return false;
     }
 
     public Graveyard getGraveyard() {
