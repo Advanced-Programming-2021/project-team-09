@@ -25,7 +25,7 @@ public abstract class Card {
     protected String description;
     protected MonsterCardType cardType;
     protected String cardID;
-    protected ArrayList<CardFeatures> features = new ArrayList<>();
+    protected ArrayList<CardFeatures> features;
 
 
     @JsonIgnore

@@ -77,7 +77,7 @@ public class Limits {
         atkAddition -= amount;
     }
 
-    public void increaseDEFAddition (int amount) {
+    public void increaseDEFAddition(int amount) {
         defAddition += amount;
     }
 
@@ -97,11 +97,24 @@ public class Limits {
         cantAttackCells.remove(cellNumber);
     }
 
-    public void setAttackBound(int attackBound){
+    public void setAttackBound(int attackBound) {
         this.attackBound = attackBound;
     }
 
     public int getAttackBound() {
         return attackBound;
     }
+
+    public boolean canAttackByThisLimitations(Card card) {
+        if (limitations.contains(EffectLimitations.CANT_ATTACK)) return false;
+        else {
+            if (attackBound != -1) return true;
+            else {
+                return ((Monster) card).getAttack() + getATKAddition(card) <= attackBound;
+            }
+        }
+    }
 }
+
+
+
