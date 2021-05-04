@@ -27,9 +27,7 @@ public class Board {
     public Cell getMonsterZone(int cellNumber){
         return monsterZone[cellNumber];
     }
-    public Graveyard getGraveyard(){
-        return  this.graveyard;
-    }
+
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if(!monsterZone[i].isOccupied() && monsterZone[i].getCard().isMonster()) monsterZone[i].addCard(card);

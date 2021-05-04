@@ -174,7 +174,7 @@ public class GameMenuController {
     }
 
     public Boolean canDraw() {
-        return game.hasCapacityToDraw() && game.getPlayerDeck().getMainDeck().getNumberOfAllCards() > 0;
+        return game.playerHasCapacityToDraw() && game.getPlayerDeck().getMainDeck().getNumberOfAllCards() > 0;
     } // todo what if 6 ta bud va resid be draw phase ?
 
     private Cell getSelectedCell() {

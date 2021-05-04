@@ -26,9 +26,6 @@ public class Cell {
         this.state = null;
         return returningCard;
     }
-    public void setState(State state){
-        this.state = state;
-    }
     public void addCard(Card card) {
         this.card = card;
     } // todo state hichvaqt dorost nemishe
