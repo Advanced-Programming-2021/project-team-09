@@ -1,6 +1,6 @@
 package model.card;
 
-public enum CardType {
+public enum MonsterCardType {
     MONSTER,
     TRAP,
     SPELL

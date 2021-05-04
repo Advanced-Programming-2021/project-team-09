@@ -33,7 +33,7 @@ public class Monster extends Card {
         permanentDefense = defense;
         description = temp.get(6);
         this.cardName = cardName;
-        this.cardType = CardType.MONSTER;
+        this.cardType = model.card.MonsterCardType.MONSTER;
     }
 
     public Monster(){
@@ -99,7 +99,7 @@ public class Monster extends Card {
 
     @JsonIgnore
     public boolean isMonsterRitual() {
-        return monsterCardType == MonsterCardType.RITUAL;
+        return monsterCardType == model.card.monster.MonsterCardType.RITUAL;
     }
 
     public boolean hasEffect() {
