@@ -129,5 +129,5 @@ public class Deck {
         for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
         return mainDeck.isValid() && sideDeck.isValid();
     }
-
+//todo clone public
 }

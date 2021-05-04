@@ -11,6 +11,25 @@ public class Board {
     private Cell fieldZone = new Cell();
     private Graveyard graveyard = new Graveyard();
     private Deck deck;
+
+    public boolean isMonsterZoneFull(){
+        for (int i = 0; i < 5; i++) {
+            if(!monsterZone[i].isOccupied()) return false;
+        }
+        return true;
+    }
+    public boolean isSpellZoneFull(){
+        for (int i = 0; i < 5; i++) {
+            if(!spellZone[i].isOccupied()) return false;
+        }
+        return true;
+    }
+    public Cell getMonsterZone(int cellNumber){
+        return monsterZone[cellNumber];
+    }
+    public Graveyard getGraveyard(){
+        return  this.graveyard;
+    }
     public void addCardToMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if(!monsterZone[i].isOccupied() && monsterZone[i].getCard().isMonster()) monsterZone[i].addCard(card);
@@ -24,11 +43,9 @@ public class Board {
     public void sendToGraveYard(Card card){
         graveyard.addCard(card);
     }
-
     public Card drawCardFromMainDeck(){
-        return deck.getMainDeck().getCards().get(0);
+        return  deck.getMainDeck().getCards().get(0);
     }
-
     public Card removeCardFromMonsterZone(Card card){
         for (int i = 0; i < 5; i++) {
             if (monsterZone[i].getCard() != card) {
@@ -39,7 +56,6 @@ public class Board {
         }
         return null;
     }
-
     public Card removeCardFromSpellZone(Card card){
         for (int i = 0; i < 5; i++) {
             if (spellZone[i].getCard() != card) {

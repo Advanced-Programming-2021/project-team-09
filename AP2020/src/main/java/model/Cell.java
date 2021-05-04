@@ -19,7 +19,9 @@ public class Cell {
         return returningCard;
 
     }
-
+    public void setState(State state){
+        this.state = state;
+    }
     public void addCard(Card card) {
         this.card = card;
     }
