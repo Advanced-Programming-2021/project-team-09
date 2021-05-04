@@ -104,4 +104,18 @@ public class Limits {
     public int getAttackBound() {
         return attackBound;
     }
+
+    public boolean canAttackByThisLimitations(Card card, int defenderCellNumber) {
+        if (limitations.contains(EffectLimitations.CANT_ATTACK)) return false;
+        else {
+            if (canAttackCell(defenderCellNumber)) {
+                if (attackBound != -1) return true;
+                else {
+                    return ((Monster) card).getAttack() + getATKAddition(card) <= attackBound;
+                }
+            } else return false;
+        }
+    }
+
+
 }
