@@ -1,6 +1,6 @@
 package model;
 
-import controller.responses.DeckMenuResponses;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.card.Card;
 import model.deck.Deck;
 import controller.*;
@@ -18,7 +18,7 @@ public class User {
     private ArrayList<Card> cards;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
-
+    
     public User(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
@@ -29,7 +29,45 @@ public class User {
         this.decks = new ArrayList<>();
         activeDeck  = null;
     }
+    public User(){
 
+    }
+
+    public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck = activeDeck;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    public void setDecks(ArrayList<Deck> decks) {
+        this.decks = decks;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public ArrayList<Deck> getDecks(){
+        return decks;
+    }
     public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
     }
@@ -49,6 +87,20 @@ public class User {
 
     public void addCard(Card card) {
         cards.add(card);
+    }
+
+    public Card removeCard(String cardName){
+        Card card = getCardByName(cardName);
+        cards.remove(card);
+        return card;
+    }
+    @JsonIgnore
+    public Card getCardByName(String cardName) {
+        ArrayList<Card> cards = getCards();
+        for (Card card : cards) {
+            if (card.getCardName().equals(cardName)) return card;
+        }
+        return null;
     }
 
     public void createDeck(String deckName) {
@@ -87,10 +139,10 @@ public class User {
         return balance >= amount;
     }
 
-    public void addCardToMainDeck(String cardName, String deckName) {
+    public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
-        if (deck.canAddCardByName(cardName)) {
-            deck.addCardToMainDeck(csvInfoGetter.getCardByName(cardName));
+        if (deck.canAddCardByName(card.getCardName())) {
+           deck.addCardToSideDeck(card);
         }
     }
 
@@ -100,11 +152,11 @@ public class User {
             deck.addCardToSideDeck(card);
     }
 
-    /*public void removeCardFromMainDeck(String cardName,String deckName){
-        if (doesDeckExist(deckName)){ //  todo ina bayad pak shan
+    public void removeCardFromMainDeck(String cardName,String deckName){
+        if (doesDeckExist(deckName)){
             Deck deck = getDeckByName(deckName);
             if (deck.doesMainDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromMainDeck(cardName); // todo in bayad dorost she
+                Card card = deck.removeCardFromMainDeck(cardName);
                 cards.add(card);
             }
         }
@@ -114,11 +166,11 @@ public class User {
         if (doesDeckExist(deckName)){
             Deck deck = getDeckByName(deckName);
             if (deck.doesSideDeckHasCard(cardName)) {
-                Card card = deck.removeCardFromSideDeck(cardName); // todo in bayad dorost she
+                Card card = deck.removeCardFromSideDeck(cardName);
                 cards.add(card);
             }
         }
-    }*/
+    }
 
     public void removeDeck(String deckName) {
         Deck deck = getDeckByName(deckName);
@@ -134,6 +186,7 @@ public class User {
         return getDeckByName(deckName) != null;
     }
 
+    @JsonIgnore
     public ArrayList<Deck> getSortedDecks() {
         ArrayList<Deck> decks = (ArrayList<Deck>) this.decks.clone();
         decks.remove(activeDeck);

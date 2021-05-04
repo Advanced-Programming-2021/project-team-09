@@ -2,12 +2,16 @@ package model.deck;
 
 import java.util.ArrayList;
 
+
 public class Graveyard extends PrimaryDeck {
     public Graveyard() {
         cards = new ArrayList<>();
         maxCapacity = 0;
         minCapacity = 0;
+    }
 
+    public String toString(String deckName) {
+        return null;
     }
 
     public String toString() {

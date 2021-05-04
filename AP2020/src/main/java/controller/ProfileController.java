@@ -1,33 +1,26 @@
 package controller;
 
 import model.User;
+import view.responses.ProfileMenuResponses;
 
 public class ProfileController {
-    public static String changePassword(String oldPassword, String newPassword) {
+    public static ProfileMenuResponses changePassword(String oldPassword, String newPassword) {
         User user = LoginMenuController.getCurrentUser();
         if (user.getPassword().equals(oldPassword)) {
             if (!oldPassword.equals(newPassword)) {
                 user.changePassword(newPassword);
                 ReadAndWriteDataBase.updateUser(user);
-                return "password changed successfully!";
-            } else return "please enter a new password";
-        } else return "current password is invalid";
+                return ProfileMenuResponses.PASSWORD_CHANGED_SUCCESSFULLY;
+            } else return ProfileMenuResponses.PLEASE_ENTER_A_NEW_PASSWORD;
+        } else return ProfileMenuResponses.CURRENT_PASSWORD_IS_INVALID;
     }
 
-    public static String changeNickname(String nickname){
+    public static ProfileMenuResponses changeNickname(String nickname){
         User user = LoginMenuController.getCurrentUser();
         if (!LoginMenuController.doesNicknameExists(nickname)){
             user.changeNickname(nickname);
             ReadAndWriteDataBase.updateUser(user);
-            return "nick name changed successfully!";
-        } else return "user with nickname " + nickname + " exits";
+            return ProfileMenuResponses.NICKNAME_CHANGED_SUCCESSFULLY;
+        } else return ProfileMenuResponses.USER_WITH_NICKNAME_ALREADY_EXISTS;
     }
-
-    public static void logout(){
-        LoginMenuController.logout();
-    }
-
- 
-
-
 }

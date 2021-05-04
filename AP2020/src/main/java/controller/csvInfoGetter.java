@@ -99,7 +99,7 @@ public class csvInfoGetter {
         return null;
     }
 
-    public int getPriceByCardName(String cardName) {
+    public static int getPriceByCardName(String cardName) {
         List<String[]> temp = readFromFile(monsterFileName);
         if (temp == null) {
             return -1;
@@ -107,7 +107,7 @@ public class csvInfoGetter {
         for (String[] tempStringArray : temp) {
             for (String tempString : tempStringArray) {
                 if (tempString.equalsIgnoreCase(cardName)) {
-                    return Integer.parseInt(tempStringArray[7]);
+                    return Integer.parseInt(tempStringArray[8]);
                 }
             }
         }
@@ -165,18 +165,17 @@ public class csvInfoGetter {
     }
 
     public static ArrayList<String> getCardNames() {
-        System.out.println(monsterFileName);
         ArrayList<String> outputArraylist = new ArrayList<String>();
         List<String[]> temp = readFromFile(monsterFileName);
         if (temp != null) {
             for (int i = 1; i < temp.size(); i++) {
-                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[7]);
+                outputArraylist.add(temp.get(i)[0]);
             }
         }
         temp = readFromFile(spellTrapFileName);
         if (temp != null) {
             for (int i = 1; i < temp.size(); i++) {
-                outputArraylist.add(temp.get(i)[0] + ":" + temp.get(i)[3]);
+                outputArraylist.add(temp.get(i)[0]);
             }
         }
         return outputArraylist;
@@ -200,4 +199,5 @@ public class csvInfoGetter {
         }
         return null;
     }
+
 }

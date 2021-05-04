@@ -1,5 +1,6 @@
 package model.deck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -25,21 +26,22 @@ public class Deck {
         sideDeck.addCard(card);
     }
 
+    @JsonIgnore
     public int getNumberOfCardsByName(String cardName) {
         return mainDeck.getCardCount(cardName) + sideDeck.getCardCount(cardName);
     }
 
     public boolean canAddCardByName(String cardName) {
         return getNumberOfCardsByName(cardName) < 3;
-    } // todo in control hesab mishe
+    } //// todo in control hesab mishe
 
-    public Card removeCardFromMainDeck(String cardName){
+    public Card removeCardFromMainDeck(String cardName) {
         if (doesMainDeckHasCard(cardName))
             return mainDeck.removeCard(cardName);
         return null;
     }
 
-    public Card removeCardFromSideDeck(String cardName){
+    public Card removeCardFromSideDeck(String cardName) {
         if (doesSideDeckHasCard(cardName))
             return sideDeck.removeCard(cardName);
         return null;
@@ -65,8 +67,9 @@ public class Deck {
         return temp.toString();
     }
 
+    @JsonIgnore
     public ArrayList<Card> getAllCards() {
-        ArrayList<Card> temp ;
+        ArrayList<Card> temp;
         ArrayList<Card> output = new ArrayList<>();
         temp = mainDeck.getCards();
         for (Card card : temp) output.add(card);
@@ -95,6 +98,23 @@ public class Deck {
         return this.sideDeck;
     }
 
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
+    }
+
+    public void setMainDeck(MainDeck mainDeck) {
+        this.mainDeck = mainDeck;
+    }
+
+    public void setSideDeck(SideDeck sideDeck) {
+        this.sideDeck = sideDeck;
+    }
+
+    public Deck() {
+
+    }
+
+    @JsonIgnore
     public boolean isValid() {
         HashMap<String, Integer> temp = new HashMap<>();
         ArrayList<Card> tempCards = mainDeck.cards;
@@ -109,4 +129,5 @@ public class Deck {
         for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
         return mainDeck.isValid() && sideDeck.isValid();
     }
+//todo clone public
 }

@@ -1,5 +1,8 @@
 package model.deck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import model.User;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -7,16 +10,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
+
 public abstract class PrimaryDeck {
     protected ArrayList<Card> cards;
+    @JsonIgnore
     protected int maxCapacity;
+    @JsonIgnore
     protected int minCapacity;
+    @JsonIgnore
     protected String deckName;
 
     public boolean hasCapacity(){
+        if (cards == null) System.out.println("fik");
         return cards.size() < maxCapacity;
     }
 
+    @JsonIgnore
     public int getCardCount(String cardName){
         int temp = 0;
         for (Card tempCard : cards) if (tempCard.getCardName().equals(cardName)) temp++;
@@ -62,8 +71,9 @@ public abstract class PrimaryDeck {
         return temp.toString();
     }
 
-    public abstract String toString();
+    public abstract String toString(String deckName);
 
+    @JsonIgnore
     public boolean isValid() {
         if (cards.size() <= maxCapacity && cards.size() >= minCapacity) return true;
         return false;
@@ -98,10 +108,21 @@ public abstract class PrimaryDeck {
         cards.add(max, tempMin);
     }
 
+    @JsonIgnore
     public int getNumberOfAllCards() {
         return cards.size();
     }
 
 
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
+    }
 
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    public String getDeckName() {
+        return deckName;
+    }
 }
