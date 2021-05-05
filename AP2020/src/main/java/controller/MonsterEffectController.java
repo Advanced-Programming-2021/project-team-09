@@ -156,7 +156,7 @@ public class MonsterEffectController {
         Card card1;
 
         while (true) {
-            card1 = CardEffectsView.getCarFromGraveyard(graveyard);
+            card1 = CardEffectsView.getCardFromGraveyard(graveyard);
             if (card1 == null) return;
             else if (!(card1 instanceof Monster)) CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
             else break;
@@ -227,7 +227,28 @@ public class MonsterEffectController {
     }
 
     public void HeraldofCreation(Game game, Card card) {
-
+        mainLoop:
+        while (true){
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
+            if(game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+                CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+            else{
+                Card removingCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+                while (true){
+                    Card givenCardFromGraveYard = CardEffectsView.getCardFromGraveyard(game.getGraveyard());
+                    if(givenCardFromGraveYard.isMonster()){
+                        Monster monster =(Monster) givenCardFromGraveYard;
+                        if(monster.getLevel() >= 7){
+                            game.removeCardFromPlayerHand(removingCard);
+                            game.addCardToHand(monster);
+                            break mainLoop;
+                        }
+                        else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
+                    }
+                    else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_MONSTER);
+                }
+            }
+        }
     }
 
     public void ExploderDragon() {
@@ -254,13 +275,15 @@ public class MonsterEffectController {
         //todo nabayad moqe summon kardan state ro ham moshakhas konim??!
         while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
-            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
-            if (chosenCard.isMonster()) {
+            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+            if(chosenCard.isMonster()){
                 Monster monster = (Monster) chosenCard;
                 if (monster.getLevel() <= 4) {
                     game.summonMonster(monster);
                     board.getMonsterZoneCellByCard(monster).setState(State.FACE_DOWN_DEFENCE);
-                } else {
+                    break;
+                }
+                else {
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_4_OR_LESS);
                 }
             } else {
@@ -268,11 +291,26 @@ public class MonsterEffectController {
             }
         }
     }
-
-    public void TheTricky() {
-
+// baraye ehzar vizhe hast in
+    public void TheTricky(Game game, Card card) {
+        for (int i = 0; i < 5; i++) {
+            if(game.getPlayerHandCards().get(i).equals(card)){
+                CardEffectsView.respond(CardEffectsResponses.DO_YOU_WANT_TO_SPECIAL_SUMMON);
+                boolean wantsToSpecialSummon = CardEffectsView.doSpecialSummon();
+                while (wantsToSpecialSummon){
+                    int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
+                    if (game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+                        CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                    else {
+                        Card toBeRemovedCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+                        game.removeCardFromPlayerHand(toBeRemovedCard);
+                        game.summonMonster(card);
+                        break;
+                    }
+                }
+            }
+        }
     }
-
     public void SpiralSerpent() {
 
     }

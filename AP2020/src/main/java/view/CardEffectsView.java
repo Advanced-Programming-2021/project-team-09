@@ -14,7 +14,10 @@ public class CardEffectsView {
     static public void respond(CardEffectsResponses response) {
     }
 
-    static public int getNumberOfCardInHand() {
+    static public boolean doSpecialSummon(){
+        return true;
+    }
+    static public int getNumberOfCardInHand(){
         return 0;
     }
 
@@ -22,7 +25,7 @@ public class CardEffectsView {
         return null;
     }
 
-    static public Card getCarFromGraveyard(Graveyard graveyard) {
+    static public Card getCardFromGraveyard(Graveyard graveyard) {
         return null;
     }
 
