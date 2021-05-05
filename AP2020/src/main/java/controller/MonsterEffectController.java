@@ -210,8 +210,8 @@ public class MonsterEffectController {
         }
     }
 
-    public void HeraldofCreation() {
-
+    public void HeraldofCreation(Game game, Card card) {
+        
     }
 
     public void ExploderDragon() {
