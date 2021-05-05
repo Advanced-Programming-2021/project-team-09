@@ -34,7 +34,12 @@ public class Board {
             if (!monsterZone[i].isOccupied() && card.isMonster()) monsterZone[i].addCard(card);
         }
     }
-
+    public Cell getMonsterZoneCellByCard(Card card){
+        for (int i = 0; i < 5; i++) {
+            if ( monsterZone[i].getCard().equals(card) ) return monsterZone[i];
+        }
+        return null;
+    }
     public void addCardToSpellZone(Card card) {
         for (int i = 0; i < 5; i++) {
             if (!spellZone[i].isOccupied() && card.isSpell()) spellZone[i].addCard(card);

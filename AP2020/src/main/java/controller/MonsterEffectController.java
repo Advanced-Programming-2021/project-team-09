@@ -194,8 +194,20 @@ public class MonsterEffectController {
 
     }
 
-    public void MirageDragon() {
-
+    public void MirageDragon(Game game, Card card) {
+        Limits limits;
+        Board board;
+        if (doesCardBelongsToPlayer(game, card)) {
+            limits = game.getRivalLimits();
+            board = game.getPlayerBoard();
+        }
+        else {
+            limits = game.getPlayerLimits();
+            board = game.getRivalBoard();
+        }
+        if(board.getMonsterZoneCellByCard(card).isFaceUp()){
+            limits.addLimit(EffectLimitations.CANT_ACTIVATE_TRAP);
+        }
     }
 
     public void HeraldofCreation() {
