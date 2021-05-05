@@ -33,7 +33,7 @@ public class Monster extends Card {
         permanentDefense = defense;
         description = temp.get(6);
         this.cardName = cardName;
-        this.cardType = model.card.MonsterCardType.MONSTER;
+        this.cardType = CardType.MONSTER;
     }
 
     public Monster(){
@@ -150,4 +150,28 @@ public class Monster extends Card {
         return monsterCardType;
     }
 
+    @Override
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+        setAttributesWithName(cardName);
+    }
+
+    public void setAttributesWithName(String cardName) {
+        ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(cardName);
+        if (temp == null || temp.size() != 7) {
+            return;
+        }
+        level = Integer.parseInt(temp.get(0));
+        attribute = csvInfoGetter.getAttribute(temp.get(1));
+        monsterType = csvInfoGetter.getMonsterType(temp.get(2));
+        monsterCardType = csvInfoGetter.getMonsterCardType(temp.get(3));
+        attack = Integer.parseInt(temp.get(4));
+        defense = Integer.parseInt(temp.get(5));
+        permanentAttack = attack;
+        permanentDefense = defense;
+        description = temp.get(6);
+        this.cardName = cardName;
+        this.cardType = CardType.MONSTER;
+        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+    }
 }

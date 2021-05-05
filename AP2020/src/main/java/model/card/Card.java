@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
-import model.EffectLimitations;
 import model.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
@@ -13,7 +12,11 @@ import model.card.spell_traps.Trap;
 
 import java.util.ArrayList;
 
-@JsonTypeInfo(use = Id.NAME)
+@JsonTypeInfo(
+        use = Id.NAME,
+        include = As.PROPERTY,
+        property = "type"
+)
 @JsonSubTypes({
         @Type(name = "Monster",value = Monster.class),
         @Type(name = "Spell",value = Spell.class),
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 public abstract class Card {
     protected String cardName;
     protected String description;
-    protected MonsterCardType cardType;
+    protected CardType cardType;
     protected String cardID;
     @JsonIgnore
     protected ArrayList<CardFeatures> features;
@@ -50,23 +53,24 @@ public abstract class Card {
 
     @JsonIgnore
     public boolean isMonster(){
-        return cardType == MonsterCardType.MONSTER;
+        return cardType == CardType.MONSTER;
     }
 
     @JsonIgnore
     public boolean isSpell(){
-        return cardType == MonsterCardType.SPELL;
+        return cardType == CardType.SPELL;
     }
 
     @JsonIgnore
     public boolean isTrap(){
-        return cardType == MonsterCardType.TRAP;
+        return cardType == CardType.TRAP;
     }
 
     @JsonIgnore
-    public MonsterCardType getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
+
     public void destroy(Game game){
 
     }
