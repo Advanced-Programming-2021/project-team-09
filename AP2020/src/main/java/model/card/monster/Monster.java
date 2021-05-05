@@ -33,7 +33,7 @@ public class Monster extends Card {
         permanentDefense = defense;
         description = temp.get(6);
         this.cardName = cardName;
-        this.cardType = model.card.MonsterCardType.MONSTER;
+        this.cardType = CardType.MONSTER;
     }
 
     public Monster(){

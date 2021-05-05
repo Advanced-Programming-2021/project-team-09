@@ -3,6 +3,7 @@ package controller;
 import model.Cell;
 import model.Game;
 import model.State;
+import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
@@ -121,14 +122,20 @@ public class GameMenuController {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1) return GameMenuResponses.INVALID_SELECTION;
         Card card = cardsInHand.get(cardNumberInHand - 1);
-        if (!game.canSummon()) return GameMenuResponses.ALREADY_SUMMONED;
-        if (!canNormalSummon(card.getFeatures())) return GameMenuResponses.THIS_CARD_CANT_NORMAL_SUMMON;
         if (!card.isMonster())
             return game.isSpellZoneFull() ? GameMenuResponses.SPELL_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
+        if (!game.canSummon()) return GameMenuResponses.ALREADY_SUMMONED;
+        if (!canNormalSummon(card.getFeatures())) return GameMenuResponses.THIS_CARD_CANT_NORMAL_SUMMON;
         Monster tempMonster = (Monster) card;
         if (tempMonster.getLevel() > 4) return canTributeSummon(tempMonster);
         return game.isMonsterZoneFull() ? GameMenuResponses.MONSTER_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
         // todo more conditions - card features
+    }
+
+    // for cards like beast king barbaros
+    private boolean normalAndSpecialSummonChecker(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.HAS_SPECIAL_NORMAL_SUMMON) return true;
+        return false;
     }
 
     private boolean canNormalSummon(ArrayList<CardFeatures> features) {
@@ -212,7 +219,7 @@ public class GameMenuController {
                 game.decreaseHealth(def.getDefense() - att.getAttack());
                 return "no card is destroyed and you received " + (def.getDefense() - att.getAttack()) + " battle damage";
             }
-        }
+        } // todo page 32 AP GAME 2021
     }
 
     public GameMenuResponses selectedCardsCanBeTributed(int[] cellNumbers) {
@@ -349,12 +356,22 @@ public class GameMenuController {
         if (cardNumberInHand > cards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (!cards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponses.PLEASE_SELECT_MONSTER;
         if (game.getPlayerBoard().getSumLevel(new int[]{1,2,3,4,5}) < ((Monster)game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
-            return GameMenuResponses.CANT_RITUAL_SUMMON; // todo age spell ro summon kone bayad effectesh faal she ?
+            return GameMenuResponses.CANT_RITUAL_SUMMON;
         if (game.getPlayerBoard().getSumLevel(tributeCells) < ((Monster)game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
             return GameMenuResponses.SELECTED_LEVELS_DONT_MATCH;
         if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
             return GameMenuResponses.SELECTED_MONSTER_IS_NOT_RITUAL;
-
+        boolean hasRitualSpell = false;
+        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : tempCells) {
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Advanced Ritual Art")){
+                    hasRitualSpell = true;
+                }
+            }
+        }
+        if (!hasRitualSpell) return GameMenuResponses.NO_RITUAL_SPELL_IN_SPELLZONE;
+        return GameMenuResponses.SUCCESSFUL;
 
     }
 
@@ -362,9 +379,11 @@ public class GameMenuController {
         tribute(tributeCellNumbers);
         Cell[] cells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : cells) {
-            if (cell.getCard().getCardName().equals("Advanced Ritual Art")) {
-                game.getPlayerBoard().getGraveyard().addCard(cell.removeCard());
-                break;
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Advanced Ritual Art")) {
+                    game.getPlayerBoard().getGraveyard().addCard(cell.removeCard());
+                    break;
+                }
             }
         }
         cells = game.getPlayerBoard().getMonsterZone();
@@ -394,12 +413,21 @@ public class GameMenuController {
         game.decreaseRivalHealth(((Monster) game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard()).getAttack());
     }
 
-    public void setTrapCard(Card card) {
-
+    public void setTrapCard(int cardNumberInHand) {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        Card card = cards.get(cardNumberInHand - 1);
+        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : tempCells) {
+            if (!cell.isOccupied()) {
+                cell.addCard(card);
+                cell.setState(State.FACE_DOWN_SPELL);
+                break;
+            }
+        }
     }
 
     public void specialSummon(Card card) {
-
+        // todo
     }
 
     public String showPlayerGraveYard() {
@@ -411,41 +439,59 @@ public class GameMenuController {
     }
 
     public String showCardFromPlayerMonsterZone(int cellNumber) {
+        if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).isOccupied()) return "E";
         return game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard().toString();
     }
 
-    public String showCardFromPlayerSpellZone() {
-
+    public String showCardFromPlayerSpellZone(int cellNumber) {
+        if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
+        if (!game.getPlayerBoard().getSpellZone()[cellNumber - 1].isOccupied()) return "E";
+        return game.getPlayerBoard().getSpellZone()[cellNumber - 1].getCard().toString();
     }
 
-    public String showCardFromRivalMonsterZone() {
-
+    public String showCardFromRivalMonsterZone(int cellNumber) {
+        if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
+        if (!game.getRivalBoard().getMonsterZone(cellNumber - 1).isOccupied()) return "E";
+        if (game.getRivalBoard().getMonsterZone(cellNumber - 1).getState() == State.FACE_DOWN_DEFENCE)
+            return "card is hidden";
+        return game.getRivalBoard().getMonsterZone(cellNumber - 1).getCard().toString();
     }
 
-    public String showCardFromRivalSpellZone() {
-
+    public String showCardFromRivalSpellZone(int cellNumber) {
+        if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
+        if (!game.getRivalBoard().getSpellZone()[cellNumber - 1].isOccupied()) return "E";
+        if (game.getRivalBoard().getSpellZone()[cellNumber - 1].getState() == State.FACE_DOWN_SPELL)
+            return "card is hidden";
+        return game.getRivalBoard().getSpellZone()[cellNumber - 1].getCard().toString();
     }
 
     public String showCardFromPlayerFieldZone() {
-
+        Cell cell = game.getPlayerBoard().getFieldZone();
+        if (!cell.isOccupied()) return "E";
+        return cell.getCard().toString();
     }
 
     public String showCardFromRivalFieldZone() {
-
-    }
-
-    public GameMenuResponses canShowCardFromHand(int cardNumberInHand) {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        if (cards.size() < cardNumberInHand) return GameMenuResponses.INVALID_SELECTION;
-        return GameMenuResponses.SUCCESSFUL;
+        Cell cell = game.getRivalBoard().getFieldZone();
+        if (!cell.isOccupied()) return "E";
+        return cell.getCard().toString();
     }
 
     public String showCardFromHand(int cardNumberInHand) {
-
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        if (cards.size() < cardNumberInHand) return "invalid selection";
+        return game.getPlayerHandCards().get(cardNumberInHand - 1).toString();
     }
 
-    public void cashOut() {
-
+    public void cashOut(int maxLP, boolean is3RoundGame, User winner, User loser) {
+        if (is3RoundGame) {
+            winner.setScore(winner.getScore() + 3000);
+            winner.increaseBalance(3000 + 3 * maxLP);
+            loser.increaseBalance(300);
+        } else {
+            winner.increaseBalance(1000 + maxLP);
+            winner.setScore(winner.getScore() + 1000);
+        }
     }
 }

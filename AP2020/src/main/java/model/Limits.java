@@ -1,7 +1,7 @@
 package model;
 
 import model.card.Card;
-import model.card.MonsterCardType;
+import model.card.CardType;
 import model.card.monster.Monster;
 import model.card.monster.MonsterType;
 
@@ -17,8 +17,8 @@ public class Limits {
 
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
     HashMap<Integer,Integer> spellUsageLimit = new HashMap<>();
-    HashMap<MonsterCardType, Integer> fieldZoneATKAddition = new HashMap<>();
-    HashMap<MonsterCardType, Integer> fieldZoneDEFAddition = new HashMap<>();
+    HashMap<CardType, Integer> fieldZoneATKAddition = new HashMap<>();
+    HashMap<CardType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
 
 
@@ -31,19 +31,19 @@ public class Limits {
         limitations.remove(limitation);
     }
 
-    public void addFieldZoneATK(MonsterCardType cardType, int amount) {
+    public void addFieldZoneATK(CardType cardType, int amount) {
         fieldZoneATKAddition.put(cardType, amount);
     }
 
-    public void addFieldZoneDEF(MonsterCardType cardType, int amount) {
+    public void addFieldZoneDEF(CardType cardType, int amount) {
         fieldZoneDEFAddition.put(cardType, amount);
     }
 
-    public void removeFieldZoneATK(MonsterCardType cardType) {
+    public void removeFieldZoneATK(CardType cardType) {
         fieldZoneATKAddition.remove(cardType);
     }
 
-    public void removeFieldZoneDEF(MonsterCardType cardType) {
+    public void removeFieldZoneDEF(CardType cardType) {
         fieldZoneDEFAddition.remove(cardType);
     }
 
