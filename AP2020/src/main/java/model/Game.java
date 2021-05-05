@@ -62,6 +62,22 @@ public class Game {
         playerLimits = rivalLimits;
         rivalLimits = tempLimits;
         roundCounter++;
+        Cell[] temp = playerBoard.getMonsterZone();
+        for (Cell cell : temp) {
+            cell.setChangedPosition(false);
+            cell.increaseRoundCounter();
+            cell.setCanAttack(false);
+        }
+        temp = playerBoard.getSpellZone();
+        for (Cell cell : temp) cell.increaseRoundCounter();
+        temp = rivalBoard.getMonsterZone();
+        for (Cell cell : temp) {
+            cell.setChangedPosition(false);
+            cell.increaseRoundCounter();
+            cell.setCanAttack(false);
+        }
+        temp = rivalBoard.getSpellZone();
+        for (Cell cell : temp) cell.increaseRoundCounter();
     }
     //todo board bayad User begire be nazaram!
 
@@ -159,6 +175,7 @@ public class Game {
         }
     }
 
+
     public void summonMonster(Card card) {
         if (!isMonsterZoneFull()) {
             playerBoard.addCardToMonsterZone(card);
@@ -214,8 +231,13 @@ public class Game {
         return null;
     }
 
-    public boolean canSummon() {
-        return false;
+
+    public boolean canSummon(){
+        return canSummonCard;
+    }
+    public void setCanSummonCard(boolean canSummonCard) {
+        this.canSummonCard = canSummonCard;
+
     }
 
     public void summonWithTribute(Card card) {
