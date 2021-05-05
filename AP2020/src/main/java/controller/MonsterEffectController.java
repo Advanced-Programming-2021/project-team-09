@@ -175,8 +175,19 @@ public class MonsterEffectController {
 
     }
 
-    public void TheCalculator() {
-
+    public void TheCalculator(Game game, Card card) {
+        Board board;
+        if (doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+        board = game.getRivalBoard();
+        int sumLevel=0;
+        for (int i = 0; i < 5; i++) {
+            if(board.getMonsterZone(i).isOccupied() && board.getMonsterZone(i).isFaceUp()){
+                Monster monster = (Monster) board.getMonsterZone(i).getCard();
+                sumLevel += monster.getLevel();
+            }
+        }
+        Monster monster = (Monster) card;
+        monster.setAttack( sumLevel * 300);
     }
 
     public void AlexandriteDragon() {
