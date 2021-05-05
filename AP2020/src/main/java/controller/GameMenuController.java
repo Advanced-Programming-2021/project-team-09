@@ -14,87 +14,82 @@ import view.responses.GameMenuResponses;
 import java.util.ArrayList;
 
 public class GameMenuController {
-    private Game game;
 
-    public GameMenuController(Game game) {
-        this.game = game;
-    }
-
-    public String showTable() {
+    static public String showTable(Game game) {
         return game.showTable();
     }
 
-    public Cell selectMonsterFromPlayer(int cellNumber) {
+    static public Cell selectMonsterFromPlayer(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return null;
         return game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
     } // todo deselect cells
 
-    public GameMenuResponses canSelectMonsterFromPlayer(int cellNumber) {
+    static public GameMenuResponses canSelectMonsterFromPlayer(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
         if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied())
             return GameMenuResponses.NO_CARD_FOUND;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public GameMenuResponses canSelectMonsterFromRival(int cellNumber) {
+    static public GameMenuResponses canSelectMonsterFromRival(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
         if (!game.getRivalBoard().getMonsterZone()[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         if (game.getRivalBoard().getMonsterZone()[cellNumber - 1].isFaceDown()) return GameMenuResponses.CARD_IS_HIDDEN;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public Cell selectMonsterFromRival(int cellNumber) {
+    static public Cell selectMonsterFromRival(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return null;
         return game.getRivalBoard().getMonsterZone()[cellNumber - 1];
     }
 
-    public GameMenuResponses canSelectSpellAndTrapFromPlayer(int cellNumber) {
+    static public GameMenuResponses canSelectSpellAndTrapFromPlayer(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
         if (!game.getPlayerBoard().getSpellZone()[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public GameMenuResponses canSelectSpellAndTrapFromRival(int cellNumber) {
+    static public GameMenuResponses canSelectSpellAndTrapFromRival(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
         if (!game.getRivalBoard().getSpellZone()[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         if (game.getRivalBoard().getSpellZone()[cellNumber - 1].isFaceDown()) return GameMenuResponses.CARD_IS_HIDDEN;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public Cell selectSpellAndTrapFromPlayer(int cellNumber) {
+    static public Cell selectSpellAndTrapFromPlayer(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return null;
         return game.getPlayerBoard().getSpellZone()[cellNumber - 1];
     }
 
-    public Cell selectSpellAndTrapFromRival(int cellNumber) {
+    static public Cell selectSpellAndTrapFromRival(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return null;
         return game.getRivalBoard().getSpellZone()[cellNumber - 1];
     }
 
-    public GameMenuResponses canSelectPlayerFieldZone() {
+    static public GameMenuResponses canSelectPlayerFieldZone(Game game) {
         if (!game.getPlayerBoard().getFieldZone().isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public Cell selectPlayerFieldZone() {
+    static public Cell selectPlayerFieldZone(Game game) {
         return game.getPlayerBoard().getFieldZone();
     }
 
-    public GameMenuResponses canSelectRivalFieldZone() {
+    static public GameMenuResponses canSelectRivalFieldZone(Game game) {
         if (!game.getRivalBoard().getFieldZone().isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public Cell selectRivalFieldZone() {
+    static public Cell selectRivalFieldZone(Game game) {
         return game.getRivalBoard().getFieldZone();
     }
 
-    public Boolean canDraw() {
+    static public Boolean canDraw(Game game) {
         return game.playerHasCapacityToDraw() && game.getPlayerDeck().getMainDeck().getNumberOfAllCards() > 0;
     }
 
     // returns the name of card which was added to hand
-    public String draw() {
+    static public String draw(Game game) {
         // todo use draw from game
         MainDeck tempDeck = game.getPlayerDeck().getMainDeck();
         ArrayList<Card> tempHand = game.getPlayerHandCards();
@@ -104,21 +99,21 @@ public class GameMenuController {
         return tempCard.getCardName();
     }
 
-    public GameMenuResponses canSelectCardFromHand(int cardNumber) {
+    static public GameMenuResponses canSelectCardFromHand(Game game, int cardNumber) {
         ArrayList<Card> tempCards = game.getPlayerHandCards();
         if (cardNumber > tempCards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (cardNumber < 1) return GameMenuResponses.INVALID_SELECTION;
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public Card selectCardFromHand(int cardNumber) {
+    static public Card selectCardFromHand(Game game, int cardNumber) {
         ArrayList<Card> tempCards = game.getPlayerHandCards();
         if (cardNumber > tempCards.size() || cardNumber < 1) return null;
         return tempCards.get(cardNumber - 1);
     }
 
 
-    public GameMenuResponses summonStatus(int cardNumberInHand) {
+    static public GameMenuResponses summonStatus(Game game, int cardNumberInHand) {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1) return GameMenuResponses.INVALID_SELECTION;
         Card card = cardsInHand.get(cardNumberInHand - 1);
@@ -127,23 +122,23 @@ public class GameMenuController {
         if (!game.canSummon()) return GameMenuResponses.ALREADY_SUMMONED;
         if (!canNormalSummon(card.getFeatures())) return GameMenuResponses.THIS_CARD_CANT_NORMAL_SUMMON;
         Monster tempMonster = (Monster) card;
-        if (tempMonster.getLevel() > 4) return canTributeSummon(tempMonster);
+        if (tempMonster.getLevel() > 4) return canTributeSummon(game,tempMonster);
         return game.isMonsterZoneFull() ? GameMenuResponses.MONSTER_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
         // todo more conditions - card features
     }
 
     // for cards like beast king barbaros
-    private boolean normalAndSpecialSummonChecker(ArrayList<CardFeatures> features) {
+    static private boolean normalAndSpecialSummonChecker(ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.HAS_SPECIAL_NORMAL_SUMMON) return true;
         return false;
     }
 
-    private boolean canNormalSummon(ArrayList<CardFeatures> features) {
+    static private boolean canNormalSummon(ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.NORMAL_SUMMON) return true;
         return false;
     }
 
-    private GameMenuResponses canTributeSummon(Monster monster) {
+    static private GameMenuResponses canTributeSummon(Game game, Monster monster) {
         Cell[] monsterCells = game.getPlayerBoard().getMonsterZone();
         int numMonsters = 0;
         for (Cell cell : monsterCells) if (cell.isOccupied()) numMonsters++;
@@ -154,7 +149,7 @@ public class GameMenuController {
     }
 
 
-    public GameMenuResponses attackStatus(int cellNumberAttacker, int cellNumberDefender) {
+    static public GameMenuResponses attackStatus(Game game, int cellNumberAttacker, int cellNumberDefender) {
         if (cellNumberAttacker > 5 || cellNumberAttacker < 1 || cellNumberDefender > 5 || cellNumberDefender < 1)
             return GameMenuResponses.INVALID_SELECTION;
         if (!game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].isOccupied())
@@ -172,13 +167,13 @@ public class GameMenuController {
         // todo card features
     }
 
-    public String attack(int attackerCellNumber, int defenderCellNumber) {
+    static public String attack(Game game, int attackerCellNumber, int defenderCellNumber) {
         Cell defender = game.getRivalBoard().getMonsterZone(defenderCellNumber - 1);
         Cell attacker = game.getPlayerBoard().getMonsterZone(attackerCellNumber - 1);
         Monster att = (Monster) attacker.getCard();
         Monster def = (Monster) defender.getCard();
         if (defender.getState() == State.FACE_DOWN_DEFENCE) {
-            rivalFlipSummon(defenderCellNumber);
+            rivalFlipSummon(game,defenderCellNumber);
             if (att.getAttack() == def.getDefense()) {
                 attacker.setCanAttack(false);
                 return "opponent’s monster card was " + def.getCardName() + " and no card was destroyed";
@@ -222,18 +217,18 @@ public class GameMenuController {
         } // todo page 32 AP GAME 2021
     }
 
-    public GameMenuResponses selectedCardsCanBeTributed(int[] cellNumbers) {
+    static public GameMenuResponses selectedCardsCanBeTributed(Game game, int[] cellNumbers) {
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : cells) if (!cell.isOccupied()) return GameMenuResponses.NO_MONSTER_ON_THIS_ADDRESS;
         return GameMenuResponses.SUCCESSFUL;
 
     }
 
-    public void tribute(int[] cellNumbers) {
+    static public void tribute(Game game, int[] cellNumbers) {
         for (int i : cellNumbers) game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
     }
 
-    public void summonMonster(int numberOFCardInHand) {
+    static public void summonMonster(Game game, int numberOFCardInHand) {
         Card card = game.getPlayerHandCards().get(numberOFCardInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : tempCells) {
@@ -245,7 +240,7 @@ public class GameMenuController {
         if (monsterHasSummonEffect(card.getFeatures())) ;// todo card.effect();
     }
 
-    public void summonSpell(int cardNumberInHand) {
+    static public void summonSpell(Game game, int cardNumberInHand) {
         Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
@@ -257,12 +252,12 @@ public class GameMenuController {
         // todo card.effect();
     }
 
-    private boolean monsterHasSummonEffect(ArrayList<CardFeatures> features) {
+    static private boolean monsterHasSummonEffect(ArrayList<CardFeatures> features) {
         for (CardFeatures cardFeatures : features) if (cardFeatures == CardFeatures.SUMMON_EFFECT) return true;
         return false;
     }
 
-    public GameMenuResponses canSetMonster(int cardNumberInHand) {
+    static public GameMenuResponses canSetMonster(Game game, int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
         if (cardNumberInHand > handCards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (!handCards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponses.PLEASE_SELECT_MONSTER;
@@ -274,7 +269,7 @@ public class GameMenuController {
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public void setMonsterCard(int numberOFCardInHand) {
+    static public void setMonsterCard(Game game, int numberOFCardInHand) {
         Card card = game.getPlayerHandCards().get(numberOFCardInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : tempCells) {
@@ -285,7 +280,7 @@ public class GameMenuController {
         }
     }
 
-    public GameMenuResponses canSetPositionMonster(int cellNumber, String attackOrDefence) {
+    static public GameMenuResponses canSetPositionMonster(Game game, int cellNumber, String attackOrDefence) {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponses.INVALID_SELECTION;
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         if (!tempCells[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
@@ -297,12 +292,12 @@ public class GameMenuController {
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public void setPositionMonster(int cellNumber, State state) {
+    static public void setPositionMonster(Game game, int cellNumber, State state) {
         game.getPlayerBoard().getMonsterZone(cellNumber - 1).setState(state);
     }
 
 
-    public GameMenuResponses canSetSpellCard(int cardNumberInHand) {
+    static public GameMenuResponses canSetSpellCard(Game game, int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
         if (cardNumberInHand < handCards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (handCards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponses.PLEASE_SELECT_SPELL_OR_TRAP;
@@ -313,7 +308,7 @@ public class GameMenuController {
         return GameMenuResponses.SUCCESSFUL;
     }
 
-    public void setSpellCard(int cardNumberInHand) {
+    static public void setSpellCard(Game game, int cardNumberInHand) {
         Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
@@ -324,7 +319,7 @@ public class GameMenuController {
         }
     }
 
-    public GameMenuResponses canFlipSummon(int cellNumber) {
+    static public GameMenuResponses canFlipSummon(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponses.INVALID_SELECTION;
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
         if (!tempCell.isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
@@ -334,24 +329,24 @@ public class GameMenuController {
 
     }
 
-    public void flipSummon(int cellNumber) {
+    static public void flipSummon(Game game, int cellNumber) {
         Cell tempCell = game.getPlayerBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_ATTACK);
         if (monsterHasSummonEffect(tempCell.getCard().getFeatures())) ;// todo tempCell.getCard().effect();
     }
 
-    public void rivalFlipSummon(int cellNumber) {
+    static public void rivalFlipSummon(Game game, int cellNumber) {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
         if (monsterHasSummonEffect(tempCell.getCard().getFeatures())) ;// todo tempCell.getCard().effect();
     }
 
-    private boolean monsterHasFlipEffect(ArrayList<CardFeatures> features) {
+    static private boolean monsterHasFlipEffect(Game game, ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.FLIP_EFFECT) return true;
         return false;
     }
 
-    public GameMenuResponses canRitualSummon(int cardNumberInHand, int[] tributeCells) {
+    static public GameMenuResponses canRitualSummon(Game game, int cardNumberInHand, int[] tributeCells) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cardNumberInHand > cards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (!cards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponses.PLEASE_SELECT_MONSTER;
@@ -375,8 +370,8 @@ public class GameMenuController {
 
     }
 
-    public void ritualSummon(int[] tributeCellNumbers, int numberOfCardInHand) {
-        tribute(tributeCellNumbers);
+   static public void ritualSummon(Game game,int[] tributeCellNumbers, int numberOfCardInHand) {
+        tribute(game,tributeCellNumbers);
         Cell[] cells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : cells) {
             if (cell.isOccupied()) {
@@ -391,7 +386,7 @@ public class GameMenuController {
             if (!cell.isOccupied()) cell.addCard(game.getPlayerHandCards().get(numberOfCardInHand - 1));
     }
 
-    public GameMenuResponses canDirectAttack(int cellNumber) {
+    static public GameMenuResponses canDirectAttack(Game game, int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponses.INVALID_SELECTION;
         if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied())
             return GameMenuResponses.NO_CARD_FOUND;
@@ -409,11 +404,11 @@ public class GameMenuController {
         // todo more conditions
     }
 
-    public void directAttack(int cellNumber) {
+    static public void directAttack(Game game, int cellNumber) {
         game.decreaseRivalHealth(((Monster) game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard()).getAttack());
     }
 
-    public void setTrapCard(int cardNumberInHand) {
+    static public void setTrapCard(Game game, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         Card card = cards.get(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
@@ -426,31 +421,31 @@ public class GameMenuController {
         }
     }
 
-    public void specialSummon(Card card) {
+    static public void specialSummon(Game game, Card card) {
         // todo
     }
 
-    public String showPlayerGraveYard() {
+    static public String showPlayerGraveYard(Game game) {
         return game.getPlayerBoard().getGraveyard().toString();
     }
 
-    public String showRivalGraveYard() {
+    static public String showRivalGraveYard(Game game) {
         return game.getRivalBoard().getGraveyard().toString();
     }
 
-    public String showCardFromPlayerMonsterZone(int cellNumber) {
+    static public String showCardFromPlayerMonsterZone(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).isOccupied()) return "E";
         return game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard().toString();
     }
 
-    public String showCardFromPlayerSpellZone(int cellNumber) {
+    static public String showCardFromPlayerSpellZone(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
         if (!game.getPlayerBoard().getSpellZone()[cellNumber - 1].isOccupied()) return "E";
         return game.getPlayerBoard().getSpellZone()[cellNumber - 1].getCard().toString();
     }
 
-    public String showCardFromRivalMonsterZone(int cellNumber) {
+    static public String showCardFromRivalMonsterZone(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
         if (!game.getRivalBoard().getMonsterZone(cellNumber - 1).isOccupied()) return "E";
         if (game.getRivalBoard().getMonsterZone(cellNumber - 1).getState() == State.FACE_DOWN_DEFENCE)
@@ -458,7 +453,7 @@ public class GameMenuController {
         return game.getRivalBoard().getMonsterZone(cellNumber - 1).getCard().toString();
     }
 
-    public String showCardFromRivalSpellZone(int cellNumber) {
+    static public String showCardFromRivalSpellZone(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return "invalid selection";
         if (!game.getRivalBoard().getSpellZone()[cellNumber - 1].isOccupied()) return "E";
         if (game.getRivalBoard().getSpellZone()[cellNumber - 1].getState() == State.FACE_DOWN_SPELL)
@@ -466,25 +461,25 @@ public class GameMenuController {
         return game.getRivalBoard().getSpellZone()[cellNumber - 1].getCard().toString();
     }
 
-    public String showCardFromPlayerFieldZone() {
+    static public String showCardFromPlayerFieldZone(Game game) {
         Cell cell = game.getPlayerBoard().getFieldZone();
         if (!cell.isOccupied()) return "E";
         return cell.getCard().toString();
     }
 
-    public String showCardFromRivalFieldZone() {
+    static public String showCardFromRivalFieldZone(Game game) {
         Cell cell = game.getRivalBoard().getFieldZone();
         if (!cell.isOccupied()) return "E";
         return cell.getCard().toString();
     }
 
-    public String showCardFromHand(int cardNumberInHand) {
+    static public String showCardFromHand(Game game, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cards.size() < cardNumberInHand) return "invalid selection";
         return game.getPlayerHandCards().get(cardNumberInHand - 1).toString();
     }
 
-    public void cashOut(int maxLP, boolean is3RoundGame, User winner, User loser) {
+    static public void cashOut(Game game,int maxLP, boolean is3RoundGame, User winner, User loser) {
         if (is3RoundGame) {
             winner.setScore(winner.getScore() + 3000);
             winner.increaseBalance(3000 + 3 * maxLP);

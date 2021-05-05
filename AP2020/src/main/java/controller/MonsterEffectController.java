@@ -10,6 +10,8 @@ import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
 import view.responses.HowToSummon;
 
+import java.util.ArrayList;
+
 public class MonsterEffectController {
 
     public void CommandKnight(Game game, Card card) {
@@ -174,13 +176,15 @@ public class MonsterEffectController {
     }
 
     public void BeastKingBarbaros(Game game, Card card) {
+        ArrayList<Card> hand;
         HowToSummon howToSummon = CardEffectsView.howToSummon();
-        if (howToSummon == HowToSummon.NORMAL) {
+        if (doesCardBelongsToPlayer(game,card)) hand = game.getPlayerHandCards();
+        else hand = game.getRivalHandCards();
+        if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE1) {
             ((Monster) card).setAttack(1900);
-            game.summonMonster(card);//ToDo "state" is missing!!
-        } else if (howToSummon == HowToSummon.SPECIAL_NORMAL) {
+
+        } else if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE2) {
             int[] cells = CardEffectsView.getCellNumbers(3);
-            if (cells == null) return;
         }
     }
 

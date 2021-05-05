@@ -3,5 +3,8 @@ package view.responses;
 public enum HowToSummon {
     NORMAL,
     SPECIAL,
-    SPECIAL_NORMAL
+    RITUAL,
+    SPECIAL_NORMAL,
+    SPECIAL_NORMAL_TYPE1,
+    SPECIAL_NORMAL_TYPE2
 }
