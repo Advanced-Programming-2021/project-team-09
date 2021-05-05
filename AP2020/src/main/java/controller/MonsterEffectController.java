@@ -144,7 +144,7 @@ public class MonsterEffectController {
         Graveyard graveyard = board.getGraveyard();
         Card card1;
         while (true) {
-            card1 = CardEffectsView.getCarFromGraveyard(graveyard);
+            card1 = CardEffectsView.getCardFromGraveyard(graveyard);
             if (card1 == null) return;
             else if (!(card1 instanceof Monster)) CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
             else break;
@@ -211,7 +211,27 @@ public class MonsterEffectController {
     }
 
     public void HeraldofCreation(Game game, Card card) {
-        
+        while (true){
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
+            if(game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+                CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+            else{
+                Card removingCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+                while (true){
+                    Card givenCardFromGraveYard = CardEffectsView.getCardFromGraveyard(game.getGraveyard());
+                    if(givenCardFromGraveYard.isMonster()){
+                        Monster monster =(Monster) givenCardFromGraveYard;
+                        if(monster.getLevel() >= 7){
+                            game.removeCardFromPlayerHand(removingCard);
+                            game.addCardToHand(monster);
+                        }
+                        else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
+                    }
+                    else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_MONSTER);
+                }
+            }
+
+        }
     }
 
     public void ExploderDragon() {
@@ -238,7 +258,7 @@ public class MonsterEffectController {
         //todo nabayad moqe summon kardan state ro ham moshakhas konim??!
         while (true){
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
-            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
+            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
             if(chosenCard.isMonster()){
                 Monster monster = (Monster) chosenCard;
                 if(monster.getLevel() <= 4){
