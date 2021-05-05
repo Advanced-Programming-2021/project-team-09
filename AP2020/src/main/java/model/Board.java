@@ -89,11 +89,12 @@ public class Board {
         return null;
     }
 
-    public int getSumLevel(Integer[] cellNumbers) {
+    public int getSumLevel(int[] cellNumbers) {
         int sumLevel = 0;
-        for (int i = 0; i < cellNumbers.length; i++) {
-            Monster monster = (Monster) monsterZone[cellNumbers[i]].getCard();
-            sumLevel += monster.getLevel();
+        for (int i : cellNumbers) {
+            if (monsterZone[i - 1].isOccupied()) {
+                sumLevel += ((Monster)monsterZone[i].getCard()).getLevel();
+            }
         }
         return sumLevel;
     }

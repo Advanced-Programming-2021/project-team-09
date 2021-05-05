@@ -24,13 +24,16 @@ public class Cell {
         this.card = null;
         this.roundCounter = 0;
         this.state = null;
+        changedPosition = false;
+        canAttack = false;
         return returningCard;
     }
 
     public void addCard(Card card) {
         this.card = card;
         changedPosition = false;
-        roundCounter++;
+        roundCounter = 0;
+        if (card.isMonster()) canAttack = true;
     }
 
     public Card getCard() {
