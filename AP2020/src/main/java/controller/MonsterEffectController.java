@@ -211,6 +211,7 @@ public class MonsterEffectController {
     }
 
     public void HeraldofCreation(Game game, Card card) {
+        mainLoop:
         while (true){
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
             if(game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
@@ -224,6 +225,7 @@ public class MonsterEffectController {
                         if(monster.getLevel() >= 7){
                             game.removeCardFromPlayerHand(removingCard);
                             game.addCardToHand(monster);
+                            break mainLoop;
                         }
                         else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
                     }
@@ -264,6 +266,7 @@ public class MonsterEffectController {
                 if(monster.getLevel() <= 4){
                     game.summonMonster(monster);
                     board.getMonsterZoneCellByCard(monster).setState(State.FACE_DOWN_DEFENCE);
+                    break;
                 }
                 else {
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_4_OR_LESS);
