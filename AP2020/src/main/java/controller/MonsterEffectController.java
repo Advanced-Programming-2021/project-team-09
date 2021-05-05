@@ -254,11 +254,26 @@ public class MonsterEffectController {
             }
         }
     }
-
-    public void TheTricky() {
-
+// baraye ehzar vizhe hast in
+    public void TheTricky(Game game, Card card) {
+        for (int i = 0; i < 5; i++) {
+            if(game.getPlayerHandCards().get(i).equals(card)){
+                CardEffectsView.respond(CardEffectsResponses.DO_YOU_WANT_TO_SPECIAL_SUMMON);
+                boolean wantsToSpecialSummon = CardEffectsView.doSpecialSummon();
+                while (wantsToSpecialSummon){
+                    int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
+                    if (game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+                        CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                    else {
+                        Card toBeRemovedCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+                        game.removeCardFromPlayerHand(toBeRemovedCard);
+                        game.summonMonster(card);
+                        break;
+                    }
+                }
+            }
+        }
     }
-
     public void SpiralSerpent() {
 
     }

@@ -11,6 +11,9 @@ public class CardEffectsView {
     }
     static public void respond(CardEffectsResponses response) {
     }
+    static public boolean doSpecialSummon(){
+        return true;
+    }
     static public int getNumberOfCardInHand(){
         return 0;
     }
