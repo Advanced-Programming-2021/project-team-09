@@ -230,8 +230,29 @@ public class MonsterEffectController {
 
     }
 
-    public void TerratigertheEmpoweredWarrior() {
-
+    public void TerratigertheEmpoweredWarrior(Game game, Card card) {
+        Board board;
+        if(doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+        board = game.getRivalBoard();
+        //todo be halat adi ehzar shode yani chi?? bedon in mizanam felan!
+        //todo nabayad moqe summon kardan state ro ham moshakhas konim??!
+        while (true){
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
+            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
+            if(chosenCard.isMonster()){
+                Monster monster = (Monster) chosenCard;
+                if(monster.getLevel() <= 4){
+                    game.summonMonster(monster);
+                    board.getMonsterZoneCellByCard(monster).setState(State.FACE_DOWN_DEFENCE);
+                }
+                else {
+                    CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_4_OR_LESS);
+                }
+            }
+            else {
+                CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_MONSTER);
+            }
+        }
     }
 
     public void TheTricky() {
