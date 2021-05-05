@@ -124,4 +124,30 @@ public class Monster extends Card {
         temp.append("Description: " + description);
         return temp.toString();
     }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setMonsterCardType(MonsterCardType monsterCardType) {
+        this.monsterCardType = monsterCardType;
+    }
+
+    public void setMonsterType(MonsterType monsterType) {
+        this.monsterType = monsterType;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    @JsonIgnore
+    public MonsterCardType getMonsterCardType() {
+        return monsterCardType;
+    }
+
 }

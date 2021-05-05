@@ -16,9 +16,11 @@ public class Limits {
     int attackBound = -1;
 
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
+    HashMap<Integer,Integer> spellUsageLimit = new HashMap<>();
     HashMap<MonsterCardType, Integer> fieldZoneATKAddition = new HashMap<>();
     HashMap<MonsterCardType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
+
 
 
     public void addLimit(EffectLimitations limitation) {
@@ -114,6 +116,7 @@ public class Limits {
             }
         }
     }
+
 }
 
 
