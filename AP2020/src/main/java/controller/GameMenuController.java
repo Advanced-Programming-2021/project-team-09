@@ -2,7 +2,6 @@ package controller;
 
 import model.Cell;
 import model.Game;
-import model.Limits;
 import model.State;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -10,7 +9,6 @@ import model.card.monster.Monster;
 import model.deck.MainDeck;
 import view.responses.GameMenuResponses;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -148,7 +146,6 @@ public class GameMenuController {
     }
 
 
-
     public GameMenuResponses attackStatus(int cellNumberAttacker, int cellNumberDefender) {
         if (cellNumberAttacker > 5 || cellNumberAttacker < 1 || cellNumberDefender > 5 || cellNumberDefender < 1)
             return GameMenuResponses.INVALID_SELECTION;
@@ -156,12 +153,58 @@ public class GameMenuController {
             return GameMenuResponses.NO_CARD_FOUND;
         if (!game.getRivalBoard().getMonsterZone()[cellNumberAttacker - 1].isOccupied())
             return GameMenuResponses.NO_CARD_FOUND;
-        if (!game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].canAttack()) return GameMenuResponses.ALREADY_ATTACKED;
-        Monster attackerMonster = (Monster)game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].getCard(),
-        defenderMonster = (Monster)game.getRivalBoard().getMonsterZone()[cellNumberDefender - 1].getCard();
+        if (!game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].canAttack())
+            return GameMenuResponses.ALREADY_ATTACKED;
+        if (game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].getState() == State.FACE_DOWN_DEFENCE)
+            return GameMenuResponses.YOU_HAVENT_SUMMONED_YET;
+        Monster attackerMonster = (Monster) game.getPlayerBoard().getMonsterZone()[cellNumberAttacker - 1].getCard();
         if (!game.getPlayerLimits().canAttackByThisLimitations(attackerMonster)) return GameMenuResponses.CANT_ATTACK;
         if (game.getRivalLimits().canAttackCell(cellNumberDefender)) return GameMenuResponses.CANT_ATTACK;
         return GameMenuResponses.SUCCESSFUL;
+    }
+
+    public String attack(int attackerCellNumber, int defenderCellNumber) {
+        Cell defender = game.getRivalBoard().getMonsterZone(defenderCellNumber - 1);
+        Cell attacker = game.getPlayerBoard().getMonsterZone(attackerCellNumber - 1);
+        Monster att = (Monster) attacker.getCard();
+        Monster def = (Monster) defender.getCard();
+        if (defender.getState() == State.FACE_DOWN_DEFENCE) {
+            rivalFlipSummon(defenderCellNumber);
+            if (att.getAttack() == def.getDefense()) {
+                return "opponent’s monster card was " + def.getCardName() + " and no card was destroyed";
+            } else if (att.getAttack() > def.getDefense()) {
+                game.getRivalBoard().getGraveyard().addCard(game.getRivalBoard().getMonsterZone(defenderCellNumber - 1).removeCard());
+                return "opponent’s monster card was " + def.getCardName() + " and the defense position monster is destroyed";
+            } else {
+                game.decreaseHealth(def.getDefense() - att.getAttack());
+                return "opponent’s monster card was " + def.getCardName() + " and no card is destroyed and you received " + (def.getDefense() - att.getAttack()) + " battle damage";
+            }
+        }
+        else if (defender.getState() == State.FACE_UP_ATTACK) {
+            if (att.getAttack() == def.getAttack()) {
+                game.getPlayerBoard().getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(attackerCellNumber - 1).removeCard());
+                game.getRivalBoard().getGraveyard().addCard(game.getRivalBoard().getMonsterZone(defenderCellNumber - 1).removeCard());
+                return "both you and your opponent monster cards are destroyed and no one receives damage";
+            } else if (att.getAttack() > def.getAttack()) {
+                game.getRivalBoard().getGraveyard().addCard(game.getRivalBoard().getMonsterZone(defenderCellNumber - 1).removeCard());
+                game.decreaseRivalHealth(att.getAttack() - def.getAttack());
+                return "your opponent’s monster is destroyed and your opponent receives " + (att.getAttack() - def.getAttack()) + " battle damage";
+            } else {
+                game.getPlayerBoard().getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(attackerCellNumber - 1).removeCard());
+                game.decreaseHealth(def.getAttack() - att.getAttack());
+                return "Your monster card is destroyed and you received " + (def.getAttack() - att.getAttack()) + " battle damage";
+            }
+        } else {
+            if (att.getAttack() == def.getDefense()) {
+                return "no card was destroyed";
+            } else if (att.getAttack() > def.getDefense()) {
+                game.getRivalBoard().getGraveyard().addCard(game.getRivalBoard().getMonsterZone(defenderCellNumber - 1).removeCard());
+                return "the defense position monster is destroyed";
+            } else {
+                game.decreaseHealth(def.getDefense() - att.getAttack());
+                return "no card is destroyed and you received " + (def.getDefense() - att.getAttack()) + " battle damage";
+            }
+        }
     }
 
     public GameMenuResponses selectedCardsCanBeTributed(int[] cellNumbers) {
@@ -207,7 +250,7 @@ public class GameMenuController {
     public GameMenuResponses canSetMonster() {
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         int occupied = 0;
-        for (Cell cell : cells) if (cell.isOccupied()) occupied ++;
+        for (Cell cell : cells) if (cell.isOccupied()) occupied++;
         if (occupied == 5) return GameMenuResponses.MONSTER_ZONE_IS_FULL;
         if (!game.canSummon()) return GameMenuResponses.ALREADY_SUMMONED;
         return GameMenuResponses.SUCCESSFUL;
@@ -229,7 +272,8 @@ public class GameMenuController {
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         if (!tempCells[cellNumber - 1].isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
         Card tempCard = tempCells[cellNumber - 1].getCard();
-        if (tempCells[cellNumber - 1].getState() == State.FACE_DOWN_DEFENCE) return GameMenuResponses.YOU_HAVENT_SUMMONED_YET;
+        if (tempCells[cellNumber - 1].getState() == State.FACE_DOWN_DEFENCE)
+            return GameMenuResponses.YOU_HAVENT_SUMMONED_YET;
         State tempState = attackOrDefence.equals("attack") ? State.FACE_UP_ATTACK : State.FACE_UP_DEFENCE;
         if (tempCells[cellNumber - 1].getState() == tempState) return GameMenuResponses.ALREADY_IN_THIS_POSITION;
         return GameMenuResponses.SUCCESSFUL;
@@ -259,7 +303,8 @@ public class GameMenuController {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponses.INVALID_SELECTION;
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
         if (!tempCell.isOccupied()) return GameMenuResponses.NO_CARD_FOUND;
-        if (tempCell.getRoundCounter() == 0 || tempCell.getState() != State.FACE_DOWN_DEFENCE) return GameMenuResponses.CANT_FLIP_SUMMON;
+        if (tempCell.getRoundCounter() == 0 || tempCell.getState() != State.FACE_DOWN_DEFENCE)
+            return GameMenuResponses.CANT_FLIP_SUMMON;
         return GameMenuResponses.SUCCESSFUL;
 
     }
@@ -267,6 +312,12 @@ public class GameMenuController {
     public void flipSummon(int cellNumber) {
         Cell tempCell = game.getPlayerBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_ATTACK);
+        if (monsterHasSummonEffect(tempCell.getCard().getFeatures())) ;// todo tempCell.getCard().effect();
+    }
+
+    public void rivalFlipSummon(int cellNumber) {
+        Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
+        tempCell.setState(State.FACE_UP_DEFENCE);
         if (monsterHasSummonEffect(tempCell.getCard().getFeatures())) ;// todo tempCell.getCard().effect();
     }
 
@@ -279,7 +330,11 @@ public class GameMenuController {
 
     }
 
-    public void directAttack(Card attackerCard, Card defenderCard) {
+    public GameMenuResponses canDirectAttack(int cellNumber) {
+        // todo
+    }
+
+    public void directAttack(int cellNumber) {
 
     }
 
