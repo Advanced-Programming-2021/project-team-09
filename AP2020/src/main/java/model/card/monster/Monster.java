@@ -6,7 +6,8 @@ import controller.*;
 import model.card.*;
 
 import java.util.ArrayList;
-@JsonIgnoreProperties ({"description","cardType","cardID","level","attack","permanentAttack","permanentDefense","defense","monsterEffectType","monsterType","monsterCardType","attribute","numberOfTributes"})
+
+@JsonIgnoreProperties({"description", "cardType", "cardID", "level", "attack", "permanentAttack", "permanentDefense", "defense", "monsterEffectType", "monsterType", "monsterCardType", "attribute", "numberOfTributes"})
 public class Monster extends Card {
     protected int level;
     private int attack;
@@ -36,7 +37,8 @@ public class Monster extends Card {
         this.cardType = CardType.MONSTER;
     }
 
-    public Monster(){
+    public Monster() {
+        features = new ArrayList<>();
     }
 
     public int getNumberOfTributes() {
@@ -156,6 +158,14 @@ public class Monster extends Card {
         setAttributesWithName(cardName);
     }
 
+    public void setPermanentAttack(int permanentAttack) {
+        this.permanentAttack = permanentAttack;
+    }
+
+    public void setPermanentDefense(int permanentDefense) {
+        this.permanentDefense = permanentDefense;
+    }
+
     public void setAttributesWithName(String cardName) {
         ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(cardName);
         if (temp == null || temp.size() != 7) {
@@ -172,6 +182,6 @@ public class Monster extends Card {
         description = temp.get(6);
         this.cardName = cardName;
         this.cardType = CardType.MONSTER;
-        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        this.features.addAll(ReadAndWriteDataBase.getCardFeaturesByName(cardName));
     }
 }

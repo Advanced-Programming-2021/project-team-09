@@ -355,9 +355,9 @@ public class GameMenuController {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cardNumberInHand > cards.size()) return GameMenuResponses.INVALID_SELECTION;
         if (!cards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponses.PLEASE_SELECT_MONSTER;
-        if (game.getPlayerBoard().getSumLevel(new int[]{1,2,3,4,5}) < ((Monster)game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+        if (game.getPlayerBoard().getSumLevel(new int[]{1, 2, 3, 4, 5}) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
             return GameMenuResponses.CANT_RITUAL_SUMMON;
-        if (game.getPlayerBoard().getSumLevel(tributeCells) < ((Monster)game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+        if (game.getPlayerBoard().getSumLevel(tributeCells) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
             return GameMenuResponses.SELECTED_LEVELS_DONT_MATCH;
         if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
             return GameMenuResponses.SELECTED_MONSTER_IS_NOT_RITUAL;
@@ -365,7 +365,7 @@ public class GameMenuController {
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) {
-                if (cell.getCard().getCardName().equals("Advanced Ritual Art")){
+                if (cell.getCard().getCardName().equals("Advanced Ritual Art")) {
                     hasRitualSpell = true;
                 }
             }

@@ -2,11 +2,13 @@ package controller;
 
 import model.*;
 import model.card.Card;
+import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterEffectType;
 import model.deck.Graveyard;
 import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
+import view.responses.HowToSummon;
 
 public class MonsterEffectController {
 
@@ -138,33 +140,48 @@ public class MonsterEffectController {
 
     public void Scanner(Game game, Card card) {
         Board board;
-        if (!card.getCardName().equals("Scanner")) card.destroy(game);
+
+        if (!card.getCardName().equals("Scanner")) {
+            card.destroy(game);
+            for (CardFeatures feature : card.getFeatures()) {
+                if (feature == CardFeatures.SCANNER || feature == CardFeatures.NORMAL_SUMMON) ;
+                else card.getFeatures().remove(feature);
+            }
+        }
+
         if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
         else board = game.getPlayerBoard();
+
         Graveyard graveyard = board.getGraveyard();
         Card card1;
+
         while (true) {
             card1 = CardEffectsView.getCarFromGraveyard(graveyard);
             if (card1 == null) return;
             else if (!(card1 instanceof Monster)) CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
             else break;
         }
+
         Monster monster = (Monster) card;
         Monster monster1 = (Monster) card1;
         DuplicateMonster(monster, monster1);
-        if (getStateOfCard(game,card).equals(State.FACE_UP_ATTACK) || getStateOfCard(game,card).equals(State.FACE_UP_DEFENCE)) {
-            if (monster.getMonsterEffectType().equals(MonsterEffectType.CONTINUOUS)) monster.activeEffect(game);
-        }
     }
 
 
-    public void Marshmallon(Game game,Card card) {
-        if (doesCardBelongsToPlayer(game,card)) game.decreaseRivalHealth(1000);
+    public void Marshmallon(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game, card)) game.decreaseRivalHealth(1000);
         else game.decreaseHealth(1000);
     }
 
-    public void BeastKingBarbaros(Game game,Card card) {
-
+    public void BeastKingBarbaros(Game game, Card card) {
+        HowToSummon howToSummon = CardEffectsView.howToSummon();
+        if (howToSummon == HowToSummon.NORMAL) {
+            ((Monster) card).setAttack(1900);
+            game.summonMonster(card);//ToDo "state" is missing!!
+        } else if (howToSummon == HowToSummon.SPECIAL_NORMAL) {
+            int[] cells = CardEffectsView.getCellNumbers(3);
+            if (cells == null) return;
+        }
     }
 
     public void Texchanger() {
@@ -177,17 +194,17 @@ public class MonsterEffectController {
 
     public void TheCalculator(Game game, Card card) {
         Board board;
-        if (doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         board = game.getRivalBoard();
-        int sumLevel=0;
+        int sumLevel = 0;
         for (int i = 0; i < 5; i++) {
-            if(board.getMonsterZone(i).isOccupied() && board.getMonsterZone(i).isFaceUp()){
+            if (board.getMonsterZone(i).isOccupied() && board.getMonsterZone(i).isFaceUp()) {
                 Monster monster = (Monster) board.getMonsterZone(i).getCard();
                 sumLevel += monster.getLevel();
             }
         }
         Monster monster = (Monster) card;
-        monster.setAttack( sumLevel * 300);
+        monster.setAttack(sumLevel * 300);
     }
 
     public void AlexandriteDragon() {
@@ -200,18 +217,17 @@ public class MonsterEffectController {
         if (doesCardBelongsToPlayer(game, card)) {
             limits = game.getRivalLimits();
             board = game.getPlayerBoard();
-        }
-        else {
+        } else {
             limits = game.getPlayerLimits();
             board = game.getRivalBoard();
         }
-        if(board.getMonsterZoneCellByCard(card).isFaceUp()){
+        if (board.getMonsterZoneCellByCard(card).isFaceUp()) {
             limits.addLimit(EffectLimitations.CANT_ACTIVATE_TRAP);
         }
     }
 
     public void HeraldofCreation(Game game, Card card) {
-        
+
     }
 
     public void ExploderDragon() {
@@ -232,24 +248,22 @@ public class MonsterEffectController {
 
     public void TerratigertheEmpoweredWarrior(Game game, Card card) {
         Board board;
-        if(doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         board = game.getRivalBoard();
         //todo be halat adi ehzar shode yani chi?? bedon in mizanam felan!
         //todo nabayad moqe summon kardan state ro ham moshakhas konim??!
-        while (true){
+        while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
             Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
-            if(chosenCard.isMonster()){
+            if (chosenCard.isMonster()) {
                 Monster monster = (Monster) chosenCard;
-                if(monster.getLevel() <= 4){
+                if (monster.getLevel() <= 4) {
                     game.summonMonster(monster);
                     board.getMonsterZoneCellByCard(monster).setState(State.FACE_DOWN_DEFENCE);
-                }
-                else {
+                } else {
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_4_OR_LESS);
                 }
-            }
-            else {
+            } else {
                 CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_MONSTER);
             }
         }
