@@ -1,7 +1,9 @@
 package view;
 
+import model.deck.Deck;
 import model.game.Board;
-import model.game.Game;
+import model.game.Cell;
+
 import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
@@ -34,7 +36,15 @@ public class CardEffectsView {
     static public Card getCardFromGraveyard(Graveyard graveyard) {
         return null;
     }
-
+    static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard){
+        return null;
+    }
+    static public Card getCardFromDeck(Deck deck){
+        return null;
+    }
+    static public Card getCardFromBothBoards(Cell[] playerSpellZone, Cell[] rivalSpellZone){
+        return null;
+    }
     static public HowToSummon howToSpecialNormalSummon() {
         return null;
     }

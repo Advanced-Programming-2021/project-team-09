@@ -7,7 +7,7 @@ import model.game.State;
 import model.card.Card;
 
 public class EffectController {
-    public boolean doesCardBelongsToPlayer(Game game, Card card) {
+    public static boolean doesCardBelongsToPlayer(Game game, Card card) {
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : cells) {
             if (cell.getCard().equals(card)) return true;
