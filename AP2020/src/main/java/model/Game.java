@@ -268,7 +268,11 @@ public class Game {
     }
 
     private String monsterStateToString(Cell cell){
-        return null;
+        if (!cell.isOccupied()) return "E   ";
+        State state = cell.getState();
+        if (state == State.FACE_UP_ATTACK) return "OO  ";
+        else if (state == State.FACE_UP_DEFENCE) return "DO  ";
+        return "DH  ";
     }
 
     public Graveyard getGraveyard() {
