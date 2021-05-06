@@ -6,7 +6,7 @@ import model.card.Card;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Deck {
+public class Deck implements Cloneable{
     private MainDeck mainDeck;
     private SideDeck sideDeck;
     private String deckName;
@@ -17,7 +17,10 @@ public class Deck {
         mainDeck = new MainDeck(deckName);
         sideDeck = new SideDeck(deckName);
     }
-
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+        return super.clone();
+    }
     public void addCardToMainDeck(Card card) {
         mainDeck.addCard(card);
     }

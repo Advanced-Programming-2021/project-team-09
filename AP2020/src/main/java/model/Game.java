@@ -27,12 +27,12 @@ public class Game {
     private Limits playerLimits;
     private Limits rivalLimits;
 
-    public Game(User player, User rival) {
+    public Game(User player, User rival) throws CloneNotSupportedException {
         winner = null;
         this.player = player;
         this.rival = rival;
-        //playerDeck = (Deck)player.getActiveDeck().clone();
-        //rivalDeck = (Deck)rival.getActiveDeck().clone();
+        playerDeck = (Deck)player.getActiveDeck().clone();
+        rivalDeck = (Deck)rival.getActiveDeck().clone();
         playerLimits = new Limits();
         rivalLimits = new Limits();
         playerBoard = new Board();
