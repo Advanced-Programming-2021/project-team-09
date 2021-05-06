@@ -1,5 +1,7 @@
 package view;
 
+import model.game.Board;
+import model.game.Game;
 import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
@@ -14,6 +16,10 @@ public class CardEffectsView {
     static public void respond(CardEffectsResponses response) {
     }
 
+    static public boolean doYouWantTo(String message) {
+        return true;
+    }
+    static public Card getCardFrom(Board board) {return null;}
     static public boolean doSpecialSummon(){
         return true;
     }

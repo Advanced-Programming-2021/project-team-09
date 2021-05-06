@@ -3,6 +3,7 @@ package model.game;
 import model.card.Card;
 import model.card.CardType;
 import model.card.monster.Monster;
+import model.card.monster.MonsterType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,12 +16,11 @@ public class Limits {
     int attackBound = -1;
 
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
-    HashMap<Integer,Integer> spellUsageLimit = new HashMap<>();
-    HashMap<CardType, Integer> fieldZoneATKAddition = new HashMap<>();
-    HashMap<CardType, Integer> fieldZoneDEFAddition = new HashMap<>();
+    HashMap<Integer, Integer> spellUsageLimit = new HashMap<>();
+    HashMap<MonsterType, Integer> fieldZoneATKAddition = new HashMap<>();
+    HashMap<MonsterType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
     ArrayList<Card> monstersWeDontHaveControl = new ArrayList<>();
-
 
 
     public void loseControlOfMonster(Card card) {
@@ -30,9 +30,11 @@ public class Limits {
     public boolean hasControlOnMonster(Card card) {
         return !monstersWeDontHaveControl.contains(card);
     }
+
     public void getControlBackOnMonster(Card card) {
         monstersWeDontHaveControl.remove(card);
     }
+
     public void addLimit(EffectLimitations limitation) {
         limitations.add(limitation);
     }
@@ -41,19 +43,19 @@ public class Limits {
         limitations.remove(limitation);
     }
 
-    public void addFieldZoneATK(CardType cardType, int amount) {
+    public void addFieldZoneATK(MonsterType cardType, int amount) {
         fieldZoneATKAddition.put(cardType, amount);
     }
 
-    public void addFieldZoneDEF(CardType cardType, int amount) {
+    public void addFieldZoneDEF(MonsterType cardType, int amount) {
         fieldZoneDEFAddition.put(cardType, amount);
     }
 
-    public void removeFieldZoneATK(CardType cardType) {
+    public void removeFieldZoneATK(MonsterType cardType) {
         fieldZoneATKAddition.remove(cardType);
     }
 
-    public void removeFieldZoneDEF(CardType cardType) {
+    public void removeFieldZoneDEF(MonsterType cardType) {
         fieldZoneDEFAddition.remove(cardType);
     }
 

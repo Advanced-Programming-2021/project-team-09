@@ -179,6 +179,7 @@ public class MonsterEffectController extends EffectController {
         ArrayList<Card> hand;
         if (doesCardBelongsToPlayer(game,card)) hand = game.getPlayerHandCards();
         else hand = game.getRivalHandCards();
+
         while (true) {
             HowToSummon howToSummon = CardEffectsView.howToSpecialNormalSummon();
             if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE1) {
@@ -199,28 +200,54 @@ public class MonsterEffectController extends EffectController {
             } else if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE2) {
                 main:
                 while (true) {
-                    int[] cells = CardEffectsView.getCellNumbers(3);
+                    int[] cellNumbers = CardEffectsView.getCellNumbers(3);
+                    Cell[] cell = game.getPlayerBoard().getMonsterZone();
+
                     for (int i = 0; i < 3; i++) {
-                        if (!isCellNumberValid(cells[i])) {
+                        if (!isCellNumberValid(cellNumbers[i])) {
                             CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
                             continue main;
                         }
                     }
-                }
+                    if (cellNumbers[0] == cellNumbers[1] || cellNumbers[1] == cellNumbers[2] || cellNumbers[0] == cellNumbers[2]) {
+                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                        continue;
+                    }
+                    for (int i = 0; i < 3; i++) {
+                        if (!cell[cellNumbers[i]].isOccupied()) {
+                            CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                            continue main;
+                        }
+                    }
 
+                    GameMenuController.tribute(game,cellNumbers);
+                    game.summonMonster(card);
+                    int cellNumber = getCellNumberOfMonster(game,card);
+                    game.getPlayerBoard().getMonsterZone(cellNumber).setState(State.FACE_UP_ATTACK);
+                }
             } else if (howToSummon == HowToSummon.BACK) {
                 return;
             }
         }
     }
 
-    public void Texchanger() {
+    public void Texchanger(Game game,Card card) {
+        if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
+            Board board;
+            if (doesCardBelongsToPlayer(game,card)) board = game.getPlayerBoard();
+            else board = game.getRivalBoard();
+            if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+            else {
+                while (true) {
+                    Card card1 = CardEffectsView.getCardFrom(board);
+                    if (card1 == null) return;
+                }
+            }
 
+        } else return;
     }
 
-    public void Leotron() {
 
-    }
 
     public void TheCalculator(Game game, Card card) {
         Board board;
@@ -238,9 +265,6 @@ public class MonsterEffectController extends EffectController {
         card = monster;
     }
 
-    public void AlexandriteDragon() {
-
-    }
 
     public void MirageDragon(Game game, Card card) {
         Limits limits;
@@ -282,21 +306,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void ExploderDragon() {
 
-    }
-
-    public void WarriorDaiGrepher() {
-
-    }
-
-    public void DarkBlade() {
-
-    }
-
-    public void Wattaildragon() {
-
-    }
 
     public void TerratigertheEmpoweredWarrior(Game game, Card card) {
         Board board;
@@ -344,9 +354,6 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void SpiralSerpent() {
-
-    }
 
     public int getCellNumberOfMonster(Game game, Card card) {
         Board board;
