@@ -14,4 +14,5 @@ public enum CardEffectsResponses {
     NO_FIELD_ZONE_SPELL_FOUND,
     PLEASE_SELECT_A_VALID_TYPE,
     YOU_DONT_HAVE_ANY_FIELD_SPELL,
+    NO_MONSTERS,
 }

@@ -98,7 +98,11 @@ public class SpellEffectController extends EffectController {
     }
 
     public void SupplySquad(Game game, Card card) {
-
+        Deck deck = getDeck(game,card);
+        ArrayList<Card> cardsInHand = getCardsInHand(game,card);
+        if (deck.getMainDeck().getCards().size() == 0) {
+            game.setWinner(getWinner(game,card));
+        }
     }
 
     public void SpellAbsorption(Game game, Card card) {

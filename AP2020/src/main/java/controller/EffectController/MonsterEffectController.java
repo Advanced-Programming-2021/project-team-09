@@ -28,6 +28,10 @@ public class MonsterEffectController extends EffectController {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
         else board = game.getPlayerBoard();
+        if (board.getMonsterZone().length == 0) {
+            CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
+            return;
+        }
         while (true) {
             int cellNumber = CardEffectsView.getCellNumber() - 1;
             if (!isCellNumberValid(cellNumber)) CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);

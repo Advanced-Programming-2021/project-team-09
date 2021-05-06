@@ -1,5 +1,6 @@
 package controller.EffectController;
 
+import model.User;
 import model.deck.Deck;
 import model.game.Board;
 import model.game.Cell;
@@ -41,6 +42,11 @@ public class EffectController {
             if (cell.getCard().equals(card)) return cell.getState();
         }
         return null;
+    }
+
+    public User getWinner(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game, card)) return game.getPlayer();
+        else return game.getRival();
     }
 
     public Board getBoard(Game game, Card card) {
