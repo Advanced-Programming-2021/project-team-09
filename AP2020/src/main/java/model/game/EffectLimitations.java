@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 public enum EffectLimitations {
     CANT_ACTIVATE_TRAP,

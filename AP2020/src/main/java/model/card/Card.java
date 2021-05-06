@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
-import model.Game;
+import model.game.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;

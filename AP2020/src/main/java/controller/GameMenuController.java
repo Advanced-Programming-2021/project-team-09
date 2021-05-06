@@ -1,8 +1,8 @@
 package controller;
 
-import model.Cell;
-import model.Game;
-import model.State;
+import model.game.Cell;
+import model.game.Game;
+import model.game.State;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -319,6 +319,7 @@ public class GameMenuController {
         }
     }
 
+
     static public GameMenuResponses canFlipSummon(Game game, int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponses.INVALID_SELECTION;
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
@@ -341,7 +342,7 @@ public class GameMenuController {
         if (monsterHasSummonEffect(tempCell.getCard().getFeatures())) ;// todo tempCell.getCard().effect();
     }
 
-    static private boolean monsterHasFlipEffect(Game game, ArrayList<CardFeatures> features) {
+    static private boolean monsterHasFlipEffect(ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.FLIP_EFFECT) return true;
         return false;
     }

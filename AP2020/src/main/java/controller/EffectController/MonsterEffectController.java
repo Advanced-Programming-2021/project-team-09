@@ -1,18 +1,18 @@
-package controller;
+package controller.EffectController;
 
-import model.*;
+import controller.GameMenuController;
 import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
-import model.card.monster.MonsterEffectType;
 import model.deck.Graveyard;
+import model.game.*;
 import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
 import view.responses.HowToSummon;
 
 import java.util.ArrayList;
 
-public class MonsterEffectController {
+public class MonsterEffectController extends EffectController {
 
     public void CommandKnight(Game game, Card card) {
         Limits limits;
@@ -177,14 +177,24 @@ public class MonsterEffectController {
 
     public void BeastKingBarbaros(Game game, Card card) {
         ArrayList<Card> hand;
-        HowToSummon howToSummon = CardEffectsView.howToSummon();
         if (doesCardBelongsToPlayer(game,card)) hand = game.getPlayerHandCards();
         else hand = game.getRivalHandCards();
-        if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE1) {
-            ((Monster) card).setAttack(1900);
-
-        } else if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE2) {
-            int[] cells = CardEffectsView.getCellNumbers(3);
+        while (true) {
+            HowToSummon howToSummon = CardEffectsView.howToSpecialNormalSummon();
+            if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE1) {
+                ((Monster) card).setAttack(1900);
+                State state = CardEffectsView.getStateOfSummon();
+                for (int i = 0; i < hand.size(); ++i) {
+                    if (hand.get(i).equals(card)) {
+                        GameMenuController.summonMonster(game,i);
+                        return;
+                    }
+                }
+            } else if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE2) {
+                int[] cells = CardEffectsView.getCellNumbers(3);
+            } else if (howToSummon == HowToSummon.BACK) {
+                return;
+            }
         }
     }
 
@@ -330,38 +340,7 @@ public class MonsterEffectController {
         return 0;
     }
 
-    public boolean doesCardBelongsToPlayer(Game game, Card card) {
-        Cell[] cells = game.getPlayerBoard().getMonsterZone();
-        for (Cell cell : cells) {
-            if (cell.getCard().equals(card)) return true;
-        }
-        cells = game.getPlayerBoard().getSpellZone();
-        for (Cell cell : cells) {
-            if (cell.getCard().equals(card)) return true;
-        }
-        for (Card card1 : game.getPlayerHandCards()) {
-            if (card1.equals(card)) return true;
-        }
-        return false;
-    }
 
-    public boolean isCellNumberValid(int cellNumber) {
-        return cellNumber >= 0 && cellNumber < 5;
-    }
-
-    public State getStateOfCard(Game game, Card card) {
-        State state;
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
-        else board = game.getRivalBoard();
-        for (Cell cell : board.getMonsterZone()) {
-            if (cell.getCard().equals(card)) return cell.getState();
-        }
-        for (Cell cell : board.getSpellZone()) {
-            if (cell.getCard().equals(card)) return cell.getState();
-        }
-        return null;
-    }
 
     private void DuplicateMonster(Monster monster, Monster originalMonster) {
         monster.setMonsterEffectType(originalMonster.getMonsterEffectType());

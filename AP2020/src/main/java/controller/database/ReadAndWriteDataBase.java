@@ -1,23 +1,14 @@
-package controller;
+package controller.database;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.Gson;
-import model.Board;
-import model.Game;
 import model.User;
-import model.card.Card;
 import model.card.CardFeatures;
 import model.card.FeatureWrapper;
-import model.card.monster.Monster;
-import model.card.spell_traps.Spell;
-import model.card.spell_traps.Trap;
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
 
 public class ReadAndWriteDataBase {
     public static final String usersAddr = "src/resources/Users/";

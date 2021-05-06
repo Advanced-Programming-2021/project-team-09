@@ -1,6 +1,7 @@
 
-package model;
+package model.game;
 
+import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.deck.Deck;

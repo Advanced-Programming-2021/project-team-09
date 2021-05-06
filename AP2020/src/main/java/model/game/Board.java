@@ -1,8 +1,7 @@
-package model;
+package model.game;
 
 import model.card.Card;
 import model.card.monster.Monster;
-import model.deck.Deck;
 import model.deck.Graveyard;
 
 public class Board {

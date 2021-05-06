@@ -1,6 +1,6 @@
 package view;
 
-import model.Board;
+import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
 import view.responses.CardEffectsResponses;
@@ -29,7 +29,11 @@ public class CardEffectsView {
         return null;
     }
 
-    static public HowToSummon howToSummon() {
+    static public HowToSummon howToSpecialNormalSummon() {
+        return null;
+    }
+
+    static public State getStateOfSummon() {
         return null;
     }
 

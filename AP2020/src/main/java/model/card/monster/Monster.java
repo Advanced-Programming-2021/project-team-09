@@ -2,7 +2,8 @@ package model.card.monster;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import controller.*;
+import controller.database.ReadAndWriteDataBase;
+import controller.database.csvInfoGetter;
 import model.card.*;
 
 import java.util.ArrayList;

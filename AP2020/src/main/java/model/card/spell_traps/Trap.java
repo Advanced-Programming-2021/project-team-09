@@ -2,7 +2,8 @@ package model.card.spell_traps;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import controller.*;
+import controller.database.ReadAndWriteDataBase;
+import controller.database.csvInfoGetter;
 import model.card.Card;
 import model.card.CardType;
 

@@ -6,5 +6,6 @@ public enum HowToSummon {
     RITUAL,
     SPECIAL_NORMAL,
     SPECIAL_NORMAL_TYPE1,
-    SPECIAL_NORMAL_TYPE2
+    SPECIAL_NORMAL_TYPE2,
+    BACK,
 }

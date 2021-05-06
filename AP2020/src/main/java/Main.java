@@ -1,14 +1,8 @@
 
 import com.google.gson.Gson;
-import controller.ReadAndWriteDataBase;
-import controller.csvInfoGetter;
-import model.User;
-import model.card.Card;
+import controller.database.csvInfoGetter;
 import model.card.CardFeatures;
 import model.card.FeatureWrapper;
-import model.deck.Deck;
-import model.deck.MainDeck;
-import view.LoginMenu;
 
 import java.io.FileWriter;
 import java.io.IOException;
