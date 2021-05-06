@@ -130,6 +130,7 @@ public class GameMenuController {
         if (tempMonster.getLevel() > 4) return canTributeSummon(tempMonster);
         return game.isMonsterZoneFull() ? GameMenuResponses.MONSTER_ZONE_IS_FULL : GameMenuResponses.SUCCESSFUL;
         // todo more conditions - card features
+		// todo joda kardan spell
     }
 
     // for cards like beast king barbaros
@@ -220,6 +221,10 @@ public class GameMenuController {
                 return "no card is destroyed and you received " + (def.getDefense() - att.getAttack()) + " battle damage";
             }
         } // todo page 32 AP GAME 2021
+		// todo destroy attacker
+		// todo lp func joda
+		// todo attack controller
+		
     }
 
     public GameMenuResponses selectedCardsCanBeTributed(int[] cellNumbers) {
@@ -299,6 +304,7 @@ public class GameMenuController {
 
     public void setPositionMonster(int cellNumber, State state) {
         game.getPlayerBoard().getMonsterZone(cellNumber - 1).setState(state);
+		// todo changed position in cell
     }
 
 
@@ -311,6 +317,7 @@ public class GameMenuController {
         for (Cell cell : cells) if (cell.isOccupied()) occupied++;
         if (occupied == 5) return GameMenuResponses.SPELL_ZONE_IS_FULL;
         return GameMenuResponses.SUCCESSFUL;
+		// todo more conditions
     }
 
     public void setSpellCard(int cardNumberInHand) {
@@ -323,6 +330,8 @@ public class GameMenuController {
             break;
         }
     }
+	// todo server clineti tor..
+	// hazfe can ha
 
     public GameMenuResponses canFlipSummon(int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponses.INVALID_SELECTION;
@@ -387,8 +396,12 @@ public class GameMenuController {
             }
         }
         cells = game.getPlayerBoard().getMonsterZone();
-        for (Cell cell : cells)
-            if (!cell.isOccupied()) cell.addCard(game.getPlayerHandCards().get(numberOfCardInHand - 1));
+        for (Cell cell : cells){
+            if (!cell.isOccupied()) {
+				cell.addCard(game.getPlayerHandCards().get(numberOfCardInHand - 1));
+				return;
+			}
+		}
     }
 
     public GameMenuResponses canDirectAttack(int cellNumber) {
@@ -411,6 +424,7 @@ public class GameMenuController {
 
     public void directAttack(int cellNumber) {
         game.decreaseRivalHealth(((Monster) game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard()).getAttack());
+		// todo canAttack changed
     }
 
     public void setTrapCard(int cardNumberInHand) {
