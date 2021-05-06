@@ -1,6 +1,8 @@
 package view;
 
 import model.deck.Deck;
+import model.game.Board;
+import model.game.Cell;
 import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
@@ -35,7 +37,9 @@ public class CardEffectsView {
     static public Card getCardFromDeck(Deck deck){
         return null;
     }
-
+    static public Card getCardFromBothBoards(Cell[] playerSpellZone, Cell[] rivalSpellZone){
+        return null;
+    }
     static public HowToSummon howToSpecialNormalSummon() {
         return null;
     }

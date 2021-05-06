@@ -1,12 +1,15 @@
 package controller;
 
+import controller.EffectController.EffectController;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.SpellType;
+import model.game.Board;
 import model.game.Cell;
 import model.game.Game;
 import model.card.Card;
 import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
+
 
 public class SpellEffectController {
     public void monsterReborn(Game game, Card card){
@@ -91,7 +94,11 @@ public class SpellEffectController {
     }
 
     public void mysticalspacetyphoon(Game game, Card card){
-
+        Card chosenCard = CardEffectsView.getCardFromBothBoards(game.getPlayerBoard().getSpellZone(), game.getRivalBoard().getSpellZone());
+        Board board;
+        if(EffectController.doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
+        board = game.getRivalBoard();
+        board.removeCardFromSpellZone(chosenCard);
     }
 
     public void ringofDefense(Game game, Card card){
