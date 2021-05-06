@@ -1,6 +1,9 @@
 package controller;
 import controller.database.ReadAndWriteDataBase;
 import controller.database.csvInfoGetter;
+import model.card.spell_traps.Limitation;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
 import view.responses.DeckMenuResponses;
 import model.*;
 import model.deck.*;
@@ -57,7 +60,7 @@ public class DeckMenuController {
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
-        if (!deck.canAddCardByName(cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
+        if (!deck.canAddCardByName(cardName) && !canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
         Card card = user.removeCard(cardName);
         primaryDeck.addCard(card);
         ReadAndWriteDataBase.updateUser(user);
@@ -149,6 +152,20 @@ public class DeckMenuController {
         outputString.append(", side deck " + deck.getSideDeck().getNumberOfAllCards() + ", ");
         outputString.append(deck.isValid() ? "valid":"invalid");
         return outputString.toString();
+    }
+
+    private static boolean canAddCard(String deckName, String cardName) {
+        int numberOfCard = LoginMenuController.getCurrentUser().getDeckByName(deckName).getNumberOfCardsByName(cardName);
+        Card card =csvInfoGetter.getCardByName(cardName);
+        if (card.isMonster()) return numberOfCard < 3;
+        else {
+            Limitation limitation;
+            if (card.isSpell()) limitation = ((Spell) card).getLimit();
+            else limitation = ((Trap) card).getLimit();
+            if (limitation.equals(Limitation.LIMITED)) return numberOfCard < 1;
+            else if (limitation.equals(Limitation.SEMI_LIMITED)) return numberOfCard < 2;
+            else return numberOfCard < 3;
+        }
     }
 
 }

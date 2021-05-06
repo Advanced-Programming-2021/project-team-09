@@ -24,82 +24,6 @@ public class MonsterEffectController extends EffectController {
         limits.banAttackingToCell(cellNumber);
     }
 
-    public void YomiShip() {
-
-    }
-
-    public void HornImp() {
-
-    }
-
-    public void SilverFang() {
-
-    }
-
-    public void Suijin() {
-
-    }
-
-    public void Fireyarou() {
-
-    }
-
-    public void Curtainofthedarkones() {
-
-    }
-
-    public void FeralImp() {
-
-    }
-
-    public void Darkmagician() {
-
-    }
-
-    public void Wattkid() {
-
-    }
-
-    public void Babydragon() {
-
-    }
-
-    public void Herooftheeast() {
-
-    }
-
-    public void Battlewarrior() {
-
-    }
-
-    public void Crawlingdragon() {
-
-    }
-
-    public void Flamemanipulator() {
-
-    }
-
-    public void BlueEyeswhitedragon() {
-
-    }
-
-    public void CrabTurtle() {
-
-    }
-
-    public void SkullGuardian() {
-
-    }
-
-    public void SlotMachine() {
-
-    }
-
-    public void Haniwa() {
-
-    }
-
     public void ManEaterBug(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
@@ -169,7 +93,6 @@ public class MonsterEffectController extends EffectController {
         Monster monster1 = (Monster) card1;
         DuplicateMonster(monster, monster1);
     }
-
 
     public void Marshmallon(Game game, Card card) {
         if (doesCardBelongsToPlayer(game, card)) game.decreaseRivalHealth(1000);
@@ -259,7 +182,6 @@ public class MonsterEffectController extends EffectController {
         } else return;
     }
 
-
     public void TheCalculator(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
@@ -275,7 +197,6 @@ public class MonsterEffectController extends EffectController {
         monster.setAttack(sumLevel * 300);
         card = monster;
     }
-
 
     public void MirageDragon(Game game, Card card) {
         Limits limits;
@@ -315,11 +236,8 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-
     public void TerratigertheEmpoweredWarrior(Game game, Card card) {
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
-        board = game.getRivalBoard();
+        Board board = getBoard(game,card);
         //todo be halat adi ehzar shode yani chi?? bedon in mizanam felan!
         //todo nabayad moqe summon kardan state ro ham moshakhas konim??!
         while (true) {
