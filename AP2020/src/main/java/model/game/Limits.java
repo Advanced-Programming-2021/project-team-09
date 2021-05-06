@@ -28,7 +28,7 @@ public class Limits {
     }
 
     public boolean hasControlOnMonster(Card card) {
-        return monstersWeDontHaveControl.contains(card);
+        return !monstersWeDontHaveControl.contains(card);
     }
     public void getControlBackOnMonster(Card card) {
         monstersWeDontHaveControl.remove(card);
@@ -118,7 +118,7 @@ public class Limits {
     }
 
     public boolean canAttackByThisLimitations(Card card) {
-        if (limitations.contains(EffectLimitations.CANT_ATTACK)) return false;
+        if (limitations.contains(EffectLimitations.CANT_ATTACK) || !hasControlOnMonster(card)) return false;
         else {
             if (attackBound != -1) return true;
             else {
