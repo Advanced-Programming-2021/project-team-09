@@ -40,6 +40,12 @@ public class Board {
         }
         return null;
     }
+    public Cell getSpellZoneCellByCard(Card card){
+        for (int i = 0; i < 5; i++) {
+            if( spellZone[i].getCard().equals(card)) return spellZone[i];
+        }
+        return null;
+    }
     public void addCardToSpellZone(Card card) {
         for (int i = 0; i < 5; i++) {
             if (!spellZone[i].isOccupied() && card.isSpell()) spellZone[i].addCard(card);
@@ -118,5 +124,9 @@ public class Board {
 
     public Cell getFieldZone() {
         return fieldZone;
+    }
+
+    public Cell getSpellZone(int spellZoneNumber) {
+        return spellZone[spellZoneNumber];
     }
 }

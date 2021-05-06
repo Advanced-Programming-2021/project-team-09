@@ -292,8 +292,15 @@ public class Game {
 
     }
 
-    public void ritualSummon(Card card) {
+    public void ritualSummon(int handNumber, int spellZoneNumber) {
+        if(canRitualSummon(handNumber, spellZoneNumber)){
+            summonMonster(playerHandCards.get(handNumber));
+            playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
+        }
+    }
 
+    public boolean canRitualSummon(int handNumber, int spellZoneNumber){
+        return playerHandCards.get(handNumber) != null && playerBoard.getSpellZone(spellZoneNumber).isOccupied();
     }
 
 
