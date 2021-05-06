@@ -6,6 +6,7 @@ import model.card.Card;
 public class SpellEffectController {
     public void monsterReborn(Game game, Card card){
 
+
     }
 
     public void terraForming(Game game, Card card){
