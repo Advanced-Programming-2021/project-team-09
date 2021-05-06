@@ -219,6 +219,7 @@ public class MonsterEffectController extends EffectController {
         }
         Monster monster = (Monster) card;
         monster.setAttack(sumLevel * 300);
+        card = monster;
     }
 
     public void AlexandriteDragon() {
