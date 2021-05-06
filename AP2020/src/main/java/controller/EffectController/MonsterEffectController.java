@@ -186,12 +186,28 @@ public class MonsterEffectController extends EffectController {
                 State state = CardEffectsView.getStateOfSummon();
                 for (int i = 0; i < hand.size(); ++i) {
                     if (hand.get(i).equals(card)) {
-                        GameMenuController.summonMonster(game,i);
-                        return;
+                        if (state.equals(State.SUMMON)){
+                            GameMenuController.summonMonster(game,i);
+                            return;
+                        }
+                        else if (state.equals(State.SET)) {
+                            GameMenuController.setMonsterCard(game,i);
+                            return;
+                        }
                     }
                 }
             } else if (howToSummon == HowToSummon.SPECIAL_NORMAL_TYPE2) {
-                int[] cells = CardEffectsView.getCellNumbers(3);
+                main:
+                while (true) {
+                    int[] cells = CardEffectsView.getCellNumbers(3);
+                    for (int i = 0; i < 3; i++) {
+                        if (!isCellNumberValid(cells[i])) {
+                            CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                            continue main;
+                        }
+                    }
+                }
+
             } else if (howToSummon == HowToSummon.BACK) {
                 return;
             }
@@ -306,6 +322,7 @@ public class MonsterEffectController extends EffectController {
             }
         }
     }
+
 // baraye ehzar vizhe hast in
     public void TheTricky(Game game, Card card) {
         for (int i = 0; i < 5; i++) {
@@ -326,6 +343,7 @@ public class MonsterEffectController extends EffectController {
             }
         }
     }
+
     public void SpiralSerpent() {
 
     }

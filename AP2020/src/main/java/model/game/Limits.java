@@ -19,9 +19,20 @@ public class Limits {
     HashMap<CardType, Integer> fieldZoneATKAddition = new HashMap<>();
     HashMap<CardType, Integer> fieldZoneDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
+    ArrayList<Card> monstersWeDontHaveControl = new ArrayList<>();
 
 
 
+    public void loseControlOfMonster(Card card) {
+        monstersWeDontHaveControl.add(card);
+    }
+
+    public boolean hasControlOnMonster(Card card) {
+        return monstersWeDontHaveControl.contains(card);
+    }
+    public void getControlBackOnMonster(Card card) {
+        monstersWeDontHaveControl.remove(card);
+    }
     public void addLimit(EffectLimitations limitation) {
         limitations.add(limitation);
     }
