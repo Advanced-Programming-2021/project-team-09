@@ -40,6 +40,7 @@ public class Game {
     }
 
     public void changeTurn() {
+        canSummonCard = true;
         phaseCounter = 0;
         User tempUser;
         tempUser = player;
@@ -179,12 +180,14 @@ public class Game {
     public void summonMonster(Card card) {
         if (!isMonsterZoneFull()) {
             playerBoard.addCardToMonsterZone(card);
+            canSummonCard =false;
         }
     }
 
     public void summonSpell(Card card) {
         if (!isSpellZoneFull()) {
             playerBoard.addCardToSpellZone(card);
+            canSummonCard = false;
         }
 
     }
@@ -296,6 +299,7 @@ public class Game {
         if(canRitualSummon(handNumber, spellZoneNumber)){
             summonMonster(playerHandCards.get(handNumber));
             playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
+            canSummonCard = false;
         }
     }
 
