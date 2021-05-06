@@ -1,5 +1,6 @@
 package view;
 
+import model.deck.Deck;
 import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
@@ -26,6 +27,12 @@ public class CardEffectsView {
     }
 
     static public Card getCardFromGraveyard(Graveyard graveyard) {
+        return null;
+    }
+    static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard){
+        return null;
+    }
+    static public Card getCardFromDeck(Deck deck){
         return null;
     }
 

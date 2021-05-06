@@ -84,15 +84,21 @@ public class Game {
     //todo board bayad User begire be nazaram!
 
     public void playerDrawCard() {
-        if (playerHasCapacityToDraw())
+        if (playerHasCapacityToDraw()){
             playerHandCards.add(playerDeck.getMainDeck().getCards().get(0));
+            playerDeck.getMainDeck().getCards().remove(0);
+        }
+
     }
     public void addCardToHand(Card card){
         playerHandCards.add(card);
     }
     public void rivalDrawCard() {
-        if (rivalHasCapacityToDraw())
+        if (rivalHasCapacityToDraw()){
             rivalHandCards.add(rivalDeck.getMainDeck().getCards().get(0));
+            rivalDeck.getMainDeck().getCards().remove(0);
+        }
+
     }
 
     public boolean playerHasCapacityToDraw() {
