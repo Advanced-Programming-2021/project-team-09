@@ -362,7 +362,7 @@ public class MonsterEffectController extends EffectController {
     }
 
 
-    public int getCellNumberOfMonster(Game game, Card card) {
+    static public int getCellNumberOfMonster(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();

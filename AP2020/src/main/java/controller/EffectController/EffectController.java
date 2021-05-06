@@ -1,10 +1,13 @@
 package controller.EffectController;
 
+import model.deck.Deck;
 import model.game.Board;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
 import model.card.Card;
+
+import java.util.ArrayList;
 
 public class EffectController {
     public static boolean doesCardBelongsToPlayer(Game game, Card card) {
@@ -39,4 +42,21 @@ public class EffectController {
         }
         return null;
     }
+
+    public Board getBoard(Game game, Card card) {
+        Board board;
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
+        else board = game.getRivalBoard();
+        return board;
+    }
+    public Deck getDeck(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getPlayerDeck();
+        else return game.getRivalDeck();
+    }
+
+    public ArrayList<Card> getCardsInHand(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getPlayerHandCards();
+        else return game.getRivalHandCards();
+    }
+
 }
