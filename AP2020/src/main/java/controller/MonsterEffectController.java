@@ -205,6 +205,7 @@ public class MonsterEffectController {
         }
         Monster monster = (Monster) card;
         monster.setAttack(sumLevel * 300);
+        card = monster;
     }
 
     public void AlexandriteDragon() {
