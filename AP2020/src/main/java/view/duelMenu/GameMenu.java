@@ -62,13 +62,13 @@ public class GameMenu {
 
     }
     public void singleRoundGame(User player, User rival){
-
+        //todo
     }
     public void tripleRoundGame(User player, User rival){
-
+        //todo
     }
     public void singlePlayerGame(){
-
+        //todo
     }
     private void respond(StartingGameResponses response){
         if (response.equals(StartingGameResponses.INVALID_COMMAND))
