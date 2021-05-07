@@ -30,6 +30,8 @@ public class GameMenu {
             command = scanner.nextLine().trim();
             if(GameMenuRegex.doesItDuelNewPlayerCommand(command))
                 duelNewPlayer(command);
+            else if (command.matches("duel new single player"))
+                singlePlayerGame();
             else if (command.matches("help"))
                 showHelp();
             else if (command.matches("menu show-current"))
@@ -92,6 +94,7 @@ public class GameMenu {
     public void showHelp(){
         StringBuilder help = new StringBuilder();
         help.append("duel new --second-player <player2 username> --rounds<1/3>\n");
+        help.append("duel new single player\n");
         help.append("menu show-current\n");
         help.append("menu exit\n");
         help.append("\n");
