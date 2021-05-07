@@ -32,6 +32,9 @@ public class CardEffectsView {
     static public int[] getCellNumbers(int count) {
         return null;
     }
+    static public int[] getCellNumbers() {
+        return null;
+    }
 
     static public Card getCardFromGraveyard(Graveyard graveyard) {
         return null;

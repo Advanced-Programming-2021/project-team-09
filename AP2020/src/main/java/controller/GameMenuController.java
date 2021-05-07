@@ -490,4 +490,8 @@ public class GameMenuController {
             winner.setScore(winner.getScore() + 1000);
         }
     }
+
+    static public void sendToGraveYard(Game game,Card card) {
+        //ToDo!
+    }
 }

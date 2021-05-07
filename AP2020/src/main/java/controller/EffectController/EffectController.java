@@ -2,10 +2,7 @@ package controller.EffectController;
 
 import model.User;
 import model.deck.Deck;
-import model.game.Board;
-import model.game.Cell;
-import model.game.Game;
-import model.game.State;
+import model.game.*;
 import model.card.Card;
 
 import java.util.ArrayList;
@@ -58,6 +55,11 @@ public class EffectController {
     public Deck getDeck(Game game, Card card) {
         if (doesCardBelongsToPlayer(game,card)) return game.getPlayerDeck();
         else return game.getRivalDeck();
+    }
+
+    public Limits getLimits(Game game,Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getPlayerLimits();
+        else return game.getRivalLimits();
     }
 
     public ArrayList<Card> getCardsInHand(Game game, Card card) {

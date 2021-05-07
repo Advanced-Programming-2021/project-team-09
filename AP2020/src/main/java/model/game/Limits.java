@@ -1,7 +1,6 @@
 package model.game;
 
 import model.card.Card;
-import model.card.CardType;
 import model.card.monster.Monster;
 import model.card.monster.MonsterType;
 
@@ -14,13 +13,46 @@ public class Limits {
     int atkAddition = 0;
     int defAddition = 0;
     int attackBound = -1;
-
+    ArrayList<Card> atkBounders = new ArrayList<>();
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
     HashMap<Integer, Integer> spellUsageLimit = new HashMap<>();
     HashMap<MonsterType, Integer> fieldZoneATKAddition = new HashMap<>();
     HashMap<MonsterType, Integer> fieldZoneDEFAddition = new HashMap<>();
+    HashMap<Card, Card> equipMonster = new HashMap<>();
+    HashMap<Card, Integer> equipGadgetATKAddition = new HashMap<>();
+    HashMap<Card, Integer> equipGadgetDEFAddition = new HashMap<>();
     HashSet<Integer> cantAttackCells = new HashSet<>();
     ArrayList<Card> monstersWeDontHaveControl = new ArrayList<>();
+
+
+    public void removeCardLimitOnATKBound(Card card) {
+        atkBounders.remove(card);
+    }
+
+    public void addCardLimitOnATKBound(Card card) {
+        atkBounders.add(card);
+    }
+
+    public ArrayList<Card> getAtkBounders() {
+        return atkBounders;
+    }
+    public void equipMonsterToCard(Card spell, Card monster) {
+        equipMonster.put(spell, monster);
+    }
+
+    public void unEquipMonster(Card spell) {
+        equipMonster.remove(spell);
+        equipGadgetATKAddition.remove(spell);
+        equipGadgetDEFAddition.remove(spell);
+    }
+
+    public void equipGadgetATKAddition(Card spell, int amount) {
+        equipGadgetATKAddition.put(spell, amount);
+    }
+
+    public void equipGadgetDEFAddition(Card spell, int amount) {
+        equipGadgetDEFAddition.put(spell, amount);
+    }
 
 
     public void loseControlOfMonster(Card card) {
@@ -66,6 +98,11 @@ public class Limits {
         if (fieldZoneATKAddition.containsKey(monsterType)) {
             addition += fieldZoneATKAddition.get(monsterType);
         }
+        ArrayList<Card> spellsThatEquipped = getSpellsThatEquipped(card);
+        for (Card spell : spellsThatEquipped) {
+            addition += equipGadgetATKAddition.get(spell);
+        }
+
         return addition;
     }
 
@@ -76,7 +113,19 @@ public class Limits {
         if (fieldZoneDEFAddition.containsKey(monsterType)) {
             addition += fieldZoneDEFAddition.get(monsterType);
         }
+        ArrayList<Card> spellsThatEquipped = getSpellsThatEquipped(card);
+        for (Card spell : spellsThatEquipped) {
+            addition += equipGadgetDEFAddition.get(spell);
+        }
         return addition;
+    }
+
+    private ArrayList<Card> getSpellsThatEquipped(Card card) {
+        ArrayList<Card> spellsThatEquipped = new ArrayList<>();
+        for (Card spell : equipMonster.keySet()) {
+            if (equipMonster.get(spell).equals(card)) spellsThatEquipped.add(spell);
+        }
+        return spellsThatEquipped;
     }
 
     public boolean doesItContainsLimit(EffectLimitations limitation) {
@@ -112,8 +161,14 @@ public class Limits {
     }
 
     public void setAttackBound(int attackBound) {
-        this.attackBound = attackBound;
+        if (attackBound > this.attackBound)
+            this.attackBound = attackBound;
     }
+
+    public void removeAttackBound() {
+        attackBound = 0;
+    }
+
 
     public int getAttackBound() {
         return attackBound;
