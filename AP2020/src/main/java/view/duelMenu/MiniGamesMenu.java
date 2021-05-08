@@ -9,6 +9,7 @@ public class MiniGamesMenu {
     private User secondUser;
     private final Scanner scanner;
     private static MiniGamesMenu miniGameMenu;
+    private User winner;
 
     private MiniGamesMenu(User firstUser, User secondUser, Scanner scanner){
         this.firstUser = firstUser;
@@ -19,7 +20,7 @@ public class MiniGamesMenu {
         if (miniGameMenu == null) miniGameMenu = new MiniGamesMenu(firstUser, secondUser ,scanner);
         return miniGameMenu;
     }
-    public void run(){
+    public User run(){
         String command;
         System.out.println("chose a game to declare first player:\n" +
                 "rock paper scissors\n"+
@@ -27,43 +28,47 @@ public class MiniGamesMenu {
                 "throw coin");
         while (true){
             command = scanner.nextLine().trim();
-            if (command.matches("rock paper scissors"))
+            if (command.matches("rock paper scissors")){
                 playRockPaperScissor(firstUser, secondUser);
-            else if (command.matches("dice"))
+                return getWinner();
+            }
+            else if (command.matches("dice")){
                 playDice(firstUser, secondUser);
-            else if (command.matches("throw coin"))
+                return getWinner();
+            }
+            else if (command.matches("throw coin")){
                 playCoin(firstUser, secondUser);
+                return getWinner();
+            }
             else if (command.matches("help"))
                 showHelp();
             else if (command.matches("menu show-current"))
                 System.out.println("mini games menu");
             else System.out.println("invalid command!");
         }
-
     }
-    public User playRockPaperScissor(User firstUser, User secondUser){
-        //todo better to make it a class?!
+    public void playRockPaperScissor(User firstUser, User secondUser){
+        setWinner(RockPaperScissors.getInstance(firstUser,secondUser,scanner).run());
     }
-    public User playDice(User firstUser, User secondUser){
+    public void playDice(User firstUser, User secondUser){
         int firstUserDice = dice();
         int secondUserDice = dice();
-        User winner;
         if (firstUserDice > secondUserDice)
-            return winner = firstUser;
+            setWinner(firstUser);
         else if (firstUserDice == secondUserDice)
             playDice(firstUser, secondUser);
-        else return winner = secondUser;
-        //todo dare bikhod irad migire!
+        else
+            setWinner(secondUser);
     }
-    public User playCoin(User firstUser, User secondUser){
+    public void playCoin(User firstUser, User secondUser){
         System.out.println("Head or Tale?");
         String playerChoice = scanner.nextLine().trim();
         String coin = throwCoin();
-        User winner;
+
         if(playerChoice.equals(throwCoin()))
-            return winner = firstUser;
+            setWinner(firstUser);
         else
-            return winner = secondUser;
+            setWinner(secondUser);
     }
     public int dice(){
         int randomNumber;
@@ -87,6 +92,12 @@ public class MiniGamesMenu {
         help.append("dice\n");
         help.append("throw coin\n");
         help.append("menu show-current");
-        System.out.println(help.toString());
+        System.out.println(help);
+    }
+    public void setWinner(User user){
+        winner = user;
+    }
+    public User getWinner(){
+        return winner;
     }
 }

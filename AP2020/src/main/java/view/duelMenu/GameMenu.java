@@ -3,9 +3,7 @@ package view.duelMenu;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
-import view.LoginMenu;
 import view.regexes.GameMenuRegex;
-import view.responses.GameMenuResponses;
 import view.responses.StartingGameResponses;
 
 import java.util.HashMap;
@@ -49,16 +47,27 @@ public class GameMenu {
         if (currentUser.getUsername().equals(username))
             respond(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME);
         else {
+            User winnerOfMiniGame;
             User rivalUser = ReadAndWriteDataBase.getUser(username+".json");
             if (rivalUser == null) respond(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME);
             else if (rivalUser.getActiveDeck() == null)
                 System.out.println(username + " has no active deck");
             else if (!rivalUser.getActiveDeck().isValid())
                 System.out.println(username +"'s deck is invalid");
-            else if(rounds.equals("1"))
-                singleRoundGame(currentUser, rivalUser);
-            else if(rounds.equals("3"))
-                tripleRoundGame(currentUser, rivalUser);
+            else if(rounds.equals("1")){
+                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser,rivalUser, scanner).run();
+                if (winnerOfMiniGame.equals(currentUser))
+                    singleRoundGame(currentUser, rivalUser);
+                else
+                    singleRoundGame(rivalUser, currentUser);
+            }
+            else if(rounds.equals("3")){
+                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser,rivalUser, scanner).run();
+                if (winnerOfMiniGame.equals(currentUser))
+                    tripleRoundGame(currentUser, rivalUser);
+                else
+                    tripleRoundGame(rivalUser, currentUser);
+            }
             else respond(StartingGameResponses.NUMBER_OF_ROUNDS_IS_NOT_SUPPORTED);
         }
 
