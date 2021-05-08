@@ -15,4 +15,7 @@ public enum CardEffectsResponses {
     PLEASE_SELECT_A_VALID_TYPE,
     YOU_DONT_HAVE_ANY_FIELD_SPELL,
     NO_MONSTERS,
+    CANT_RITUAL_SUMMON,
+    SPECIAL_SUMMON_NOW,
+
 }

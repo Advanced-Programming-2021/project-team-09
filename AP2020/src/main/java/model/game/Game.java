@@ -32,8 +32,8 @@ public class Game {
         winner = null;
         this.player = player;
         this.rival = rival;
-        playerDeck = (Deck)player.getActiveDeck().clone();
-        rivalDeck = (Deck)rival.getActiveDeck().clone();
+        playerDeck = (Deck) player.getActiveDeck().clone();
+        rivalDeck = (Deck) rival.getActiveDeck().clone();
         playerLimits = new Limits();
         rivalLimits = new Limits();
         playerBoard = new Board();
@@ -84,17 +84,19 @@ public class Game {
     //todo board bayad User begire be nazaram!
 
     public void playerDrawCard() {
-        if (playerHasCapacityToDraw()){
+        if (playerHasCapacityToDraw()) {
             playerHandCards.add(playerDeck.getMainDeck().getCards().get(0));
             playerDeck.getMainDeck().getCards().remove(0);
         }
 
     }
-    public void addCardToHand(Card card){
+
+    public void addCardToHand(Card card) {
         playerHandCards.add(card);
     }
+
     public void rivalDrawCard() {
-        if (rivalHasCapacityToDraw()){
+        if (rivalHasCapacityToDraw()) {
             rivalHandCards.add(rivalDeck.getMainDeck().getCards().get(0));
             rivalDeck.getMainDeck().getCards().remove(0);
         }
@@ -187,7 +189,7 @@ public class Game {
     public void summonMonster(Card card) {
         if (!isMonsterZoneFull()) {
             playerBoard.addCardToMonsterZone(card);
-            canSummonCard =false;
+            canSummonCard = false;
         }
     }
 
@@ -200,6 +202,7 @@ public class Game {
     }
 
     public void setWinner(User user) {
+        if (this.winner == null)
         this.winner = user;
     }
 
@@ -237,14 +240,14 @@ public class Game {
         StringBuilder table = new StringBuilder();
         table.append(rival.getNickname()).append(":").append(rivalLP).append("\n");
         ArrayList<Card> temp = rivalHandCards;
-        for (Card card : temp ) table.append("    c");
+        for (Card card : temp) table.append("    c");
         table.append("\n").append(rivalDeck.getMainDeck().getNumberOfAllCards()).append("\n");
         Cell[] tempCellArray = rivalBoard.getSpellZone();
-        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n    ": "    H\n    ") : "    E\n    ");
+        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n    " : "    H\n    ") : "    E\n    ");
         tempCellArray = rivalBoard.getMonsterZone();
         table.append(monsterStateToString(tempCellArray[4]));
         table.append(monsterStateToString(tempCellArray[2]));
@@ -264,11 +267,11 @@ public class Game {
         table.append(monsterStateToString(tempCellArray[4]));
         table.append("\n");
         tempCellArray = playerBoard.getSpellZone();
-        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O": "    H") : "    E");
-        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O\n    ": "    H\n    ") : "    E\n    ");
+        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O\n    " : "    H\n    ") : "    E\n    ");
         table.append("\\t\\t\\t\\t\\t\\t").append(playerDeck.getMainDeck().getNumberOfAllCards()).append("\n");
         temp = playerHandCards;
         for (Card card : temp) table.append("    c");
@@ -277,7 +280,7 @@ public class Game {
         return table.toString();
     }
 
-    private String monsterStateToString(Cell cell){
+    private String monsterStateToString(Cell cell) {
         if (!cell.isOccupied()) return "E   ";
         State state = cell.getState();
         if (state == State.FACE_UP_ATTACK) return "OO  ";
@@ -290,12 +293,12 @@ public class Game {
     }
 
 
-    public boolean canSummon(){
+    public boolean canSummon() {
         return canSummonCard;
     }
+
     public void setCanSummonCard(boolean canSummonCard) {
         this.canSummonCard = canSummonCard;
-
     }
 
     public void summonWithTribute(Card card) {
@@ -303,14 +306,14 @@ public class Game {
     }
 
     public void ritualSummon(int handNumber, int spellZoneNumber) {
-        if(canRitualSummon(handNumber, spellZoneNumber)){
+        if (canRitualSummon(handNumber, spellZoneNumber)) {
             summonMonster(playerHandCards.get(handNumber));
             playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
             canSummonCard = false;
         }
     }
 
-    public boolean canRitualSummon(int handNumber, int spellZoneNumber){
+    public boolean canRitualSummon(int handNumber, int spellZoneNumber) {
         return playerHandCards.get(handNumber) != null && playerBoard.getSpellZone(spellZoneNumber).isOccupied();
     }
 
