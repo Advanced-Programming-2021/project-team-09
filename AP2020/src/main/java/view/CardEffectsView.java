@@ -21,17 +21,23 @@ public class CardEffectsView {
     static public boolean doYouWantTo(String message) {
         return true;
     }
-    static public Card getCardFrom(Board board) {return null;}
-    static public boolean doSpecialSummon(){
+
+    static public Card getCardFrom(Board board) {
+        return null;
+    }
+
+    static public boolean doSpecialSummon() {
         return true;
     }
-    static public int getNumberOfCardInHand(){
+
+    static public int getNumberOfCardInHand() {
         return 0;
     }
 
     static public int[] getCellNumbers(int count) {
         return null;
     }
+
     static public int[] getCellNumbers() {
         return null;
     }
@@ -39,15 +45,19 @@ public class CardEffectsView {
     static public Card getCardFromGraveyard(Graveyard graveyard) {
         return null;
     }
-    static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard){
+
+    static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard) {
         return null;
     }
-    static public Card getCardFromDeck(Deck deck){
+
+    static public Card getCardFromDeck(Deck deck) {
         return null;
     }
-    static public Card getCardFromBothBoards(Cell[] playerSpellZone, Cell[] rivalSpellZone){
+
+    static public Card getCardFromBothBoards(Cell[] playerSpellZone, Cell[] rivalSpellZone) {
         return null;
     }
+
     static public HowToSummon howToSpecialNormalSummon() {
         return null;
     }

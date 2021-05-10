@@ -17,16 +17,17 @@ public class GameMenu {
     private GameMenu(Scanner scanner) {
         this.scanner = scanner;
     }
-    public static GameMenu getInstance(Scanner scanner){
-        if(gameMenu == null) gameMenu = new GameMenu(scanner);
+
+    public static GameMenu getInstance(Scanner scanner) {
+        if (gameMenu == null) gameMenu = new GameMenu(scanner);
         return gameMenu;
     }
 
-    public void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
-            if(GameMenuRegex.doesItDuelNewPlayerCommand(command))
+            if (GameMenuRegex.doesItDuelNewPlayerCommand(command))
                 duelNewPlayer(command);
             else if (command.matches("duel new single player"))
                 singlePlayerGame();
@@ -39,8 +40,9 @@ public class GameMenu {
             else respond(StartingGameResponses.INVALID_COMMAND);
         }
     }
-    private void duelNewPlayer(String command){
-        HashMap<String,String> data = parseDuelNewPlayerData(command);
+
+    private void duelNewPlayer(String command) {
+        HashMap<String, String> data = parseDuelNewPlayerData(command);
         String username = data.get("username");
         String rounds = data.get("rounds");
         User currentUser = LoginMenuController.getCurrentUser();
@@ -48,40 +50,42 @@ public class GameMenu {
             respond(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME);
         else {
             User winnerOfMiniGame;
-            User rivalUser = ReadAndWriteDataBase.getUser(username+".json");
+            User rivalUser = ReadAndWriteDataBase.getUser(username + ".json");
             if (rivalUser == null) respond(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME);
             else if (rivalUser.getActiveDeck() == null)
                 System.out.println(username + " has no active deck");
             else if (!rivalUser.getActiveDeck().isValid())
-                System.out.println(username +"'s deck is invalid");
-            else if(rounds.equals("1")){
-                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser,rivalUser, scanner).run();
+                System.out.println(username + "'s deck is invalid");
+            else if (rounds.equals("1")) {
+                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser, rivalUser, scanner).run();
                 if (winnerOfMiniGame.equals(currentUser))
                     singleRoundGame(currentUser, rivalUser);
                 else
                     singleRoundGame(rivalUser, currentUser);
-            }
-            else if(rounds.equals("3")){
-                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser,rivalUser, scanner).run();
+            } else if (rounds.equals("3")) {
+                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser, rivalUser, scanner).run();
                 if (winnerOfMiniGame.equals(currentUser))
                     tripleRoundGame(currentUser, rivalUser);
                 else
                     tripleRoundGame(rivalUser, currentUser);
-            }
-            else respond(StartingGameResponses.NUMBER_OF_ROUNDS_IS_NOT_SUPPORTED);
+            } else respond(StartingGameResponses.NUMBER_OF_ROUNDS_IS_NOT_SUPPORTED);
         }
 
     }
-    public void singleRoundGame(User player, User rival){
+
+    public void singleRoundGame(User player, User rival) {
         //todo
     }
-    public void tripleRoundGame(User player, User rival){
+
+    public void tripleRoundGame(User player, User rival) {
         //todo
     }
-    public void singlePlayerGame(){
+
+    public void singlePlayerGame() {
         //todo
     }
-    private void respond(StartingGameResponses response){
+
+    private void respond(StartingGameResponses response) {
         if (response.equals(StartingGameResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
         else if (response.equals(StartingGameResponses.CURRENT_MENU_DUEL_MENU))
@@ -91,16 +95,18 @@ public class GameMenu {
         else if (response.equals(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME))
             System.out.println("there is no player with this username");
     }
-    private HashMap<String,String> parseDuelNewPlayerData(String command){
-        HashMap<String,String> parsedData = new HashMap<>();
+
+    private HashMap<String, String> parseDuelNewPlayerData(String command) {
+        HashMap<String, String> parsedData = new HashMap<>();
         Matcher matcher = GameMenuRegex.getRightMatcherForDuelNewPlayer(command);
-        if(matcher.find()){
+        if (matcher.find()) {
             parsedData.put("username", matcher.group("username"));
             parsedData.put("rounds", matcher.group("rounds"));
         }
         return parsedData;
     }
-    public void showHelp(){
+
+    public void showHelp() {
         StringBuilder help = new StringBuilder();
         help.append("duel new --second-player <player2 username> --rounds<1/3>\n");
         help.append("duel new single player\n");

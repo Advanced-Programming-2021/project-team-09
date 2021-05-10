@@ -113,15 +113,15 @@ public class SpellEffectController extends EffectController {
     }
 
     public void Messengerofpeace(Game game, Card card) {
-        Board board = getBoard(game,card);
+        Board board = getBoard(game, card);
         game.getPlayerLimits().setAttackBound(1500);
         game.getRivalLimits().setAttackBound(1500);
         if (CardEffectsView.doYouWantTo("do you want to 100 LP to keep this card?")) {
-            if (doesCardBelongsToPlayer(game,card)) game.decreaseHealth(100);
+            if (doesCardBelongsToPlayer(game, card)) game.decreaseHealth(100);
             else game.decreaseRivalHealth(100);
         } else {
-            GameMenuController.sendToGraveYard(game,card);
-        }
+            GameMenuController.sendToGraveYard(game, card);
+        }//ToDo
     }
 
     public void TwinTwisters(Game game, Card card) {

@@ -3,14 +3,13 @@ package view.regexes;
 import java.util.regex.Matcher;
 
 abstract public class ProfileMenuRegex {
-    public static final String changeNicknameRegex ="^profile change --nickname (?<nickname>[\\w]+)$";
-    public static final String changeNicknameRegexShort="^profile change -n (?<nickname>[\\w]+)$";
-    public static final String changePasswordRegexType1 ="^profile change --password --current (?<currentPassword>\\S+) --new (?<newPassword>\\S+)$";
-    public static final String changePasswordRegexType2 ="^profile change --password --new (?<newPassword>\\S+) --current (?<currentPassword>\\S+)$";
-    public static final String changePasswordRegexType1Short ="^profile change -p -c (?<currentPassword>\\S+) -n (?<newPassword>\\S+)$";
-    public static final String changePasswordRegexType2Short ="^profile change -p -n (?<newPassword>\\S+) -c (?<currentPassword>\\S+)$";
+    public static final String changeNicknameRegex = "^profile change --nickname (?<nickname>[\\w]+)$";
+    public static final String changeNicknameRegexShort = "^profile change -n (?<nickname>[\\w]+)$";
+    public static final String changePasswordRegexType1 = "^profile change --password --current (?<currentPassword>\\S+) --new (?<newPassword>\\S+)$";
+    public static final String changePasswordRegexType2 = "^profile change --password --new (?<newPassword>\\S+) --current (?<currentPassword>\\S+)$";
+    public static final String changePasswordRegexType1Short = "^profile change -p -c (?<currentPassword>\\S+) -n (?<newPassword>\\S+)$";
+    public static final String changePasswordRegexType2Short = "^profile change -p -n (?<newPassword>\\S+) -c (?<currentPassword>\\S+)$";
     public static final String showHelp = "^help$";
-
 
 
     public static Matcher getRightMatcherForChangePassword(String command) {

@@ -26,4 +26,8 @@ public enum CardFeatures {
     HAS_ACTION_WHEN_OWN_CARD_DESTROYS,
     STANDBY_ACTION,
 
+    SPEED_1,
+    SPEED_2,
+    SPEED_3,
+
 }

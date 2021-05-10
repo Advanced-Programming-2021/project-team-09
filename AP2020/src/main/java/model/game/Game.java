@@ -203,7 +203,7 @@ public class Game {
 
     public void setWinner(User user) {
         if (this.winner == null)
-        this.winner = user;
+            this.winner = user;
     }
 
     public boolean hasWinner() {
