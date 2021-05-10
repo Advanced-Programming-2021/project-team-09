@@ -1,9 +1,11 @@
 package controller.EffectController;
 
 import controller.GameMenuController;
+import controller.database.csvInfoGetter;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterType;
+import model.card.spell_traps.Limitation;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.SpellType;
 import model.deck.Deck;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import view.CardEffectsView;
 import view.responses.CardEffectsResponses;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -77,13 +81,13 @@ public class SpellEffectController extends EffectController {
     }
 
     public void ChangeofHeart(Game game, Card card) {
-        Limits limits=getRivalsLimits(game,card);
+        Limits limits = getRivalsLimits(game, card);
         Board rivalBoard = getRivalBoard(game, card);
         if (rivalBoard.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
         else {
             int monsterNumber = CardEffectsView.getCellNumber() - 1;
             if (isCellNumberValid(monsterNumber)) {
-                if (rivalBoard.getMonsterZone(monsterNumber).isOccupied()){
+                if (rivalBoard.getMonsterZone(monsterNumber).isOccupied()) {
                     Card card1 = rivalBoard.getMonsterZone(monsterNumber).getCard();
                     limits.loseControlOfMonster(card1);
                 } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
@@ -101,11 +105,11 @@ public class SpellEffectController extends EffectController {
 
     public void SwordsofRevealingLight(Game game, Card card) {
         Limits limits = getRivalsLimits(game, card);
-        Board board = getRivalBoard(game,card);
+        Board board = getRivalBoard(game, card);
         Cell[] cells = board.getMonsterZone();
         for (int i = 0; i < cells.length; i++) {
             if (cells[i].isOccupied() && cells[i].isFaceDown()) {
-                GameMenuController.rivalFlipSummon(game,i);
+                GameMenuController.rivalFlipSummon(game, i);
             }
         }
         limits.addLimit(EffectLimitations.CANT_ATTACK);
@@ -113,12 +117,7 @@ public class SpellEffectController extends EffectController {
 
 
     public void DarkHole(Game game, Card card) {
-        for (Cell tempCell : game.getPlayerBoard().getMonsterZone()) {
-            if (tempCell.isOccupied())  GameMenuController.sendToGraveYard(game,tempCell.getCard());
-        }
-        for (Cell tempCell : game.getRivalBoard().getMonsterZone()) {
-            if (tempCell.isOccupied()) GameMenuController.sendToGraveYard(game,tempCell.getCard());
-        }
+        destroyAllMonsters(game);
     }
 
     public void SupplySquad(Game game, Card card) {
@@ -126,16 +125,16 @@ public class SpellEffectController extends EffectController {
         if (deck.getMainDeck().getCards().size() == 0) {
             game.setWinner(getWinner(game, card));
         } else {
-            if (doesCardBelongsToPlayer(game,card)) {
+            if (doesCardBelongsToPlayer(game, card)) {
                 GameMenuController.draw(game);
             } else {
-                //ToDo
+                //ToDo draw!
             }
         }
     }
 
     public void SpellAbsorption(Game game, Card card) {
-        if (doesCardBelongsToPlayer(game,card)) {
+        if (doesCardBelongsToPlayer(game, card)) {
             game.increaseHealth(500);
         } else {
             game.increaseRivalHealth(500);
@@ -156,7 +155,34 @@ public class SpellEffectController extends EffectController {
     }
 
     public void TwinTwisters(Game game, Card card) {
-
+        ArrayList<Card> cardsInHand = getCardsInHand(game, card);
+        Board board = getBoard(game, card);
+        if (cardsInHand.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
+        else {
+            while (true) {
+                int cardNumberInHand = CardEffectsView.getNumberOfCardInHand() - 1;
+                if (cardNumberInHand < cardsInHand.size()) {
+                    Card cardToBeRemoved = cardsInHand.get(cardNumberInHand);
+                    cardsInHand.remove(cardToBeRemoved);
+                    board.sendToGraveYard(card);
+                    if (CardEffectsView.doYouWantTo("do you want to destroy a spell card?")) {
+                        for (int i = 0; i < 2; ++i) {
+                            if (i == 1 && CardEffectsView.doYouWantTo("do you want to destroy another spell card?")) {
+                                while (true) {
+                                    Card card1 = CardEffectsView.getCardFromBothBoards(game.getPlayerBoard().getSpellZone(), game.getRivalBoard().getSpellZone());
+                                    if (card1 == null) {
+                                        CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
+                                        return;
+                                    } else {
+                                        GameMenuController.sendToGraveYard(game, card1);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+            }
+        }
     }
 
     public void Mysticalspacetyphoon(Game game, Card card) {
@@ -172,7 +198,7 @@ public class SpellEffectController extends EffectController {
     }
 
     public void RingofDefense(Game game, Card card) {
-
+        //ToDo
     }
 
     public void Yami(Game game, Card card) {
@@ -327,6 +353,8 @@ public class SpellEffectController extends EffectController {
         cantRitualSummon(game, card, board);
     }
 
+
+    //traps!
     public void magicCylinder(Game game, Card card) {
 
     }
@@ -336,6 +364,14 @@ public class SpellEffectController extends EffectController {
     }
 
     public void mindCrush(Game game, Card card) {
+        ArrayList<Card> cards = getCardsInHand(game, card);
+        String cardName = CardEffectsView.getCardName();
+        if (csvInfoGetter.cardNameExists(cardName)) {
+
+        } else {
+            int cardToBeDeleted = LocalDateTime.now().getSecond() % cards.size();
+            cards.remove(c);
+        }
 
     }
 
@@ -344,11 +380,21 @@ public class SpellEffectController extends EffectController {
     }
 
     public void torrentialTribute(Game game, Card card) {
+        destroyAllMonsters(game);
+    }
 
+    private void destroyAllMonsters(Game game) {
+        for (Cell cell : game.getPlayerBoard().getMonsterZone()) {
+            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
+        }
+        for (Cell cell : game.getRivalBoard().getMonsterZone()) {
+            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
+        }
     }
 
     public void timeSeal(Game game, Card card) {
-
+        Limits limits = getRivalsLimits(game, card);
+        limits.addLimit(EffectLimitations.HAS_NO_DRAW_PHASE);
     }
 
     public void negateAttack(Game game, Card card) {

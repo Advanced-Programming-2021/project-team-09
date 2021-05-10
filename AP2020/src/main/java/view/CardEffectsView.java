@@ -30,6 +30,10 @@ public class CardEffectsView {
         return true;
     }
 
+    static public String getCardName(){
+        return null;
+    }
+
     static public int getNumberOfCardInHand() {
         return 0;
     }

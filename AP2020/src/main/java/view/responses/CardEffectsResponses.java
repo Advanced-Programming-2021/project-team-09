@@ -17,5 +17,6 @@ public enum CardEffectsResponses {
     NO_MONSTERS,
     CANT_RITUAL_SUMMON,
     SPECIAL_SUMMON_NOW,
+    HAVE_NO_CARDS,
 
 }
