@@ -12,8 +12,8 @@ public class Limits {
 
     int atkAddition = 0;
     int defAddition = 0;
-    int attackBound = -1;
-    ArrayList<Card> atkBounders = new ArrayList<>();
+    int attackBound = 0;
+    HashSet<Card> atkBounders = new HashSet<>();
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
     HashMap<Integer, Integer> spellUsageLimit = new HashMap<>();
     HashMap<MonsterType, Integer> fieldZoneATKAddition = new HashMap<>();
@@ -27,13 +27,14 @@ public class Limits {
 
     public void removeCardLimitOnATKBound(Card card) {
         atkBounders.remove(card);
+        if (atkBounders.size() == 0) attackBound = 0;
     }
 
     public void addCardLimitOnATKBound(Card card) {
         atkBounders.add(card);
     }
 
-    public ArrayList<Card> getAtkBounders() {
+    public HashSet<Card> getAtkBounders() {
         return atkBounders;
     }
     public void equipMonsterToCard(Card spell, Card monster) {
@@ -177,7 +178,7 @@ public class Limits {
     public boolean canAttackByThisLimitations(Card card) {
         if (limitations.contains(EffectLimitations.CANT_ATTACK) || !hasControlOnMonster(card)) return false;
         else {
-            if (attackBound != -1) return true;
+            if (attackBound != 0) return true;
             else {
                 return ((Monster) card).getAttack() + getATKAddition(card) <= attackBound;
             }

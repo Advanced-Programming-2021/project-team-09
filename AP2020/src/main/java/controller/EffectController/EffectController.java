@@ -67,4 +67,23 @@ public class EffectController {
         else return game.getRivalHandCards();
     }
 
+    public Limits getRivalsLimits(Game game, Card card) {
+        Limits limits;
+        if (doesCardBelongsToPlayer(game, card)) limits = game.getRivalLimits();
+        else limits = game.getPlayerLimits();
+        return limits;
+    }
+
+    public Board getRivalBoard(Game game, Card card) {
+        Board rivalBoard;
+
+        if (doesCardBelongsToPlayer(game, card)){
+            rivalBoard = game.getRivalBoard();
+        }
+        else {
+            rivalBoard = game.getPlayerBoard();
+        }
+        return rivalBoard;
+    }
+
 }
