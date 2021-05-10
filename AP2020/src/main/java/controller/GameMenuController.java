@@ -24,17 +24,25 @@ public class GameMenuController {
     public String showTable() {
         return game.showTable();
     }
+    
+    // for easier application of selectMonsterFromPlayer & selectSpellAndTrapFromPlayer
+    private GameMenuResponse selectCardFromPlayerArray(int cellNumber, Cell[] cells) {
+        if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        Cell tempCell = cells[cellNumber - 1];
+        if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
+        return respondWithObj(tempCell, GameMenuResponsesEnum.SUCCESSFUL);
+    }
 
-    public Cell selectMonsterFromPlayer(int cellNumber) {
-        if (cellNumber < 1 || cellNumber > 5) return null;
-        return game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
-    } // todo deselect cells
-
-    public GameMenuResponsesEnum canSelectMonsterFromPlayer(int cellNumber) {
+    public GameMenuResponsesEnum canSelectSpellAndTrapFromRival(int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return GameMenuResponsesEnum.INVALID_SELECTION;
-        if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied())
-            return GameMenuResponsesEnum.NO_CARD_FOUND;
+        if (!game.getRivalBoard().getSpellZone()[cellNumber - 1].isOccupied()) return GameMenuResponsesEnum.NO_CARD_FOUND;
+        if (game.getRivalBoard().getSpellZone()[cellNumber - 1].isFaceDown()) return GameMenuResponsesEnum.CARD_IS_HIDDEN;
         return GameMenuResponsesEnum.SUCCESSFUL;
+    }
+
+    public Cell selectSpellAndTrapFromRival(int cellNumber) {
+        if (cellNumber < 1 || cellNumber > 5) return null;
+        return game.getRivalBoard().getSpellZone()[cellNumber - 1];
     }
 
     public GameMenuResponsesEnum canSelectMonsterFromRival(int cellNumber) {
@@ -47,29 +55,6 @@ public class GameMenuController {
     public Cell selectMonsterFromRival(int cellNumber) {
         if (cellNumber < 1 || cellNumber > 5) return null;
         return game.getRivalBoard().getMonsterZone()[cellNumber - 1];
-    }
-
-    public GameMenuResponsesEnum canSelectSpellAndTrapFromPlayer(int cellNumber) {
-        if (cellNumber < 1 || cellNumber > 5) return GameMenuResponsesEnum.INVALID_SELECTION;
-        if (!game.getPlayerBoard().getSpellZone()[cellNumber - 1].isOccupied()) return GameMenuResponsesEnum.NO_CARD_FOUND;
-        return GameMenuResponsesEnum.SUCCESSFUL;
-    }
-
-    public GameMenuResponsesEnum canSelectSpellAndTrapFromRival(int cellNumber) {
-        if (cellNumber < 1 || cellNumber > 5) return GameMenuResponsesEnum.INVALID_SELECTION;
-        if (!game.getRivalBoard().getSpellZone()[cellNumber - 1].isOccupied()) return GameMenuResponsesEnum.NO_CARD_FOUND;
-        if (game.getRivalBoard().getSpellZone()[cellNumber - 1].isFaceDown()) return GameMenuResponsesEnum.CARD_IS_HIDDEN;
-        return GameMenuResponsesEnum.SUCCESSFUL;
-    }
-
-    public Cell selectSpellAndTrapFromPlayer(int cellNumber) {
-        if (cellNumber < 1 || cellNumber > 5) return null;
-        return game.getPlayerBoard().getSpellZone()[cellNumber - 1];
-    }
-
-    public Cell selectSpellAndTrapFromRival(int cellNumber) {
-        if (cellNumber < 1 || cellNumber > 5) return null;
-        return game.getRivalBoard().getSpellZone()[cellNumber - 1];
     }
 
     public GameMenuResponsesEnum canSelectPlayerFieldZone() {
@@ -124,7 +109,7 @@ public class GameMenuController {
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1) return GameMenuResponsesEnum.INVALID_SELECTION;
         Card card = cardsInHand.get(cardNumberInHand - 1);
         if (!card.isMonster())
-            return game.isSpellZoneFull() ? GameMenuResponsesEnum.SPELL_ZONE_IS_FULL : GameMenuResponsesEnum.SUCCESSFUL;
+            return game.isSpellZoneFull() ? GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL : GameMenuResponsesEnum.SUCCESSFUL;
         if (!game.canSummon()) return GameMenuResponsesEnum.ALREADY_SUMMONED;
         if (!canNormalSummon(card.getFeatures())) return GameMenuResponsesEnum.THIS_CARD_CANT_NORMAL_SUMMON;
         Monster tempMonster = (Monster) card;
@@ -303,49 +288,38 @@ public class GameMenuController {
         return GameMenuResponsesEnum.SUCCESSFUL;
     }
 
-    public void setPositionMonster(int cellNumber, State state) {
+    public void setPositionMonster111(int cellNumber, State state) {
         game.getPlayerBoard().getMonsterZone(cellNumber - 1).setState(state);
 		// todo changed position in cell
     }
 
+    public GameMenuResponse setMonsterPosition(int cellNumber, String attackOrDefence) {
+        if (cellNumber > 5 || cellNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
+        if (!tempCells[cellNumber - 1].isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
+        Card tempCard = tempCells[cellNumber - 1].getCard();
+        if (tempCells[cellNumber - 1].getState() == State.FACE_DOWN_DEFENCE)
+            return respond(GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET);
+        State tempState = attackOrDefence.equals("attack") ? State.FACE_UP_ATTACK : State.FACE_UP_DEFENCE;
+        if (tempCells[cellNumber - 1].getState() == tempState) return respond(GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION);
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
 
-    public GameMenuResponsesEnum canSetSpellCard(int cardNumberInHand) {
+    public GameMenuResponse setSpellAndTrap(int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
-        if (cardNumberInHand < handCards.size()) return GameMenuResponsesEnum.INVALID_SELECTION;
-        if (handCards.get(cardNumberInHand - 1).isMonster()) return GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP;
-        int occupied = 0;
-        Cell[] cells = game.getPlayerBoard().getSpellZone();
-        for (Cell cell : cells) if (cell.isOccupied()) occupied++;
-        if (occupied == 5) return GameMenuResponsesEnum.SPELL_ZONE_IS_FULL;
-        return GameMenuResponsesEnum.SUCCESSFUL;
-		// todo more conditions
-    }
-
-    public void setTrapCard(int cardNumberInHand) {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        Card card = cards.get(cardNumberInHand - 1);
-        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-        for (Cell cell : tempCells) {
-            if (!cell.isOccupied()) {
-                cell.addCard(card);
-                cell.setState(State.FACE_DOWN_SPELL);
-                break;
-            }
-        }
-    }
-
-    public void setSpellCard(int cardNumberInHand) {
-        Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
+        if (cardNumberInHand < handCards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (handCards.get(cardNumberInHand - 1).isMonster()) return respond(GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP);
+        if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
+        Card tempCard = handCards.get(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) continue;
-            cell.addCard(card);
+            cell.addCard(tempCard);
             cell.setState(State.FACE_DOWN_SPELL);
             break;
         }
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
-	// todo server clineti tor..
-	// hazfe can ha
 
     public GameMenuResponsesEnum canFlipSummon(int cellNumber) {
         if (cellNumber > 5 || cellNumber < 1) return GameMenuResponsesEnum.INVALID_SELECTION;
