@@ -1,8 +1,7 @@
-package model;
+package model.game;
 
 import model.card.Card;
 import model.card.monster.Monster;
-import model.deck.Deck;
 import model.deck.Graveyard;
 
 public class Board {
@@ -34,7 +33,18 @@ public class Board {
             if (!monsterZone[i].isOccupied() && card.isMonster()) monsterZone[i].addCard(card);
         }
     }
-
+    public Cell getMonsterZoneCellByCard(Card card){
+        for (int i = 0; i < 5; i++) {
+            if ( monsterZone[i].getCard().equals(card) ) return monsterZone[i];
+        }
+        return null;
+    }
+    public Cell getSpellZoneCellByCard(Card card){
+        for (int i = 0; i < 5; i++) {
+            if( spellZone[i].getCard().equals(card)) return spellZone[i];
+        }
+        return null;
+    }
     public void addCardToSpellZone(Card card) {
         for (int i = 0; i < 5; i++) {
             if (!spellZone[i].isOccupied() && card.isSpell()) spellZone[i].addCard(card);
@@ -113,5 +123,9 @@ public class Board {
 
     public Cell getFieldZone() {
         return fieldZone;
+    }
+
+    public Cell getSpellZone(int spellZoneNumber) {
+        return spellZone[spellZoneNumber];
     }
 }

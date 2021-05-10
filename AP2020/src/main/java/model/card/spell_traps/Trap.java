@@ -1,7 +1,9 @@
 package model.card.spell_traps;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import controller.*;
+import controller.database.ReadAndWriteDataBase;
+import controller.database.csvInfoGetter;
 import model.card.Card;
 import model.card.CardType;
 
@@ -25,12 +27,31 @@ public class Trap extends Card {
 
     }
 
+    @JsonIgnore
     public Limitation getLimit(){
         return this.limit;
     }
 
+    @JsonIgnore
     public TrapType getTrapType(){
         return this.trapType;
+    }
+
+    @Override
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+        setAttributesByName(cardName);
+        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+    }
+
+    public void setAttributesByName(String cardName) {
+        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(cardName);
+        if (temp == null || temp.size() != 4) return;
+        trapType = csvInfoGetter.getTrapType(temp.get(1));
+        this.cardName = cardName;
+        description = temp.get(2);
+        limit = csvInfoGetter.getLimitation(temp.get(3));
+        cardType = CardType.TRAP;
     }
 
     public String toString(){

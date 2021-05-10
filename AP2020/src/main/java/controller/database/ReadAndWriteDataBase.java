@@ -1,27 +1,25 @@
-package controller;
+package controller.database;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import model.Board;
+import com.google.gson.Gson;
 import model.User;
-import model.card.Card;
-import model.card.monster.Monster;
-import model.card.spell_traps.Spell;
-import model.card.spell_traps.Trap;
+import model.card.CardFeatures;
+import model.card.FeatureWrapper;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ReadAndWriteDataBase {
     public static final String usersAddr = "src/resources/Users/";
+    public static final String cardsFeaturesAddr = "src/resources/card-infos/features/";
 
     public static User getUser(String usersAddr) {
         File file = getUserFileByUserAddr(usersAddr);
         ObjectMapper mapper = new ObjectMapper();
         User user;
         try {
-            user = mapper.readValue(file,User.class);
+            user = mapper.readValue(file, User.class);
         } catch (IOException e) {
             return null;
         }
@@ -58,6 +56,18 @@ public class ReadAndWriteDataBase {
 
     public static void updateUser(User user) {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
+    }
+
+    public static ArrayList<CardFeatures> getCardFeaturesByName(String cardName) {
+        FeatureWrapper wrapper;
+        Gson gson = new Gson();
+        try {
+            FileReader fileReader = new FileReader(cardsFeaturesAddr + cardName + ".json");
+            wrapper = gson.fromJson(fileReader, FeatureWrapper.class);
+        } catch (IOException e) {
+            wrapper = new FeatureWrapper();
+        }
+        return wrapper.features;
     }
 
 

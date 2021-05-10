@@ -2,11 +2,13 @@ package model.card.monster;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import controller.*;
+import controller.database.ReadAndWriteDataBase;
+import controller.database.csvInfoGetter;
 import model.card.*;
 
 import java.util.ArrayList;
-@JsonIgnoreProperties ({"description","cardType","cardID","level","attack","permanentAttack","permanentDefense","defense","monsterEffectType","monsterType","monsterCardType","attribute","numberOfTributes"})
+
+@JsonIgnoreProperties({"description", "cardType", "cardID", "level", "attack", "permanentAttack", "permanentDefense", "defense", "monsterEffectType", "monsterType", "monsterCardType", "attribute", "numberOfTributes"})
 public class Monster extends Card {
     protected int level;
     private int attack;
@@ -36,7 +38,8 @@ public class Monster extends Card {
         this.cardType = CardType.MONSTER;
     }
 
-    public Monster(){
+    public Monster() {
+        features = new ArrayList<>();
     }
 
     public int getNumberOfTributes() {
@@ -150,4 +153,36 @@ public class Monster extends Card {
         return monsterCardType;
     }
 
+    @Override
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+        setAttributesWithName(cardName);
+    }
+
+    public void setPermanentAttack(int permanentAttack) {
+        this.permanentAttack = permanentAttack;
+    }
+
+    public void setPermanentDefense(int permanentDefense) {
+        this.permanentDefense = permanentDefense;
+    }
+
+    public void setAttributesWithName(String cardName) {
+        ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV(cardName);
+        if (temp == null || temp.size() != 7) {
+            return;
+        }
+        level = Integer.parseInt(temp.get(0));
+        attribute = csvInfoGetter.getAttribute(temp.get(1));
+        monsterType = csvInfoGetter.getMonsterType(temp.get(2));
+        monsterCardType = csvInfoGetter.getMonsterCardType(temp.get(3));
+        attack = Integer.parseInt(temp.get(4));
+        defense = Integer.parseInt(temp.get(5));
+        permanentAttack = attack;
+        permanentDefense = defense;
+        description = temp.get(6);
+        this.cardName = cardName;
+        this.cardType = CardType.MONSTER;
+        this.features.addAll(ReadAndWriteDataBase.getCardFeaturesByName(cardName));
+    }
 }

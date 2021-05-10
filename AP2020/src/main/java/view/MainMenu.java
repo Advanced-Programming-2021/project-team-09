@@ -46,7 +46,7 @@ public class MainMenu {
             try {
                 Method method = MainMenu.class.getDeclaredMethod(menuName);
                 method.invoke(this);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            } catch (Exception e) {
                 respond(MainMenuResponses.INVALID_MENU);
             }
         }
