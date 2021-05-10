@@ -5,6 +5,7 @@ import model.card.Card;
 import model.card.monster.Monster;
 import model.deck.Deck;
 import model.deck.Graveyard;
+import model.deck.MainDeck;
 
 import java.util.ArrayList;
 
@@ -82,8 +83,9 @@ public class Game {
     //todo board bayad User begire be nazaram!
 
     public void playerDrawCard() {
-        if (playerHasCapacityToDraw())
-            playerHandCards.add(playerDeck.getMainDeck().getCards().get(0));
+        MainDeck tempDeck = playerDeck.getMainDeck();
+        if (playerHasCapacityToDraw() && tempDeck.getNumberOfAllCards() != 0)
+            playerHandCards.add(tempDeck.removeCard(tempDeck.getCards().get(0).getCardName()));
     }
     public void addCardToHand(Card card){
         playerHandCards.add(card);

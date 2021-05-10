@@ -1,8 +1,8 @@
 package view.responses;
 
 public class GameMenuResponse {
-    private Object obj;
-    private GameMenuResponsesEnum gameMenuResponseEnum;
+    private final Object obj;
+    private final GameMenuResponsesEnum gameMenuResponseEnum;
 
     public GameMenuResponse(Object obj, GameMenuResponsesEnum gameMenuResponseEnum) {
         this.obj = obj;
@@ -11,6 +11,7 @@ public class GameMenuResponse {
 
     public GameMenuResponse(GameMenuResponsesEnum gameMenuResponseEnum){
         this.gameMenuResponseEnum = gameMenuResponseEnum;
+        obj = null;
     }
 
     public Object getObj() {
