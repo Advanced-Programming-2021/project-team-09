@@ -1,6 +1,6 @@
 package view.responses;
 
-public enum GameMenuResponses {
+public enum GameMenuResponsesEnum {
     INVALID_SELECTION,
     NO_CARD_FOUND,
     SUCCESSFUL,
