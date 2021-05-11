@@ -21,7 +21,6 @@ public class Deck implements Cloneable{
     public Object clone() throws CloneNotSupportedException{
         return super.clone();
     }
-
     public void addCardToMainDeck(Card card) {
         mainDeck.addCard(card);
     }
@@ -37,7 +36,7 @@ public class Deck implements Cloneable{
 
     public boolean canAddCardByName(String cardName) {
         return getNumberOfCardsByName(cardName) < 3;
-    } //// todo in control hesab mishe
+    }
 
     public Card removeCardFromMainDeck(String cardName) {
         if (doesMainDeckHasCard(cardName))
@@ -133,5 +132,5 @@ public class Deck implements Cloneable{
         for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
         return mainDeck.isValid() && sideDeck.isValid();
     }
-
+//todo clone public
 }

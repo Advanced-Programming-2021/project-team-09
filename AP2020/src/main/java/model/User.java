@@ -94,6 +94,7 @@ public class User {
         cards.remove(card);
         return card;
     }
+
     @JsonIgnore
     public Card getCardByName(String cardName) {
         ArrayList<Card> cards = getCards();

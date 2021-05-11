@@ -1,10 +1,10 @@
 package controller;
 
+import controller.database.ReadAndWriteDataBase;
 import de.vandermeer.asciitable.AsciiTable;
 import model.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ScoreboardController {
 
