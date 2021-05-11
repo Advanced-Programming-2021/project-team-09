@@ -1,5 +1,6 @@
 package controller;
 
+import controller.EffectController.MonsterEffectController;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -15,6 +16,7 @@ import view.duelMenu.specialCardsMenu.ScannerMenu;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -108,6 +110,8 @@ public class GameMenuController {
                 int occupied = 0;
                 for (Cell cell : tempCells) if (cell.isOccupied()) occupied++;
                 if (numberOfTributes > occupied) return respond(GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS);
+                if (normalAndSpecialSummonChecker(card.getFeatures()))
+                    return specialSummon(game, card);
                 int[] tributes = TributeMenu.run(numberOfTributes);
                 if (tributes == null) return respond(GameMenuResponsesEnum.ABORTED);
                 while (!canTributeSelectedCards(tempCells, tributes)) {
@@ -232,6 +236,15 @@ public class GameMenuController {
             return respondWithObj("Your monster attack point was reduced to zero",
                     GameMenuResponsesEnum.ABORTED);
         }
+        if (cardHasStopAttackFeature(defenderMonster.getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
+            if (cardHasSpecialAfterDefending(defenderMonster.getFeatures())) {
+                activeEffect(game, defenderMonster, game.getPlayer(), 1);
+            }
+            if (hasLimitedUsesForEffect(defenderMonster.getFeatures())) {
+                defenderMonster.addFeature(CardFeatures.USED_EFFECT);
+            }
+            return respond(GameMenuResponsesEnum.ABORTED);
+        }
 
         String answer = "";
         if (defender.getState() == State.FACE_DOWN_DEFENCE) {
@@ -241,7 +254,7 @@ public class GameMenuController {
             if (attackerPoint == defenderPoint) { // both cards stay on board .. no player damage
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getRival(), 1);
+                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
@@ -257,7 +270,7 @@ public class GameMenuController {
                     }
                 } else answer = " and the defense position monster was not destroyed";
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getRival(), 1);
+                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName()
                                 + answer + tempString,
@@ -266,7 +279,7 @@ public class GameMenuController {
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getRival(), 1);
+                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
                         + damage + " battle damage", GameMenuResponsesEnum.SUCCESSFUL);
@@ -347,6 +360,22 @@ public class GameMenuController {
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
         }
+    }
+
+    private static boolean hasLimitedUsesForEffect(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_EFFECT_PER_ROUND
+                || feature == CardFeatures.ONE_USE_ONLY) return true;
+        return false;
+    }
+
+    private static boolean cardHasSpecialAfterDefending(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.HAS_SPECIAL_EFFECT_AFTER_DEFENDING) return true;
+        return false;
+    }
+
+    private static boolean cardHasStopAttackFeature(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.STOP_ATTACK) return true;
+        return false;
     }
 
     private static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
@@ -454,7 +483,7 @@ public class GameMenuController {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
-            activeEffect(game, tempCell.getCard(), game.getRival(), 1);
+            activeEffect(game, tempCell.getCard(), game.getPlayer(), 1);
     }
 
     private static boolean cardHasFlipEffect(ArrayList<CardFeatures> cardFeatures) {
@@ -518,6 +547,11 @@ public class GameMenuController {
     public static GameMenuResponse specialSummon(Game game, Card card) {
         if (!canBeSpecialSummoned(card.getFeatures())) return respond(GameMenuResponsesEnum.CANT_SPECIAL_SUMMON);
         if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
+        try {
+            Method method = MonsterEffectController.class.getDeclaredMethod(trimName(card.getCardName()), Game.class, Card.class);
+            method.invoke(new MonsterEffectController(), game, card);
+        } catch (Exception ignored) {
+        }
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
