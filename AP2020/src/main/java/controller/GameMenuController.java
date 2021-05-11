@@ -284,7 +284,7 @@ public class GameMenuController {
                                 + answer + tempString,
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else { // both stay on board ... player takes damage
-                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
+                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint, attackerMonster, defenderMonster);
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
                     activeEffect(game, defenderMonster, game.getPlayer(), 1);
@@ -324,7 +324,7 @@ public class GameMenuController {
                     }
                     answer = "your opponent’s monster is destroyed and your opponent receives ";
                 } else answer = "your opponent’s monster was not destroyed and your opponent receives ";
-                int damage = decreaseRivalLP(game, attackerPoint - defenderPoint);
+                int damage = decreaseRivalLP(game, attackerPoint - defenderPoint, attackerMonster, defenderMonster);
                 return respondWithObj(answer + damage + " battle damage" + tempString,
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else { // attacker monster is destroyed .. player takes damage
@@ -334,7 +334,7 @@ public class GameMenuController {
                 } else {
                     answer = "Your monster card is not destroyed and you received";
                 }
-                int damage = decreasePlayerLP(game, defenderMonster.getAttack() - attackerMonster.getAttack());
+                int damage = decreasePlayerLP(game, defenderMonster.getAttack() - attackerMonster.getAttack(), attackerMonster, defenderMonster);
                 return respondWithObj(answer + damage + " battle damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
@@ -363,7 +363,7 @@ public class GameMenuController {
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else { // no card is destroyed .. player takes damage
                 attacker.setCanAttack(false);
-                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
+                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint, attackerMonster, defenderMonster);
                 return respondWithObj("no card is destroyed and you received " + damage + " battle damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
@@ -371,13 +371,15 @@ public class GameMenuController {
     }
 
     private static boolean hasLimitedUsesForEffect(ArrayList<CardFeatures> features) {
-        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_EFFECT_PER_ROUND
-                || feature == CardFeatures.ONE_USE_ONLY) return true;
+        for (CardFeatures feature : features)
+            if (feature == CardFeatures.ONE_EFFECT_PER_ROUND
+                    || feature == CardFeatures.ONE_USE_ONLY) return true;
         return false;
     }
 
     private static boolean cardHasSpecialAfterDefending(ArrayList<CardFeatures> features) {
-        for (CardFeatures feature : features) if (feature == CardFeatures.HAS_SPECIAL_EFFECT_AFTER_DEFENDING) return true;
+        for (CardFeatures feature : features)
+            if (feature == CardFeatures.HAS_SPECIAL_EFFECT_AFTER_DEFENDING) return true;
         return false;
     }
 
@@ -554,7 +556,8 @@ public class GameMenuController {
                 break;
             }
         if (hasMonster) return respond(GameMenuResponsesEnum.CANT_ATTACK);
-        decreaseRivalLP(game, ((Monster) game.getPlayerBoard().getMonsterZone()[cellNumber - 1].getCard()).getAttack());
+        Card tempCard = tempCells[cellNumber - 1].getCard();
+        game.decreaseRivalHealth(((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard));
         tempCells[cellNumber - 1].setCanAttack(false);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
