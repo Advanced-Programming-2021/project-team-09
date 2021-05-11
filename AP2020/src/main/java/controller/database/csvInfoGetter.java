@@ -2,7 +2,8 @@ package controller.database;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import model.card.*;
+import model.card.Attribute;
+import model.card.Card;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterType;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class csvInfoGetter {
-    private static final String monsterFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\Monster.csv":"src/resources/card-infos/Monster.csv";
-    private static final String spellTrapFileName = System.getProperty("os.name").startsWith("Windows")?"src\\resources\\card-infos\\SpellTrap.csv":"src/resources/card-infos/SpellTrap.csv";
+    private static final String monsterFileName = System.getProperty("os.name").startsWith("Windows") ? "src\\resources\\card-infos\\Monster.csv" : "src/resources/card-infos/Monster.csv";
+    private static final String spellTrapFileName = System.getProperty("os.name").startsWith("Windows") ? "src\\resources\\card-infos\\SpellTrap.csv" : "src/resources/card-infos/SpellTrap.csv";
 
     public static ArrayList<String> trapAndSpellReadFromCSV(String cardName) {
         ArrayList<String> tempArraylist = new ArrayList<String>();

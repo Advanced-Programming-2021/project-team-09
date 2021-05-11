@@ -1,22 +1,18 @@
 package controller;
 
-import model.Cell;
-import model.Game;
-import model.State;
 import model.game.Cell;
 import model.game.Game;
-import model.game.State;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
+import model.game.State;
 import view.TributeMenu;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
-import model.deck.MainDeck;
-import view.responses.GameMenuResponses;
+import model.game.Limits;
 
 import java.util.ArrayList;
 
@@ -124,7 +120,7 @@ public class GameMenuController {
             putCardInNearestCell(card, tempCells, State.FACE_UP_SPELL);
         }
         if (cardHasSummonEffect(card.getFeatures()))
-            activeEffect(card, game.getRival()); // todo spell ham dare dige ?
+            activeEffect(game, card, game.getRival(), 1); // todo spell ham dare dige ?
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -308,14 +304,14 @@ public class GameMenuController {
         if (tempCell.getRoundCounter() == 0 || tempCell.getState() != State.FACE_DOWN_DEFENCE)
             return respond(GameMenuResponsesEnum.CANT_FLIP_SUMMON);
         tempCell.setState(State.FACE_UP_ATTACK);
-        if (cardHasFlipEffect(tempCell.getCard().getFeatures())) activeEffect(tempCell.getCard(), game.getRival());
+        if (cardHasFlipEffect(tempCell.getCard().getFeatures())) activeEffect(game, tempCell.getCard(), game.getRival(), 1);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static void rivalFlipSummon(Game game, int cellNumber) {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
-        if (cardHasFlipEffect(tempCell.getCard().getFeatures())) activeEffect(tempCell.getCard(), game.getRival());
+        if (cardHasFlipEffect(tempCell.getCard().getFeatures())) activeEffect(game, tempCell.getCard(), game.getRival(), 1);
     }
 
     private static boolean cardHasFlipEffect(ArrayList<CardFeatures> cardFeatures) {
@@ -483,11 +479,66 @@ public class GameMenuController {
         graveyard.addCard(cells[cellNumber - 1].removeCard());
     }
 
-    public static void activeEffect(Card card, User player) {
-        // todo
+    public static void moveToGraveYardFromPlayerHand(Game game, Card card) {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        for (int i = 0; i < cards.size(); i ++) {
+            if (cards.get(i) == card) {
+                moveToGraveYardFromPlayerHand(game , i + 1);
+                return;
+            }
+        }
+    }
+
+    public static void moveToGraveYardFromPlayerHand(Game game, int cardNumberInHand) {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        if (cardNumberInHand > cards.size() || cardNumberInHand < 1) return;
+        game.getPlayerBoard().getGraveyard().addCard(cards.remove(cardNumberInHand - 1));
+    }
+
+    public static void activeEffect(Game game, Card card, User player, int speed) {
+
 	}
+
+	private User getOtherUser (Game game, User user) {
+        if (game.getPlayer().getUsername().equals(user.getUsername())) return game.getRival();
+        return game.getPlayer();
+    }
 	
     public static void sendToGraveYard(Game game,Card card) {
-        //ToDo!
+        Cell[] cells;
+        Graveyard gy;
+        if (card.isMonster()) {
+            cells = game.getPlayerBoard().getMonsterZone();
+            gy = game.getPlayerBoard().getGraveyard();
+            for (Cell cell : cells) {
+                if (cell.getCard() == card) {
+                    gy.addCard(cell.removeCard());
+                    return;
+                }
+            }
+            cells = game.getPlayerBoard().getSpellZone();
+            for (Cell cell : cells) {
+                if (cell.getCard() == card) {
+                    gy.addCard(cell.removeCard());
+                    return;
+                }
+            }
+        } else {
+            cells = game.getRivalBoard().getMonsterZone();
+            gy = game.getRivalBoard().getGraveyard();
+            for (Cell cell : cells) {
+                if (cell.getCard() == card) {
+                    gy.addCard(cell.removeCard());
+                    return;
+                }
+            }
+            cells = game.getRivalBoard().getSpellZone();
+            for (Cell cell : cells) {
+                if (cell.getCard() == card) {
+                    gy.addCard(cell.removeCard());
+                    return;
+                }
+            }
+        }
     }
 }
