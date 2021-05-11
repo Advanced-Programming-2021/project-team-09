@@ -184,6 +184,11 @@ public class GameMenuController {
         Limits playerLimits = game.getPlayerLimits();
         Limits rivalLimits = game.getRivalLimits();
         if (!game.getRivalLimits().canAttackCell(defenderCellNumber)) return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) || hasNotUsedEffect(defender.getCard().getFeatures())) {
+            ((Monster) attacker.getCard()).setAttack(0);
+            return respondWithObj("Your monster attack point was reduced to zero",
+                    GameMenuResponsesEnum.ABORTED);
+        }
         if (defender.getState() == State.FACE_DOWN_DEFENCE) {
             rivalFlipSummon(game, defenderCellNumber);
             attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
@@ -261,6 +266,16 @@ public class GameMenuController {
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
         }
+    }
+
+    private static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) return true;
+        return false;
+    }
+
+    private static boolean hasMakeAttackerZeroEffect(ArrayList<CardFeatures> cardFeatures){
+        for (CardFeatures feature : cardFeatures) if (feature == CardFeatures.MAKE_ATTACKER_ZERO) return true;
+        return false;
     }
 
     private static boolean hasDestroyAttackerEffect(ArrayList<CardFeatures> cardFeatures) {
