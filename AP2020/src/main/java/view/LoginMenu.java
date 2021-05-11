@@ -109,4 +109,8 @@ public class LoginMenu {
         System.out.println(help);
     }
 
+    public Scanner getScanner(){
+        return this.scanner;
+    }
+
 }
