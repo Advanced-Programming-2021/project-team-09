@@ -121,6 +121,7 @@ public class GameMenuController {
         }
         if (cardHasSummonEffect(card.getFeatures()))
             activeEffect(game, card, game.getRival(), 1); // todo spell ham dare dige ?
+        game.setCanSummonCard(false);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -309,6 +310,7 @@ public class GameMenuController {
             cell.setState(State.FACE_DOWN_DEFENCE);
             break;
         }
+        game.setCanSummonCard(false);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -369,7 +371,6 @@ public class GameMenuController {
         return false;
     }
 
-    // todo static
     // todo tribute level check
     public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
