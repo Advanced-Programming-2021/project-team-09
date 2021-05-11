@@ -7,12 +7,11 @@ import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
-import model.game.Cell;
-import model.game.Game;
-import model.game.Limits;
-import model.game.State;
+import model.game.*;
+import view.CardEffectsView;
 import view.TributeMenu;
 import view.duelMenu.specialCardsMenu.ScannerMenu;
+import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
@@ -141,7 +140,14 @@ public class GameMenuController {
         if (cardHasSummonEffect(card.getFeatures()))
             activeEffect(game, card, game.getRival(), 1);
         game.setCanSummonCard(false);
+        if (hasSpecialSummonAfterNormalSummon(card.getFeatures()))
+            specialSummon(game, card);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    private static boolean hasSpecialSummonAfterNormalSummon(ArrayList<CardFeatures> cardFeatures) {
+        for (CardFeatures f : cardFeatures) if (f == CardFeatures.HAS_SPECIAL_SUMMON_AFTER_NORMAL_SUMMON) return true;
+        return false;
     }
 
     private static boolean cardHasCalculatorEffect(ArrayList<CardFeatures> features) {
@@ -717,12 +723,55 @@ public class GameMenuController {
     }
 
     public static void activeEffect(Game game, Card card, User player, int speed) {
-
+        User rival = getOtherUser(game, player);
+        Board tempBoard = getPlayersBoard(game, player);
+        if (CardEffectsView.doYouWantTo("Do you want to active effect ?")) {
+            while(true) {
+                int cellNumber = CardEffectsView.getCellNumber();
+                if (cellNumber > 5 || cellNumber < 1) {
+                    CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                    continue;
+                }
+                if (!tempBoard.getSpellZone(cellNumber - 1).isOccupied()) {
+                    CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                    continue;
+                }
+                Card chosenCard = tempBoard.getSpellZone()[cellNumber - 1].getCard();
+                int chosenSpeed = getSpeed(chosenCard.getFeatures());
+                if (chosenSpeed < speed) {
+                    CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+                    if (CardEffectsView.doYouWantTo("Do you want to active effect ?")) {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+                activeEffect(game, chosenCard, rival, chosenSpeed);
+                return;
+            }
+        } else {
+            card.activeEffect(game);
+        }
     }
 
-    private User getOtherUser(Game game, User user) {
+    private static int getSpeed(ArrayList<CardFeatures> features) {
+        for (CardFeatures f : features) {
+            if (f == CardFeatures.SPEED_1) return 1;
+            if (f == CardFeatures.SPEED_2) return 2;
+            if (f == CardFeatures.SPEED_3) return 3;
+        }
+        return 1;
+    }
+
+    private static User getOtherUser(Game game, User user) {
         if (game.getPlayer().getUsername().equals(user.getUsername())) return game.getRival();
         return game.getPlayer();
+    }
+
+    private static Board getPlayersBoard(Game game, User user) {
+        if (user.getUsername().equals(game.getPlayer().getUsername()))
+            return game.getPlayerBoard();
+        return game.getRivalBoard();
     }
 
     public static void sendToGraveYard(Game game, Card card) {
