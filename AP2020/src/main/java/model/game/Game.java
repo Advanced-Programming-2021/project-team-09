@@ -288,7 +288,7 @@ public class Game {
     }
 
     public Graveyard getGraveyard() {
-        return null;
+        return null; //ToDo
     }
 
 
@@ -364,5 +364,9 @@ public class Game {
 
     public Limits getRivalLimits() {
         return rivalLimits;
+    }
+
+    public int getRoundCounter() {
+        return roundCounter;
     }
 }

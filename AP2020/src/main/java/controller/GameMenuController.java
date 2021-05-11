@@ -3,6 +3,9 @@ package controller;
 import model.Cell;
 import model.Game;
 import model.State;
+import model.game.Cell;
+import model.game.Game;
+import model.game.State;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -12,6 +15,8 @@ import model.deck.Graveyard;
 import view.TributeMenu;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
+import model.deck.MainDeck;
+import view.responses.GameMenuResponses;
 
 import java.util.ArrayList;
 
@@ -480,5 +485,9 @@ public class GameMenuController {
 
     public static void activeEffect(Card card, User player) {
         // todo
+	}
+	
+    public static void sendToGraveYard(Game game,Card card) {
+        //ToDo!
     }
 }
