@@ -18,8 +18,9 @@ public class MonsterEffectController extends EffectController {
 
     public void CommandKnight(Game game, Card card) {
         Limits limits;
-        if (doesCardBelongsToPlayer(game, card)) limits = game.getPlayerLimits();
-        else limits = game.getRivalLimits();
+        limits = game.getPlayerLimits();
+        limits.increaseATKAddition(400);
+        limits = game.getRivalLimits();
         limits.increaseATKAddition(400);
         int cellNumber = getCellNumberOfMonster(game, card);
         limits.banAttackingToCell(cellNumber);

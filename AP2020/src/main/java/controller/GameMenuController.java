@@ -180,34 +180,41 @@ public class GameMenuController {
         Monster defenderMonster = (Monster) defender.getCard();
         if (!game.getPlayerLimits().canAttackByThisLimitations(attackerMonster))
             return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        int attackerPoint, defenderPoint;
+        Limits playerLimits = game.getPlayerLimits();
+        Limits rivalLimits = game.getRivalLimits();
         if (!game.getRivalLimits().canAttackCell(defenderCellNumber)) return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (defender.getState() == State.FACE_DOWN_DEFENCE) {
             rivalFlipSummon(game, defenderCellNumber);
-            if (attackerMonster.getAttack() == defenderMonster.getDefense()) {
+            attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
+            defenderPoint = defenderMonster.getDefense() + rivalLimits.getDEFAddition(defenderMonster);
+            if (attackerPoint == defenderPoint) {
                 attacker.setCanAttack(false);
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerMonster.getAttack() > defenderMonster.getDefense()) {
+            } else if (attackerPoint > defenderPoint) {
                 moveToRivalGraveyard(game, defenderCellNumber, true);
                 attacker.setCanAttack(false);
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and the defense position monster is destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else {
-                int damage = decreasePlayerLP(game, defenderMonster.getAttack() - attackerMonster.getAttack());
+                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 attacker.setCanAttack(false);
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
                         + damage + " battle damage", GameMenuResponsesEnum.SUCCESSFUL);
             }
         } else if (defender.getState() == State.FACE_UP_ATTACK) {
-            if (attackerMonster.getAttack() == defenderMonster.getAttack()) {
+            attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
+            defenderPoint = defenderMonster.getAttack() + rivalLimits.getATKAddition(defenderMonster);
+            if (attackerPoint == defenderPoint) {
                 moveToPlayerGraveyard(game, attackerCellNumber, true);
                 moveToRivalGraveyard(game, defenderCellNumber, true);
                 return respondWithObj("both you and your opponent monster cards are destroyed and no one receives damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerMonster.getAttack() > defenderMonster.getAttack()) {
+            } else if (attackerPoint > defenderPoint) {
                 attacker.setCanAttack(false);
                 moveToRivalGraveyard(game, defenderCellNumber, true);
-                int damage = decreaseRivalLP(game, attackerMonster.getAttack() - defenderMonster.getAttack());
+                int damage = decreaseRivalLP(game, attackerPoint - defenderPoint);
                 return respondWithObj("your opponent’s monster is destroyed and your opponent receives " + damage + " battle damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else {
@@ -217,18 +224,20 @@ public class GameMenuController {
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
         } else {
-            if (attackerMonster.getAttack() == defenderMonster.getDefense()) {
+            attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
+            defenderPoint = defenderMonster.getDefense() + rivalLimits.getDEFAddition(defenderMonster);
+            if (attackerPoint == defenderPoint) {
                 attacker.setCanAttack(false);
                 return respondWithObj("no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerMonster.getAttack() > defenderMonster.getDefense()) {
+            } else if (attackerPoint > defenderPoint) {
                 attacker.setCanAttack(false);
                 moveToRivalGraveyard(game, defenderCellNumber, true);
                 return respondWithObj("the defense position monster is destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
             } else {
                 attacker.setCanAttack(false);
-                int damage = decreasePlayerLP(game, defenderMonster.getAttack() - attackerMonster.getAttack());
+                int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 return respondWithObj("no card is destroyed and you received " + damage + " battle damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
