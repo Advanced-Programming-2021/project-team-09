@@ -415,6 +415,9 @@ public class GameMenuController {
         State tempState = attackOrDefence.equals("attack") ? State.FACE_UP_ATTACK : State.FACE_UP_DEFENCE;
         if (tempCells[cellNumber - 1].getState() == tempState)
             return respond(GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION);
+        if (tempCells[cellNumber - 1].isChangedPosition()) return respond(GameMenuResponsesEnum.ALREADY_CHANGED);
+        tempCells[cellNumber - 1].setState(tempState);
+        tempCells[cellNumber - 1].setChangedPosition(true);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 

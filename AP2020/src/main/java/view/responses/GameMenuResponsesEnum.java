@@ -24,5 +24,7 @@ public enum GameMenuResponsesEnum {
     PLAYER_HAND_IS_FULL,
     NO_CARDS_IN_MAIN_DECK,
     ABORTED,
-    CANT_SPECIAL_SUMMON
+    CANT_SPECIAL_SUMMON,
+    ALREADY_CHANGED,
+
 }
