@@ -9,6 +9,7 @@ import model.deck.Deck;
 import model.deck.Graveyard;
 import model.game.*;
 import view.CardEffectsView;
+import view.TributeMenu;
 import view.responses.CardEffectsResponses;
 import view.responses.HowToSummon;
 
@@ -18,8 +19,9 @@ public class MonsterEffectController extends EffectController {
 
     public void CommandKnight(Game game, Card card) {
         Limits limits;
-        if (doesCardBelongsToPlayer(game, card)) limits = game.getPlayerLimits();
-        else limits = game.getRivalLimits();
+        limits = game.getPlayerLimits();
+        limits.increaseATKAddition(400);
+        limits = game.getRivalLimits();
         limits.increaseATKAddition(400);
         int cellNumber = getCellNumberOfMonster(game, card);
         limits.banAttackingToCell(cellNumber);
@@ -52,10 +54,10 @@ public class MonsterEffectController extends EffectController {
         else board = game.getRivalBoard();
         if (board.getMonsterZone().length < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
         while (true) {
-            int[] cellNumbers = CardEffectsView.getCellNumbers(3);
+            int[] cellNumbers = TributeMenu.run(3);
             if (isCellNumberValid(cellNumbers[0] - 1) &&
                     isCellNumberValid(cellNumbers[1] - 1) &&
-                    isCellNumberValid(cellNumbers[2] - 1)) {
+                    isCellNumberValid(cellNumbers[2] - 1)) { // todo bugs
                 Cell[] cells = new Cell[3];
                 cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
                 cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
