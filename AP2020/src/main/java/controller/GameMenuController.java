@@ -83,6 +83,14 @@ public class GameMenuController {
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
+    public static GameMenuResponse drawRival(Game game) {
+        if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
+        if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0)
+            return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+        String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
+        game.rivalDrawCard();
+        return respondWithObj(temp /* :) */, GameMenuResponsesEnum.SUCCESSFUL);
+    }
 
     public static GameMenuResponse selectCardFromHand(Game game, int cardNumber) {
         ArrayList<Card> tempCards = game.getPlayerHandCards();

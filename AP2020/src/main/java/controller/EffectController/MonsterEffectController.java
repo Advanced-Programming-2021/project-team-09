@@ -292,13 +292,21 @@ public class MonsterEffectController extends EffectController {
         return 0;
     }
 
-    private void setMonster(Game game, Card card, State state) {
+    static protected void setMonster(Game game, Card card, State state) {
+        boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);
         game.getPlayerBoard().getMonsterZone(cellNumber).setState(state);
+        game.setCanSummonCard(canSummon);
+        if (state.equals(State.FACE_UP_ATTACK)) {
+            if (card.getFeatures().contains(CardFeatures.SUMMON_EFFECT) ||
+                    card.getFeatures().contains(CardFeatures.SCANNER) ||
+                    card.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS))
+                card.activeEffect(game);
+        }
     }
 
-    private void duplicateMonster(Monster monster, Monster originalMonster) {
+    static private void duplicateMonster(Monster monster, Monster originalMonster) {
         monster.setMonsterEffectType(originalMonster.getMonsterEffectType());
         monster.setMonsterType(originalMonster.getMonsterType());
         monster.setAttack(originalMonster.getAttack());
@@ -309,7 +317,7 @@ public class MonsterEffectController extends EffectController {
         monster.setDescription(originalMonster.getDescription());
     }
 
-    private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
+    static private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
         for (Card card : deck.getMainDeck().getCards()) {
             if (card.isMonster() && ((Monster) card).getMonsterType().equals(type)) return true;
         }
