@@ -241,7 +241,7 @@ public class GameMenuController {
             if (attackerPoint == defenderPoint) { // both cards stay on board .. no player damage
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    defenderMonster.activeEffect(game);
+                    activeEffect(game, defenderMonster, game.getRival(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
@@ -257,7 +257,7 @@ public class GameMenuController {
                     }
                 } else answer = " and the defense position monster was not destroyed";
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    defenderMonster.activeEffect(game);
+                    activeEffect(game, defenderMonster, game.getRival(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName()
                                 + answer + tempString,
@@ -266,7 +266,7 @@ public class GameMenuController {
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    defenderMonster.activeEffect(game);
+                    activeEffect(game, defenderMonster, game.getRival(), 1);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
                         + damage + " battle damage", GameMenuResponsesEnum.SUCCESSFUL);
