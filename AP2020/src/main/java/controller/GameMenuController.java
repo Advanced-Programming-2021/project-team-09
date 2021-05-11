@@ -721,8 +721,52 @@ public class GameMenuController {
         Cell[] cells;
         Graveyard gy;
         Card tempCard;
+        ArrayList<Card> equippedSpells;
         if (card.isMonster()) {
             cells = game.getPlayerBoard().getMonsterZone();
+            gy = game.getPlayerBoard().getGraveyard();
+            equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
+            for (Cell cell : cells) {
+                if (cell.getCard().equals(card)) {
+                    gy.addCard(tempCard = cell.removeCard());
+                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                    for (Cell spellCell : tempCells) {
+                        if (spellCell.isOccupied()) {
+                            for (Card spellCard : equippedSpells) {
+                                if (spellCard.equals(spellCell.getCard())) {
+                                    sendToGraveYard(game, spellCard);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    tempCard.destroy(game);
+                    return;
+                }
+            }
+            cells = game.getRivalBoard().getMonsterZone();
+            gy = game.getRivalBoard().getGraveyard();
+            equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
+            for (Cell cell : cells) {
+                if (cell.getCard().equals(card)) {
+                    gy.addCard(tempCard = cell.removeCard());
+                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                    for (Cell spellCell : tempCells) {
+                        if (spellCell.isOccupied()) {
+                            for (Card spellCard : equippedSpells) {
+                                if (spellCard.equals(spellCell.getCard())) {
+                                    sendToGraveYard(game, spellCard);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    tempCard.destroy(game);
+                    return;
+                }
+            }
+        } else {
+            cells = game.getPlayerBoard().getSpellZone();
             gy = game.getPlayerBoard().getGraveyard();
             for (Cell cell : cells) {
                 if (cell.getCard().equals(card)) {
@@ -731,25 +775,8 @@ public class GameMenuController {
                     return;
                 }
             }
-            cells = game.getPlayerBoard().getSpellZone();
-            for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
-                }
-            }
-        } else {
-            cells = game.getRivalBoard().getMonsterZone();
-            gy = game.getRivalBoard().getGraveyard();
-            for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
-                }
-            }
             cells = game.getRivalBoard().getSpellZone();
+            gy = game.getRivalBoard().getGraveyard();
             for (Cell cell : cells) {
                 if (cell.getCard().equals(card)) {
                     gy.addCard(tempCard = cell.removeCard());
