@@ -293,9 +293,11 @@ public class MonsterEffectController extends EffectController {
     }
 
     private void setMonster(Game game, Card card, State state) {
+        boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);
         game.getPlayerBoard().getMonsterZone(cellNumber).setState(state);
+        game.setCanSummonCard(canSummon);
     }
 
     private void duplicateMonster(Monster monster, Monster originalMonster) {

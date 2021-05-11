@@ -9,6 +9,9 @@ import model.card.spell_traps.Limitation;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.SpellType;
 import model.deck.Deck;
+import model.exceptions.GameException;
+import model.exceptions.StopEffectState;
+import model.exceptions.StopSpell;
 import model.game.*;
 import model.card.Card;
 import org.jetbrains.annotations.NotNull;
@@ -409,12 +412,21 @@ public class SpellEffectController extends EffectController {
 
     }
 
-    public void solemnWarning(Game game, Card card) {
-
+    public void solemnWarning(Game game, Card card) throws GameException {
+      if (doesCardBelongsToPlayer(game,card)) game.decreaseHealth(2000);
+      else game.decreaseRivalHealth(2000);
+      throw new StopSpell(StopEffectState.DESTROY_SPELL);
     }
 
-    public void magicJammer(Game game, Card card) {
+    public void magicJammer(Game game, Card card) throws GameException {
+        ArrayList<Card> cards = getCardsInHand(game,card);
+        if (cards.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
+        else {
+            int cardNumber = CardEffectsView.getNumberOfCardInHand() - 1;
+            Board board = getBoard(game,card);
 
+            removeCardFromHand(board);
+        }
     }
 
     public void calloftheHaunted(Game game, Card card) {
@@ -522,6 +534,10 @@ public class SpellEffectController extends EffectController {
 
     private void removeARandomCardFromHand(Board board, ArrayList<Card> cards) {
         int cardToBeDeleted = LocalDateTime.now().getSecond() % cards.size();
+        removeCardFromHand(board, cards, cardToBeDeleted);
+    }
+
+    private void removeCardFromHand(Board board, ArrayList<Card> cards, int cardToBeDeleted) {
         board.sendToGraveYard(cards.get(cardToBeDeleted));
         cards.remove(cardToBeDeleted);
     }
