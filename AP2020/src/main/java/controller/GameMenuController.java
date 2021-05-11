@@ -104,6 +104,9 @@ public class GameMenuController {
             if (cardHasScannerEffect(card.getFeatures())) {
                 return scannerController(game, card);
             }
+            if (cardHasCalculatorEffect(card.getFeatures())) {
+                return specialSummon(game, card);
+            }
             if (monster.getLevel() > 4) {
                 int numberOfTributes = monster.getLevel() > 6 ? 2 : 1;
                 Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
@@ -131,6 +134,11 @@ public class GameMenuController {
             activeEffect(game, card, game.getRival(), 1);
         game.setCanSummonCard(false);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    private static boolean cardHasCalculatorEffect(ArrayList<CardFeatures> features) {
+        for (CardFeatures cardFeature : features) if (cardFeature == CardFeatures.CALCULATOR) return true;
+        return false;
     }
 
     private static void putCardInNearestCell(Card card, Cell[] cells, State state) {
