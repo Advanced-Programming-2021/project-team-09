@@ -49,7 +49,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void GateGuardian(Game game, Card card) {
+    public void GateGuardian(Game game, Card card) throws GameException {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
@@ -72,7 +72,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void Scanner(Game game, Card card) {
+    public void Scanner(Game game, Card card) throws GameException {
         Board board;
 
         if (!card.getCardName().equals("Scanner")) {
@@ -114,7 +114,7 @@ public class MonsterEffectController extends EffectController {
         else game.decreaseHealth(1000);
     }
 
-    public void BeastKingBarbaros(Game game, Card card) {
+    public void BeastKingBarbaros(Game game, Card card) throws GameException {
         ArrayList<Card> hand;
         if (doesCardBelongsToPlayer(game, card)) hand = game.getPlayerHandCards();
         else hand = game.getRivalHandCards();
@@ -168,7 +168,7 @@ public class MonsterEffectController extends EffectController {
     }
 
 
-    public void Texchanger(Game game, Card card) {
+    public void Texchanger(Game game, Card card) throws GameException{
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
@@ -297,7 +297,7 @@ public class MonsterEffectController extends EffectController {
         return 0;
     }
 
-    static protected void setMonster(Game game, Card card, State state) {
+    static protected void setMonster(Game game, Card card, State state) throws GameException {
         boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);
