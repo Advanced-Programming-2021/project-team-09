@@ -11,6 +11,7 @@ import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
 import model.game.State;
 import view.TributeMenu;
+import view.duelMenu.specialCardsMenu.ScannerMenu;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 import model.game.Limits;
@@ -100,6 +101,9 @@ public class GameMenuController {
             if (!game.canSummon()) return respond(GameMenuResponsesEnum.ALREADY_SUMMONED);
             if (!canNormalSummon(card.getFeatures())) return respond(GameMenuResponsesEnum.CANT_NORMAL_SUMMON);
             if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
+            if (cardHasScannerEffect(card.getFeatures())) {
+                return scannerController(game, card);
+            }
             if (monster.getLevel() > 4) {
                 int numberOfTributes = monster.getLevel() > 6 ? 2 : 1;
                 Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
@@ -153,6 +157,43 @@ public class GameMenuController {
     private static boolean cardHasSummonEffect(ArrayList<CardFeatures> features) {
         for (CardFeatures cardFeatures : features) if (cardFeatures == CardFeatures.SUMMON_EFFECT) return true;
         return false;
+    }
+
+    private static boolean cardHasScannerEffect(ArrayList<CardFeatures> features) {
+        for (CardFeatures cardFeatures : features) if (cardFeatures == CardFeatures.SCANNER) return true;
+        return false;
+    }
+
+    private static GameMenuResponse scannerController(Game game, Card card) {
+        ArrayList<Card> graveyardCards = game.getRivalBoard().getGraveyard().getCards();
+        ArrayList<Card> cardsToBeShown = new ArrayList<>();
+        for (Card tempCard : graveyardCards) {
+            if (!cardHasScannerEffect(tempCard.getFeatures())){
+                cardsToBeShown.add(tempCard);
+            }
+        }
+        if (cardsToBeShown.size() == 0) {
+            putCardInNearestCell(card, game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
+        } else {
+            Card tempCard = ScannerMenu.run(cardsToBeShown);
+            while (!tempCard.isMonster()) {
+                ScannerMenu.pleaseSelectMonster();
+                tempCard = ScannerMenu.run(cardsToBeShown);
+            }
+            Monster tempMonster = (Monster) tempCard;
+            Monster scannerMonster = (Monster) card;
+            scannerMonster.setCardName(tempMonster.getCardName());
+            scannerMonster.setDescription(tempMonster.getDescription());
+            scannerMonster.setFeatures(tempMonster.getFeatures());
+            scannerMonster.setAttack(tempMonster.getAttack());
+            scannerMonster.setDefense(tempMonster.getDefense());
+            scannerMonster.setLevel(tempMonster.getLevel());
+            scannerMonster.setMonsterEffectType(tempMonster.getMonsterEffectType());
+            scannerMonster.setMonsterType(tempMonster.getMonsterType());
+            scannerMonster.setMonsterCardType(tempMonster.getMonsterCardType());
+            scannerMonster.addFeature(CardFeatures.SCANNER);
+        }
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     // for cards like beast king barbaros
