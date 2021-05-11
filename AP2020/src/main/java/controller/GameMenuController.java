@@ -1,8 +1,8 @@
 package controller;
 
-import model.Cell;
-import model.Game;
-import model.State;
+import model.game.Cell;
+import model.game.Game;
+import model.game.State;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;

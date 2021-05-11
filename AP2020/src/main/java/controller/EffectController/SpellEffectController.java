@@ -360,20 +360,36 @@ public class SpellEffectController extends EffectController {
     }
 
     public void mirrorForce(Game game, Card card) {
-
+        Board board = getRivalBoard(game,card);
+        Cell[] monsterZone = board.getMonsterZone();
+        for (Cell cell : monsterZone) {
+            if (cell.isOccupied() && cell.isFaceUp()) {
+                Card cardToBeDestroyed = cell.getCard();
+                GameMenuController.sendToGraveYard(game,cardToBeDestroyed);
+            }
+        }
     }
 
     public void mindCrush(Game game, Card card) {
+        Board board = getBoard(game, card);
+        Board opponentsBoard = getRivalBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        String cardName = CardEffectsView.getCardName();
-        if (csvInfoGetter.cardNameExists(cardName)) {
+        ArrayList<Card> opponentsCards = getRivalsCardsInHand(game, card);
 
+        String cardName = CardEffectsView.getCardName();
+        if (csvInfoGetter.cardNameExists(cardName) && doWeHaveACardWithNameInHand(cardName, opponentsCards)) {
+            for (Card card1 : opponentsCards) {
+                if (card1.getCardName().equals(cardName)) {
+                    opponentsBoard.sendToGraveYard(card1);
+                    opponentsCards.remove(card1);
+                }
+            }
         } else {
-            int cardToBeDeleted = LocalDateTime.now().getSecond() % cards.size();
-            cards.remove(c);
+            removeARandomCardFromHand(board, cards);
         }
 
     }
+
 
     public void trapHole(Game game, Card card) {
 
@@ -383,14 +399,6 @@ public class SpellEffectController extends EffectController {
         destroyAllMonsters(game);
     }
 
-    private void destroyAllMonsters(Game game) {
-        for (Cell cell : game.getPlayerBoard().getMonsterZone()) {
-            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
-        }
-        for (Cell cell : game.getRivalBoard().getMonsterZone()) {
-            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
-        }
-    }
 
     public void timeSeal(Game game, Card card) {
         Limits limits = getRivalsLimits(game, card);
@@ -505,6 +513,27 @@ public class SpellEffectController extends EffectController {
         return canSummon;
     }
 
+    private boolean doWeHaveACardWithNameInHand(String cardName, ArrayList<Card> cards) {
+        for (Card card : cards) {
+            if (card.getCardName().equals(cardName)) return true;
+        }
+        return false;
+    }
+
+    private void removeARandomCardFromHand(Board board, ArrayList<Card> cards) {
+        int cardToBeDeleted = LocalDateTime.now().getSecond() % cards.size();
+        board.sendToGraveYard(cards.get(cardToBeDeleted));
+        cards.remove(cardToBeDeleted);
+    }
+
+    private void destroyAllMonsters(Game game) {
+        for (Cell cell : game.getPlayerBoard().getMonsterZone()) {
+            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
+        }
+        for (Cell cell : game.getRivalBoard().getMonsterZone()) {
+            if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
+        }
+    }
 }
 
 

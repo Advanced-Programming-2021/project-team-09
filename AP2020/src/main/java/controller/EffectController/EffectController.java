@@ -66,6 +66,10 @@ public class EffectController {
         if (doesCardBelongsToPlayer(game,card)) return game.getPlayerHandCards();
         else return game.getRivalHandCards();
     }
+    public ArrayList<Card> getRivalsCardsInHand(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getRivalHandCards();
+        else return game.getPlayerHandCards();
+    }
 
     public Limits getRivalsLimits(Game game, Card card) {
         Limits limits;
