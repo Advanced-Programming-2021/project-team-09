@@ -411,16 +411,23 @@ public class GameMenuController {
         return false;
     }
 
-    private static int decreasePlayerLP(Game game, int damage) {
+    private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) {
+        if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
+        if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
         game.decreaseRivalHealth(damage);
         return damage;
-        // todo effects
     }
 
-    private static int decreaseRivalLP(Game game, int damage) {
+    private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) {
+        if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
+        if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
         game.decreaseHealth(damage);
         return damage;
-        // todo effects
+    }
+
+    private static boolean cardHasChangeLPBanned(ArrayList<CardFeatures> features) {
+        for (CardFeatures f : features) if (f == CardFeatures.DONT_CHANGE_LP) return true;
+        return false;
     }
 
     public static GameMenuResponse setMonsterCard(Game game, int cardNumberInHand) {
