@@ -7,6 +7,7 @@ import model.card.monster.Monster;
 import model.card.monster.MonsterType;
 import model.deck.Deck;
 import model.deck.Graveyard;
+import model.exceptions.GameException;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
@@ -100,7 +101,11 @@ public class MonsterEffectController extends EffectController {
         Monster monster1 = (Monster) card1;
         duplicateMonster(monster, monster1);
         if (monster.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS)) {
-            monster.activeEffect(game);
+            try {
+                monster.activeEffect(game);
+            } catch (GameException ignored) {
+                //ToDo
+            }
         }
     }
 
@@ -302,7 +307,11 @@ public class MonsterEffectController extends EffectController {
             if (card.getFeatures().contains(CardFeatures.SUMMON_EFFECT) ||
                     card.getFeatures().contains(CardFeatures.SCANNER) ||
                     card.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS))
-                card.activeEffect(game);
+                try {
+                    card.activeEffect(game);
+                } catch (GameException ignored) {
+                    //ToDo
+                }
         }
     }
 

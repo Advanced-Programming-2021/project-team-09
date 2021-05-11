@@ -6,4 +6,8 @@ public class StopAttackException extends GameException {
     public StopAttackException(StopEffectState state) {
         this.state = state;
     }
+
+    public StopEffectState getState() {
+        return state;
+    }
 }

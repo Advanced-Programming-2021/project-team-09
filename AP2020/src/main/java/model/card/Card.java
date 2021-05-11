@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
+import model.exceptions.GameException;
 import model.game.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
@@ -85,7 +86,7 @@ public abstract class Card {
 
     }
 
-    public void activeEffect(Game game) {
+    public void activeEffect(Game game) throws GameException {
 
     }
 
