@@ -37,19 +37,19 @@ public class DeckMenu {
                 deleteDeck(command);
             else if (command.matches(DeckMenuRegex.showMainDeckRegex))
                 showMainDeck(command);
-            else if (command.matches(DeckMenuRegex.showSideDeckRegex))
+            else if (DeckMenuRegex.doesItShowSideDeckCommand(command))
                 showSideDeck(command);
             else if (command.matches(DeckMenuRegex.showAllDecksRegex))
                 showAllDecks();
             else if (command.matches(DeckMenuRegex.showAllCardsRegex))
                 showAllCards();
-            else if (command.matches(DeckMenuRegex.addCardToMainDeckRegex))
+            else if (DeckMenuRegex.doesItAddCardToMainDeckCommand(command))
                 addCardToMainDeck(command);
-            else if (command.matches(DeckMenuRegex.addCardToSideDeckRegex))
+            else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
                 addCardToSideDeck(command);
-            else if (command.matches(DeckMenuRegex.removeCardFromMainDeckRegex))
+            else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
                 removeCardFromMainDeck(command);
-            else if (command.matches(DeckMenuRegex.removeCardFromSideDeckRegex))
+            else if (DeckMenuRegex.doesItRemoveCardFromSideDeckCommand(command))
                 removeCardFromSideDeck(command);
             else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
@@ -91,7 +91,7 @@ public class DeckMenu {
     }
 
     private void addCardToMainDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.addCardToMainDeckRegex);
+        Matcher matcher = DeckMenuRegex.getRightMatcherForAddCardToMainDeck(command);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
@@ -101,7 +101,7 @@ public class DeckMenu {
     }
 
     private void addCardToSideDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.addCardToSideDeckRegex);
+        Matcher matcher = DeckMenuRegex.getRightMatcherForAddCardToSideDeck(command);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
@@ -111,7 +111,7 @@ public class DeckMenu {
     }
 
     private void removeCardFromMainDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.removeCardFromMainDeckRegex);
+        Matcher matcher = DeckMenuRegex.getRightMatcherForRemoveCardFromMainDeck(command);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
@@ -121,7 +121,7 @@ public class DeckMenu {
     }
 
     private void removeCardFromSideDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.removeCardFromSideDeckRegex);
+        Matcher matcher = DeckMenuRegex.getRightMatcherForRemoveCardFromSideDeck(command);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
@@ -150,7 +150,7 @@ public class DeckMenu {
     }
 
     private void showSideDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.showSideDeckRegex);
+        Matcher matcher = DeckMenuRegex.getRightMatcherForShowSideDeck(command);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             DeckMenuResponses response = DeckMenuController.showSideDeck(deckName);
