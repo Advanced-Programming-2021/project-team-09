@@ -188,16 +188,22 @@ public class GameMenuController {
             rivalFlipSummon(game, defenderCellNumber);
             attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
             defenderPoint = defenderMonster.getDefense() + rivalLimits.getDEFAddition(defenderMonster);
-            if (attackerPoint == defenderPoint) {
+            if (attackerPoint == defenderPoint) { // both cards stay on board .. no player damage
                 attacker.setCanAttack(false);
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerPoint > defenderPoint) {
+            } else if (attackerPoint > defenderPoint) { // defense monster destroyed .. no player damage
+                ArrayList<CardFeatures> features = defender.getCard().getFeatures();
                 moveToRivalGraveyard(game, defenderCellNumber, true);
-                attacker.setCanAttack(false);
-                return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and the defense position monster is destroyed",
+                String tempString = "";
+                if (hasDestroyAttackerEffect(features)) {
+                    moveToPlayerGraveyard(game, attackerCellNumber, true);
+                    tempString = "\nYour card was also destroyed by rival's card effect";
+                }
+                return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName()
+                                + " and the defense position monster is destroyed" + tempString,
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else {
+            } else { // both stay on board ... player takes damage
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 attacker.setCanAttack(false);
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
@@ -206,18 +212,25 @@ public class GameMenuController {
         } else if (defender.getState() == State.FACE_UP_ATTACK) {
             attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
             defenderPoint = defenderMonster.getAttack() + rivalLimits.getATKAddition(defenderMonster);
-            if (attackerPoint == defenderPoint) {
+            if (attackerPoint == defenderPoint) { // destroy both cards .. no one takes damage
                 moveToPlayerGraveyard(game, attackerCellNumber, true);
                 moveToRivalGraveyard(game, defenderCellNumber, true);
                 return respondWithObj("both you and your opponent monster cards are destroyed and no one receives damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerPoint > defenderPoint) {
+            } else if (attackerPoint > defenderPoint) { // defender monster is destroyed .. rival takes damage
                 attacker.setCanAttack(false);
+                ArrayList<CardFeatures> features = defender.getCard().getFeatures();
                 moveToRivalGraveyard(game, defenderCellNumber, true);
+                String tempString = "";
+                if (hasDestroyAttackerEffect(features)) {
+                    moveToPlayerGraveyard(game, attackerCellNumber, true);
+                    tempString = "\nYour card was also destroyed by rival's card effect";
+                }
                 int damage = decreaseRivalLP(game, attackerPoint - defenderPoint);
-                return respondWithObj("your opponent’s monster is destroyed and your opponent receives " + damage + " battle damage",
+                return respondWithObj("your opponent’s monster is destroyed and your opponent receives "
+                                + damage + " battle damage" + tempString,
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else {
+            } else { // attacker monster is destroyed .. player takes damage
                 moveToPlayerGraveyard(game, attackerCellNumber, true);
                 int damage = decreasePlayerLP(game, defenderMonster.getAttack() - attackerMonster.getAttack());
                 return respondWithObj("Your monster card is destroyed and you received " + damage + " battle damage",
@@ -226,25 +239,33 @@ public class GameMenuController {
         } else {
             attackerPoint = attackerMonster.getAttack() + playerLimits.getATKAddition(attackerMonster);
             defenderPoint = defenderMonster.getDefense() + rivalLimits.getDEFAddition(defenderMonster);
-            if (attackerPoint == defenderPoint) {
+            if (attackerPoint == defenderPoint) { // both cards stay on board .. no player damage
                 attacker.setCanAttack(false);
                 return respondWithObj("no card was destroyed",
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else if (attackerPoint > defenderPoint) {
+            } else if (attackerPoint > defenderPoint) { // defense monster destroyed .. no player damage
                 attacker.setCanAttack(false);
+                ArrayList<CardFeatures> features = defender.getCard().getFeatures();
                 moveToRivalGraveyard(game, defenderCellNumber, true);
-                return respondWithObj("the defense position monster is destroyed",
+                String tempString = "";
+                if (hasDestroyAttackerEffect(features)) {
+                    moveToPlayerGraveyard(game, attackerCellNumber, true);
+                    tempString = "\nYour card was also destroyed by rival's card effect";
+                }
+                return respondWithObj("the defense position monster is destroyed" + tempString,
                         GameMenuResponsesEnum.SUCCESSFUL);
-            } else {
+            } else { // no card is destroyed .. player takes damage
                 attacker.setCanAttack(false);
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint);
                 return respondWithObj("no card is destroyed and you received " + damage + " battle damage",
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
-        } // todo page 32 AP GAME 2021
-        // todo destroy attacker
-        // todo lp func joda
-        // todo attack controller
+        }
+    }
+
+    private static boolean hasDestroyAttackerEffect(ArrayList<CardFeatures> cardFeatures) {
+        for (CardFeatures feature : cardFeatures) if (feature == CardFeatures.DESTROY_ATTACKER) return true;
+        return false;
     }
 
     private static int decreasePlayerLP(Game game, int damage) {
