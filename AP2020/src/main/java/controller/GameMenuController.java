@@ -1,5 +1,6 @@
 package controller;
 
+import controller.EffectController.MonsterEffectController;
 import model.game.Cell;
 import model.game.Game;
 import model.User;
@@ -14,6 +15,7 @@ import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 import model.game.Limits;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -120,7 +122,7 @@ public class GameMenuController {
             putCardInNearestCell(card, tempCells, State.FACE_UP_SPELL);
         }
         if (cardHasSummonEffect(card.getFeatures()))
-            activeEffect(game, card, game.getRival(), 1); // todo spell ham dare dige ?
+            activeEffect(game, card, game.getRival(), 1);
         game.setCanSummonCard(false);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
@@ -187,6 +189,7 @@ public class GameMenuController {
         if (!game.getRivalLimits().canAttackCell(defenderCellNumber)) return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) || hasNotUsedEffect(defender.getCard().getFeatures())) {
             ((Monster) attacker.getCard()).setAttack(0);
+            defender.getCard().addFeature(CardFeatures.USED_EFFECT);
             return respondWithObj("Your monster attack point was reduced to zero",
                     GameMenuResponsesEnum.ABORTED);
         }
@@ -419,8 +422,26 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static void specialSummon(Card card) {
-        // todo
+    public static GameMenuResponse specialSummon(Game game, Card card) {
+        if (!canBeSpecialSummoned(card.getFeatures())) {
+            return respond(GameMenuResponsesEnum.CANT_SPECIAL_SUMMON);
+        }
+        try {
+            Method method = MonsterEffectController.class.getDeclaredMethod(trimName(card.getCardName()), Game.class, Card.class);
+            method.invoke(new MonsterEffectController(), game, card);
+        } catch (Exception ignored) {
+        }
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    private static boolean canBeSpecialSummoned(ArrayList<CardFeatures> cardFeatures) {
+        for (CardFeatures cardFeature : cardFeatures) if (cardFeature == CardFeatures.SPECIAL_SUMMON
+                || cardFeature == CardFeatures.HAS_SPECIAL_NORMAL_SUMMON) return true;
+        return false;
+    }
+
+    private static String trimName(String name) {
+        return name.replace(" ", "").replace(",","").replace("-", "");
     }
 
     public static GameMenuResponse showPlayerGraveYard(Game game) {

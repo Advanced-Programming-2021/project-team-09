@@ -38,6 +38,11 @@ public abstract class Card {
     }
 
     @JsonIgnore
+    public void addFeature(CardFeatures cardFeature) {
+        this.features.add(cardFeature);
+    }
+
+    @JsonIgnore
     public void setFeatures(ArrayList<CardFeatures> features) {
         this.features = features;
     }
