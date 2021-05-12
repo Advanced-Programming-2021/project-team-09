@@ -23,11 +23,11 @@ public class EffectController {
         return false;
     }
 
-    public boolean isCellNumberValid(int cellNumber) {
+    public static boolean isCellNumberValid(int cellNumber) {
         return cellNumber >= 0 && cellNumber < 5;
     }
 
-    public State getStateOfCard(Game game, Card card) {
+    public static State getStateOfCard(Game game, Card card) {
         State state;
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
@@ -41,44 +41,44 @@ public class EffectController {
         return null;
     }
 
-    public User getWinner(Game game, Card card) {
+    public static User getWinner(Game game, Card card) {
         if (doesCardBelongsToPlayer(game, card)) return game.getPlayer();
         else return game.getRival();
     }
 
-    public Board getBoard(Game game, Card card) {
+    public static Board getBoard(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
         return board;
     }
-    public Deck getDeck(Game game, Card card) {
+    public static Deck getDeck(Game game, Card card) {
         if (doesCardBelongsToPlayer(game,card)) return game.getPlayerDeck();
         else return game.getRivalDeck();
     }
 
-    public Limits getLimits(Game game,Card card) {
+    public static Limits getLimits(Game game,Card card) {
         if (doesCardBelongsToPlayer(game,card)) return game.getPlayerLimits();
         else return game.getRivalLimits();
     }
 
-    public ArrayList<Card> getCardsInHand(Game game, Card card) {
+    public static ArrayList<Card> getCardsInHand(Game game, Card card) {
         if (doesCardBelongsToPlayer(game,card)) return game.getPlayerHandCards();
         else return game.getRivalHandCards();
     }
-    public ArrayList<Card> getRivalsCardsInHand(Game game, Card card) {
+    public static ArrayList<Card> getRivalsCardsInHand(Game game, Card card) {
         if (doesCardBelongsToPlayer(game,card)) return game.getRivalHandCards();
         else return game.getPlayerHandCards();
     }
 
-    public Limits getRivalsLimits(Game game, Card card) {
+    public static Limits getRivalsLimits(Game game, Card card) {
         Limits limits;
         if (doesCardBelongsToPlayer(game, card)) limits = game.getRivalLimits();
         else limits = game.getPlayerLimits();
         return limits;
     }
 
-    public Board getRivalBoard(Game game, Card card) {
+    public static Board getRivalBoard(Game game, Card card) {
         Board rivalBoard;
 
         if (doesCardBelongsToPlayer(game, card)){

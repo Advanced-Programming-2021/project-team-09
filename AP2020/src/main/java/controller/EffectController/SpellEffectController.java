@@ -358,7 +358,7 @@ public class SpellEffectController extends EffectController {
 
     //traps!
     public void magicCylinder(Game game, Card card) throws GameException {
-        throw new StopAttackException(StopEffectState.REDUCE_FROM_RIVALS_LP);
+        throw new StopAttackException(StopEffectState.REDUCE_FROM_ATTACKERS_LP);
     }
 
     public void mirrorForce(Game game, Card card) throws GameException {
@@ -394,9 +394,9 @@ public class SpellEffectController extends EffectController {
         //ToDo
     }
 
-    public void torrentialTribute(Game game, Card card) throws GameException {
+    public void TorrentialTribute(Game game, Card card) throws GameException {
         destroyAllMonsters(game);
-        throw new StopAttackException(StopEffectState.DESTROY_RIVAL);
+        throw new StopAttackException(StopEffectState.STOP_SUMMON);
     }
 
     public void timeSeal(Game game, Card card) throws GameException {
@@ -408,13 +408,13 @@ public class SpellEffectController extends EffectController {
         throw new StopAttackException(StopEffectState.END_BATTLE_PHASE);
     }
 
-    public void solemnWarning(Game game, Card card) throws GameException {
+    public void SolemnWarning(Game game, Card card) throws GameException {
         if (doesCardBelongsToPlayer(game, card)) game.decreaseHealth(2000);
         else game.decreaseRivalHealth(2000);
         throw new StopSpell(StopEffectState.DESTROY_SPELL);
     }
 
-    public void magicJammer(Game game, Card card) throws GameException {
+    public void MagicJammer(Game game, Card card) throws GameException {
         ArrayList<Card> cards = getCardsInHand(game, card);
         if (cards.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {

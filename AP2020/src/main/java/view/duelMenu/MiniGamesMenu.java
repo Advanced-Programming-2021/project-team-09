@@ -1,28 +1,26 @@
 package view.duelMenu;
 
-import model.User;
+import controller.MiniGameController;
+import model.game.MiniGame;
 
 import java.util.Scanner;
 
 public class MiniGamesMenu {
-    private User firstUser;
-    private User secondUser;
     private final Scanner scanner;
     private static MiniGamesMenu miniGameMenu;
-    private User winner;
+    private final MiniGame miniGame;
 
-    private MiniGamesMenu(User firstUser, User secondUser, Scanner scanner) {
-        this.firstUser = firstUser;
-        this.secondUser = secondUser;
+    private MiniGamesMenu(Scanner scanner, MiniGame miniGame) {
+        this.miniGame = miniGame;
         this.scanner = scanner;
     }
 
-    public static MiniGamesMenu getInstance(User firstUser, User secondUser, Scanner scanner) {
-        if (miniGameMenu == null) miniGameMenu = new MiniGamesMenu(firstUser, secondUser, scanner);
+    public static MiniGamesMenu getInstance(Scanner scanner, MiniGame miniGame) {
+        if (miniGameMenu == null) miniGameMenu = new MiniGamesMenu(scanner, miniGame);
         return miniGameMenu;
     }
 
-    public User run() {
+    public void run() {
         String command;
         System.out.println("chose a game to declare first player:\n" +
                 "rock paper scissors\n" +
@@ -31,14 +29,14 @@ public class MiniGamesMenu {
         while (true) {
             command = scanner.nextLine().trim();
             if (command.matches("rock paper scissors")) {
-                playRockPaperScissor(firstUser, secondUser);
-                return getWinner();
+                playRockPaperScissor();
+                return;
             } else if (command.matches("dice")) {
-                playDice(firstUser, secondUser);
-                return getWinner();
+                playDice();
+                return;
             } else if (command.matches("throw coin")) {
-                playCoin(firstUser, secondUser);
-                return getWinner();
+                playCoin();
+                return;
             } else if (command.matches("help"))
                 showHelp();
             else if (command.matches("menu show-current"))
@@ -47,63 +45,34 @@ public class MiniGamesMenu {
         }
     }
 
-    public void playRockPaperScissor(User firstUser, User secondUser) {
-        setWinner(RockPaperScissors.getInstance(firstUser, secondUser, scanner).run());
+    private void playDice() {
+        MiniGameController.playDice(miniGame);
     }
 
-    public void playDice(User firstUser, User secondUser) {
-        int firstUserDice = dice();
-        int secondUserDice = dice();
-        if (firstUserDice > secondUserDice)
-            setWinner(firstUser);
-        else if (firstUserDice == secondUserDice)
-            playDice(firstUser, secondUser);
-        else
-            setWinner(secondUser);
+    private void playCoin() {
+        System.out.println("head or tale");
+        String userChoice;
+        while (true) {
+            userChoice = scanner.nextLine().trim();
+            if (userChoice.equals("head"))
+                break;
+            else if (userChoice.equals("tale"))
+                break;
+            else
+                System.out.println("please chose head or tail!");
+        }
+        MiniGameController.playCoin(miniGame, userChoice);
     }
 
-    public void playCoin(User firstUser, User secondUser) {
-        System.out.println("Head or Tale?");
-        String playerChoice = scanner.nextLine().trim();
-        String coin = throwCoin();
-
-        if (playerChoice.equals(throwCoin()))
-            setWinner(firstUser);
-        else
-            setWinner(secondUser);
-    }
-
-    public int dice() {
-        int randomNumber;
-        randomNumber = (int) (Math.random() * 1_000_000);
-        int diceNumber;
-        return diceNumber = (randomNumber % 6) + 1;
-    }
-
-    public String throwCoin() {
-        int randomNumber;
-        randomNumber = (int) (Math.random() * 1_000_000);
-        int headOrTale = randomNumber % 2;
-        if (headOrTale == 0)
-            return "Head";
-        else
-            return "Tale";
+    public void playRockPaperScissor() {
+        RockPaperScissors.getInstance(scanner, miniGame).run();
     }
 
     public void showHelp() {
-        StringBuilder help = new StringBuilder();
-        help.append("rock paper scissors\n");
-        help.append("dice\n");
-        help.append("throw coin\n");
-        help.append("menu show-current");
+        String help = "rock paper scissors\n" +
+                "dice\n" +
+                "throw coin\n" +
+                "menu show-current";
         System.out.println(help);
-    }
-
-    public void setWinner(User user) {
-        winner = user;
-    }
-
-    public User getWinner() {
-        return winner;
     }
 }
