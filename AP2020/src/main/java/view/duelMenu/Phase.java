@@ -1,6 +1,6 @@
 package view.duelMenu;
 
-public enum CurrentPhase {
+public enum Phase {
     STANDBY_PHASE,
     MAIN_PHASE1,
     DRAW_PHASE,
