@@ -105,9 +105,9 @@ public class CardEffectsView {
         System.out.println("Please enter a card name ..");
         return LoginMenu.getInstance().getScanner().nextLine();
     }
-
-    static public int getNumberOfCardInHand() {
-        System.out.println("please select a card from your hand");
+	
+    static public int getNumberOfCardInHand(ArrayList<Card> cards) {
+		System.out.println("please select a card from your hand");
         return 0;
     }
 

@@ -160,7 +160,7 @@ public class SpellEffectController extends EffectController {
         if (cardsInHand.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {
             while (true) {
-                int cardNumberInHand = CardEffectsView.getNumberOfCardInHand() - 1;
+                int cardNumberInHand = CardEffectsView.getNumberOfCardInHand(cardsInHand) - 1;
                 if (cardNumberInHand < cardsInHand.size()) {
                     Card cardToBeRemoved = cardsInHand.get(cardNumberInHand);
                     cardsInHand.remove(cardToBeRemoved);
@@ -323,30 +323,30 @@ public class SpellEffectController extends EffectController {
             CardEffectsView.respond(CardEffectsResponses.SPECIAL_SUMMON_NOW);
             main:
             while (true) {
-                int cardNumber = CardEffectsView.getNumberOfCardInHand();
-                Card card1 = cardsInHand.get(cardNumber);
-                if (card1.isMonster()) {
-                    Monster monster = (Monster) card1;
-                    if (card1.getFeatures().contains(CardFeatures.RITUAL_SUMMON)) {
-                        if (isThereAnyCombinationOfCardsThatTheyLevelEqualsTo(board, monster.getLevel())) {
-                            int[] cellNumbers = CardEffectsView.getCellNumbers();
-                            for (int cellNumber : cellNumbers) {
-                                if (!isCellNumberValid(cellNumber)) {
-                                    CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
-                                    continue main;
+                int cardNumber = CardEffectsView.getNumberOfCardInHand(cardsInHand) - 1;
+                if (cardNumber < cardsInHand.size()) {
+                    Card card1 = cardsInHand.get(cardNumber);
+                    if (card1.isMonster()) {
+                        Monster monster = (Monster) card1;
+                        if (card1.getFeatures().contains(CardFeatures.RITUAL_SUMMON)) {
+                            if (isThereAnyCombinationOfCardsThatTheyLevelEqualsTo(board, monster.getLevel())) {
+                                int[] cellNumbers = CardEffectsView.getCellNumbers();
+                                for (int cellNumber : cellNumbers) {
+                                    if (!isCellNumberValid(cellNumber)) {
+                                        CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                                        continue main;
+                                    }
                                 }
-                            }
-                            int sumOfLevel = board.getSumLevel(cellNumbers);
-                            if (sumOfLevel == monster.getLevel()) {
-                                GameMenuController.tribute(game, cellNumbers);
-                                game.summonMonster(monster);
-                                int cellNumber1 = getCellNumberOfSpell(game, monster);
-                                board.getMonsterZone(cellNumber1).setState(State.FACE_UP_ATTACK);
-                                return;
-                            } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
-                        } else CardEffectsView.respond(CardEffectsResponses.CANT_RITUAL_SUMMON);
-                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
-                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+                                int sumOfLevel = board.getSumLevel(cellNumbers);
+                                if (sumOfLevel == monster.getLevel()) {
+                                    GameMenuController.tribute(game, cellNumbers);
+                                    MonsterEffectController.setMonster(game,monster,State.FACE_UP_ATTACK);
+                                    return;
+                                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                            } else CardEffectsView.respond(CardEffectsResponses.CANT_RITUAL_SUMMON);
+                        } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
+                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
             }
         } else CardEffectsView.respond(CardEffectsResponses.CANT_RITUAL_SUMMON);
         cantRitualSummon(game, card, board);
@@ -415,10 +415,15 @@ public class SpellEffectController extends EffectController {
         ArrayList<Card> cards = getCardsInHand(game, card);
         if (cards.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {
-            int cardNumber = CardEffectsView.getNumberOfCardInHand() - 1;
-            Board board = getBoard(game, card);
-            removeCardFromHand(board, cards, cardNumber);
-            throw new StopSpell(StopEffectState.DESTROY_SPELL);
+            while (true) {
+                int cardNumber = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+                if (cardNumber < cards.size()) {
+                    Board board = getBoard(game, card);
+                    removeCardFromHand(board, cards, cardNumber);
+                    throw new StopSpell(StopEffectState.DESTROY_SPELL);
+                    //ToDo
+                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+            }
         }
     }
 

@@ -43,7 +43,7 @@ public class Board {
     }
     public Cell getMonsterZoneCellByCard(Card card){
         for (int i = 0; i < 5; i++) {
-            if ( monsterZone[i].getCard().equals(card) ) return monsterZone[i];
+            if ( monsterZone[i].getCard() == card ) return monsterZone[i];
         }
         return null;
     }
