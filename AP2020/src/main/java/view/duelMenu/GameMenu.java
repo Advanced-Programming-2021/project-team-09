@@ -3,6 +3,7 @@ package view.duelMenu;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
+import model.game.MiniGame;
 import view.regexes.GameMenuRegex;
 import view.responses.StartingGameResponses;
 
@@ -57,13 +58,17 @@ public class GameMenu {
             else if (!rivalUser.getActiveDeck().isValid())
                 System.out.println(username + "'s deck is invalid");
             else if (rounds.equals("1")) {
-                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser, rivalUser, scanner).run();
+                MiniGame miniGame = new MiniGame(currentUser,rivalUser);
+                MiniGamesMenu.getInstance(scanner,miniGame).run();
+                winnerOfMiniGame = miniGame.getWinner();
                 if (winnerOfMiniGame.equals(currentUser))
                     singleRoundGame(currentUser, rivalUser);
                 else
                     singleRoundGame(rivalUser, currentUser);
             } else if (rounds.equals("3")) {
-                winnerOfMiniGame = MiniGamesMenu.getInstance(currentUser, rivalUser, scanner).run();
+                MiniGame miniGame = new MiniGame(currentUser,rivalUser);
+                MiniGamesMenu.getInstance(scanner,miniGame).run();
+                winnerOfMiniGame = miniGame.getWinner();
                 if (winnerOfMiniGame.equals(currentUser))
                     tripleRoundGame(currentUser, rivalUser);
                 else

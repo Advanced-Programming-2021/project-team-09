@@ -79,19 +79,23 @@ public class GameMenuController {
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) {
         if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
-        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0)
+        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
+            game.setWinner(game.getRival());
             return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+        }
         String temp = game.getPlayerDeck().getMainDeck().getCards().get(0).toString();
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
     public static GameMenuResponse drawRival(Game game) {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
-        if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0)
+        if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
+            game.setWinner(game.getPlayer());
             return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+        }
         String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
         game.rivalDrawCard();
-        return respondWithObj(temp /* :) */, GameMenuResponsesEnum.SUCCESSFUL);
+        return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse selectCardFromHand(Game game, int cardNumber) {
@@ -201,34 +205,7 @@ public class GameMenuController {
     }
 
     private static GameMenuResponse scannerController(Game game, Card card) {
-        ArrayList<Card> graveyardCards = game.getRivalBoard().getGraveyard().getCards();
-        ArrayList<Card> cardsToBeShown = new ArrayList<>();
-        for (Card tempCard : graveyardCards) {
-            if (!cardHasScannerEffect(tempCard.getFeatures())) {
-                cardsToBeShown.add(tempCard);
-            }
-        }
-        if (cardsToBeShown.size() == 0) {
-            putCardInNearestCell(card, game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
-        } else {
-            Card tempCard = ScannerMenu.run(cardsToBeShown);
-            while (!tempCard.isMonster()) {
-                ScannerMenu.pleaseSelectMonster();
-                tempCard = ScannerMenu.run(cardsToBeShown);
-            }
-            Monster tempMonster = (Monster) tempCard;
-            Monster scannerMonster = (Monster) card;
-            scannerMonster.setCardName(tempMonster.getCardName());
-            scannerMonster.setDescription(tempMonster.getDescription());
-            scannerMonster.setFeatures(tempMonster.getFeatures());
-            scannerMonster.setAttack(tempMonster.getAttack());
-            scannerMonster.setDefense(tempMonster.getDefense());
-            scannerMonster.setLevel(tempMonster.getLevel());
-            scannerMonster.setMonsterEffectType(tempMonster.getMonsterEffectType());
-            scannerMonster.setMonsterType(tempMonster.getMonsterType());
-            scannerMonster.setMonsterCardType(tempMonster.getMonsterCardType());
-            scannerMonster.addFeature(CardFeatures.SCANNER);
-        }
+        specialSummon(game, card);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -309,6 +286,19 @@ public class GameMenuController {
                 defenderMonster.addFeature(CardFeatures.USED_EFFECT);
             }
             return respond(GameMenuResponsesEnum.ABORTED);
+        }
+
+        if (cardHasVariableATKAndDEF(defenderMonster.getFeatures())){
+            try {
+                activeEffect(game, defenderMonster, game.getRival(), 0);
+            } catch (Exception ignored) {
+            }
+        }
+        if (cardHasVariableATKAndDEF(attackerMonster.getFeatures())){
+            try {
+                activeEffect(game, attackerMonster, game.getPlayer(), 0);
+            } catch (Exception ignored) {
+            }
         }
 
         String answer = "";
@@ -429,6 +419,11 @@ public class GameMenuController {
                         GameMenuResponsesEnum.SUCCESSFUL);
             }
         }
+    }
+
+    private static boolean cardHasVariableATKAndDEF(ArrayList<CardFeatures> cardFeatures) {
+        for (CardFeatures feature : cardFeatures) if (feature == CardFeatures.VARIABLE_ATK_DEF_NUMBERS) return true;
+        return false;
     }
 
     private static boolean hasLimitedUsesForEffect(ArrayList<CardFeatures> features) {
@@ -575,6 +570,7 @@ public class GameMenuController {
     public static void rivalFlipSummon(Game game, int cellNumber) throws GameException {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
+
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
            try {
                activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
@@ -636,6 +632,8 @@ public class GameMenuController {
                 break;
             }
         if (hasMonster) return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
+            return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Card tempCard = tempCells[cellNumber - 1].getCard();
         game.decreaseRivalHealth(((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard));
         tempCells[cellNumber - 1].setCanAttack(false);
@@ -643,11 +641,8 @@ public class GameMenuController {
     }
 
     public static GameMenuResponse specialSummon(Game game, Card card) {
-        if (!canBeSpecialSummoned(card.getFeatures())) return respond(GameMenuResponsesEnum.CANT_SPECIAL_SUMMON);
-        if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
         try {
-            Method method = MonsterEffectController.class.getDeclaredMethod(trimName(card.getCardName()), Game.class, Card.class);
-            method.invoke(new MonsterEffectController(), game, card);
+            card.activeEffect(game);
         } catch (Exception ignored) {
         }
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
@@ -841,7 +836,10 @@ public class GameMenuController {
                 }
             }
         }
-        if (card != null) card.activeEffect(game);
+        if (card != null) {
+            card.activeEffect(game);
+            card.addFeature(CardFeatures.USED_EFFECT);
+        }
     }
 
     private static int getSpeed(ArrayList<CardFeatures> features) {
