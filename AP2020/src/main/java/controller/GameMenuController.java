@@ -77,7 +77,7 @@ public class GameMenuController {
     }
 
     // returns the name of card which was added to hand
-    public static GameMenuResponse draw(Game game) {
+    public static GameMenuResponse draw(Game game) throws WinnerException {
         if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
@@ -87,7 +87,7 @@ public class GameMenuController {
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
-    public static GameMenuResponse drawRival(Game game) {
+    public static GameMenuResponse drawRival(Game game) throws WinnerException {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getPlayer());
