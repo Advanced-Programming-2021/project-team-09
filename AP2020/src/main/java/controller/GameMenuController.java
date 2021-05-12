@@ -574,8 +574,6 @@ public class GameMenuController {
     public static void rivalFlipSummon(Game game, int cellNumber) {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
-        if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
-            activeEffect(game, tempCell.getCard(), game.getPlayer(), 1);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures())) {
             try {
                 activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
@@ -638,6 +636,8 @@ public class GameMenuController {
                 break;
             }
         if (hasMonster) return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
+            return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Card tempCard = tempCells[cellNumber - 1].getCard();
         game.decreaseRivalHealth(((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard));
         tempCells[cellNumber - 1].setCanAttack(false);
