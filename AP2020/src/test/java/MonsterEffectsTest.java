@@ -36,6 +36,7 @@ public class MonsterEffectsTest {
             Assertions.fail();
         }
     }
+
     @Test
     public void testCommandKnight() {
         Card card = csvInfoGetter.getCardByName("Command Knight");

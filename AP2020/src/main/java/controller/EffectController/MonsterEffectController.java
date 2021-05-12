@@ -173,6 +173,7 @@ public class MonsterEffectController extends EffectController {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
+            ArrayList<Card> cards = getCardsInHand(game,card);
             if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
             else board = game.getRivalBoard();
             if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -180,7 +181,7 @@ public class MonsterEffectController extends EffectController {
                 CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             else {
                 while (true) {
-                    Card card1 = CardEffectsView.getCardFrom(board);
+                    Card card1 = CardEffectsView.getCardFrom(board, cards);
                     if (card1 == null) return;
                     if (card1.isMonster()) {
                         if (((Monster) card1).getMonsterType().equals(MonsterType.CYBERSE)) {
