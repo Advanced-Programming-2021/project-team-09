@@ -1,5 +1,6 @@
 package view.duelMenu;
 
+import controller.GameMenuController;
 import model.User;
 import model.game.Game;
 import org.jetbrains.annotations.NotNull;
@@ -80,8 +81,11 @@ public class OneRoundGame {
     public void goToNextPhase(){
         if (currentPhase.equals(Phase.STANDBY_PHASE))
             goToMainPhase1();
-        else if (currentPhase.equals(Phase.MAIN_PHASE1))
+        else if (currentPhase.equals(Phase.MAIN_PHASE1)){
             goToDrawPhase();
+            //todo add card to hand
+        }
+
         else if (currentPhase.equals(Phase.DRAW_PHASE))
             goToMainPhase2();
         else if (currentPhase.equals(Phase.MAIN_PHASE2))
@@ -138,7 +142,6 @@ public class OneRoundGame {
 
     }
     public void showGraveyard(){
-
     }
     public void showSelectedCard(){
 
@@ -178,6 +181,13 @@ public class OneRoundGame {
         allowedPhaseForSummon.add(Phase.MAIN_PHASE1);
         allowedPhaseForSummon.add(Phase.MAIN_PHASE2);
         return allowedPhaseForSummon;
+    }
+    public ArrayList<Phase> getAllowedPhaseForSelect(){
+        ArrayList<Phase> allowedPhaseForSelect = new ArrayList<>();
+        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
+        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
+        allowedPhaseForSelect.add(Phase.BATTLE_PHASE);
+        return allowedPhaseForSelect;
     }
     public ArrayList<Phase> getAllowedPhaseForAttack(){
         ArrayList<Phase> allowedPhaseForAttack = new ArrayList<>();
