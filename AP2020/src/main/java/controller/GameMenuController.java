@@ -515,6 +515,13 @@ public class GameMenuController {
         tempCell.setState(State.FACE_UP_DEFENCE);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
             activeEffect(game, tempCell.getCard(), game.getPlayer(), 1);
+        if (cardHasFlipEffect(tempCell.getCard().getFeatures())) {
+            try {
+                activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
+            } catch (GameException e) {
+
+            }
+        }
     }
 
     private static boolean cardHasFlipEffect(ArrayList<CardFeatures> cardFeatures) {
