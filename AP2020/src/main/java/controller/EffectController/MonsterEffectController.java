@@ -7,6 +7,7 @@ import model.card.monster.Monster;
 import model.card.monster.MonsterType;
 import model.deck.Deck;
 import model.deck.Graveyard;
+import model.exceptions.GameException;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
@@ -48,7 +49,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void GateGuardian(Game game, Card card) {
+    public void GateGuardian(Game game, Card card) throws GameException {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
@@ -71,7 +72,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void Scanner(Game game, Card card) {
+    public void Scanner(Game game, Card card) throws GameException {
         Board board;
 
         if (!card.getCardName().equals("Scanner")) {
@@ -100,7 +101,11 @@ public class MonsterEffectController extends EffectController {
         Monster monster1 = (Monster) card1;
         duplicateMonster(monster, monster1);
         if (monster.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS)) {
-            monster.activeEffect(game);
+            try {
+                monster.activeEffect(game);
+            } catch (GameException ignored) {
+                //ToDo
+            }
         }
     }
 
@@ -109,7 +114,7 @@ public class MonsterEffectController extends EffectController {
         else game.decreaseHealth(1000);
     }
 
-    public void BeastKingBarbaros(Game game, Card card) {
+    public void BeastKingBarbaros(Game game, Card card) throws GameException {
         ArrayList<Card> hand;
         if (doesCardBelongsToPlayer(game, card)) hand = game.getPlayerHandCards();
         else hand = game.getRivalHandCards();
@@ -163,7 +168,7 @@ public class MonsterEffectController extends EffectController {
     }
 
 
-    public void Texchanger(Game game, Card card) {
+    public void Texchanger(Game game, Card card) throws GameException{
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
@@ -292,13 +297,25 @@ public class MonsterEffectController extends EffectController {
         return 0;
     }
 
-    private void setMonster(Game game, Card card, State state) {
+    static protected void setMonster(Game game, Card card, State state) throws GameException {
+        boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);
         game.getPlayerBoard().getMonsterZone(cellNumber).setState(state);
+        game.setCanSummonCard(canSummon);
+        if (state.equals(State.FACE_UP_ATTACK)) {
+            if (card.getFeatures().contains(CardFeatures.SUMMON_EFFECT) ||
+                    card.getFeatures().contains(CardFeatures.SCANNER) ||
+                    card.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS))
+                try {
+                    card.activeEffect(game);
+                } catch (GameException ignored) {
+                    //ToDo
+                }
+        }
     }
 
-    private void duplicateMonster(Monster monster, Monster originalMonster) {
+    static private void duplicateMonster(Monster monster, Monster originalMonster) {
         monster.setMonsterEffectType(originalMonster.getMonsterEffectType());
         monster.setMonsterType(originalMonster.getMonsterType());
         monster.setAttack(originalMonster.getAttack());
@@ -309,7 +326,7 @@ public class MonsterEffectController extends EffectController {
         monster.setDescription(originalMonster.getDescription());
     }
 
-    private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
+    static private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
         for (Card card : deck.getMainDeck().getCards()) {
             if (card.isMonster() && ((Monster) card).getMonsterType().equals(type)) return true;
         }

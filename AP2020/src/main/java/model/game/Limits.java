@@ -121,7 +121,7 @@ public class Limits {
         return addition;
     }
 
-    private ArrayList<Card> getSpellsThatEquipped(Card card) {
+    public ArrayList<Card> getSpellsThatEquipped(Card card) {
         ArrayList<Card> spellsThatEquipped = new ArrayList<>();
         for (Card spell : equipMonster.keySet()) {
             if (equipMonster.get(spell).equals(card)) spellsThatEquipped.add(spell);
