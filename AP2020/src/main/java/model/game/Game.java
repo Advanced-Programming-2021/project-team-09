@@ -1,6 +1,7 @@
 
 package model.game;
 
+import controller.DeckMenuController;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -32,11 +33,17 @@ public class Game {
     private Limits rivalLimits;
 
     public Game(User player, User rival) throws CloneNotSupportedException {
+        rivalLP = 8000;
+        playerLP = 8000;
         winner = null;
         this.player = player;
         this.rival = rival;
         playerDeck = (Deck) player.getActiveDeck().clone();
+        playerDeck.getMainDeck().shuffle();
         rivalDeck = (Deck) rival.getActiveDeck().clone();
+        rivalDeck.getMainDeck().shuffle();
+        playerHandCards = new ArrayList<>();
+        rivalHandCards = new ArrayList<>();
         playerLimits = new Limits();
         rivalLimits = new Limits();
         playerBoard = new Board();

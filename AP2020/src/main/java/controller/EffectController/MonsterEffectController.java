@@ -112,7 +112,9 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void Marshmallon(Game game, Card card) throws WinnerException {
-        if (doesCardBelongsToPlayer(game, card)) game.decreaseRivalHealth(1000);
+        if (doesCardBelongsToPlayer(game, card)) {
+            game.decreaseRivalHealth(1000);
+        }
         else game.decreaseHealth(1000);
     }
 
@@ -173,6 +175,7 @@ public class MonsterEffectController extends EffectController {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
+            ArrayList<Card> cards = getCardsInHand(game,card);
             if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
             else board = game.getRivalBoard();
             if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -180,7 +183,7 @@ public class MonsterEffectController extends EffectController {
                 CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             else {
                 while (true) {
-                    Card card1 = CardEffectsView.getCardFrom(board);
+                    Card card1 = CardEffectsView.getCardFrom(board,cards);
                     if (card1 == null) return;
                     if (card1.isMonster()) {
                         if (((Monster) card1).getMonsterType().equals(MonsterType.CYBERSE)) {
@@ -189,6 +192,7 @@ public class MonsterEffectController extends EffectController {
                                 CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
                             else {
                                 setMonster(game, monster, State.FACE_UP_ATTACK);
+                                return;
                             }
                         } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_TYPE);
                     } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
@@ -226,15 +230,17 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void HeraldofCreation(Game game, Card card) {
+        Graveyard graveyard = getBoard(game,card).getGraveyard();
+        ArrayList<Card> cards = 
         mainLoop:
         while (true) {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
-            if (game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand() -1;
+            if (game.getPlayerHandCards().size() < numberOfCardInHand)
                 CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
             else {
-                Card removingCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
+                Card removingCard = game.getPlayerHandCards().get(numberOfCardInHand);
                 while (true) {
-                    Card givenCardFromGraveYard = CardEffectsView.getCardFromGraveyard(game.getGraveyard());
+                    Card givenCardFromGraveYard = CardEffectsView.getCardFromGraveyard(graveyard);
                     if (givenCardFromGraveYard.isMonster()) {
                         Monster monster = (Monster) givenCardFromGraveYard;
                         if (monster.getLevel() >= 7) {
@@ -300,6 +306,8 @@ public class MonsterEffectController extends EffectController {
     }
 
     static protected void setMonster(Game game, Card card, State state) throws GameException {
+        Board board = getBoard(game,card);
+        ArrayList<Card> cards = getCardsInHand(game,card);
         boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);

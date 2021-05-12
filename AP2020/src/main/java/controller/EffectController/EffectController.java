@@ -17,6 +17,7 @@ public class EffectController {
         for (Cell cell : cells) {
             if (cell.isOccupied() && cell.getCard().equals(card)) return true;
         }
+        if (game.getPlayerHandCards().size() == 0) return false;
         for (Card card1 : game.getPlayerHandCards()) {
             if (card1.equals(card)) return true;
         }

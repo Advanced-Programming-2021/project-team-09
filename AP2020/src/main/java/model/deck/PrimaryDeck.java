@@ -83,6 +83,10 @@ public abstract class PrimaryDeck {
         return cards;
     }
 
+    public void shuffle() {
+        shuffle(this.cards);
+    }
+
     public static void shuffle(ArrayList<Card> cards) {
         int elementsCount = cards.size();
         if (elementsCount <= 1) return;

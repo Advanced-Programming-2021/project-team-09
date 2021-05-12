@@ -10,6 +10,8 @@ import model.deck.Graveyard;
 import view.responses.CardEffectsResponses;
 import view.responses.HowToSummon;
 
+import java.util.ArrayList;
+
 public class CardEffectsView {
     static public int getCellNumber() {
         return 0;
@@ -22,7 +24,7 @@ public class CardEffectsView {
         return true;
     }
 
-    static public Card getCardFrom(Board board) {
+    static public Card getCardFrom(Board board, ArrayList<Card> cards) {
         return null;
     }
 
