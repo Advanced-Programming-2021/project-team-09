@@ -8,6 +8,7 @@ import model.card.monster.MonsterType;
 import model.deck.Deck;
 import model.deck.Graveyard;
 import model.exceptions.GameException;
+import model.exceptions.WinnerException;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
@@ -109,7 +110,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void Marshmallon(Game game, Card card) {
+    public void Marshmallon(Game game, Card card) throws WinnerException {
         if (doesCardBelongsToPlayer(game, card)) game.decreaseRivalHealth(1000);
         else game.decreaseHealth(1000);
     }

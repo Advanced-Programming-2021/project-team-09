@@ -3,10 +3,12 @@ package model.game;
 
 import model.User;
 import model.card.Card;
+import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.deck.Deck;
 import model.deck.Graveyard;
 import model.deck.MainDeck;
+import model.exceptions.WinnerException;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,51 @@ public class Game {
     public void changeTurn() {
         canSummonCard = true;
         phaseCounter = 0;
+        roundCounter++;
+        switchReferences();
+        updateCellData(playerBoard);
+        updateCellData(rivalBoard);
+        deleteUsedEnumsFromGame();
+    }
+
+    private void updateCellData(Board board) {
+        Cell[] temp = board.getMonsterZone();
+
+        for (Cell cell : temp) {
+            cell.setChangedPosition(false);
+            if (cell.isOccupied()) cell.increaseRoundCounter();
+            cell.setCanAttack(false);
+        }
+
+        temp = board.getSpellZone();
+        for (Cell cell : temp) {
+            if (cell.isOccupied()) cell.increaseRoundCounter();
+        }
+    }
+
+    private void deleteUsedEnumsFromGame() {
+        deleteUsedEnumsForBoard(getPlayerBoard());
+        deleteUsedEnumsForBoard(getRivalBoard());
+    }
+
+    private void deleteUsedEnumsForBoard(Board board) {
+        for (Cell cell : board.getMonsterZone()) {
+            deleteUsedEnums(cell.getCard());
+        }
+        for (Cell cell : board.getSpellZone()) {
+            deleteUsedEnums(cell.getCard());
+        }
+    }
+
+    private void deleteUsedEnums(Card card) {
+        if (!card.getFeatures().contains(CardFeatures.ONE_USE_ONLY)) {
+            while (card.getFeatures().contains(CardFeatures.USED_EFFECT)) {
+                card.getFeatures().remove(CardFeatures.USED_EFFECT);
+            }
+        }
+    }
+
+    private void switchReferences() {
         User tempUser;
         tempUser = player;
         player = rival;
@@ -64,23 +111,6 @@ public class Game {
         tempLimits = playerLimits;
         playerLimits = rivalLimits;
         rivalLimits = tempLimits;
-        roundCounter++;
-        Cell[] temp = playerBoard.getMonsterZone();
-        for (Cell cell : temp) {
-            cell.setChangedPosition(false);
-            cell.increaseRoundCounter();
-            cell.setCanAttack(false);
-        }
-        temp = playerBoard.getSpellZone();
-        for (Cell cell : temp) cell.increaseRoundCounter();
-        temp = rivalBoard.getMonsterZone();
-        for (Cell cell : temp) {
-            cell.setChangedPosition(false);
-            cell.increaseRoundCounter();
-            cell.setCanAttack(false);
-        }
-        temp = rivalBoard.getSpellZone();
-        for (Cell cell : temp) cell.increaseRoundCounter();
     }
     //todo board bayad User begire be nazaram!
 
@@ -142,7 +172,7 @@ public class Game {
         playerLP += amount;
     }
 
-    public void decreaseHealth(int amount) {
+    public void decreaseHealth(int amount) throws WinnerException {
         if (playerLP - amount <= 0) {
             playerLP = 0;
             setWinner(rival);
@@ -153,7 +183,7 @@ public class Game {
         rivalLP += amount;
     }
 
-    public void decreaseRivalHealth(int amount) {
+    public void decreaseRivalHealth(int amount) throws WinnerException {
         if (rivalLP - amount <= 0) {
             rivalLP = 0;
             setWinner(player);
@@ -168,7 +198,7 @@ public class Game {
         return rivalBoard.getGraveyard().toString();
     }
 
-    public void directAttack(int cellNumber) {
+    public void directAttack(int cellNumber) throws WinnerException {
         Monster tempMonster = (Monster) playerBoard.getMonsterZone(cellNumber).getCard();
         decreaseRivalHealth(tempMonster.getAttack());
     }
@@ -200,9 +230,21 @@ public class Game {
 
     }
 
-    public void setWinner(User user) {
+    public void setWinner(User user) throws WinnerException {
         if (this.winner == null)
             this.winner = user;
+        User loser;
+        int winnerLP, loserLP;
+        if (winner == player) {
+            loser = rival;
+            winnerLP = playerLP;
+            loserLP = rivalLP;
+        } else {
+            loser = player;
+            loserLP = playerLP;
+            winnerLP = rivalLP;
+        }
+        throw new WinnerException(winner, loser, winnerLP, loserLP);
     }
 
     public boolean hasWinner() {

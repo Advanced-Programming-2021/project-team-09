@@ -8,10 +8,7 @@ import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
-import model.exceptions.GameException;
-import model.exceptions.StopAttackException;
-import model.exceptions.StopEffectState;
-import model.exceptions.StopSpell;
+import model.exceptions.*;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
@@ -285,6 +282,8 @@ public class GameMenuController {
                         if (EffectController.doesCardBelongsToPlayer(game,attackerMonster)) game.decreaseHealth(attackerMonster.getAttack());
                         else game.decreaseRivalHealth(attackerMonster.getAttack());
                 }
+            } else if (e instanceof WinnerException) {
+                throw e;
             }
         }
 
@@ -300,8 +299,10 @@ public class GameMenuController {
             if (cardHasSpecialAfterDefending(defenderMonster.getFeatures())) {
                 try {
                     activeEffect(game, defenderMonster, game.getPlayer(), 1);
-                } catch (GameException ignored) {
-
+                } catch (GameException e) {
+                    if (e instanceof WinnerException) {
+                        throw e;
+                    }
                 }
             }
             if (hasLimitedUsesForEffect(defenderMonster.getFeatures())) {
@@ -321,7 +322,7 @@ public class GameMenuController {
                     try {
                         activeEffect(game, defenderMonster, game.getPlayer(), 0);
                     } catch (GameException e) {
-
+                        if (e instanceof WinnerException) throw e;
                     }
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card was destroyed",
@@ -473,14 +474,14 @@ public class GameMenuController {
         return false;
     }
 
-    private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) {
+    private static int decreasePlayerLP (Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
         game.decreaseRivalHealth(damage);
         return damage;
     }
 
-    private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) {
+    private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
         game.decreaseHealth(damage);
@@ -544,7 +545,7 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse flipSummon(Game game, int cellNumber) {
+    public static GameMenuResponse flipSummon(Game game, int cellNumber) throws GameException {
 
         if (cellNumber > 5 || cellNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
@@ -566,19 +567,19 @@ public class GameMenuController {
                         default:
                             break;
                     }
-                }
+                } else if (e instanceof WinnerException) throw e;
             }
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
-    //ToDo
-    public static void rivalFlipSummon(Game game, int cellNumber) {
+
+    public static void rivalFlipSummon(Game game, int cellNumber) throws GameException {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_DEFENCE);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
            try {
                activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
            } catch (GameException e) {
-
+               if (e instanceof  WinnerException) throw e;
         }
     }
 
@@ -623,7 +624,7 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse directAttack(Game game, int cellNumber) {
+    public static GameMenuResponse directAttack(Game game, int cellNumber) throws WinnerException {
         if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         if (!game.getPlayerBoard().getMonsterZone()[cellNumber - 1].isOccupied())
             return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
