@@ -38,7 +38,7 @@ public class RockPaperScissors {
                     break;
                 else if (firstUsersChoice.matches("scissors"))
                     break;
-                else System.out.println("invalid command!\n"+"please chose rock,paper or scissors");
+                else System.out.println("invalid command!\n"+"please chose 'rock' , 'paper' or 'scissors'");
             }
             String secondUsersChoice;
             while (true){
@@ -49,7 +49,7 @@ public class RockPaperScissors {
                     break;
                 else if (secondUsersChoice.matches("scissors"))
                     break;
-                else System.out.println("invalid command!\n"+"please chose rock,paper or scissors");
+                else System.out.println("invalid command!\n"+"please chose 'rock' , 'paper' or 'scissors'");
             }
             checkThisRoundWinner(firstUsersChoice, secondUsersChoice);
             System.out.println(firstUser.getNickname()+":"+ firstUsersChoice +"\t"
