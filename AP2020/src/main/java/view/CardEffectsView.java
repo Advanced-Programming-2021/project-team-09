@@ -36,7 +36,7 @@ public class CardEffectsView {
         return null;
     }
 
-    static public int getNumberOfCardInHand() {
+    static public int getNumberOfCardInHand(ArrayList<Card> cards) {
         return 0;
     }
 

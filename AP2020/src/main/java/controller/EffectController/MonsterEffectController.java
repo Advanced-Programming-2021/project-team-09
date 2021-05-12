@@ -26,7 +26,7 @@ public class MonsterEffectController extends EffectController {
         limits = game.getRivalLimits();
         limits.increaseATKAddition(400);
         int cellNumber = getCellNumberOfMonster(game, card);
-        limits = getRivalsLimits(game,card);
+        limits = getRivalsLimits(game, card);
         limits.banAttackingToCell(cellNumber);
     }
 
@@ -114,8 +114,7 @@ public class MonsterEffectController extends EffectController {
     public static void Marshmallon(Game game, Card card) throws WinnerException {
         if (doesCardBelongsToPlayer(game, card)) {
             game.decreaseRivalHealth(1000);
-        }
-        else game.decreaseHealth(1000);
+        } else game.decreaseHealth(1000);
     }
 
     public static void BeastKingBarbaros(Game game, Card card) throws GameException {
@@ -175,7 +174,7 @@ public class MonsterEffectController extends EffectController {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
-            ArrayList<Card> cards = getCardsInHand(game,card);
+            ArrayList<Card> cards = getCardsInHand(game, card);
             if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
             else board = game.getRivalBoard();
             if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -183,7 +182,7 @@ public class MonsterEffectController extends EffectController {
                 CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             else {
                 while (true) {
-                    Card card1 = CardEffectsView.getCardFrom(board,cards);
+                    Card card1 = CardEffectsView.getCardFrom(board, cards);
                     if (card1 == null) return;
                     if (card1.isMonster()) {
                         if (((Monster) card1).getMonsterType().equals(MonsterType.CYBERSE)) {
@@ -230,22 +229,23 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void HeraldofCreation(Game game, Card card) {
-        Graveyard graveyard = getBoard(game,card).getGraveyard();
-        ArrayList<Card> cards = 
+        Graveyard graveyard = getBoard(game, card).getGraveyard();
+        ArrayList<Card> cards = getCardsInHand(game, card);
         mainLoop:
         while (true) {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand() -1;
-            if (game.getPlayerHandCards().size() < numberOfCardInHand)
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+            if (cards.size() < numberOfCardInHand)
                 CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
             else {
-                Card removingCard = game.getPlayerHandCards().get(numberOfCardInHand);
+                Card removingCard = cards.get(numberOfCardInHand);
                 while (true) {
                     Card givenCardFromGraveYard = CardEffectsView.getCardFromGraveyard(graveyard);
                     if (givenCardFromGraveYard.isMonster()) {
                         Monster monster = (Monster) givenCardFromGraveYard;
                         if (monster.getLevel() >= 7) {
-                            game.removeCardFromPlayerHand(removingCard);
-                            game.addCardToHand(monster);
+                            cards.remove(removingCard);
+                            graveyard.addCard(removingCard);
+                            cards.add(monster);
                             break mainLoop;
                         } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
                     } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
@@ -254,39 +254,41 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public static void TerratigertheEmpoweredWarrior(Game game, Card card) {
+    public static void TerratigertheEmpoweredWarrior(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
+        ArrayList<Card> cards = getCardsInHand(game, card);
         while (true) {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
-            Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
-            if (chosenCard != null) {
-                if (chosenCard.isMonster()) {
-                    Monster monster = (Monster) chosenCard;
-                    if (monster.getLevel() <= 4) {
-                        game.summonMonster(monster);
-                        board.getMonsterZoneCellByCard(monster).setState(State.FACE_DOWN_DEFENCE);
-                        break;
-                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
-                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+            if (numberOfCardInHand < cards.size()) {
+                Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
+                if (chosenCard != null) {
+                    if (chosenCard.isMonster()) {
+                        Monster monster = (Monster) chosenCard;
+                        if (monster.getLevel() <= 4) {
+                            setMonster(game, monster, State.FACE_DOWN_DEFENCE);
+                            break;
+                        } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
+                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
             } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
         }
     }
 
 
-    public static void TheTricky(Game game, Card card) {
+    public static void TheTricky(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
+        ArrayList<Card> cards = getCardsInHand(game, card);
         if (board.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
         else {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
-            if (game.getPlayerHandCards().get(numberOfCardInHand - 1) == null)
+            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+            if (cards.size() <= numberOfCardInHand)
                 CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
             else {
-                if (game.getPlayerHandCards().get(numberOfCardInHand).equals(card))
+                if (cards.get(numberOfCardInHand).equals(card))
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
                 else {
-                    Card toBeRemovedCard = game.getPlayerHandCards().get(numberOfCardInHand - 1);
-                    game.removeCardFromPlayerHand(toBeRemovedCard);
-                    game.summonMonster(card);
+                    Card toBeRemovedCard = cards.get(numberOfCardInHand);
+                    setMonster(game, toBeRemovedCard, State.FACE_UP_ATTACK);
                 }
             }
         }
@@ -306,8 +308,8 @@ public class MonsterEffectController extends EffectController {
     }
 
     static protected void setMonster(Game game, Card card, State state) throws GameException {
-        Board board = getBoard(game,card);
-        ArrayList<Card> cards = getCardsInHand(game,card);
+        Board board = getBoard(game, card);
+        ArrayList<Card> cards = getCardsInHand(game, card);
         boolean canSummon = game.canSummon();
         game.summonMonster(card);
         int cellNumber = getCellNumberOfMonster(game, card);
