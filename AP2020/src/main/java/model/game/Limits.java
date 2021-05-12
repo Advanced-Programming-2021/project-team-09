@@ -185,6 +185,49 @@ public class Limits {
         }
     }
 
+    public ArrayList<EffectLimitations> getLimitations() {
+        return limitations;
+    }
+
+    public HashMap<Card, Card> getEquipMonster() {
+        return equipMonster;
+    }
+
+    public ArrayList<Card> getMonstersWeDontHaveControl() {
+        return monstersWeDontHaveControl;
+    }
+
+    public HashMap<Card, Integer> getEquipGadgetATKAddition() {
+        return equipGadgetATKAddition;
+    }
+
+    public HashMap<Card, Integer> getEquipGadgetDEFAddition() {
+        return equipGadgetDEFAddition;
+    }
+
+    public int getAtkAddition() {
+        return atkAddition;
+    }
+
+    public HashMap<Integer, Integer> getSpellUsageLimit() {
+        return spellUsageLimit;
+    }
+
+    public HashMap<MonsterType, Integer> getFieldZoneATKAddition() {
+        return fieldZoneATKAddition;
+    }
+
+    public HashMap<MonsterType, Integer> getFieldZoneDEFAddition() {
+        return fieldZoneDEFAddition;
+    }
+
+    public HashSet<Integer> getCantAttackCells() {
+        return cantAttackCells;
+    }
+
+    public int getDefAddition() {
+        return defAddition;
+    }
 }
 
 

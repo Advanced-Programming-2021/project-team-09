@@ -8,6 +8,7 @@ import model.card.monster.MonsterType;
 import model.deck.Deck;
 import model.deck.Graveyard;
 import model.exceptions.GameException;
+import model.exceptions.WinnerException;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
@@ -18,17 +19,18 @@ import java.util.ArrayList;
 
 public class MonsterEffectController extends EffectController {
 
-    public void CommandKnight(Game game, Card card) {
+    public static void CommandKnight(Game game, Card card) {
         Limits limits;
         limits = game.getPlayerLimits();
         limits.increaseATKAddition(400);
         limits = game.getRivalLimits();
         limits.increaseATKAddition(400);
         int cellNumber = getCellNumberOfMonster(game, card);
+        limits = getRivalsLimits(game,card);
         limits.banAttackingToCell(cellNumber);
     }
 
-    public void ManEaterBug(Game game, Card card) {
+    public static void ManEaterBug(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
         else board = game.getPlayerBoard();
@@ -49,7 +51,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void GateGuardian(Game game, Card card) throws GameException {
+    public static void GateGuardian(Game game, Card card) throws GameException {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
@@ -72,7 +74,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void Scanner(Game game, Card card) throws GameException {
+    public static void Scanner(Game game, Card card) throws GameException {
         Board board;
 
         if (!card.getCardName().equals("Scanner")) {
@@ -103,18 +105,18 @@ public class MonsterEffectController extends EffectController {
         if (monster.getFeatures().contains(CardFeatures.VARIABLE_ATK_DEF_NUMBERS)) {
             try {
                 monster.activeEffect(game);
-            } catch (GameException ignored) {
-                //ToDo
+            } catch (GameException e) {
+                if (e instanceof WinnerException) throw e;
             }
         }
     }
 
-    public void Marshmallon(Game game, Card card) {
+    public static void Marshmallon(Game game, Card card) throws WinnerException {
         if (doesCardBelongsToPlayer(game, card)) game.decreaseRivalHealth(1000);
         else game.decreaseHealth(1000);
     }
 
-    public void BeastKingBarbaros(Game game, Card card) throws GameException {
+    public static void BeastKingBarbaros(Game game, Card card) throws GameException {
         ArrayList<Card> hand;
         if (doesCardBelongsToPlayer(game, card)) hand = game.getPlayerHandCards();
         else hand = game.getRivalHandCards();
@@ -167,8 +169,7 @@ public class MonsterEffectController extends EffectController {
 
     }
 
-
-    public void Texchanger(Game game, Card card) throws GameException{
+    public static void Texchanger(Game game, Card card) throws GameException {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
             Board board;
             Deck deck = getDeck(game, card);
@@ -196,7 +197,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void TheCalculator(Game game, Card card) {
+    public static void TheCalculator(Game game, Card card) {
         Board board = getBoard(game, card);
         int sumLevel = 0;
         for (int i = 0; i < 5; i++) {
@@ -209,7 +210,7 @@ public class MonsterEffectController extends EffectController {
         monster.setAttack(sumLevel * 300);
     }
 
-    public void MirageDragon(Game game, Card card) {
+    public static void MirageDragon(Game game, Card card) {
         Limits limits;
         Board board;
         if (doesCardBelongsToPlayer(game, card)) {
@@ -224,7 +225,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void HeraldofCreation(Game game, Card card) {
+    public static void HeraldofCreation(Game game, Card card) {
         mainLoop:
         while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
@@ -247,7 +248,7 @@ public class MonsterEffectController extends EffectController {
         }
     }
 
-    public void TerratigertheEmpoweredWarrior(Game game, Card card) {
+    public static void TerratigertheEmpoweredWarrior(Game game, Card card) {
         Board board = getBoard(game, card);
         while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand();
@@ -266,7 +267,7 @@ public class MonsterEffectController extends EffectController {
     }
 
 
-    public void TheTricky(Game game, Card card) {
+    public static void TheTricky(Game game, Card card) {
         Board board = getBoard(game, card);
         if (board.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
         else {
@@ -286,13 +287,14 @@ public class MonsterEffectController extends EffectController {
     }
 
 
+    //helping functions!
     static public int getCellNumberOfMonster(Game game, Card card) {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
         Cell[] cells = board.getMonsterZone();
         for (int i = 0; i < cells.length; i++) {
-            if (cells[i].getCard().equals(card)) return i;
+            if (cells[i].isOccupied() && cells[i].getCard().equals(card)) return i;
         }
         return 0;
     }

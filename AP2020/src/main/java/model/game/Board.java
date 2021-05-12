@@ -10,6 +10,14 @@ public class Board {
     private Cell fieldZone = new Cell();
     private Graveyard graveyard = new Graveyard();
 
+    public Board() {
+        for (int i = 0; i <monsterZone.length; ++i) {
+            monsterZone[i] = new Cell();
+        }
+        for (int i = 0; i <spellZone.length; ++i) {
+            spellZone[i] = new Cell();
+        }
+    }
     public boolean isMonsterZoneFull() {
         for (int i = 0; i < 5; i++) {
             if (!monsterZone[i].isOccupied()) return false;

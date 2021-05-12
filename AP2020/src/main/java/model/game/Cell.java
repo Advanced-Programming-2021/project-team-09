@@ -13,6 +13,8 @@ public class Cell {
         card = null;
         state = null;
         roundCounter = 0;
+        canAttack = false;
+        changedPosition = false;
     }
 
     public boolean isOccupied() {

@@ -7,44 +7,6 @@
     <groupId>fantaMolaee</groupId>
     <artifactId>AP2020</artifactId>
     <version>1.0-SNAPSHOT</version>
-<!--    <dependencies>-->
-<!--        <dependency>-->
-<!--            <groupId>com.squareup.moshi</groupId>-->
-<!--            <artifactId>moshi</artifactId>-->
-<!--            <version>1.12.0</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.gilecode.yagson</groupId>-->
-<!--            <artifactId>yagson</artifactId>-->
-<!--            <version>0.5.1</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.opencsv</groupId>-->
-<!--            <artifactId>opencsv</artifactId>-->
-<!--            <version>5.3</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.google.code.gson</groupId>-->
-<!--            <artifactId>gson</artifactId>-->
-<!--            <version>2.8.6</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>de.vandermeer</groupId>-->
-<!--            <artifactId>asciitable</artifactId>-->
-<!--            <version>0.3.2</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-databind</artifactId>-->
-<!--            <version>2.12.3</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-core</artifactId>-->
-<!--            <version>2.12.3</version>-->
-<!--        </dependency>-->
-<!--    </dependencies>-->
 
     <dependencyManagement>
         <dependencies>

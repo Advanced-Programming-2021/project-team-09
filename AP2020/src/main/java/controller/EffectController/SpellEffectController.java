@@ -19,6 +19,7 @@ import view.responses.CardEffectsResponses;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class SpellEffectController extends EffectController {
@@ -96,7 +97,6 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-
     public void harpiesFeatherDuster(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         for (Cell tempCell : board.getSpellZone()) {
@@ -116,7 +116,6 @@ public class SpellEffectController extends EffectController {
         limits.addLimit(EffectLimitations.CANT_ATTACK);
     }
 
-
     public void DarkHole(Game game, Card card) throws GameException {
         destroyAllMonsters(game);
     }
@@ -129,7 +128,7 @@ public class SpellEffectController extends EffectController {
             if (doesCardBelongsToPlayer(game, card)) {
                 GameMenuController.draw(game);
             } else {
-               GameMenuController.drawRival(game);
+                GameMenuController.drawRival(game);
             }
         }
     }
@@ -389,7 +388,7 @@ public class SpellEffectController extends EffectController {
     }
 
     public void trapHole(Game game, Card card) throws GameException {
-        //ToDo
+        throw new StopSpell(StopEffectState.STOP_SUMMON);
     }
 
     public void TorrentialTribute(Game game, Card card) throws GameException {
@@ -513,7 +512,22 @@ public class SpellEffectController extends EffectController {
     }
 
     private boolean isThereAnyCombinationOfCardsThatTheyLevelEqualsTo(Board board, int level) {
-        return false;
+        if (level < 0) return false;
+        if (level == 0) return true;
+        ArrayList<Integer> levels = new ArrayList<>();
+        for (Cell cell : board.getMonsterZone()) {
+            if (cell.isOccupied() && cell.isFaceUp()) levels.add(((Monster) cell.getCard()).getLevel());
+        }
+        return haveAnySubSequenceWithSum(levels,level);
+    }
+
+    private boolean haveAnySubSequenceWithSum(ArrayList<Integer> integers , int sum) {
+        if (sum < 0) return false;
+        if (sum == 0) return true;
+        if (integers.size() == 0) return false;
+        int temp /* :) */ = integers.get(0);
+        integers.remove(0);
+        return haveAnySubSequenceWithSum(integers,sum-temp) || haveAnySubSequenceWithSum(integers,sum);
     }
 
     private ArrayList<Integer> getLevesOfRitualMonstersInHand(ArrayList<Card> cardsInHand) {
@@ -569,6 +583,7 @@ public class SpellEffectController extends EffectController {
             if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
         }
     }
+
 }
 
 
