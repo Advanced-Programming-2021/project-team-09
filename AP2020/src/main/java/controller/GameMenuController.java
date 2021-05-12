@@ -82,19 +82,23 @@ public class GameMenuController {
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) {
         if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
-        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0)
+        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
+            game.setWinner(game.getRival());
             return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+        }
         String temp = game.getPlayerDeck().getMainDeck().getCards().get(0).toString();
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
     public static GameMenuResponse drawRival(Game game) {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
-        if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0)
+        if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
+            game.setWinner(game.getPlayer());
             return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+        }
         String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
         game.rivalDrawCard();
-        return respondWithObj(temp /* :) */, GameMenuResponsesEnum.SUCCESSFUL);
+        return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse selectCardFromHand(Game game, int cardNumber) {
