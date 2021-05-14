@@ -23,6 +23,7 @@ public class Spell extends Card {
         description = temp.get(2);
         limit = csvInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
+        features = new ArrayList<>();
     }
 
     public Spell(){

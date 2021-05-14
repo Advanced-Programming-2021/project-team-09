@@ -36,6 +36,7 @@ public class Monster extends Card {
         description = temp.get(6);
         this.cardName = cardName;
         this.cardType = CardType.MONSTER;
+        features = new ArrayList<>();
     }
 
     public Monster() {

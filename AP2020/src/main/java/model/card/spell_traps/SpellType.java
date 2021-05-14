@@ -6,4 +6,5 @@ public enum SpellType {
     QUICKPLAY,
     RITUAL,
     CONTINUOUS,
+    NORMAL
 }

@@ -8,6 +8,7 @@ import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterType;
 import model.card.spell_traps.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -146,7 +147,7 @@ public class csvInfoGetter {
         else if (spellName.equalsIgnoreCase("field")) return SpellType.FIELD;
         else if (spellName.equalsIgnoreCase("ritual")) return SpellType.RITUAL;
         else if (spellName.equalsIgnoreCase("equip")) return SpellType.EQUIP;
-        return null;
+        return SpellType.NORMAL;
     }
 
     public static boolean cardNameExists(String cardName) {

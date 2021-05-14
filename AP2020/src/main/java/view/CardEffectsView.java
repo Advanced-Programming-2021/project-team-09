@@ -1,5 +1,6 @@
 package view;
 
+import controller.database.csvInfoGetter;
 import model.deck.Deck;
 import model.game.Board;
 import model.game.Cell;
@@ -97,18 +98,31 @@ public class CardEffectsView {
         }
     }
 
-    static public boolean doSpecialSummon() {
+    static public boolean doSpecialSummon() { // no usage
         return true;
     }
 
     static public String getCardName(){
-        System.out.println("Please enter a card name ..");
+        System.out.println("Please enter a card name .. Available card names :");
+        ArrayList<String> names = csvInfoGetter.getCardNames();
+        for (String s : names) System.out.println(s);
         return LoginMenu.getInstance().getScanner().nextLine();
     }
 	
     static public int getNumberOfCardInHand(ArrayList<Card> cards) {
-		System.out.println("please select a card from your hand");
-        return 0;
+		System.out.println("please select a card number from your hand");
+		Scanner scanner = LoginMenu.getInstance().getScanner();
+		String command;
+		while (true) {
+		    command = scanner.nextLine().trim();
+		    if (command.matches("^[\\d]{1,2}$")) {
+		        int temp = Integer.parseInt(command);
+		        if (!(temp < 1 || temp > cards.size())) {
+		            return temp;
+                }
+            }
+		    System.out.println("Please enter a valid number ..");
+        }
     }
 
     static public int[] getCellNumbers(int count) {
@@ -148,27 +162,76 @@ public class CardEffectsView {
     }
 
     static public Card getCardFromGraveyard(Graveyard graveyard) {
-        return null;
+        ArrayList<Card> temp = graveyard.getCards();
+        return getCardFromList(temp);
     }
 
     static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard) {
-        return null;
+        ArrayList<Card> cards = playerGraveyard.getCards();
+        cards.addAll(rivalGraveyard.getCards());
+        return getCardFromList(cards);
     }
 
     static public Card getCardFromDeck(Deck deck) {
-        return null;
+        return getCardFromList(deck.getMainDeck().getCards());
+    }
+
+    private static  Card getCardFromList(ArrayList<Card> cards) {
+        if (cards.size() == 0) return null;
+        Scanner scanner = LoginMenu.getInstance().getScanner();
+        while (true) {
+            System.out.println("Please select a card from this item(s) :");
+            for (int i = 0; i < cards.size(); i++) {
+                System.out.println((i + 1) + " : " + cards.get(i).getCardName());
+            }
+            String command = scanner.nextLine().trim();
+            if (command.matches("^[\\d]{1,2}$")){
+                int temp = Integer.parseInt(command);
+                if (temp >= 1 && temp <= cards.size()) return cards.get(temp - 1);
+            }
+            System.out.println("Invalid number ..");
+        }
     }
 
     static public Card getCardFromBothBoards(Cell[] playerSpellZone, Cell[] rivalSpellZone) {
-        return null;
+        ArrayList<Card> cards = new ArrayList<>();
+        for (Cell cell : playerSpellZone) {
+            if (cell.isOccupied()) {
+                cards.add(cell.getCard());
+            }
+        }
+        for (Cell cell : rivalSpellZone) {
+            if (cell.isOccupied()) {
+                cards.add(cell.getCard());
+            }
+        }
+        return selectCardFromArrayList(cards);
     }
 
     static public HowToSummon howToSpecialNormalSummon() {
-        return null;
+        Scanner scanner = LoginMenu.getInstance().getScanner();
+        while (true) {
+            System.out.println("You can summon cards in these ways .. \n1. Summon normally with 1900 ATK .. \n2. Summon with 3 tributes ..\n" +
+                    "You can type back to cancel ..\nPlease choose a way :");
+            String command = scanner.nextLine().trim();
+            if (command.equals("1")) return HowToSummon.SPECIAL_NORMAL_TYPE1;
+            if (command.equals("2")) return  HowToSummon.SPECIAL_NORMAL_TYPE2;
+            if (command.equals("back")) return HowToSummon.BACK;
+            System.out.println("Invalid command ..");
+        }
     }
 
     static public State getStateOfSummon() {
-        return null;
+        Scanner scanner = LoginMenu.getInstance().getScanner();
+        while (true) {
+            System.out.println("Please choose a card state to summon your card ..\n1. Face up attack \n2. face up defense\n3. face down defense" +
+                    "You can type back to cancel ..\nPlease choose a way :");
+            String command = scanner.nextLine().trim();
+            if (command.equals("1")) return State.FACE_UP_ATTACK;
+            if (command.equals("2")) return  State.FACE_UP_DEFENCE;
+            if (command.equals("3")) return State.FACE_DOWN_DEFENCE;
+            System.out.println("Invalid command ..");
+        }
     }
 
 }
