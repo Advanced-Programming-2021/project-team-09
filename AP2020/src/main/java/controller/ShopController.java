@@ -1,7 +1,7 @@
 package controller;
 
 import controller.database.ReadAndWriteDataBase;
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import de.vandermeer.asciitable.AsciiTable;
 import model.User;
 import model.card.Card;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public class ShopController {
 
     public static String showAllCards() {
-        ArrayList<String> cardNames = csvInfoGetter.getCardNames();
+        ArrayList<String> cardNames = CSVInfoGetter.getCardNames();
         ArrayList<Card> cards = new ArrayList<>();
         for (String cardName : cardNames)
-            cards.add(csvInfoGetter.getCardByName(cardName));
+            cards.add(CSVInfoGetter.getCardByName(cardName));
         AsciiTable asciiTable = new AsciiTable();
         asciiTable.addRule();
         asciiTable.addRow("No.","Name","Description","Price");
@@ -24,7 +24,7 @@ public class ShopController {
             asciiTable.addRow(counter,
                     card.getCardName(),
                     card.getDescription(),
-                    csvInfoGetter.getPriceByCardName(card.getCardName()));
+                    CSVInfoGetter.getPriceByCardName(card.getCardName()));
             asciiTable.addRule();
             counter++;
         }
@@ -33,10 +33,10 @@ public class ShopController {
 
     public static ShopMenuResponses BuyCard(String cardName) {
         User user = LoginMenuController.getCurrentUser();
-        if (csvInfoGetter.cardNameExists(cardName)) {
-            if (user.hasEnoughBalance(csvInfoGetter.getPriceByCardName(cardName))) {
-                user.addCard(csvInfoGetter.getCardByName(cardName));
-                user.decreaseBalance(csvInfoGetter.getPriceByCardName(cardName));
+        if (CSVInfoGetter.cardNameExists(cardName)) {
+            if (user.hasEnoughBalance(CSVInfoGetter.getPriceByCardName(cardName))) {
+                user.addCard(CSVInfoGetter.getCardByName(cardName));
+                user.decreaseBalance(CSVInfoGetter.getPriceByCardName(cardName));
                 ReadAndWriteDataBase.updateUser(user);
                 return ShopMenuResponses.SUCCESSFUL;
             } else return ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE;

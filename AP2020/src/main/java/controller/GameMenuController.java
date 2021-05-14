@@ -805,6 +805,15 @@ public class GameMenuController {
                         continue;
                     }
                     Card chosenCard = tempBoard.getSpellZone(cellNumber).getCard();
+                    if (chosenCard.isTrap()) {
+                        Limits limits;
+                        if (player.getUsername().equals(game.getPlayer().getUsername())) {
+                            limits = game.getPlayerLimits();
+                        } else limits = game.getRivalLimits();
+                        if (hasCantActivateTrap(limits.getLimitations())) {
+                            CardEffectsView.respond(CardEffectsResponses.CANT_ACTIVATE_TRAP);
+                        }
+                    }
                     int chosenSpeed = getSpeed(chosenCard.getFeatures());
                     if (chosenSpeed < speed) {
                         CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
@@ -840,6 +849,11 @@ public class GameMenuController {
             card.activeEffect(game);
             card.addFeature(CardFeatures.USED_EFFECT);
         }
+    }
+
+    private static boolean hasCantActivateTrap(ArrayList<EffectLimitations> effectLimitations) {
+        for (EffectLimitations e : effectLimitations) if (e == EffectLimitations.CANT_ACTIVATE_TRAP) return true;
+        return false;
     }
 
     private static int getSpeed(ArrayList<CardFeatures> features) {

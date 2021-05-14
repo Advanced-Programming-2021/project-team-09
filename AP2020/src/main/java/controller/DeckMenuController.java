@@ -1,6 +1,6 @@
 package controller;
 import controller.database.ReadAndWriteDataBase;
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import model.card.spell_traps.Limitation;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;
@@ -56,7 +56,7 @@ public class DeckMenuController {
 
     public static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
         User user = LoginMenuController.getCurrentUser();
-        if (!csvInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
+        if (!CSVInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
@@ -138,7 +138,7 @@ public class DeckMenuController {
     private static DeckMenuResponses removeCardFromDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
         User user = LoginMenuController.getCurrentUser();
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
-        if (!csvInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
+        if (!CSVInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, primaryDeck.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         Card card = primaryDeck.removeCard(cardName);
         user.addCard(card);
@@ -156,7 +156,7 @@ public class DeckMenuController {
 
     private static boolean canAddCard(String deckName, String cardName) {
         int numberOfCard = LoginMenuController.getCurrentUser().getDeckByName(deckName).getNumberOfCardsByName(cardName);
-        Card card =csvInfoGetter.getCardByName(cardName);
+        Card card = CSVInfoGetter.getCardByName(cardName);
         if (card.isMonster()) return numberOfCard < 3;
         else {
             Limitation limitation;

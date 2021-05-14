@@ -1,7 +1,7 @@
 package controller.EffectController;
 
 import controller.GameMenuController;
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterType;
@@ -19,7 +19,6 @@ import view.responses.CardEffectsResponses;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class SpellEffectController extends EffectController {
@@ -377,7 +376,7 @@ public class SpellEffectController extends EffectController {
         ArrayList<Card> opponentsCards = getRivalsCardsInHand(game, card);
 
         String cardName = CardEffectsView.getCardName();
-        if (csvInfoGetter.cardNameExists(cardName) && doWeHaveACardWithNameInHand(cardName, opponentsCards)) {
+        if (CSVInfoGetter.cardNameExists(cardName) && doWeHaveACardWithNameInHand(cardName, opponentsCards)) {
             for (Card card1 : opponentsCards) {
                 if (card1.getCardName().equals(cardName)) {
                     opponentsBoard.sendToGraveYard(card1);

@@ -47,11 +47,11 @@ public class Cell {
     }
 
     public boolean isFaceDown() {
-        return state.equals(State.FACE_DOWN_ATTACK) || state.equals(State.FACE_DOWN_DEFENCE);
+        return state.equals(State.FACE_DOWN_DEFENCE);
     }
 
     public boolean isAttack() {
-        return state.equals(State.FACE_UP_ATTACK) || state.equals(State.FACE_DOWN_ATTACK);
+        return state.equals(State.FACE_UP_ATTACK);
     }
 
     public boolean isDefence() {
