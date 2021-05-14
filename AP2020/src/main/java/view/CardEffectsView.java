@@ -1,11 +1,10 @@
 package view;
 
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import model.deck.Deck;
 import model.game.Board;
 import model.game.Cell;
 
-import model.game.Game;
 import model.game.State;
 import model.card.Card;
 import model.deck.Graveyard;
@@ -104,7 +103,7 @@ public class CardEffectsView {
 
     static public String getCardName(){
         System.out.println("Please enter a card name .. Available card names :");
-        ArrayList<String> names = csvInfoGetter.getCardNames();
+        ArrayList<String> names = CSVInfoGetter.getCardNames();
         for (String s : names) System.out.println(s);
         return LoginMenu.getInstance().getScanner().nextLine();
     }

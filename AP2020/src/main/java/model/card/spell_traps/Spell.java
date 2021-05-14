@@ -3,7 +3,7 @@ package model.card.spell_traps;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import controller.database.ReadAndWriteDataBase;
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.CardType;
 
@@ -16,12 +16,12 @@ public class Spell extends Card {
     private Limitation limit;
 
     public Spell(String cardName) {
-        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(cardName);
+        ArrayList<String> temp = CSVInfoGetter.trapAndSpellReadFromCSV(cardName);
         if (temp == null || temp.size() != 4) return;
-        spellType = csvInfoGetter.getSpellType(temp.get(1));
+        spellType = CSVInfoGetter.getSpellType(temp.get(1));
         this.cardName = cardName;
         description = temp.get(2);
-        limit = csvInfoGetter.getLimitation(temp.get(3));
+        limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
         features = new ArrayList<>();
     }
@@ -56,12 +56,12 @@ public class Spell extends Card {
     }
 
     public void setAttributesByName(String cardName) {
-        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV(cardName);
+        ArrayList<String> temp = CSVInfoGetter.trapAndSpellReadFromCSV(cardName);
         if (temp == null || temp.size() != 4) return;
-        spellType = csvInfoGetter.getSpellType(temp.get(1));
+        spellType = CSVInfoGetter.getSpellType(temp.get(1));
         this.cardName = cardName;
         description = temp.get(2);
-        limit = csvInfoGetter.getLimitation(temp.get(3));
+        limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
         this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
     }

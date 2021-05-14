@@ -1,13 +1,12 @@
 package databaseTest;
 
-import controller.database.csvInfoGetter;
+import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.util.ArrayList;
 
@@ -15,9 +14,9 @@ public class CSVTest {
 
     @Test
     public void testGetTrapAndSpell() {
-        ArrayList<String> temp = csvInfoGetter.trapAndSpellReadFromCSV("bla bla");
+        ArrayList<String> temp = CSVInfoGetter.trapAndSpellReadFromCSV("bla bla");
         Assertions.assertNull(temp);
-        temp = csvInfoGetter.trapAndSpellReadFromCSV("Umiiruka");
+        temp = CSVInfoGetter.trapAndSpellReadFromCSV("Umiiruka");
         Assertions.assertNotNull(temp);
         for (String s : temp) {
             Assertions.assertNotNull(s);
@@ -27,9 +26,9 @@ public class CSVTest {
 
     @Test
     public void testMonsterRead() {
-        ArrayList<String> temp = csvInfoGetter.monsterReadFromCSV("bla bla");
+        ArrayList<String> temp = CSVInfoGetter.monsterReadFromCSV("bla bla");
         Assertions.assertNull(temp);
-        temp = csvInfoGetter.monsterReadFromCSV("Battle OX");
+        temp = CSVInfoGetter.monsterReadFromCSV("Battle OX");
         Assertions.assertNotNull(temp);
         for (String s : temp) {
             Assertions.assertNotNull(s);
@@ -40,13 +39,13 @@ public class CSVTest {
 
     @Test
     public void testCardNameExists() {
-        Assertions.assertFalse(csvInfoGetter.cardNameExists("bla bla"));
-        Assertions.assertTrue(csvInfoGetter.cardNameExists("Battle OX"));
+        Assertions.assertFalse(CSVInfoGetter.cardNameExists("bla bla"));
+        Assertions.assertTrue(CSVInfoGetter.cardNameExists("Battle OX"));
     }
 
     @Test
     public void testGetAllNames() {
-        ArrayList<String> temp = csvInfoGetter.getCardNames();
+        ArrayList<String> temp = CSVInfoGetter.getCardNames();
         Assertions.assertNotNull(temp);
         for (String s : temp) {
             Assertions.assertNotNull(s);
@@ -56,9 +55,9 @@ public class CSVTest {
 
     @Test
     public void testAllCards() {
-        ArrayList<String> temp = csvInfoGetter.getCardNames();
+        ArrayList<String> temp = CSVInfoGetter.getCardNames();
         for (String s : temp) {
-            Card tempCard = csvInfoGetter.getCardByName(s);
+            Card tempCard = CSVInfoGetter.getCardByName(s);
             Assertions.assertNotNull(tempCard);
             if (tempCard.isMonster()) {
                 Monster tempMonster = (Monster)tempCard;

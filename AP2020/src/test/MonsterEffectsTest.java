@@ -1,12 +1,9 @@
-import controller.DeckMenuController;
 import controller.EffectController.MonsterEffectController;
-import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.*;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
-import model.card.spell_traps.Limitation;
 import model.game.EffectLimitations;
 import model.game.Game;
 import model.game.State;
@@ -15,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import java.net.UnknownServiceException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class MonsterEffectsTest {
@@ -43,7 +38,7 @@ public class MonsterEffectsTest {
 
     @Test
     public void testCommandKnight() {
-        Card card = csvInfoGetter.getCardByName("Command Knight");
+        Card card = CSVInfoGetter.getCardByName("Command Knight");
         HashSet<Integer> bannedCell = new HashSet<>();
         bannedCell.add(1);
         Assertions.assertNotNull(card);
@@ -59,7 +54,7 @@ public class MonsterEffectsTest {
 
     @Test
     public void testMarshmallon() {
-        Card card = csvInfoGetter.getCardByName("Marshmallon");
+        Card card = CSVInfoGetter.getCardByName("Marshmallon");
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(game.getPlayerBoard());
         Assertions.assertNotNull(game.getPlayerBoard().getMonsterZone(1));
@@ -73,10 +68,10 @@ public class MonsterEffectsTest {
 
     @Test
     public void testTheCalculator() {
-        Card card = csvInfoGetter.getCardByName("The Calculator");
-        Card card1 = csvInfoGetter.getCardByName("Battle OX");
-        Card card2 = csvInfoGetter.getCardByName("Battle OX");
-        Card card3 = csvInfoGetter.getCardByName("Battle OX");
+        Card card = CSVInfoGetter.getCardByName("The Calculator");
+        Card card1 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card2 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card3 = CSVInfoGetter.getCardByName("Battle OX");
 
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(card1);
@@ -114,7 +109,7 @@ public class MonsterEffectsTest {
 
     @Test
     public void testMirageDragon() {
-        Card card = csvInfoGetter.getCardByName("Mirage Dragon");
+        Card card = CSVInfoGetter.getCardByName("Mirage Dragon");
         game.getRivalBoard().addCardToMonsterZone(card);
         game.getRivalBoard().getMonsterZoneCellByCard(card).setState(State.FACE_UP_ATTACK);
         Executable executable = () -> MonsterEffectController.MirageDragon(game,card);

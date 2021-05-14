@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class csvInfoGetter {
+public class CSVInfoGetter {
     private static final String monsterFileName = System.getProperty("os.name").startsWith("Windows") ? "src\\resources\\card-infos\\Monster.csv" : "src/resources/card-infos/Monster.csv";
     private static final String spellTrapFileName = System.getProperty("os.name").startsWith("Windows") ? "src\\resources\\card-infos\\SpellTrap.csv" : "src/resources/card-infos/SpellTrap.csv";
 
