@@ -1,12 +1,9 @@
-import controller.DeckMenuController;
 import controller.EffectController.MonsterEffectController;
-import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.*;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
-import model.card.spell_traps.Limitation;
 import model.game.EffectLimitations;
 import model.game.Game;
 import model.game.State;
@@ -14,9 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-
-import java.net.UnknownServiceException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class MonsterEffectsTest {
@@ -54,7 +48,6 @@ public class MonsterEffectsTest {
         Assertions.assertNotNull(game.getPlayerLimits());
         Assertions.assertNotNull(game.getRivalLimits().getCantAttackCells());
         Assertions.assertArrayEquals(game.getRivalLimits().getCantAttackCells().toArray(), bannedCell.toArray());
-
     }
 
     @Test
@@ -122,4 +115,5 @@ public class MonsterEffectsTest {
         Assertions.assertNotNull(game.getPlayerLimits().getLimitations());
         Assertions.assertTrue(game.getPlayerLimits().getLimitations().contains(EffectLimitations.CANT_ACTIVATE_TRAP));
     }
+
 }

@@ -308,13 +308,23 @@ public class MonsterEffectController extends EffectController {
     }
 
     static protected void setMonster(Game game, Card card, State state) throws GameException {
+        Deck deck = getDeck(game,card);
+        Deck rivalDeck = getRivalDeck(game,card);
         Board board = getBoard(game, card);
+        Board rivalsBoard = getRivalBoard(game,card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        boolean canSummon = game.canSummon();
-        game.summonMonster(card);
+        ArrayList<Card> rivalCards = getRivalsCardsInHand(game,card);
+        if (cards.contains(card)) cards.remove(card);
+        else if (board.getGraveyard().getCards().contains(card)) board.getGraveyard().getCards().remove(card);
+        else if (deck.getMainDeck().getCards().contains(card)) deck.getMainDeck().getCards().remove(card);
+        else if (rivalDeck.getMainDeck().getCards().contains(card)) rivalDeck.getMainDeck().getCards().remove(card);
+        else if (rivalsBoard.getGraveyard().getCards().contains(card)) rivalsBoard.getGraveyard().getCards().remove(card);
+        else if (rivalCards.contains(card)) rivalCards.remove(card);
+
+        board.addCardToMonsterZone(card);
         int cellNumber = getCellNumberOfMonster(game, card);
-        game.getPlayerBoard().getMonsterZone(cellNumber).setState(state);
-        game.setCanSummonCard(canSummon);
+        board.getMonsterZone(cellNumber).setState(state);
+
         if (state.equals(State.FACE_UP_ATTACK)) {
             if (card.getFeatures().contains(CardFeatures.SUMMON_EFFECT) ||
                     card.getFeatures().contains(CardFeatures.SCANNER) ||
@@ -325,6 +335,11 @@ public class MonsterEffectController extends EffectController {
                     //ToDo
                 }
         }
+    }
+
+    private static Deck getRivalDeck(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getRivalDeck();
+        else return game.getPlayerDeck();
     }
 
     static private void duplicateMonster(Monster monster, Monster originalMonster) {
