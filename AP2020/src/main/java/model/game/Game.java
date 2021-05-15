@@ -337,7 +337,7 @@ public class Game {
     }
 
     public Graveyard getGraveyard() {
-        return null; //ToDo
+        return playerBoard.getGraveyard();
     }
 
 

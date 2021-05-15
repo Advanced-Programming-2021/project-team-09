@@ -31,10 +31,8 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void ManEaterBug(Game game, Card card) {
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
-        else board = game.getPlayerBoard();
-        if (board.getMonsterZone().length == 0) {
+        Board board = getRivalBoard(game,card);
+        if (board.getNumberOfMonstersInMonsterZone() == 0) {
             CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             return;
         }
@@ -55,22 +53,25 @@ public class MonsterEffectController extends EffectController {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
-        if (board.getMonsterZone().length < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
-        while (true) {
-            int[] cellNumbers = TributeMenu.run(3);
-            if (isCellNumberValid(cellNumbers[0] - 1) &&
-                    isCellNumberValid(cellNumbers[1] - 1) &&
-                    isCellNumberValid(cellNumbers[2] - 1)) { // todo bugs
-                Cell[] cells = new Cell[3];
-                cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
-                cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
-                cells[2] = board.getMonsterZone(cellNumbers[2] - 1);
-                if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
-                    GameMenuController.tribute(game, cellNumbers);
-                    setMonster(game, card, State.FACE_UP_ATTACK);
-                    break;
+        if (board.getNumberOfMonstersInMonsterZone() < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
+        else {
+            while (true) {
+                int[] cellNumbers = TributeMenu.run(3);
+                if (cellNumbers == null) return;
+                if (cellNumbers[0] != cellNumbers[1] &&
+                        cellNumbers[0] != cellNumbers[2] &&
+                        cellNumbers[1] != cellNumbers[2]) {
+                    Cell[] cells = new Cell[3];
+                    cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
+                    cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
+                    cells[2] = board.getMonsterZone(cellNumbers[2] - 1);
+                    if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
+                        GameMenuController.tribute(game, cellNumbers);
+                        setMonster(game, card, State.FACE_UP_ATTACK);
+                        break;
+                    } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
                 } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-            } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+            }
         }
     }
 
@@ -231,6 +232,10 @@ public class MonsterEffectController extends EffectController {
     public static void HeraldofCreation(Game game, Card card) {
         Graveyard graveyard = getBoard(game, card).getGraveyard();
         ArrayList<Card> cards = getCardsInHand(game, card);
+        if (cards.size() == 0) {
+            CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
+            return;
+        }
         mainLoop:
         while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
@@ -246,6 +251,7 @@ public class MonsterEffectController extends EffectController {
                             cards.remove(removingCard);
                             graveyard.addCard(removingCard);
                             cards.add(monster);
+                            graveyard.getCards().remove(monster);
                             break mainLoop;
                         } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
                     } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
@@ -278,7 +284,7 @@ public class MonsterEffectController extends EffectController {
     public static void TheTricky(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        if (board.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+        if (board.getNumberOfMonstersInMonsterZone() == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
         else {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
             if (cards.size() <= numberOfCardInHand)

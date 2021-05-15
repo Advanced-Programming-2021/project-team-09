@@ -191,7 +191,9 @@ public class GameMenuController {
     }
 
     public static void tribute(Game game, int[] cellNumbers) {
-        for (int i : cellNumbers) game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+        for (int i : cellNumbers) {
+            game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+        }
     }
 
     private static boolean cardHasSummonEffect(ArrayList<CardFeatures> features) {
