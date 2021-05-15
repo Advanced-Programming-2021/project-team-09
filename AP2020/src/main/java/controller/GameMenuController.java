@@ -12,15 +12,35 @@ import model.exceptions.*;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
-import view.duelMenu.specialCardsMenu.ScannerMenu;
+import view.duelMenu.SelectState;
+import view.duelMenu.SpellSelectMenu;
 import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class GameMenuController {
+
+    private static int cellNumber = -1; // or card number in hand
+    private static SelectState selectState = null;
+
+    public static int getCellNumber() {
+        return cellNumber;
+    }
+
+    public static void setCellNumber(int cellNumber) {
+        GameMenuController.cellNumber = cellNumber;
+    }
+
+    public static SelectState getSelectState() {
+        return selectState;
+    }
+
+    public static void setSelectState(SelectState selectState) {
+        GameMenuController.selectState = selectState;
+    }
+
+
     public static String showTable(Game game) {
         return game.showTable();
     }
@@ -42,7 +62,7 @@ public class GameMenuController {
     }
 
 
-    public GameMenuResponse selectSpellAndTrapFromRival(Game game, int cellNumber) {
+    public static GameMenuResponse selectSpellAndTrapFromRival(Game game, int cellNumber) {
         return selectFromRivalArray(cellNumber, game.getRivalBoard().getSpellZone());
     }
 
@@ -56,8 +76,6 @@ public class GameMenuController {
         Cell tempCell = cells[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
         State tempState = tempCell.getState();
-        if (tempState == State.FACE_DOWN_DEFENCE || tempState == State.FACE_DOWN_SPELL)
-            return respond(GameMenuResponsesEnum.CARD_IS_HIDDEN);
         return respondWithObj(tempCell, GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -81,7 +99,7 @@ public class GameMenuController {
         if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
-            return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+            throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
         }
         String temp = game.getPlayerDeck().getMainDeck().getCards().get(0).toString();
         game.playerDrawCard();
@@ -91,7 +109,7 @@ public class GameMenuController {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getPlayer());
-            return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+            throw new WinnerException(game.getPlayer(), game.getRival(), game.getPlayerLP(), game.getRivalLP());
         }
         String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
         game.rivalDrawCard();
@@ -138,12 +156,13 @@ public class GameMenuController {
                 tribute(game, tributes);
             }
             putCardInNearestCell(card, game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
+            game.setCanSummonCard(false);
         } else {
             if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
             Cell[] tempCells = game.getPlayerBoard().getSpellZone();
             putCardInNearestCell(card, tempCells, State.FACE_UP_SPELL);
         }
-        if (cardHasSummonEffect(card.getFeatures()))
+        if (cardHasSummonEffect(card.getFeatures())) {
             try {
                 activeEffect(game, card, game.getRival(), 1);
             } catch (GameException e) {
@@ -155,7 +174,7 @@ public class GameMenuController {
                     }
                 }
             }
-        game.setCanSummonCard(false);
+        }
         if (hasSpecialSummonAfterNormalSummon(card.getFeatures()))
             specialSummon(game, card);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
@@ -446,9 +465,9 @@ public class GameMenuController {
         return false;
     }
 
-    private static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
-        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) return true;
-        return false;
+    public static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) return false;
+        return true;
     }
 
     private static boolean hasMakeAttackerZeroEffect(ArrayList<CardFeatures> cardFeatures) {
@@ -543,7 +562,6 @@ public class GameMenuController {
     }
 
     public static GameMenuResponse flipSummon(Game game, int cellNumber) throws GameException {
-
         if (cellNumber > 5 || cellNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
@@ -637,9 +655,10 @@ public class GameMenuController {
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Card tempCard = tempCells[cellNumber - 1].getCard();
-        game.decreaseRivalHealth(((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard));
+        int ATK = ((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard);
+        game.decreaseRivalHealth(ATK);
         tempCells[cellNumber - 1].setCanAttack(false);
-        return respond(GameMenuResponsesEnum.SUCCESSFUL);
+        return respondWithObj(ATK, GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse specialSummon(Game game, Card card) {
@@ -777,6 +796,21 @@ public class GameMenuController {
         }
     }
 
+    public static void setCardInPlayerFieldZone(Game game, int cardNumberInHand) {
+        GameMenuResponse temp = selectPlayerFieldZone(game);
+        Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
+        if (temp.getGameMenuResponseEnum() != GameMenuResponsesEnum.NO_CARD_FOUND) {
+            sendToGraveYard(game, ((Cell)temp.getObj()).getCard());
+        }
+        Cell tempCell = game.getPlayerBoard().getFieldZone();
+        tempCell.addCard(card);
+        tempCell.setState(State.FACE_UP_SPELL);
+        try {
+            activeEffect(game, card, game.getRival(), 0);
+        } catch (Exception ignored){
+        }
+    }
+
     public static void moveToGraveYardFromPlayerHand(Game game, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cardNumberInHand > cards.size() || cardNumberInHand < 1) return;
@@ -787,63 +821,30 @@ public class GameMenuController {
 
     public static void activeEffect(Game game, Card card, User player, int speed) throws GameException {
         User rival = getOtherUser(game, player);
-        Board tempBoard = getPlayersBoard(game, player);
-        GameException exception = null;
+        if (card!= null) faceUpCard(game, card);
         //ToDo never leaves loop
         if (speed != 0) {
-            if (CardEffectsView.doYouWantTo(player.getNickname() + " do you want to active effect ?")) {
-                while (true) {
-                    int cellNumber = CardEffectsView.getCellNumber() - 1;
-                    if (cellNumber > 4 || cellNumber < 0) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    if (!tempBoard.getSpellZone(cellNumber).isOccupied()) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    if (tempBoard.getSpellZone(cellNumber).isFaceUp()) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    Card chosenCard = tempBoard.getSpellZone(cellNumber).getCard();
-                    if (chosenCard.isTrap()) {
-                        Limits limits;
-                        if (player.getUsername().equals(game.getPlayer().getUsername())) {
-                            limits = game.getPlayerLimits();
-                        } else limits = game.getRivalLimits();
-                        if (hasCantActivateTrap(limits.getLimitations())) {
-                            CardEffectsView.respond(CardEffectsResponses.CANT_ACTIVATE_TRAP);
+            Card chosenCard = new SpellSelectMenu(game).run(speed);
+            if (chosenCard == null) return;
+            else {
+                try {
+                    activeEffect(game, chosenCard, rival, getSpeed(chosenCard.getFeatures()));
+                } catch (GameException e) {
+                    if (e instanceof StopSpell) {
+                        StopSpell stopSpell = (StopSpell) e;
+                        StopEffectState state = stopSpell.getState();
+                        switch (state) {
+                            case DESTROY_SPELL:
+                                if (card != null) sendToGraveYard(game, card);
+                                return;
+                            case STOP_SUMMON:
+                            case END_BATTLE_PHASE:
+                                throw stopSpell;
+                            default:
+                                break;
                         }
                     }
-                    int chosenSpeed = getSpeed(chosenCard.getFeatures());
-                    if (chosenSpeed < speed) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        if (CardEffectsView.doYouWantTo(player.getNickname() + " do you want to active effect ?")) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                    try {
-                        activeEffect(game, chosenCard, rival, chosenSpeed);
-                    } catch (GameException e) {
-                        if (e instanceof StopSpell) {
-                            StopSpell stopSpell = (StopSpell) e;
-                            StopEffectState state = stopSpell.getState();
-                            switch (state) {
-                                case DESTROY_SPELL:
-                                    if (card != null) sendToGraveYard(game, card);
-                                    return;
-                                case STOP_SUMMON:
-                                case END_BATTLE_PHASE:
-                                    throw stopSpell;
-                                default:
-                                    break;
-                            }
-                        }
-                        throw e;
-                    }
+                    throw e;
                 }
             }
         }
@@ -853,12 +854,29 @@ public class GameMenuController {
         }
     }
 
+    private static void faceUpCard(Game game, Card card) {
+        Cell[] temp = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : temp) {
+            if (cell.getCard() == card) {
+                cell.setState(State.FACE_UP_SPELL);
+                return;
+            }
+        }
+        temp = game.getRivalBoard().getSpellZone();
+        for (Cell cell : temp) {
+            if (cell.getCard() == card) {
+                cell.setState(State.FACE_UP_SPELL);
+                return;
+            }
+        }
+    }
+
     private static boolean hasCantActivateTrap(ArrayList<EffectLimitations> effectLimitations) {
         for (EffectLimitations e : effectLimitations) if (e == EffectLimitations.CANT_ACTIVATE_TRAP) return true;
         return false;
     }
 
-    private static int getSpeed(ArrayList<CardFeatures> features) {
+    public static int getSpeed(ArrayList<CardFeatures> features) {
         for (CardFeatures f : features) {
             if (f == CardFeatures.SPEED_1) return 1;
             if (f == CardFeatures.SPEED_2) return 2;

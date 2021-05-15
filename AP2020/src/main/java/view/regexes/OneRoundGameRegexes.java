@@ -31,7 +31,7 @@ abstract public class OneRoundGameRegexes {
     private static final String[] selectMyFieldZone = new String[2];
     static {
         selectMyFieldZone[0] = "select --field";
-        selectMyFieldZone[1] = "select --f";
+        selectMyFieldZone[1] = "select -f";
     }
     private static final String[] selectCardFromMyHand = new String[2];
     static {
