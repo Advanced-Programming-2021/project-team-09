@@ -97,7 +97,7 @@ public class Game {
         }
     }
 
-    private void switchReferences() {
+    public void switchReferences() {
         User tempUser;
         tempUser = player;
         player = rival;
@@ -364,7 +364,6 @@ public class Game {
     public boolean canRitualSummon(int handNumber, int spellZoneNumber) {
         return playerHandCards.get(handNumber) != null && playerBoard.getSpellZone(spellZoneNumber).isOccupied();
     }
-
 
     public Board getPlayerBoard() {
         return playerBoard;

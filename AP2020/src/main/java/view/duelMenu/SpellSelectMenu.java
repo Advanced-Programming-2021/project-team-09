@@ -20,7 +20,7 @@ public class SpellSelectMenu extends OneRoundGame {
 
     public Card run(int speed) throws WinnerException {
         this.speed = speed;
-        game.spellChangeTurn();
+        game.switchReferences();
         System.out.println("Now its " + game.getPlayer().getNickname() + "'s turn .");
         System.out.println(GameMenuController.showTable(game));
         String command;
@@ -71,6 +71,8 @@ public class SpellSelectMenu extends OneRoundGame {
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
             if (successful) {
+                game.switchReferences();
+                System.out.println("Now its " + game.getPlayer().getNickname() + "'s turn .");
                 return card;
             }
         }
