@@ -12,7 +12,6 @@ import model.exceptions.*;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
-import view.duelMenu.specialCardsMenu.ScannerMenu;
 import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
@@ -21,6 +20,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class GameMenuController {
+
+    private static Card selected = null;
+
+    public static Card getSelected() {
+        return selected;
+    }
+
+    public static void setSelected(Card selected) {
+        GameMenuController.selected = selected;
+    }
+
     public static String showTable(Game game) {
         return game.showTable();
     }
@@ -81,7 +91,7 @@ public class GameMenuController {
         if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
-            return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+            throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
         }
         String temp = game.getPlayerDeck().getMainDeck().getCards().get(0).toString();
         game.playerDrawCard();
@@ -91,7 +101,7 @@ public class GameMenuController {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getPlayer());
-            return respond(GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK);
+            throw new WinnerException(game.getPlayer(), game.getRival(), game.getPlayerLP(), game.getRivalLP());
         }
         String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
         game.rivalDrawCard();

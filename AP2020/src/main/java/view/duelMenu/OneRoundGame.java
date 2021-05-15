@@ -2,6 +2,7 @@ package view.duelMenu;
 
 import controller.GameMenuController;
 import model.User;
+import model.exceptions.WinnerException;
 import model.game.Game;
 import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
@@ -15,13 +16,14 @@ public class OneRoundGame {
     private final Scanner scanner;
     private Phase currentPhase;
 
-    public OneRoundGame(User firstPlayer, User secondPlayer,Scanner scanner) throws CloneNotSupportedException {
+    public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) throws CloneNotSupportedException {
         game = new Game(firstPlayer, secondPlayer);
         this.scanner = scanner;
     }
-    public void run(){
+
+    public void run() throws WinnerException {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
             if (OneRoundGameRegexes.doesItSelectMyMonsterCellCommand(command))
                 selectMyMonsterCell(command);
@@ -29,7 +31,7 @@ public class OneRoundGame {
                 selectMySpellCell(command);
             else if (OneRoundGameRegexes.doesItSelectCardFromMyHandCommand(command))
                 selectCardFromMyHand(command);
-            else if(OneRoundGameRegexes.doesItSelectMyFieldZoneCommand(command))
+            else if (OneRoundGameRegexes.doesItSelectMyFieldZoneCommand(command))
                 selectMyFieldZone(command);
             else if (OneRoundGameRegexes.doesItSelectOpponentFieldZoneCommand(command))
                 selectOpponentFieldZone(command);
@@ -59,18 +61,17 @@ public class OneRoundGame {
                 showGraveyard();
             else if (command.matches(OneRoundGameRegexes.summon))
                 summon();
-            else if (command.matches(OneRoundGameRegexes.surrender))
-            {
+            else if (command.matches(OneRoundGameRegexes.surrender)) {
                 surrender();
                 break;
-            }
-            else if (command.matches(OneRoundGameRegexes.nextPhase))
+            } else if (command.matches(OneRoundGameRegexes.nextPhase))
                 goToNextPhase();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
     }
-    public void selectCard(String command){
+
+    public void selectCard(String command) {
 
     }
 
@@ -78,15 +79,13 @@ public class OneRoundGame {
         this.currentPhase = currentPhase;
     }
 
-    public void goToNextPhase(){
+    public void goToNextPhase() {
         if (currentPhase.equals(Phase.STANDBY_PHASE))
             goToMainPhase1();
-        else if (currentPhase.equals(Phase.MAIN_PHASE1)){
+        else if (currentPhase.equals(Phase.MAIN_PHASE1)) {
             goToDrawPhase();
             //todo add card to hand
-        }
-
-        else if (currentPhase.equals(Phase.DRAW_PHASE))
+        } else if (currentPhase.equals(Phase.DRAW_PHASE))
             goToMainPhase2();
         else if (currentPhase.equals(Phase.MAIN_PHASE2))
             goToBattlePhase();
@@ -95,116 +94,152 @@ public class OneRoundGame {
         else if (currentPhase.equals(Phase.END_PHASE))
             goToStandByPhase();
     }
-    public void goToStandByPhase(){
+
+    public void goToStandByPhase() {
         setCurrentPhase(Phase.STANDBY_PHASE);
         respond(OneRoundGameResponses.STANDBY_PHASE);
     }
-    public void goToMainPhase1(){
+
+    public void goToMainPhase1() {
         setCurrentPhase(Phase.MAIN_PHASE1);
         respond(OneRoundGameResponses.MAIN_PHASE1);
     }
-    public void goToDrawPhase(){
+
+    public void goToDrawPhase() {
         setCurrentPhase(Phase.DRAW_PHASE);
         respond(OneRoundGameResponses.DRAW_PHASE);
     }
-    public void goToMainPhase2(){
+
+    public void goToMainPhase2() {
         setCurrentPhase(Phase.MAIN_PHASE2);
         respond(OneRoundGameResponses.MAIN_PHASE2);
     }
-    public void goToBattlePhase(){
+
+    public void goToBattlePhase() {
         setCurrentPhase(Phase.BATTLE_PHASE);
         respond(OneRoundGameResponses.BATTLE_PHASE);
     }
-    public void goToEndPhase(){
+
+    public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
         //todo print "its <next player nickname> turn
     }
-    public void surrender(){
+
+    public void surrender() throws WinnerException{
+        throw new WinnerException(game.getRival(), game.getPlayer(), game.getRivalLP(), game.getPlayerLP());
+    }
+
+    public void deselectCard() {
+        if (GameMenuController.getSelected() == null)
+            System.out.println("No card is selected ..");
+        else {
+            GameMenuController.setSelected(null);
+            System.out.println("Card deselected ..");
+        }
+    }
+
+    public void summon() {
 
     }
-    public void deselectCard(){
+
+    public void set() {
 
     }
-    public void summon(){
+
+    public void flipSummon() {
 
     }
-    public void set(){
+
+    public void attackDirect() {
 
     }
-    public void flipSummon(){
+
+    public void activeEffect() {
 
     }
-    public void attackDirect(){
+
+    public void showGraveyard() {
+    }
+
+    public void showSelectedCard() {
 
     }
-    public void activeEffect(){
+
+    public void selectMyMonsterCell(String command) {
 
     }
-    public void showGraveyard(){
-    }
-    public void showSelectedCard(){
+
+    public void selectMySpellCell(String command) {
 
     }
-    public void selectMyMonsterCell(String command){
+
+    public void selectMyFieldZone(String command) {
 
     }
-    public void selectMySpellCell(String command){
+
+    public void selectCardFromMyHand(String command) {
 
     }
-    public void selectMyFieldZone(String command){
+
+    public void selectOpponentMonsterCell(String command) {
 
     }
-    public void selectCardFromMyHand(String command){
+
+    public void selectOpponentSpellCell(String command) {
 
     }
-    public void selectOpponentMonsterCell(String command){
+
+    public void selectOpponentFieldZone(String command) {
 
     }
-    public void selectOpponentSpellCell(String command){
+
+    public void setAttack(String command) {
 
     }
-    public void selectOpponentFieldZone(String command){
+
+    public void setDefense(String command) {
 
     }
-    public void setAttack(String command){
+
+    public void attackToOpponentMonster(String command) {
 
     }
-    public void setDefense(String command){
 
-    }
-    public void attackToOpponentMonster(String command){
-
-    }
-    public ArrayList<Phase> getAllowedPhaseForSummonSetChangePositionActiveEffect(){
+    public ArrayList<Phase> getAllowedPhaseForSummonSetChangePositionActiveEffect() {
         ArrayList<Phase> allowedPhaseForSummon = new ArrayList<>();
         allowedPhaseForSummon.add(Phase.MAIN_PHASE1);
         allowedPhaseForSummon.add(Phase.MAIN_PHASE2);
         return allowedPhaseForSummon;
     }
-    public ArrayList<Phase> getAllowedPhaseForSelect(){
+
+    public ArrayList<Phase> getAllowedPhaseForSelect() {
         ArrayList<Phase> allowedPhaseForSelect = new ArrayList<>();
         allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
         allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
         allowedPhaseForSelect.add(Phase.BATTLE_PHASE);
         return allowedPhaseForSelect;
     }
-    public ArrayList<Phase> getAllowedPhaseForAttack(){
+
+    public ArrayList<Phase> getAllowedPhaseForAttack() {
         ArrayList<Phase> allowedPhaseForAttack = new ArrayList<>();
         allowedPhaseForAttack.add(Phase.BATTLE_PHASE);
         return allowedPhaseForAttack;
     }
-    public boolean doesActionAllowedInCurrentPhases(@NotNull ArrayList<Phase> allowedPhases){
-        for (Phase phase: allowedPhases) {
+
+    public boolean doesActionAllowedInCurrentPhases(@NotNull ArrayList<Phase> allowedPhases) {
+        for (Phase phase : allowedPhases) {
             if (getCurrentPhase().equals(phase))
                 return true;
         }
         return false;
     }
-    public Phase getCurrentPhase(){
+
+    public Phase getCurrentPhase() {
         return currentPhase;
     }
-    public void respond(OneRoundGameResponses responses){
+
+    public void respond(OneRoundGameResponses responses) {
         if (responses.equals(OneRoundGameResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
         else if (responses.equals(OneRoundGameResponses.INVALID_SELECTION))
