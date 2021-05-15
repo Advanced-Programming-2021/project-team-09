@@ -13,6 +13,7 @@ import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
 import view.duelMenu.SelectState;
+import view.duelMenu.SpellSelectMenu;
 import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
@@ -818,69 +819,53 @@ public class GameMenuController {
 
     public static void activeEffect(Game game, Card card, User player, int speed) throws GameException {
         User rival = getOtherUser(game, player);
-        Board tempBoard = getPlayersBoard(game, player);
-        GameException exception = null;
+        if (card!= null) faceUpCard(game, card);
         //ToDo never leaves loop
         if (speed != 0) {
-            if (CardEffectsView.doYouWantTo(player.getNickname() + " do you want to active effect ?")) {
-                while (true) {
-                    int cellNumber = CardEffectsView.getCellNumber() - 1;
-                    if (cellNumber > 4 || cellNumber < 0) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    if (!tempBoard.getSpellZone(cellNumber).isOccupied()) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    if (tempBoard.getSpellZone(cellNumber).isFaceUp()) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        continue;
-                    }
-                    Card chosenCard = tempBoard.getSpellZone(cellNumber).getCard();
-                    if (chosenCard.isTrap()) {
-                        Limits limits;
-                        if (player.getUsername().equals(game.getPlayer().getUsername())) {
-                            limits = game.getPlayerLimits();
-                        } else limits = game.getRivalLimits();
-                        if (hasCantActivateTrap(limits.getLimitations())) {
-                            CardEffectsView.respond(CardEffectsResponses.CANT_ACTIVATE_TRAP);
+            Card chosenCard = new SpellSelectMenu(game).run(speed);
+            if (chosenCard == null) return;
+            else {
+                try {
+                    activeEffect(game, chosenCard, rival, getSpeed(chosenCard.getFeatures()));
+                } catch (GameException e) {
+                    if (e instanceof StopSpell) {
+                        StopSpell stopSpell = (StopSpell) e;
+                        StopEffectState state = stopSpell.getState();
+                        switch (state) {
+                            case DESTROY_SPELL:
+                                if (card != null) sendToGraveYard(game, card);
+                                return;
+                            case STOP_SUMMON:
+                            case END_BATTLE_PHASE:
+                                throw stopSpell;
+                            default:
+                                break;
                         }
                     }
-                    int chosenSpeed = getSpeed(chosenCard.getFeatures());
-                    if (chosenSpeed < speed) {
-                        CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-                        if (CardEffectsView.doYouWantTo(player.getNickname() + " do you want to active effect ?")) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                    try {
-                        activeEffect(game, chosenCard, rival, chosenSpeed);
-                    } catch (GameException e) {
-                        if (e instanceof StopSpell) {
-                            StopSpell stopSpell = (StopSpell) e;
-                            StopEffectState state = stopSpell.getState();
-                            switch (state) {
-                                case DESTROY_SPELL:
-                                    if (card != null) sendToGraveYard(game, card);
-                                    return;
-                                case STOP_SUMMON:
-                                case END_BATTLE_PHASE:
-                                    throw stopSpell;
-                                default:
-                                    break;
-                            }
-                        }
-                        throw e;
-                    }
+                    throw e;
                 }
             }
         }
         if (card != null) {
             card.activeEffect(game);
             card.addFeature(CardFeatures.USED_EFFECT);
+        }
+    }
+
+    private static void faceUpCard(Game game, Card card) {
+        Cell[] temp = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : temp) {
+            if (cell.getCard() == card) {
+                cell.setState(State.FACE_UP_SPELL);
+                return;
+            }
+        }
+        temp = game.getRivalBoard().getSpellZone();
+        for (Cell cell : temp) {
+            if (cell.getCard() == card) {
+                cell.setState(State.FACE_UP_SPELL);
+                return;
+            }
         }
     }
 

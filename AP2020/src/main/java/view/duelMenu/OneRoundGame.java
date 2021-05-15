@@ -21,12 +21,20 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class OneRoundGame {
-    private Game game;
-    private final Scanner scanner;
-    private Phase currentPhase;
+    protected Game game;
+    protected final Scanner scanner;
+    private Phase currentPhase = Phase.STANDBY_PHASE;
 
-    public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) throws CloneNotSupportedException {
-        game = new Game(firstPlayer, secondPlayer);
+    public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) {
+        try {
+            game = new Game(firstPlayer, secondPlayer);
+        } catch (CloneNotSupportedException ignored) {
+        }
+        this.scanner = scanner;
+    }
+
+    public OneRoundGame(Game game, Scanner scanner) {
+        this.game = game;
         this.scanner = scanner;
     }
 
@@ -294,7 +302,6 @@ public class OneRoundGame {
                 Cell tempCell = game.getPlayerBoard().getSpellZone(GameMenuController.getCellNumber() - 1);
                 Card card = tempCell.getCard();
                 if (GameMenuController.hasNotUsedEffect(card.getFeatures())) {
-                    tempCell.setState(State.FACE_UP_SPELL);
                     try {
                         GameMenuController.activeEffect(game, card, game.getRival(), GameMenuController.getSpeed(card.getFeatures()));
                     } catch (Exception e) {
@@ -311,7 +318,7 @@ public class OneRoundGame {
         }
     }
 
-    private boolean canActiveEffect() {
+    protected boolean canActiveEffect() {
         return canChangePosition();
     }
 
