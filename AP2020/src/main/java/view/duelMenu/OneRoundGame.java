@@ -2,14 +2,23 @@ package view.duelMenu;
 
 import controller.GameMenuController;
 import model.User;
-import model.exceptions.WinnerException;
+import model.card.Card;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.SpellType;
+import model.exceptions.*;
+import model.game.Cell;
 import model.game.Game;
+import model.game.State;
 import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
+import view.regexes.RegexFunctions;
+import view.responses.GameMenuResponse;
+import view.responses.GameMenuResponsesEnum;
 import view.responses.OneRoundGameResponses;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class OneRoundGame {
     private Game game;
@@ -32,9 +41,9 @@ public class OneRoundGame {
             else if (OneRoundGameRegexes.doesItSelectCardFromMyHandCommand(command))
                 selectCardFromMyHand(command);
             else if (OneRoundGameRegexes.doesItSelectMyFieldZoneCommand(command))
-                selectMyFieldZone(command);
+                selectMyFieldZone();
             else if (OneRoundGameRegexes.doesItSelectOpponentFieldZoneCommand(command))
-                selectOpponentFieldZone(command);
+                selectOpponentFieldZone();
             else if (OneRoundGameRegexes.doesItSelectOpponentMonsterCellCommand(command))
                 selectOpponentMonsterCell(command);
             else if (OneRoundGameRegexes.doesItSelectOpponentSpellCellCommand(command))
@@ -50,7 +59,7 @@ public class OneRoundGame {
             else if (command.matches(OneRoundGameRegexes.attackDirect))
                 attackDirect();
             else if (command.matches(OneRoundGameRegexes.deselectCard))
-                deselectCard();
+                deselectCard(true);
             else if (command.matches(OneRoundGameRegexes.flipSummon))
                 flipSummon();
             else if (command.matches(OneRoundGameRegexes.attackToOpponentMonster))
@@ -61,30 +70,28 @@ public class OneRoundGame {
                 showGraveyard();
             else if (command.matches(OneRoundGameRegexes.summon))
                 summon();
-            else if (command.matches(OneRoundGameRegexes.surrender)) {
+            else if (command.matches(OneRoundGameRegexes.surrender))
                 surrender();
-                break;
-            } else if (command.matches(OneRoundGameRegexes.nextPhase))
+            else if (command.matches(OneRoundGameRegexes.nextPhase))
                 goToNextPhase();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
     }
 
-    public void selectCard(String command) {
-
-    }
-
     public void setCurrentPhase(Phase currentPhase) {
         this.currentPhase = currentPhase;
     }
 
-    public void goToNextPhase() {
+    public void goToNextPhase() throws WinnerException{
         if (currentPhase.equals(Phase.STANDBY_PHASE))
             goToMainPhase1();
         else if (currentPhase.equals(Phase.MAIN_PHASE1)) {
             goToDrawPhase();
-            //todo add card to hand
+            GameMenuResponse gameMenuResponse;
+            if ((gameMenuResponse = GameMenuController.draw(game)).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+                System.out.println("New Card added to hand : " + ((Card)gameMenuResponse.getObj()).getCardName());
+            }
         } else if (currentPhase.equals(Phase.DRAW_PHASE))
             goToMainPhase2();
         else if (currentPhase.equals(Phase.MAIN_PHASE2))
@@ -123,87 +130,372 @@ public class OneRoundGame {
     public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
-        //todo print "its <next player nickname> turn
+        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
+        game.changeTurn();
     }
 
-    public void surrender() throws WinnerException{
+    public void surrender() throws WinnerException {
         throw new WinnerException(game.getRival(), game.getPlayer(), game.getRivalLP(), game.getPlayerLP());
     }
 
-    public void deselectCard() {
-        if (GameMenuController.getSelected() == null)
-            System.out.println("No card is selected ..");
-        else {
-            GameMenuController.setSelected(null);
-            System.out.println("Card deselected ..");
+    public void deselectCard(boolean printNeeded) {
+        if (GameMenuController.getSelectState() == null) {
+            if (printNeeded) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+        } else {
+            GameMenuController.setSelectState(null);
+            GameMenuController.setCellNumber(-1);
+            if (printNeeded) respond(OneRoundGameResponses.CARD_DESELECTED);
         }
     }
 
     public void summon() {
+        if (canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else {
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            else if (selectState != SelectState.HAND) respond(OneRoundGameResponses.YOU_CANT_SUMMON_THIS_CARD);
+            else {
+                GameMenuResponse gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber());
+                GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+                if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED) respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
+                else if (answer == GameMenuResponsesEnum.CANT_NORMAL_SUMMON) respond(OneRoundGameResponses.CANT_NORMAL_SUMMON);
+                else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL) respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
+                else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL) respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+                else if (answer == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS) respond(OneRoundGameResponses.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE);
+                else if (answer == GameMenuResponsesEnum.ABORTED) respond(OneRoundGameResponses.ABORTED);
+            }
+        }
+    }
 
+    private boolean canSummonInThisPhase() {
+        return canChangePosition();
     }
 
     public void set() {
+        if (!canSetInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else {
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) {
+                respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            } else if (selectState != SelectState.HAND) {
+                respond(OneRoundGameResponses.YOU_CANT_SET_THIS_CARD);
+            } else {
+                int cellNumber = GameMenuController.getCellNumber();
+                Card card = game.getPlayerHandCards().get(cellNumber - 1);
+                if (card.isMonster()) setMonster(cellNumber);
+                else setTrapAndSpell(cellNumber);
+            }
+        }
+    }
+
+    private void setMonster(int cellNumber) {
+        GameMenuResponse gameMenuResponse = GameMenuController.setMonsterCard(game, cellNumber);
+        GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+        if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
+        else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL) respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
+        else if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED) respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
+        else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+            respond(OneRoundGameResponses.SET_SUCCESSFULLY);
+            deselectCard(false);
+        }
+    }
+
+    private void setTrapAndSpell(int cellNumber) {
+        GameMenuResponse gameMenuResponse = GameMenuController.setSpellAndTrap(game, cellNumber);
+        GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+        if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
+        else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL) respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+        else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+            respond(OneRoundGameResponses.SET_SUCCESSFULLY);
+            deselectCard(false);
+        }
 
     }
 
-    public void flipSummon() {
-
+    private boolean canSetInThisPhase() {
+        return canChangePosition();
     }
 
-    public void attackDirect() {
-
+    public void flipSummon() throws WinnerException{
+        if (!canFlipIntThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else  {
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.PLEASE_SELECT_MONSTER);
+            else {
+                GameMenuResponse gameMenuResponse;
+                try {
+                    gameMenuResponse = GameMenuController.flipSummon(game, GameMenuController.getCellNumber());
+                } catch (GameException e) {
+                    if (e instanceof WinnerException) throw (WinnerException) e;
+                    return;
+                }
+                GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+                if (answer == GameMenuResponsesEnum.CANT_FLIP_SUMMON) respond(OneRoundGameResponses.YOU_CANT_FLIP_SUMMON_THIS_CARD);
+                else if (answer == GameMenuResponsesEnum.SUCCESSFUL) respond(OneRoundGameResponses.FLIP_SUMMONED_SUCCESSFULLY);
+            }
+        }
     }
 
-    public void activeEffect() {
+    private boolean canFlipIntThisPhase() {
+        return canChangePosition();
+    }
 
+    public void attackDirect() throws WinnerException{
+        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else {
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.YOU_CANT_ATTACK_WITH_THIS_CARD);
+            else {
+                GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, GameMenuController.getCellNumber());
+                GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+                if (answer == GameMenuResponsesEnum.CANT_ATTACK) respond(OneRoundGameResponses.CANT_ATTACK_DIRECTLY);
+                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED) respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
+                else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+                    System.out.println("Opponent received " + gameMenuResponse.getObj() + " damage.");
+                }
+            }
+        }
+    }
+
+    private boolean canAttackInThisPhase() {
+        return canChangePosition();
+    }
+
+
+    //todo new menu
+    public void activeEffect() throws WinnerException {
+        if (!canActiveEffect()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else { // action allowed
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            else if (selectState == SelectState.HAND) {
+                Card card = game.getPlayerHandCards().get(GameMenuController.getCellNumber() - 1);
+                if (!card.isSpell()) respond(OneRoundGameResponses.ACTIVE_EFFECT_IS_ONLY_FOR_SPELL_CARDS);
+                else { // card is in hand and is spell or trap
+                    if (card.isSpell()) {
+                        Spell tempSpell = (Spell) card;
+                        if (tempSpell.getSpellType() == SpellType.FIELD) {
+                            GameMenuController.setCardInPlayerFieldZone(game, GameMenuController.getCellNumber());
+                            respond(OneRoundGameResponses.SPELL_ACTIVATED);
+                            return;
+                        }
+                    }
+                    if (game.isSpellZoneFull()) {
+                        respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+                        return;
+                    }
+                    GameMenuController.summon(game, GameMenuController.getCellNumber());
+                }
+            } else if (selectState != SelectState.PLAYER_SPELL)
+                respond(OneRoundGameResponses.ACTIVE_EFFECT_IS_ONLY_FOR_SPELL_CARDS);
+            else { // card is in spell zone
+                Cell tempCell = game.getPlayerBoard().getSpellZone(GameMenuController.getCellNumber() - 1);
+                Card card = tempCell.getCard();
+                if (GameMenuController.hasNotUsedEffect(card.getFeatures())) {
+                    tempCell.setState(State.FACE_UP_SPELL);
+                    try {
+                        GameMenuController.activeEffect(game, card, game.getRival(), GameMenuController.getSpeed(card.getFeatures()));
+                    } catch (Exception e) {
+                        if (e instanceof WinnerException) throw (WinnerException) e;
+                        if (e instanceof StopSpell) {
+                            if (((StopSpell) e).getState() == StopEffectState.DESTROY_SPELL) GameMenuController.sendToGraveYard(game,
+                                    card);
+                        }
+                        return;
+                    }
+                } else respond(OneRoundGameResponses.YOU_HAVE_ALREADY_ACTIVATED_THIS_CARD);
+            }
+            deselectCard(false);
+        }
+    }
+
+    private boolean canActiveEffect() {
+        return canChangePosition();
     }
 
     public void showGraveyard() {
+        System.out.println(game.getPlayerBoard().getGraveyard());
     }
 
     public void showSelectedCard() {
-
+        SelectState selectState = GameMenuController.getSelectState();
+        if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+        else if (selectState == SelectState.HAND)
+            System.out.println(game.getPlayerHandCards().get(GameMenuController.getCellNumber() - 1).toString());
+        else if (selectState == SelectState.PLAYER_FIELD)
+            System.out.println(game.getPlayerBoard().getFieldZone().getCard().toString());
+        else if (selectState == SelectState.PLAYER_SPELL)
+            System.out.println(game.getRivalBoard().getSpellZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+        else if (selectState == SelectState.PLAYER_MONSTER)
+            System.out.println(game.getRivalBoard().getMonsterZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+        else if (selectState == SelectState.RIVAL_FIELD)
+            System.out.println(game.getRivalBoard().getFieldZone().getCard().toString());
+        else if (selectState == SelectState.RIVAL_MONSTER) {
+            Cell tempCell = game.getRivalBoard().getMonsterZone(GameMenuController.getCellNumber() - 1);
+            if (tempCell.isFaceDown()) respond(OneRoundGameResponses.CARD_IS_NOT_VISIBLE);
+            else System.out.println(tempCell.getCard().toString());
+        } else if (selectState == SelectState.RIVAL_SPELL) {
+            Cell tempCell = game.getRivalBoard().getSpellZone(GameMenuController.getCellNumber() - 1);
+            if (tempCell.isFaceDown()) respond(OneRoundGameResponses.CARD_IS_NOT_VISIBLE);
+            else System.out.println(tempCell.getCard().toString());
+        }
     }
 
     public void selectMyMonsterCell(String command) {
+        int cellNumber = getNumberFromString(command);
+        GameMenuResponse gameMenuResponse = GameMenuController.selectMonsterFromPlayer(game, cellNumber);
+        selectCard(gameMenuResponse, SelectState.PLAYER_MONSTER);
+    }
 
+    private boolean canSelectInThisPhase() {
+        ArrayList<Phase> phases = getAllowedPhaseForSelect();
+        for (Phase p : phases) if (p == currentPhase) return true;
+        return false;
     }
 
     public void selectMySpellCell(String command) {
-
+        int cellNumber = getNumberFromString(command);
+        GameMenuResponse gameMenuResponse = GameMenuController.selectSpellAndTrapFromPlayer(game, cellNumber);
+        selectCard(gameMenuResponse, SelectState.PLAYER_SPELL);
     }
 
-    public void selectMyFieldZone(String command) {
+    // for easier application of selectMySpell and selectMyMonster and selectCardFromHand and selectMyFieldZone
+    private void selectCard(GameMenuResponse gameMenuResponse, SelectState selectState) {
+        GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+        if (answer == GameMenuResponsesEnum.NO_CARD_FOUND) {
+            respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
+        } else if (answer == GameMenuResponsesEnum.INVALID_SELECTION) {
+            respond(OneRoundGameResponses.INVALID_SELECTION);
+        } else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+            Object obj = gameMenuResponse.getObj();
+            if (!(obj instanceof Card)) {
+                unknownError();
+                return;
+            }
+            GameMenuController.setCellNumber(getCellNumberFromCard((Card) obj));
+            GameMenuController.setSelectState(selectState);
+            respond(OneRoundGameResponses.CARD_SELECTED);
+        } else unknownError();
+    }
 
+    private int getCellNumberFromCard(Card card) {
+        Cell[] temp = game.getPlayerBoard().getMonsterZone();
+        for (int i = 0; i < 5; i++) if (temp[i].getCard() == card) return i + 1;
+        temp = game.getPlayerBoard().getSpellZone();
+        for (int i = 0; i < 5; i++) if (temp[i].getCard() == card) return i + 1;
+        temp = game.getRivalBoard().getMonsterZone();
+        for (int i = 0; i < 5; i++) if (temp[i].getCard() == card) return i + 1;
+        temp = game.getRivalBoard().getSpellZone();
+        for (int i = 0; i < 5; i++) if (temp[i].getCard() == card) return i + 1;
+        ArrayList<Card> tempHands = game.getPlayerHandCards();
+        for (int i = 0; i < tempHands.size(); i++) if (tempHands.get(i) == card) return i + 1;
+        return  -1;
+    }
+
+    public void selectMyFieldZone() {
+        GameMenuResponse gameMenuResponse = GameMenuController.selectPlayerFieldZone(game);
+        selectCard(gameMenuResponse, SelectState.PLAYER_FIELD);
     }
 
     public void selectCardFromMyHand(String command) {
-
+        int cardNumber = getNumberFromString(command);
+        GameMenuResponse gameMenuResponse = GameMenuController.selectCardFromHand(game, cardNumber);
+        selectCard(gameMenuResponse, SelectState.HAND);
     }
 
     public void selectOpponentMonsterCell(String command) {
-
+        int cellNumber = getNumberFromString(command);
+        GameMenuResponse gameMenuResponse = GameMenuController.selectMonsterFromRival(game, cellNumber);
+        selectCard(gameMenuResponse, SelectState.RIVAL_MONSTER);
     }
 
     public void selectOpponentSpellCell(String command) {
-
+        int cellNumber = getNumberFromString(command);
+        GameMenuResponse gameMenuResponse = GameMenuController.selectSpellAndTrapFromRival(game, cellNumber);
+        selectCard(gameMenuResponse, SelectState.RIVAL_SPELL);
     }
 
-    public void selectOpponentFieldZone(String command) {
-
+    public void selectOpponentFieldZone() {
+        GameMenuResponse gameMenuResponse = GameMenuController.selectRivalFieldZone(game);
+        selectCard(gameMenuResponse, SelectState.RIVAL_FIELD);
     }
 
     public void setAttack(String command) {
-
+        setPosition("attack");
     }
 
     public void setDefense(String command) {
-
+        setPosition("defense");
     }
 
-    public void attackToOpponentMonster(String command) {
+    private void setPosition(String position) {
+        if (!canChangePosition()) {
+            respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+            return;
+        }
+        SelectState selectState = GameMenuController.getSelectState();
+        if (selectState == null) {
+            respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+        } else if (selectState != SelectState.PLAYER_MONSTER) {
+            respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
+        } else {
+            GameMenuResponse gameMenuResponse = GameMenuController.setMonsterPosition(game, GameMenuController.getCellNumber(), position);
+            GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+            if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
+            else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND) respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
+            else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET) respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
+            else if (answer == GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION) respond(OneRoundGameResponses.THIS_CARD_IS_ALREADY_IN_THE_WANTED_POSITION);
+            else if (answer == GameMenuResponsesEnum.ALREADY_CHANGED) respond(OneRoundGameResponses.YOU_ALREADY_CHANGED_THIS_CARD_POSITION_THIS_TURN);
+            else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+                respond(OneRoundGameResponses.MONSTER_CARD_POSITION_CHANGED_SUCCESSFULLY);
+                deselectCard(false);
+            } else unknownError();
+        }
+    }
 
+    private boolean canChangePosition() {
+        ArrayList<Phase> phases = getAllowedPhaseForSummonSetChangePositionActiveEffect();
+        for (Phase p : phases) if (p == currentPhase) return true;
+        return false;
+    }
+
+    public void attackToOpponentMonster(String command) throws WinnerException{
+        int cellNumber = getNumberFromString(command);
+        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        else {
+            SelectState selectState = GameMenuController.getSelectState();
+            if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
+            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.PLEASE_SELECT_MONSTER);
+            else {
+                GameMenuResponse gameMenuResponse;
+                try {
+                    gameMenuResponse = GameMenuController.attack(game, GameMenuController.getCellNumber(), cellNumber);
+                } catch (GameException e) {
+                    if (e instanceof WinnerException) throw (WinnerException)e;
+                    else if (e instanceof StopAttackException) {
+                        if (((StopAttackException) e).getState() == StopEffectState.END_BATTLE_PHASE) {
+                            goToNextPhase();
+                        }
+                    }
+                    return;
+                }
+                GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
+                if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
+                else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND) respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
+                else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET) respond(OneRoundGameResponses.NOT_SUMMONED_YET);
+                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED) respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
+                else if (answer == GameMenuResponsesEnum.ABORTED) {
+                    respond(OneRoundGameResponses.ABORTED);
+                    deselectCard(false);
+                }
+                else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+                    System.out.println((String)gameMenuResponse.getObj());
+                    deselectCard(false);
+                }
+            }
+        }
     }
 
     public ArrayList<Phase> getAllowedPhaseForSummonSetChangePositionActiveEffect() {
@@ -338,5 +630,28 @@ public class OneRoundGame {
             System.out.println("phase: battle phase");
         else if (responses.equals(OneRoundGameResponses.END_PHASE))
             System.out.println("phase: end phase");
+        else if (responses.equals(OneRoundGameResponses.SET_SUCCESSFULLY))
+            System.out.println("Card was set successfully");
+        else if (responses.equals(OneRoundGameResponses.PLEASE_SELECT_MONSTER))
+            System.out.println("Selected Card is not monster .. please select monster .");
+        else if (responses.equals(OneRoundGameResponses.CANT_ATTACK_DIRECTLY))
+            System.out.println("You can’t attack the opponent directly");
+        else if (responses.equals(OneRoundGameResponses.NOT_SUMMONED_YET))
+            System.out.println("You haven't summoned this card yet .");
+        else if (responses.equals(OneRoundGameResponses.ABORTED))
+            System.out.println("Action was aborted .");
+        else if (responses.equals(OneRoundGameResponses.CANT_NORMAL_SUMMON))
+            System.out.println("This card can't normal summon !");
+        else unknownError();
+    }
+
+    private static void unknownError() {
+        System.out.println("unknown error occurred !");
+    }
+
+    private int getNumberFromString(String command) {
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, "^[\\D]*(?<cellNumber>[\\d]{1,9})[\\D]*$");
+        if (matcher.find()) return Integer.parseInt(matcher.group("cellNumber"));
+        return 0;
     }
 }
