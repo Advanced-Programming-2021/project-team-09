@@ -12,10 +12,9 @@ public class ScoreboardMenu {
         String command;
         while (true){
             command = scanner.nextLine().trim().toLowerCase();
-            if (command.equals("exit menu")) {
-                System.out.println("Entering main menu");
+            if (command.equals("exit menu"))
                 return;
-            } else if (command.matches("show scoreboard"))
+            else if (command.matches("show scoreboard"))
                 showScoreBoard();
             else if (command.matches("help"))
                 showHelp();

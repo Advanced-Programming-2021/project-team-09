@@ -8,6 +8,7 @@ import model.card.spell_traps.SpellType;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
+import model.game.State;
 import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
 import view.regexes.RegexFunctions;

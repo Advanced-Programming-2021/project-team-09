@@ -1,13 +1,10 @@
 package view.duelMenu;
 
-import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
-import model.exceptions.WinnerException;
 import model.game.MiniGame;
 import org.jetbrains.annotations.NotNull;
-import view.LoginMenu;
 import view.regexes.DuelMenuRegex;
 import view.responses.StartingGameResponses;
 
@@ -92,16 +89,6 @@ public class DuelMenu {
     }
 
     public void singleRoundGame(User player, User rival) {
-        try {
-            new OneRoundGame(player, rival, LoginMenu.getInstance().getScanner()).run();
-        } catch (WinnerException winnerException) {
-            System.out.println(winnerException.getWinner().getUsername()
-                    + " Won the game and the score is :\n"
-                    + winnerException.getWinner().getUsername() + " 1000\n"
-                    + winnerException.getLoser().getUsername() + " 0");
-            GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner()
-                    , winnerException.getLoser());
-        }
     }
 
     public void tripleRoundGame(User player, User rival) {
