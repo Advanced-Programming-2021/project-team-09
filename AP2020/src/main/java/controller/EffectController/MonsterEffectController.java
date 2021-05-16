@@ -119,9 +119,7 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void BeastKingBarbaros(Game game, Card card) throws GameException {
-        ArrayList<Card> hand;
-        if (doesCardBelongsToPlayer(game, card)) hand = game.getPlayerHandCards();
-        else hand = game.getRivalHandCards();
+        ArrayList<Card> hand = getCardsInHand(game,card);
         Board board = getBoard(game, card);
         if (board.isMonsterZoneFull()) {
             CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -173,17 +171,16 @@ public class MonsterEffectController extends EffectController {
 
     public static void Texchanger(Game game, Card card) throws GameException {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
-            Board board;
+            Board board = getBoard(game,card);
             Deck deck = getDeck(game, card);
             ArrayList<Card> cards = getCardsInHand(game, card);
-            if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
-            else board = game.getRivalBoard();
+
             if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
-            else if (!doesHaveCardWithType(MonsterType.CYBERSE, deck))
+            else if (!doesHaveCardWithType(MonsterType.CYBERSE, deck,board.getGraveyard(),cards))
                 CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             else {
                 while (true) {
-                    Card card1 = CardEffectsView.getCardFrom(board, cards);
+                    Card card1 = CardEffectsView.getCardFrom(board.getGraveyard(),deck, cards);
                     if (card1 == null) return;
                     if (card1.isMonster()) {
                         if (((Monster) card1).getMonsterType().equals(MonsterType.CYBERSE)) {
@@ -365,8 +362,12 @@ public class MonsterEffectController extends EffectController {
         monster.setDescription(originalMonster.getDescription());
     }
 
-    static private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
-        for (Card card : deck.getMainDeck().getCards()) {
+    static private boolean doesHaveCardWithType(MonsterType type, Deck deck,Graveyard graveyard,ArrayList<Card> cards) {
+        ArrayList<Card> allCards = new ArrayList<>();
+        allCards.addAll(cards);
+        allCards.addAll(graveyard.getCards());
+        allCards.addAll(deck.getMainDeck().getCards());
+        for (Card card : allCards) {
             if (card.isMonster() && ((Monster) card).getMonsterType().equals(type)) return true;
         }
         return false;
