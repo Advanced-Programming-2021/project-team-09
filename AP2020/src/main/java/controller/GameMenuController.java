@@ -210,12 +210,8 @@ public class GameMenuController {
     }
 
     public static void tribute(Game game, int[] cellNumbers) {
-
-        Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (int i : cellNumbers) {
-            if (tempCells[i].isOccupied()) {
-                sendToGraveYard(game, tempCells[i].getCard());
-            }
+            game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
         }
     }
 
@@ -918,7 +914,6 @@ public class GameMenuController {
                             for (Card spellCard : equippedSpells) {
                                 if (spellCard.equals(spellCell.getCard())) {
                                     sendToGraveYard(game, spellCard);
-                                    game.getPlayerLimits().unEquipMonster(spellCard);
                                     break;
                                 }
                             }
@@ -941,7 +936,6 @@ public class GameMenuController {
                             for (Card spellCard : equippedSpells) {
                                 if (spellCard.equals(spellCell.getCard())) {
                                     sendToGraveYard(game, spellCard);
-                                    game.getRivalLimits().unEquipMonster(spellCard);
                                     break;
                                 }
                             }

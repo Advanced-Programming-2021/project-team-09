@@ -2,7 +2,6 @@
 package model.game;
 
 import controller.DeckMenuController;
-import controller.database.CSVInfoGetter;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -29,22 +28,9 @@ public class Game {
     private boolean canSummonCard;
     private Board playerBoard;
     private Board rivalBoard;
+    private boolean canRivalActiveSpell;
     private Limits playerLimits;
     private Limits rivalLimits;
-
-    public Game() {
-        rivalLP = 0;
-        playerLP = 0;
-        winner = null;
-        playerDeck = null;
-        rivalDeck = null;
-        playerHandCards = null;
-        rivalHandCards = null;
-        playerLimits = null;
-        rivalLimits = null;
-        playerBoard = null;
-        rivalBoard = null;
-    }
 
     public Game(User player, User rival) throws CloneNotSupportedException {
         rivalLP = 8000;
@@ -52,9 +38,9 @@ public class Game {
         winner = null;
         this.player = player;
         this.rival = rival;
-        playerDeck = player.getActiveDeck().clone();
+        playerDeck = (Deck) player.getActiveDeck().clone();
         playerDeck.getMainDeck().shuffle();
-        rivalDeck = rival.getActiveDeck().clone();
+        rivalDeck = (Deck) rival.getActiveDeck().clone();
         rivalDeck.getMainDeck().shuffle();
         playerHandCards = new ArrayList<>();
         rivalHandCards = new ArrayList<>();
@@ -432,87 +418,4 @@ public class Game {
         return roundCounter;
     }
 
-    @Override
-    public Game clone() {
-        Game outputGame;
-        outputGame = new Game();
-        outputGame.setPlayer(this.getPlayer());
-        outputGame.setRival(this.getRival());
-        outputGame.setPlayerLP(this.getPlayerLP());
-        outputGame.setRivalLP(this.getRivalLP());
-        try {
-            outputGame.setPlayerDeck(this.getPlayerDeck().clone());
-            outputGame.setRivalDeck(this.getRivalDeck().clone());
-        } catch (Exception e) {
-            return null;
-        }
-        outputGame.setPlayerHandCards(cloneArraylistOfCards(this.getPlayerHandCards()));
-        outputGame.setRivalHandCards(cloneArraylistOfCards(this.getRivalHandCards()));
-        outputGame.setPlayerBoard(this.getPlayerBoard().clone());
-        outputGame.setRivalBoard(this.getRivalBoard().clone());
-        outputGame.setRoundCounter(this.getRoundCounter());
-        outputGame.setRivalLimits(this.getRivalLimits().cloneLimits(this.getRivalBoard(), outputGame.getRivalBoard()));
-        outputGame.setPlayerLimits(this.getPlayerLimits().cloneLimits(this.getPlayerBoard(), outputGame.getPlayerBoard()));
-        return outputGame;
-    }
-
-    private ArrayList<Card> cloneArraylistOfCards(ArrayList<Card> cards) {
-        ArrayList<Card> outputCards = new ArrayList<>();
-        for (Card card : cards) {
-            outputCards.add(CSVInfoGetter.getCardByName(card.getCardName()));
-        }
-        return outputCards;
-    }
-
-    public void setPlayer(User player) {
-        this.player = player;
-    }
-
-    public void setRival(User rival) {
-        this.rival = rival;
-    }
-
-    public void setPlayerLP(int playerLP) {
-        this.playerLP = playerLP;
-    }
-
-    public void setRivalLP(int rivalLP){
-        this.rivalLP = rivalLP;
-    }
-
-    public void setPlayerDeck(Deck playerDeck) {
-        this.playerDeck = playerDeck;
-    }
-
-    public void setRivalDeck(Deck rivalDeck) {
-        this.rivalDeck = rivalDeck;
-    }
-
-    public void setPlayerHandCards(ArrayList<Card> playerHandCards) {
-        this.playerHandCards = playerHandCards;
-    }
-
-    public void setPlayerBoard(Board playerBoard) {
-        this.playerBoard = playerBoard;
-    }
-
-    public void setRivalBoard(Board rivalBoard) {
-        this.rivalBoard = rivalBoard;
-    }
-
-    public void setRivalHandCards(ArrayList<Card> rivalHandCards) {
-        this.rivalHandCards = rivalHandCards;
-    }
-
-    public void setRoundCounter(int roundCounter) {
-        this.roundCounter = roundCounter;
-    }
-
-    public void setPlayerLimits(Limits playerLimits) {
-        this.playerLimits = playerLimits;
-    }
-
-    public void setRivalLimits(Limits rivalLimits) {
-        this.rivalLimits = rivalLimits;
-    }
 }
