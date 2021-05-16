@@ -99,8 +99,6 @@ public class MonsterEffectsTest {
         }
         Assertions.assertNull(game.getRivalBoard().getMonsterZone(2).getCard());
         Assertions.assertTrue(game.getRivalBoard().getGraveyard().getCards().contains(card1));
-        System.setOut(defaultStream);
-        System.setIn(defaultInputStream);
     }
 
     @Test
@@ -149,9 +147,6 @@ public class MonsterEffectsTest {
             Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(card3));
             Assertions.assertNotNull(game.getPlayerBoard().getMonsterZoneCellByCard(card));
         }
-
-
-
     }
 
     @Test
@@ -193,7 +188,6 @@ public class MonsterEffectsTest {
             Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(card3));
 
         }
-
     }
 
     @Test
@@ -489,11 +483,10 @@ public class MonsterEffectsTest {
                     "1. Face up attack \n" +
                     "2. face up defense\n" +
                     "3. face down defenseYou can type back to cancel ..\n" +
-                    "Please choose a way :",stream.toString());
+                    "Please choose a way :",stream.toString().trim());
+            Assertions.assertEquals("",stream.toString());
 
         }
-
-
     }
     
     @AfterEach
