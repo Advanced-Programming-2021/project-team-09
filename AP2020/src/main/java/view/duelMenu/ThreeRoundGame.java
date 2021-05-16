@@ -1,17 +1,24 @@
 package view.duelMenu;
 
+import controller.GameMenuController;
 import model.User;
 import model.deck.Deck;
+import model.exceptions.WinnerException;
 
 import java.util.Scanner;
 
 public class ThreeRoundGame {
     private User firstUser;
     private User secondUser;
+    private User winner;
+    private User loser;
     private final Scanner scanner;
     private OneRoundGame firstRound;
     private OneRoundGame secondRound;
     private OneRoundGame thirdRound;
+    private WinnerException firstRoundException;
+    private WinnerException secondRoundException;
+    private WinnerException thirdRoundException;
 
     public ThreeRoundGame(User firstUser, User secondUser, Scanner scanner) {
         this.firstUser = firstUser;
@@ -21,32 +28,69 @@ public class ThreeRoundGame {
 
     public void run() {
         firstRound = new OneRoundGame(firstUser, secondUser, scanner);
-        //todo inja bayad winner ro begirim va first va second ro avaz konim!
+        try {
+            firstRound.run();
+        } catch (WinnerException firstRoundException) {
+            this.firstRoundException = firstRoundException;
+        }
         askPlayersIfTheyWantToChangeDeck();
-        secondRound = new OneRoundGame(firstUser, secondUser, scanner);
-        askPlayersIfTheyWantToChangeDeck();
-        thirdRound = new OneRoundGame(firstUser, secondUser, scanner);
+        askPlayersIfTheyWantToBringCardsFromMainToSide();
+        secondRound = new OneRoundGame(firstRoundException.getWinner(), firstRoundException.getLoser(), scanner);
+        try {
+            secondRound.run();
+        } catch (WinnerException secondRoundException) {
+            this.firstRoundException = secondRoundException;
+        }
+        if (checkIfThirdRoundIsNeededOrNot()){
+            askPlayersIfTheyWantToChangeDeck();
+            askPlayersIfTheyWantToBringCardsFromMainToSide();
+            thirdRound = new OneRoundGame(secondRoundException.getWinner(), secondRoundException.getLoser(), scanner);
+            try {
+                thirdRound.run();
+            } catch (WinnerException thirdRoundException) {
+                this.thirdRoundException = thirdRoundException;
+            }
+            declareWinnerAndLoser(true);
+            GameMenuController.cashOut(calculateMaxLP(true),true,winner,loser);
+        }
+        else {
+            declareWinnerAndLoser(false);
+            GameMenuController.cashOut(calculateMaxLP(false),true,winner,loser);
+        }
+    }
+    public void askPlayersIfTheyWantToBringCardsFromMainToSide(){
+        askPlayerToBringCardsFromMainToSide(firstUser);
+        askPlayerToBringCardsFromMainToSide(secondUser);
+    }
+    public void askPlayerToBringCardsFromMainToSide(User user){
+        String command;
+        while (true) {
+            System.out.println("do you want to swap cards "+ user.getNickname()+"?");
+            command = scanner.nextLine();
+            if (command.matches("yes")){
+                swapCard(user);
+            }
+            else if (command.matches("no"))
+                break;
+            else System.out.println("invalid command!");
+        }
+    }
+    public void swapCard(User user){
+        //todo
     }
 
     public void askPlayersIfTheyWantToChangeDeck() {
+        askPlayerToChangeDeck(firstUser);
+        askPlayerToChangeDeck(secondUser);
+    }
+
+    private void askPlayerToChangeDeck(User user) {
         String command;
         while (true) {
-            System.out.println("do you want to change your deck " + firstUser.getNickname() + "?");
+            System.out.println("do you want to change your deck " + user.getNickname() + "?");
             command = scanner.nextLine().trim();
             if (command.matches("yes"))
-                changeDeck(firstUser);
-            else if (command.matches("no"))
-                break;
-            else if (command.matches("next"))
-                break;
-            else
-                System.out.println("invalid command!");
-        }
-        while (true) {
-            System.out.println("do you want to change your deck " + secondUser.getNickname() + "?");
-            command = scanner.nextLine().trim();
-            if (command.matches("yes"))
-                changeDeck(secondUser);
+                changeDeck(user);
             else if (command.matches("no"))
                 break;
             else if (command.matches("next"))
@@ -77,6 +121,29 @@ public class ThreeRoundGame {
                 return;
             } else
                 System.out.println("chose a valid deck!");
+        }
+    }
+    public boolean checkIfThirdRoundIsNeededOrNot(){
+        return !firstRoundException.getWinner().equals(secondRoundException.getWinner());
+    }
+    public void declareWinnerAndLoser(boolean hasThirdRound){
+        if (hasThirdRound){
+            winner = thirdRoundException.getWinner();
+            loser = thirdRoundException.getLoser();
+        }
+        else {
+            winner = firstRoundException.getWinner();
+            loser = firstRoundException.getLoser();
+        }
+    }
+    public int calculateMaxLP(boolean hasThirdRound){
+        if (hasThirdRound){
+            if (thirdRoundException.getWinner().equals(secondRoundException.getWinner()))
+                return Math.max(secondRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
+            return Math.max(firstRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
+        }
+        else {
+            return Math.max(firstRoundException.getWinnerLP(), secondRoundException.getWinnerLP());
         }
     }
 }
