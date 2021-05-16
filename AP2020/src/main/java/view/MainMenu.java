@@ -64,21 +64,25 @@ public class MainMenu {
     }
 
     private void shop(){
+        System.out.println("Now Entering shop ..");
         ShopMenu shopMenu = ShopMenu.getInstance(scanner);
         shopMenu.run();
     }
 
     public void scoreboard(){
+        System.out.println("Now Entering scoreboard menu ..");
         ScoreboardMenu scoreboardMenu = ScoreboardMenu.getInstance(scanner);
         scoreboardMenu.run();
     }
 
     private void profile(){
+        System.out.println("Now Entering profile menu ..");
         ProfileMenu profileMenu = ProfileMenu.getInstance(scanner);
         profileMenu.run();
     }
 
     private void deck(){
+        System.out.println("Now Entering deck menu ..");
         DeckMenu deckMenu = DeckMenu.getInstance(scanner);
         deckMenu.run();
     }
@@ -88,7 +92,7 @@ public class MainMenu {
     }
 
     private void duel(){
-
+        System.out.println("Now Entering duel menu  ..");
     }
 
     private void logout(){
@@ -97,10 +101,9 @@ public class MainMenu {
     }
 
     public void showHelp() {
-        String help = "user logout\n";
+        String help = "logout\n";
         help += "menu show-current\n";
-        help += "menu enter <menu name>\n";
-        help += "menu exit";
+        help += "menu enter <menu name>\nAvailable menus : \n\tduel\n\tshop\n\tscoreboard\n\tdeck\n\tprofile";
         System.out.println(help);
     }
 

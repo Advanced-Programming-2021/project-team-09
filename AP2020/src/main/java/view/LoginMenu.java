@@ -25,7 +25,7 @@ public class LoginMenu {
     public void run() {
         String command;
         while (true) {
-            command = scanner.nextLine().trim().toLowerCase();
+            command = scanner.nextLine().trim();
             if (LoginMenuRegex.doesItLoginCommand(command))
                 login(command);
             else if (LoginMenuRegex.doesItCreateUserCommand(command))
@@ -34,8 +34,7 @@ public class LoginMenu {
                 showHelp();
             else if(command.matches("menu show-current"))
                 respond(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU);
-            else if (command.matches("exit menu"))
-                return;
+            else if (command.matches("exit menu")) return;
             else respond(LoginMenuResponses.INVALID_COMMAND);
         }
 

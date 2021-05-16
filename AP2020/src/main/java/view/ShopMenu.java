@@ -34,9 +34,9 @@ public class ShopMenu {
             else if (command.matches("menu show-current"))
                 respond(ShopMenuResponses.CURRENT_MENU_SHOP_MENU);
             else if (command.matches("menu exit")) {
+                System.out.println("Entering main menu");
                 return;
-            }
-            else respond(ShopMenuResponses.INVALID_COMMAND);
+            } else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
     }
@@ -52,6 +52,8 @@ public class ShopMenu {
             System.out.println("invalid command!");
         else if (response.equals(ShopMenuResponses.CURRENT_MENU_SHOP_MENU))
             System.out.println("you are in shop menu");
+        else if (response.equals(ShopMenuResponses.INVALID_CARD_NUMBER))
+            System.out.println("Invalid card number !");
     }
 
     private void buyCard (String command) {
@@ -69,9 +71,9 @@ public class ShopMenu {
     }
 
     public void showHelp() {
-        String help = "shop buy <card name>\n";
+        String help = "shop buy <card name> (You can also enter card number in the list of card ) ..\n";
         help += "shop show --all\n";
-        help += "menu show-current";
+        help += "menu show-current\n";
         help += "menu exit";
         System.out.println(help);
     }
