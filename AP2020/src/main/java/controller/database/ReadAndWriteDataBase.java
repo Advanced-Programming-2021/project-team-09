@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import model.User;
 import model.card.CardFeatures;
 import model.card.FeatureWrapper;
+import model.deck.Deck;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -84,7 +85,4 @@ public class ReadAndWriteDataBase {
         }
         return wrapper.features;
     }
-
-
-
 }

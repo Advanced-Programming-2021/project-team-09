@@ -40,6 +40,16 @@ public class ShopController {
                 ReadAndWriteDataBase.updateUser(user);
                 return ShopMenuResponses.SUCCESSFUL;
             } else return ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE;
+        } else if (cardName.matches("^[\\d]{1,2}$")) {
+            int cardNumber = Integer.parseInt(cardName);
+            if (cardNumber > 76 || cardNumber < 1) return ShopMenuResponses.INVALID_CARD_NUMBER;
+            String cardNameByCardNumber = CSVInfoGetter.getCardNames().get(cardNumber - 1);
+            if (user.hasEnoughBalance(CSVInfoGetter.getPriceByCardName(cardNameByCardNumber))) {
+                user.addCard(CSVInfoGetter.getCardByName(cardNameByCardNumber));
+                user.decreaseBalance(CSVInfoGetter.getPriceByCardName(cardNameByCardNumber));
+                ReadAndWriteDataBase.updateUser(user);
+                return ShopMenuResponses.SUCCESSFUL;
+            } else return ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE;
         } else return ShopMenuResponses.INVALID_CARD_NAME;
     }
 

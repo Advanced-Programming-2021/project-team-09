@@ -64,10 +64,17 @@ public class CardEffectsView {
         }
     }
 
-    static public Card getCardFrom(Graveyard graveyard, Deck deck,ArrayList<Card> cards) {
+    static public Card getCardFrom(Board board, ArrayList<Card> cards) {
+        ArrayList<Card> temp = new ArrayList<>();
+        Cell[] cells = board.getMonsterZone();
         ArrayList<Card> output = new ArrayList<>(cards);
-        output.addAll(graveyard.getCards());
-        output.addAll(deck.getMainDeck().getCards());
+        output.addAll(board.getGraveyard().getCards());
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].isOccupied()) {
+                temp.add(cells[i].getCard());
+            }
+        }
+        output.addAll(temp);
         return selectCardFromArrayList(output);
     }
 

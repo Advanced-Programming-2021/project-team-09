@@ -207,8 +207,11 @@ public class GameMenuController {
     }
 
     public static void tribute(Game game, int[] cellNumbers) {
+        Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (int i : cellNumbers) {
-            game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+            if (tempCells[i].isOccupied()) {
+                sendToGraveYard(game, tempCells[i].getCard());
+            }
         }
     }
 
@@ -903,7 +906,7 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard() == card) {
+                if (cell.getCard().equals(card)) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
@@ -911,6 +914,7 @@ public class GameMenuController {
                             for (Card spellCard : equippedSpells) {
                                 if (spellCard.equals(spellCell.getCard())) {
                                     sendToGraveYard(game, spellCard);
+                                    game.getPlayerLimits().unEquipMonster(spellCard);
                                     break;
                                 }
                             }
@@ -923,9 +927,8 @@ public class GameMenuController {
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
-            //ToDo duplicate code
             for (Cell cell : cells) {
-                if (cell.getCard() == card) {
+                if (cell.getCard().equals(card)) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
@@ -933,6 +936,7 @@ public class GameMenuController {
                             for (Card spellCard : equippedSpells) {
                                 if (spellCard.equals(spellCell.getCard())) {
                                     sendToGraveYard(game, spellCard);
+                                    game.getRivalLimits().unEquipMonster(spellCard);
                                     break;
                                 }
                             }
