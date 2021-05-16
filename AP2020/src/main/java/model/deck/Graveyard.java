@@ -1,5 +1,8 @@
 package model.deck;
 
+import controller.database.CSVInfoGetter;
+import model.card.Card;
+
 import java.util.ArrayList;
 
 
@@ -22,5 +25,16 @@ public class Graveyard extends PrimaryDeck {
         for (int i = 0; i < cards.size(); i++)
             temp.append((i + 1) + ". " + cards.get(i).getCardName() + ":" + cards.get(i).getDescription());
         return temp.toString();
+    }
+
+    @Override
+    public Graveyard clone() {
+        Graveyard output = new Graveyard();
+        ArrayList<Card> temp = new ArrayList<>();
+        for (Card card : this.getCards()) {
+            temp.add(CSVInfoGetter.getCardByName(card.getCardName()));
+        }
+        output.setCards(temp);
+        return output;
     }
 }

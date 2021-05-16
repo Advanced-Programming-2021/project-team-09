@@ -1,5 +1,6 @@
 package model.game;
 
+import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.deck.Graveyard;
@@ -135,5 +136,42 @@ public class Board {
 
     public Cell getSpellZone(int spellZoneNumber) {
         return spellZone[spellZoneNumber];
+    }
+
+    @Override
+    public Board clone() {
+        Board outputBoard = new Board();
+        outputBoard.setMonsterZone(cloneCells(this.getMonsterZone()));
+        outputBoard.setSpellZone(cloneCells(this.getSpellZone()));
+        outputBoard.setGraveyard(this.graveyard.clone());
+        outputBoard.setFieldZone(this.fieldZone.clone());
+        return outputBoard;
+    }
+
+    private static Cell[] cloneCells(Cell[] cells) {
+        Cell[] outputCells = new Cell[5];
+        for (int i = 0; i < 5; i++) {
+            outputCells[i] = new Cell();
+            if (cells[i].isOccupied()) {
+                outputCells[i] = cells[i].clone();
+            }
+        }
+        return outputCells;
+    }
+
+    public void setMonsterZone(Cell[] monsterZone) {
+        this.monsterZone = monsterZone;
+    }
+
+    public void setSpellZone(Cell[] spellZone) {
+        this.spellZone = spellZone;
+    }
+
+    public void setFieldZone(Cell fieldZone) {
+        this.fieldZone = fieldZone;
+    }
+
+    public void setGraveyard(Graveyard graveyard) {
+        this.graveyard = graveyard;
     }
 }
