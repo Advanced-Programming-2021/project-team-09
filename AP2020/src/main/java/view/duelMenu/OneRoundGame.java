@@ -538,6 +538,7 @@ public class OneRoundGame {
         return currentPhase;
     }
 
+
     public void respond(OneRoundGameResponses responses) {
         if (responses.equals(OneRoundGameResponses.INVALID_COMMAND))
             System.out.println("invalid command!");

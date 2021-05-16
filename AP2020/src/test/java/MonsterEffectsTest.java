@@ -1,18 +1,26 @@
 import controller.EffectController.MonsterEffectController;
+import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.*;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
+import model.card.monster.MonsterCardType;
+import model.card.monster.MonsterEffectType;
+import model.deck.Deck;
+import model.deck.Graveyard;
+import model.game.Board;
 import model.game.EffectLimitations;
 import model.game.Game;
 import model.game.State;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class MonsterEffectsTest {
@@ -302,9 +310,196 @@ public class MonsterEffectsTest {
 
     @Test
     public void testTexChanger() {
+        Board board = game.getPlayerBoard();
+        Graveyard graveyard = board.getGraveyard();
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        Deck deck = game.getPlayerDeck();
+        ByteArrayOutputStream stream = getOutPutStream();
 
+        Card card = CSVInfoGetter.getCardByName("Texchanger");
+        Card card1 = CSVInfoGetter.getCardByName("Texchanger");
+        Card card2 = CSVInfoGetter.getCardByName("Leotron");
+        Card card11 = CSVInfoGetter.getCardByName("Leotron");
+        Card card12 = CSVInfoGetter.getCardByName("Leotron");
+        Card card13 = CSVInfoGetter.getCardByName("Leotron");
+        Card card14 = CSVInfoGetter.getCardByName("Leotron");
+        Card card15 = CSVInfoGetter.getCardByName("Leotron");
+        Card tempCard = CSVInfoGetter.getCardByName("Battle OX");
+        Card tempSpell = CSVInfoGetter.getCardByName("Magnum Shield");
+        Executable executable = () -> MonsterEffectController.Texchanger(game, card);
+        setCommandInInputStream("yes\n" + "yes\n" + "yes\n4\n7\n14\n1");
+        //Not Null test
+        {
+            Assertions.assertNotNull(card);
+            Assertions.assertNotNull(card1);
+            Assertions.assertNotNull(card2);
+            Assertions.assertNotNull(card11);
+            Assertions.assertNotNull(card12);
+            Assertions.assertNotNull(card13);
+            Assertions.assertNotNull(card14);
+            Assertions.assertNotNull(card15);
+            Assertions.assertNotNull(tempCard);
+            Assertions.assertNotNull(tempSpell);
+        }
+        //preparing
+        {
+            ((Monster) card).setMonsterEffectType(MonsterEffectType.TRIGGER);
+            ((Monster) card1).setMonsterEffectType(MonsterEffectType.TRIGGER);
+            ((Monster) card2).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card11).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card12).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card13).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card14).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card15).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) tempCard).setMonsterEffectType(MonsterEffectType.NONE);
+            board.addCardToMonsterZone(card);
+            deck.addCardToMainDeck(tempCard);
+            deck.addCardToMainDeck(tempSpell);
+        }
+
+        //first situation test
+        {
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("do you want to summon a normal cyberse card?\n" +
+                    "You have no monsters !", stream.toString().trim());
+            stream.reset();
+        }
+        //second condition test
+        {
+            board.addCardToMonsterZone(card11);
+            board.addCardToMonsterZone(card12);
+            board.addCardToMonsterZone(card13);
+            board.addCardToMonsterZone(card14);
+            deck.addCardToMainDeck(card1);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("do you want to summon a normal cyberse card?\n" +
+                    "Monster zone is full !", stream.toString().trim());
+            stream.reset();
+        }
+        //third condition test
+        {
+            GameMenuController.sendToGraveYard(game, card11);
+            GameMenuController.sendToGraveYard(game, card12);
+            GameMenuController.sendToGraveYard(game, card13);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("do you want to summon a normal cyberse card?\n" +
+                    "Please select one of the following cards : \n" +
+                    "1 : Leotron\n" +
+                    "2 : Leotron\n" +
+                    "3 : Leotron\n" +
+                    "4 : Command Knight\n" +
+                    "5 : Battle OX\n" +
+                    "6 : Battle OX\n" +
+                    "7 : Magnum Shield\n" +
+                    "8 : Magnum Shield\n" +
+                    "9 : Magnum Shield\n" +
+                    "10 : Advanced Ritual Art\n" +
+                    "11 : Advanced Ritual Art\n" +
+                    "12 : Battle OX\n" +
+                    "13 : Magnum Shield\n" +
+                    "14 : Texchanger\n" +
+                    "Please select a valid type ! \n" +
+                    "Please select one of the following cards : \n" +
+                    "1 : Leotron\n" +
+                    "2 : Leotron\n" +
+                    "3 : Leotron\n" +
+                    "4 : Command Knight\n" +
+                    "5 : Battle OX\n" +
+                    "6 : Battle OX\n" +
+                    "7 : Magnum Shield\n" +
+                    "8 : Magnum Shield\n" +
+                    "9 : Magnum Shield\n" +
+                    "10 : Advanced Ritual Art\n" +
+                    "11 : Advanced Ritual Art\n" +
+                    "12 : Battle OX\n" +
+                    "13 : Magnum Shield\n" +
+                    "14 : Texchanger\n" +
+                    "Please select monster !\n" +
+                    "Please select one of the following cards : \n" +
+                    "1 : Leotron\n" +
+                    "2 : Leotron\n" +
+                    "3 : Leotron\n" +
+                    "4 : Command Knight\n" +
+                    "5 : Battle OX\n" +
+                    "6 : Battle OX\n" +
+                    "7 : Magnum Shield\n" +
+                    "8 : Magnum Shield\n" +
+                    "9 : Magnum Shield\n" +
+                    "10 : Advanced Ritual Art\n" +
+                    "11 : Advanced Ritual Art\n" +
+                    "12 : Battle OX\n" +
+                    "13 : Magnum Shield\n" +
+                    "14 : Texchanger\n" +
+                    "Please select a valid monster !\n" +
+                    "Please select one of the following cards : \n" +
+                    "1 : Leotron\n" +
+                    "2 : Leotron\n" +
+                    "3 : Leotron\n" +
+                    "4 : Command Knight\n" +
+                    "5 : Battle OX\n" +
+                    "6 : Battle OX\n" +
+                    "7 : Magnum Shield\n" +
+                    "8 : Magnum Shield\n" +
+                    "9 : Magnum Shield\n" +
+                    "10 : Advanced Ritual Art\n" +
+                    "11 : Advanced Ritual Art\n" +
+                    "12 : Battle OX\n" +
+                    "13 : Magnum Shield\n" +
+                    "14 : Texchanger", stream.toString().trim());
+        }
+        Assertions.assertNotNull(board.getMonsterZoneCellByCard(card11));
+        Assertions.assertFalse(board.getGraveyard().getCards().contains(card11));
     }
 
+    @Test
+    public void testBeastKingBarbaros() {
+        Board board = game.getPlayerBoard();
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        ByteArrayOutputStream stream = getOutPutStream();
+        Card card = CSVInfoGetter.getCardByName("Beast King Barbaros");
+        Card card11 = CSVInfoGetter.getCardByName("Leotron");
+        Card card12 = CSVInfoGetter.getCardByName("Leotron");
+        Card card13 = CSVInfoGetter.getCardByName("Leotron");
+        Card card14 = CSVInfoGetter.getCardByName("Leotron");
+        Card card15 = CSVInfoGetter.getCardByName("Leotron");
+        cards.add(card);
+        Executable executable = () -> MonsterEffectController.BeastKingBarbaros(game,card);
+        setCommandInInputStream("1\n2\n");
+        {
+            board.addCardToMonsterZone(card11);
+            board.addCardToMonsterZone(card12);
+            board.addCardToMonsterZone(card13);
+            board.addCardToMonsterZone(card14);
+            board.addCardToMonsterZone(card15);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("Monster zone is full !",stream.toString().trim());
+        }
+
+        {
+            board.removeCardFromMonsterZone(card11);
+            board.removeCardFromMonsterZone(card12);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("Monster zone is full !\n" +
+                    "You can summon cards in these ways .. \n" +
+                    "1. Summon normally with 1900 ATK .. \n" +
+                    "2. Summon with 3 tributes ..\n" +
+                    "You can type back to cancel ..\n" +
+                    "Please choose a way :\n" +
+                    "Please choose a card state to summon your card ..\n" +
+                    "1. Face up attack \n" +
+                    "2. face up defense\n" +
+                    "3. face down defenseYou can type back to cancel ..\n" +
+                    "Please choose a way :",stream.toString());
+
+        }
+
+
+    }
+    
+    @AfterEach
+    public void afterEachTest() {
+        resetStreams();
+    }
 
     private ByteArrayOutputStream getOutPutStream() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -314,8 +509,18 @@ public class MonsterEffectsTest {
     }
 
     private void setCommandInInputStream(String command1) {
+        try {
+            System.in.reset();
+        } catch (IOException ignored) {
+        }
         ByteArrayInputStream stream1 = new ByteArrayInputStream(command1.getBytes());
         System.setIn(stream1);
+    }
+
+    private void resetStreams() {
+        System.setIn(defaultInputStream);
+        System.setOut(defaultStream);
+
     }
 
 

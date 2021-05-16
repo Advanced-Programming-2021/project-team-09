@@ -906,7 +906,7 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.getCard() == card) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
@@ -926,8 +926,9 @@ public class GameMenuController {
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
+            //ToDo duplicate code
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.getCard() == card) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
