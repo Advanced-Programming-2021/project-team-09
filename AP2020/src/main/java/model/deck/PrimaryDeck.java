@@ -20,6 +20,7 @@ public abstract class PrimaryDeck {
     @JsonIgnore
     protected String deckName;
 
+
     public boolean hasCapacity(){
         if (cards == null) System.out.println("fik");
         return cards.size() < maxCapacity;
@@ -93,9 +94,7 @@ public abstract class PrimaryDeck {
         if (elementsCount <= 1) return;
         int index1 = 0, index2 = 0;
         Random rand = new Random();
-        for (int i = 0; i < elementsCount*elementsCount; i++){
-            index1 = rand.nextInt(elementsCount);
-            index2 = rand.nextInt(elementsCount);
+        for (int i = 0; i < elementsCount*elementsCount; i ++){
             while(index1 == index2){
                 index1 = rand.nextInt(elementsCount);
                 index2 = rand.nextInt(elementsCount);
@@ -120,8 +119,6 @@ public abstract class PrimaryDeck {
         return cards.size();
     }
 
-    @Override
-    public abstract PrimaryDeck clone();
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;

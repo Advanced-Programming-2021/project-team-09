@@ -31,10 +31,8 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void ManEaterBug(Game game, Card card) {
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) board = game.getRivalBoard();
-        else board = game.getPlayerBoard();
-        if (board.getMonsterZone().length == 0) {
+        Board board = getRivalBoard(game,card);
+        if (board.getNumberOfMonstersInMonsterZone() == 0) {
             CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             return;
         }
@@ -55,22 +53,25 @@ public class MonsterEffectController extends EffectController {
         Board board;
         if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
         else board = game.getRivalBoard();
-        if (board.getMonsterZone().length < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
-        while (true) {
-            int[] cellNumbers = TributeMenu.run(3);
-            if (isCellNumberValid(cellNumbers[0] - 1) &&
-                    isCellNumberValid(cellNumbers[1] - 1) &&
-                    isCellNumberValid(cellNumbers[2] - 1)) { // todo bugs
-                Cell[] cells = new Cell[3];
-                cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
-                cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
-                cells[2] = board.getMonsterZone(cellNumbers[2] - 1);
-                if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
-                    GameMenuController.tribute(game, cellNumbers);
-                    setMonster(game, card, State.FACE_UP_ATTACK);
-                    break;
+        if (board.getNumberOfMonstersInMonsterZone() < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
+        else {
+            while (true) {
+                int[] cellNumbers = TributeMenu.run(3);
+                if (cellNumbers == null) return;
+                if (cellNumbers[0] != cellNumbers[1] &&
+                        cellNumbers[0] != cellNumbers[2] &&
+                        cellNumbers[1] != cellNumbers[2]) {
+                    Cell[] cells = new Cell[3];
+                    cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
+                    cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
+                    cells[2] = board.getMonsterZone(cellNumbers[2] - 1);
+                    if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
+                        GameMenuController.tribute(game, cellNumbers);
+                        setMonster(game, card, State.FACE_UP_ATTACK);
+                        break;
+                    } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
                 } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
-            } else CardEffectsView.respond(CardEffectsResponses.INVALID_CELL_NUMBER);
+            }
         }
     }
 
@@ -118,9 +119,7 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void BeastKingBarbaros(Game game, Card card) throws GameException {
-        ArrayList<Card> hand;
-        if (doesCardBelongsToPlayer(game, card)) hand = game.getPlayerHandCards();
-        else hand = game.getRivalHandCards();
+        ArrayList<Card> hand = getCardsInHand(game,card);
         Board board = getBoard(game, card);
         if (board.isMonsterZoneFull()) {
             CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -172,17 +171,16 @@ public class MonsterEffectController extends EffectController {
 
     public static void Texchanger(Game game, Card card) throws GameException {
         if (CardEffectsView.doYouWantTo("do you want to summon a normal cyberse card?")) {
-            Board board;
+            Board board = getBoard(game,card);
             Deck deck = getDeck(game, card);
             ArrayList<Card> cards = getCardsInHand(game, card);
-            if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
-            else board = game.getRivalBoard();
+
             if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
-            else if (!doesHaveCardWithType(MonsterType.CYBERSE, deck))
+            else if (!doesHaveCardWithType(MonsterType.CYBERSE, deck,board.getGraveyard(),cards))
                 CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
             else {
                 while (true) {
-                    Card card1 = CardEffectsView.getCardFrom(board, cards);
+                    Card card1 = CardEffectsView.getCardFrom(board.getGraveyard(),deck, cards);
                     if (card1 == null) return;
                     if (card1.isMonster()) {
                         if (((Monster) card1).getMonsterType().equals(MonsterType.CYBERSE)) {
@@ -231,6 +229,10 @@ public class MonsterEffectController extends EffectController {
     public static void HeraldofCreation(Game game, Card card) {
         Graveyard graveyard = getBoard(game, card).getGraveyard();
         ArrayList<Card> cards = getCardsInHand(game, card);
+        if (cards.size() == 0) {
+            CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
+            return;
+        }
         mainLoop:
         while (true) {
             int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
@@ -246,6 +248,7 @@ public class MonsterEffectController extends EffectController {
                             cards.remove(removingCard);
                             graveyard.addCard(removingCard);
                             cards.add(monster);
+                            graveyard.getCards().remove(monster);
                             break mainLoop;
                         } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE);
                     } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
@@ -278,17 +281,23 @@ public class MonsterEffectController extends EffectController {
     public static void TheTricky(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        if (board.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+        if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+        else if (cards.size() == 1) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
-            if (cards.size() <= numberOfCardInHand)
-                CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
-            else {
-                if (cards.get(numberOfCardInHand).equals(card))
+            while (true) {
+                int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+                if (cards.size() <= numberOfCardInHand)
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
                 else {
-                    Card toBeRemovedCard = cards.get(numberOfCardInHand);
-                    setMonster(game, toBeRemovedCard, State.FACE_UP_ATTACK);
+                    if (cards.get(numberOfCardInHand).equals(card))
+                        CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                    else {
+                        Card toBeRemovedCard = cards.get(numberOfCardInHand);
+                        cards.remove(toBeRemovedCard);
+                        board.sendToGraveYard(toBeRemovedCard);
+                        setMonster(game, card, State.FACE_UP_ATTACK);
+                        break;
+                    }
                 }
             }
         }
@@ -308,13 +317,23 @@ public class MonsterEffectController extends EffectController {
     }
 
     static protected void setMonster(Game game, Card card, State state) throws GameException {
+        Deck deck = getDeck(game,card);
+        Deck rivalDeck = getRivalDeck(game,card);
         Board board = getBoard(game, card);
+        Board rivalsBoard = getRivalBoard(game,card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        boolean canSummon = game.canSummon();
-        game.summonMonster(card);
+        ArrayList<Card> rivalCards = getRivalsCardsInHand(game,card);
+        if (cards.contains(card)) cards.remove(card);
+        else if (board.getGraveyard().getCards().contains(card)) board.getGraveyard().getCards().remove(card);
+        else if (deck.getMainDeck().getCards().contains(card)) deck.getMainDeck().getCards().remove(card);
+        else if (rivalDeck.getMainDeck().getCards().contains(card)) rivalDeck.getMainDeck().getCards().remove(card);
+        else if (rivalsBoard.getGraveyard().getCards().contains(card)) rivalsBoard.getGraveyard().getCards().remove(card);
+        else if (rivalCards.contains(card)) rivalCards.remove(card);
+
+        board.addCardToMonsterZone(card);
         int cellNumber = getCellNumberOfMonster(game, card);
-        game.getPlayerBoard().getMonsterZone(cellNumber).setState(state);
-        game.setCanSummonCard(canSummon);
+        board.getMonsterZone(cellNumber).setState(state);
+
         if (state.equals(State.FACE_UP_ATTACK)) {
             if (card.getFeatures().contains(CardFeatures.SUMMON_EFFECT) ||
                     card.getFeatures().contains(CardFeatures.SCANNER) ||
@@ -325,6 +344,11 @@ public class MonsterEffectController extends EffectController {
                     //ToDo
                 }
         }
+    }
+
+    private static Deck getRivalDeck(Game game, Card card) {
+        if (doesCardBelongsToPlayer(game,card)) return game.getRivalDeck();
+        else return game.getPlayerDeck();
     }
 
     static private void duplicateMonster(Monster monster, Monster originalMonster) {
@@ -338,8 +362,12 @@ public class MonsterEffectController extends EffectController {
         monster.setDescription(originalMonster.getDescription());
     }
 
-    static private boolean doesHaveCardWithType(MonsterType type, Deck deck) {
-        for (Card card : deck.getMainDeck().getCards()) {
+    static private boolean doesHaveCardWithType(MonsterType type, Deck deck,Graveyard graveyard,ArrayList<Card> cards) {
+        ArrayList<Card> allCards = new ArrayList<>();
+        allCards.addAll(cards);
+        allCards.addAll(graveyard.getCards());
+        allCards.addAll(deck.getMainDeck().getCards());
+        for (Card card : allCards) {
             if (card.isMonster() && ((Monster) card).getMonsterType().equals(type)) return true;
         }
         return false;
