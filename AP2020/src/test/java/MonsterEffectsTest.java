@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.io.*;
 import java.util.HashSet;
 
 public class MonsterEffectsTest {
@@ -117,4 +118,70 @@ public class MonsterEffectsTest {
         Assertions.assertNotNull(game.getPlayerLimits().getLimitations());
         Assertions.assertTrue(game.getPlayerLimits().getLimitations().contains(EffectLimitations.CANT_ACTIVATE_TRAP));
     }
+
+    @Test
+    public void theTricky(){
+        ByteArrayOutputStream stream = getOutPutStream();
+        Card card = CSVInfoGetter.getCardByName("The Tricky");
+        Card card1 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card2 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card3 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card4 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card5 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card6 = CSVInfoGetter.getCardByName("Battle OX");
+        game.addCardToHand(card);
+        Executable executable = () -> MonsterEffectController.TheTricky(game,card);
+        {
+            game.getPlayerBoard().addCardToMonsterZone(card1);
+            game.getPlayerBoard().addCardToMonsterZone(card2);
+            game.getPlayerBoard().addCardToMonsterZone(card3);
+            game.getPlayerBoard().addCardToMonsterZone(card4);
+            game.getPlayerBoard().addCardToMonsterZone(card5);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("Monster zone is full !", stream.toString().trim());
+            stream.reset();
+        }
+        {
+            game.getPlayerBoard().removeCardFromMonsterZone(card5);
+            game.getPlayerBoard().sendToGraveYard(card5);
+            Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(card5));
+            Assertions.assertFalse(game.getRivalBoard().getGraveyard().getCards().contains(card5));
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("You have no cards !",stream.toString().trim());
+            stream.reset();
+        }
+        {
+            game.getPlayerHandCards().add(card6);
+            setCommandInInputStream("9\n1\n2");
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("please select a card number from your hand\n" +
+                    "Please enter a valid number ..\n" +
+                    "Please select a valid number !\n" +
+                    "please select a card number from your hand",stream.toString().trim());
+            Assertions.assertNotNull(game.getPlayerBoard().getMonsterZone(4));;
+            Assertions.assertTrue(game.getPlayerBoard().isMonsterZoneFull());;
+            Assertions.assertFalse(game.getPlayerHandCards().contains(card));
+            Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(card6));
+        }
+    }
+
+    @Test
+    public void testTexChanger() {
+
+    }
+
+
+    private ByteArrayOutputStream getOutPutStream() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(stream);
+        System.setOut(printStream);
+        return stream;
+    }
+
+    private void setCommandInInputStream(String command1) {
+        ByteArrayInputStream stream1 = new ByteArrayInputStream(command1.getBytes());
+        System.setIn(stream1);
+    }
+
+
 }
