@@ -24,9 +24,13 @@ public class ReadAndWriteDataBase {
         } catch (IOException e) {
             return null;
         }
+        ArrayList<Deck> decks = user.getDecks();
+        for (Deck deck : decks) {
+            deck.getMainDeck().setDeckName(deck.getDeckName());
+            deck.getSideDeck().setDeckName(deck.getDeckName());
+        }
         if (user.getActiveDeck() == null) return user;
         else {
-            ArrayList<Deck> decks = user.getDecks();
             Deck activeDeck = user.getActiveDeck();
             for (Deck deck : decks) {
                 if (deck.getDeckName().equals(activeDeck.getDeckName())) {

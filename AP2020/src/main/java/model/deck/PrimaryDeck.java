@@ -71,7 +71,8 @@ public abstract class PrimaryDeck {
         return temp.toString();
     }
 
-    public abstract String toString(String deckName);
+    @Override
+    public abstract String toString();
 
     @JsonIgnore
     public boolean isValid() {

@@ -81,6 +81,8 @@ public class OneRoundGame {
                 surrender();
             else if (command.matches(OneRoundGameRegexes.nextPhase))
                 goToNextPhase();
+            else if (command.equals("help"))
+                showHelp();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
@@ -659,5 +661,25 @@ public class OneRoundGame {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, "^[\\D]*(?<cellNumber>[\\d]{1,9})[\\D]*$");
         if (matcher.find()) return Integer.parseInt(matcher.group("cellNumber"));
         return 0;
+    }
+
+    public void showHelp() {
+        System.out.println("next phase\n" +
+                "show table\n" +
+                "summon\n" +
+                "set\n" +
+                "flip summon\n" +
+                "attack <cell number>\n" +
+                "attack direct\n" +
+                "active effect\n" +
+                "show graveyard\n" +
+                "card show --selected\n" +
+                "surrender\n" +
+                "select --monster <cell number>\n --opponent(optional)" +
+                "select --spell <cell number> --opponent(optional)\n" +
+                "select --field --opponent(optional)\n" +
+                "select --hand <number>\n" +
+                "set --position attack\n" +
+                "set --position defense\n");
     }
 }

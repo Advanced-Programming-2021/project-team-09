@@ -12,7 +12,7 @@ public class ScoreboardMenu {
         String command;
         while (true){
             command = scanner.nextLine().trim().toLowerCase();
-            if (command.equals("exit menu")) {
+            if (command.equals("menu exit")) {
                 System.out.println("Entering main menu");
                 return;
             } else if (command.matches("show scoreboard"))
@@ -40,7 +40,7 @@ public class ScoreboardMenu {
     }
 
     public void showHelp() {
-        String help = "scoreboard show\n";
+        String help = "show scoreboard\n";
         help += "menu show-current\n";
         help += "menu exit";
         System.out.println(help);

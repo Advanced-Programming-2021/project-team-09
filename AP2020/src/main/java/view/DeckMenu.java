@@ -45,7 +45,7 @@ public class DeckMenu {
                 showAllCards();
             else if (DeckMenuRegex.doesItAddCardToMainDeckCommand(command))
                 addCardToMainDeck(command);
-            else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
+            else if (DeckMenuRegex.doesItAddCardToSideDeckCommand(command))
                 addCardToSideDeck(command);
             else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
                 removeCardFromMainDeck(command);

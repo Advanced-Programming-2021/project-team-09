@@ -1,6 +1,7 @@
 package view;
 
 import controller.LoginMenuController;
+import view.duelMenu.DuelMenu;
 import view.regexes.RegexFunctions;
 import view.responses.MainMenuResponses;
 
@@ -93,6 +94,7 @@ public class MainMenu {
 
     private void duel(){
         System.out.println("Now Entering duel menu  ..");
+        DuelMenu.getInstance(LoginMenu.getInstance().getScanner()).run();
     }
 
     private void logout(){

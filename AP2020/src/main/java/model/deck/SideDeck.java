@@ -12,12 +12,14 @@ public class SideDeck extends PrimaryDeck {
         cards = new ArrayList<>();
         this.deckName = deckName;
     }
+
     public SideDeck() {
         maxCapacity = 15;
         minCapacity = 0;
     }
 
-    public String toString(String deckName){
+    @Override
+    public String toString(){
         return "Deck: " + deckName + "\nSide Deck: \n" + PrimaryDeck.sortCardsInDecks(cards);
     }
 

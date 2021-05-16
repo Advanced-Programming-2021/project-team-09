@@ -18,7 +18,8 @@ public class MainDeck extends PrimaryDeck {
         minCapacity = 40;
     }
 
-    public String toString(String deckName) {
+    @Override
+    public String toString() {
         return "Deck: " + deckName + "\nMain Deck: \n" + PrimaryDeck.sortCardsInDecks(cards);
     }
 

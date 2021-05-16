@@ -1,7 +1,6 @@
 package controller;
 
 import controller.EffectController.EffectController;
-import controller.EffectController.MonsterEffectController;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -10,11 +9,9 @@ import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
 import model.exceptions.*;
 import model.game.*;
-import view.CardEffectsView;
 import view.TributeMenu;
 import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
-import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 import java.util.ArrayList;

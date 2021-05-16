@@ -19,52 +19,52 @@ abstract public class DeckMenuRegex {
     public static final String[] SHOW_MAIN_DECK_REGEX = new String[2];
     static {
         SHOW_MAIN_DECK_REGEX[0] = "^deck show --deck-name (?<deckName>\\w+)$";
-        SHOW_MAIN_DECK_REGEX[1] = "^deck show - (?<deckName>\\w+)$";
+        SHOW_MAIN_DECK_REGEX[1] = "^deck show -d (?<deckName>\\w+)$";
     }
     public static final String SHOW_HELP = "^help$";
     private static final String[] ADD_CARD_TO_MAIN_DECK_REGEX = new String[4];
     static {
-        ADD_CARD_TO_MAIN_DECK_REGEX[0] = "^deck add-card --card (?<cardName>[\\w ,\\-]+) --deck (?<deckName>\\w+)$";
-        ADD_CARD_TO_MAIN_DECK_REGEX[1] = "^deck add-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+)$";
-        ADD_CARD_TO_MAIN_DECK_REGEX[2] = "^deck add-card -c (?<cardName>[\\w ,\\-]+) -d (?<deckName>\\w+)$";
-        ADD_CARD_TO_MAIN_DECK_REGEX[3] = "^deck add-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+)$";
+        ADD_CARD_TO_MAIN_DECK_REGEX[0] = "^deck add-card --card (?<cardName>[\\w ,\\-']+) --deck (?<deckName>\\w+)$";
+        ADD_CARD_TO_MAIN_DECK_REGEX[1] = "^deck add-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+)$";
+        ADD_CARD_TO_MAIN_DECK_REGEX[2] = "^deck add-card -c (?<cardName>[\\w ,\\-']+) -d (?<deckName>\\w+)$";
+        ADD_CARD_TO_MAIN_DECK_REGEX[3] = "^deck add-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+)$";
     }
     private static final String[] ADD_CARD_TO_SIDE_DECK_REGEX = new String[12];
     static {
-        ADD_CARD_TO_SIDE_DECK_REGEX[0] =  "^deck add-card --card (?<cardName>[\\w \\-,]+) --deck (?<deckName>\\w+) --side$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[1] =  "^deck add-card --card (?<cardName>[\\w \\-,]+) --side --deck (?<deckName>\\w+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[2] =  "^deck add-card --side --card (?<cardName>[\\w \\-,]+) --deck (?<deckName>\\w+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[3] =  "^deck add-card --side --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[4] =  "^deck add-card --deck (?<deckName>\\w+) --side --card (?<cardName>[\\w \\-,]+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[5] =  "^deck add-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+) --side$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[6] =  "^deck add-card -c (?<cardName>[\\w \\-,]+) -d (?<deckName>\\w+) -s$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[7] =  "^deck add-card -c (?<cardName>[\\w \\-,]+) -s -d (?<deckName>\\w+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[8] =  "^deck add-card -s -c (?<cardName>[\\w \\-,]+) -d (?<deckName>\\w+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[9] =  "^deck add-card -s -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[10] =  "^deck add-card -d (?<deckName>\\w+) -s -c (?<cardName>[\\w \\-,]+)$";
-        ADD_CARD_TO_SIDE_DECK_REGEX[11] =  "^deck add-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+) -s$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[0] =  "^deck add-card --card (?<cardName>[\\w \\-,']+) --deck (?<deckName>\\w+) --side$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[1] =  "^deck add-card --card (?<cardName>[\\w \\-,']+) --side --deck (?<deckName>\\w+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[2] =  "^deck add-card --side --card (?<cardName>[\\w \\-,']+) --deck (?<deckName>\\w+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[3] =  "^deck add-card --side --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[4] =  "^deck add-card --deck (?<deckName>\\w+) --side --card (?<cardName>[\\w \\-,']+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[5] =  "^deck add-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+) --side$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[6] =  "^deck add-card -c (?<cardName>[\\w \\-,']+) -d (?<deckName>\\w+) -s$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[7] =  "^deck add-card -c (?<cardName>[\\w \\-,']+) -s -d (?<deckName>\\w+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[8] =  "^deck add-card -s -c (?<cardName>[\\w \\-,']+) -d (?<deckName>\\w+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[9] =  "^deck add-card -s -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[10] =  "^deck add-card -d (?<deckName>\\w+) -s -c (?<cardName>[\\w \\-,']+)$";
+        ADD_CARD_TO_SIDE_DECK_REGEX[11] =  "^deck add-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+) -s$";
     }
     private static final String[] REMOVE_CARD_FROM_MAIN_DECK_REGEX = new String[4];
     static {
-        REMOVE_CARD_FROM_MAIN_DECK_REGEX[0] = "^deck rm-card --card (?<cardName>[\\w \\-,]+) --deck (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_MAIN_DECK_REGEX[1] = "^deck rm-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+)$";
-        REMOVE_CARD_FROM_MAIN_DECK_REGEX[2] = "^deck rm-card -c (?<cardName>[\\w \\-,]+) -d (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_MAIN_DECK_REGEX[3] = "^deck rm-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+)$";
+        REMOVE_CARD_FROM_MAIN_DECK_REGEX[0] = "^deck rm-card --card (?<cardName>[\\w \\-,']+) --deck (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_MAIN_DECK_REGEX[1] = "^deck rm-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+)$";
+        REMOVE_CARD_FROM_MAIN_DECK_REGEX[2] = "^deck rm-card -c (?<cardName>[\\w \\-,']+) -d (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_MAIN_DECK_REGEX[3] = "^deck rm-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+)$";
     }
     private static final String[] REMOVE_CARD_FROM_SIDE_DECK_REGEX = new String[12];
     static {
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[0] = "^deck rm-card --card (?<cardName>[\\w \\-,]+) --deck (?<deckName>\\w+) --side$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[1] = "^deck rm-card --card (?<cardName>[\\w \\-,]+) --side --deck (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[2] = "^deck rm-card --side --card (?<cardName>[\\w \\-,]+) --deck (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[3] = "^deck rm-card --side --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[4] = "^deck rm-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,]+) --side$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[5] = "^deck rm-card --deck (?<deckName>\\w+) --side --card (?<cardName>[\\w \\-,]+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[6] = "^deck rm-card -c (?<cardName>[\\w \\-,]+) -d (?<deckName>\\w+) -s$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[7] = "^deck rm-card -c (?<cardName>[\\w \\-,]+) -s -d (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[8] = "^deck rm-card -s -c (?<cardName>[\\w \\-,]+) -d (?<deckName>\\w+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[9] = "^deck rm-card -s -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+)$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[10] = "^deck rm-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,]+) -s$";
-        REMOVE_CARD_FROM_SIDE_DECK_REGEX[11] = "^deck rm-card -d (?<deckName>\\w+) -s -c (?<cardName>[\\w \\-,]+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[0] = "^deck rm-card --card (?<cardName>[\\w \\-,']+) --deck (?<deckName>\\w+) --side$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[1] = "^deck rm-card --card (?<cardName>[\\w \\-,']+) --side --deck (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[2] = "^deck rm-card --side --card (?<cardName>[\\w \\-,']+) --deck (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[3] = "^deck rm-card --side --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[4] = "^deck rm-card --deck (?<deckName>\\w+) --card (?<cardName>[\\w \\-,']+) --side$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[5] = "^deck rm-card --deck (?<deckName>\\w+) --side --card (?<cardName>[\\w \\-,']+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[6] = "^deck rm-card -c (?<cardName>[\\w \\-,']+) -d (?<deckName>\\w+) -s$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[7] = "^deck rm-card -c (?<cardName>[\\w \\-,']+) -s -d (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[8] = "^deck rm-card -s -c (?<cardName>[\\w \\-,']+) -d (?<deckName>\\w+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[9] = "^deck rm-card -s -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+)$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[10] = "^deck rm-card -d (?<deckName>\\w+) -c (?<cardName>[\\w \\-,']+) -s$";
+        REMOVE_CARD_FROM_SIDE_DECK_REGEX[11] = "^deck rm-card -d (?<deckName>\\w+) -s -c (?<cardName>[\\w \\-,']+)$";
     }
     private static final String[] SHOW_SIDE_DECK_REGEX = new String[8];
     static {
