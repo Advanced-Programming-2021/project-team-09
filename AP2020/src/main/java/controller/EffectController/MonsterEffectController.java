@@ -284,17 +284,23 @@ public class MonsterEffectController extends EffectController {
     public static void TheTricky(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        if (board.getNumberOfMonstersInMonsterZone() == 0) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+        if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+        else if (cards.size() == 1) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
-            if (cards.size() <= numberOfCardInHand)
-                CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
-            else {
-                if (cards.get(numberOfCardInHand).equals(card))
+            while (true) {
+                int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+                if (cards.size() <= numberOfCardInHand)
                     CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
                 else {
-                    Card toBeRemovedCard = cards.get(numberOfCardInHand);
-                    setMonster(game, toBeRemovedCard, State.FACE_UP_ATTACK);
+                    if (cards.get(numberOfCardInHand).equals(card))
+                        CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                    else {
+                        Card toBeRemovedCard = cards.get(numberOfCardInHand);
+                        cards.remove(toBeRemovedCard);
+                        board.sendToGraveYard(toBeRemovedCard);
+                        setMonster(game, card, State.FACE_UP_ATTACK);
+                        break;
+                    }
                 }
             }
         }
