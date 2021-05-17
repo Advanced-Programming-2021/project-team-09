@@ -47,7 +47,8 @@ public class MainMenu {
                 Method method = MainMenu.class.getDeclaredMethod(menuName);
                 method.invoke(this);
             } catch (Exception e) {
-                respond(MainMenuResponses.INVALID_MENU);
+                if (e instanceof NullPointerException) e.printStackTrace();
+                else respond(MainMenuResponses.INVALID_MENU);
             }
         }
     }
@@ -92,7 +93,11 @@ public class MainMenu {
 
     private void duel() {
         System.out.println("Now Entering duel menu  ..");
-        DuelMenu.getInstance(LoginMenu.getInstance().getScanner()).run();
+        try {
+            DuelMenu.getInstance(LoginMenu.getInstance().getScanner()).run();
+        } catch (CloneNotSupportedException ignored) {
+            System.out.println("problem occurred .. please try again");
+        }
     }
 
     private void logout() {

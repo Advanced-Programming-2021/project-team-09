@@ -29,6 +29,14 @@ public class OneRoundGame {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     protected Game game;
     protected final Scanner scanner;
@@ -126,6 +134,9 @@ public class OneRoundGame {
     }
 
     public void goToStandByPhase() {
+        if (game.getPlayerHandCards().size() > 6) ;
+        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
+        game.changeTurn();
         setCurrentPhase(Phase.STANDBY_PHASE);
         respond(OneRoundGameResponses.STANDBY_PHASE);
     }
@@ -153,8 +164,6 @@ public class OneRoundGame {
     public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
-        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
-        game.changeTurn();
     }
 
     public void surrender() throws WinnerException {
@@ -405,11 +414,16 @@ public class OneRoundGame {
             respond(OneRoundGameResponses.INVALID_SELECTION);
         } else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
             Object obj = gameMenuResponse.getObj();
-            if (!(obj instanceof Card)) {
-                unknownError();
-                return;
+            if (!(obj instanceof Cell)) {
+                if (!(obj instanceof Card)) {
+                    unknownError();
+                    return;
+                } else {
+                    GameMenuController.setCellNumber(getCellNumberFromCard((Card) obj));
+                }
+            } else {
+                GameMenuController.setCellNumber(getCellNumberFromCard(((Cell) obj).getCard()));
             }
-            GameMenuController.setCellNumber(getCellNumberFromCard((Card) obj));
             GameMenuController.setSelectState(selectState);
             respond(OneRoundGameResponses.CARD_SELECTED);
         } else unknownError();
@@ -573,7 +587,7 @@ public class OneRoundGame {
     }
 
     public void showTable() {
-        System.out.println(ANSI_PURPLE + GameMenuController.showTable(game) + ANSI_RESET);
+        System.out.println(ANSI_RED + ANSI_CYAN_BACKGROUND + GameMenuController.showTable(game) + ANSI_RESET);
     }
 
     public void respond(OneRoundGameResponses responses) {
@@ -701,7 +715,7 @@ public class OneRoundGame {
     }
 
     public void showHelp() {
-        System.out.println("summon\n" +
+        System.out.println(ANSI_BLACK_BACKGROUND + ANSI_YELLOW + "summon\n" +
                 "show table\n" +
                 "set\n" +
                 "flip-summon\n" +
@@ -719,7 +733,7 @@ public class OneRoundGame {
                 "next phase\n" +
                 "surrender\n" +
                 "select -d\n" +
-                "show phase");
+                "show phase\n" + ANSI_RESET);
     }
 
     public void showPhase() {

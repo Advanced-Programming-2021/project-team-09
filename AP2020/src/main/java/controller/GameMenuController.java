@@ -69,7 +69,7 @@ public class GameMenuController {
 
     // for easier application of selectSpellAndTrapFromRival & selectMonsterFromRival
     private static GameMenuResponse selectFromRivalArray(int cellNumber, Cell[] cells) {
-        if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.SUCCESSFUL);
+        if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = cells[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
         State tempState = tempCell.getState();
@@ -251,6 +251,8 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
         if (tempCells[attackerCellNumber - 1].getState() == State.FACE_DOWN_DEFENCE)
             return respond(GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET);
+        if (tempCells[attackerCellNumber - 1].isDefence())
+            return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (!tempCells[attackerCellNumber - 1].canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Cell defender = game.getRivalBoard().getMonsterZone(defenderCellNumber - 1);
@@ -266,7 +268,7 @@ public class GameMenuController {
 
 
         try {
-            activeEffect(game,null,game.getRival(),1);
+            activeEffect(game, null, game.getRival(), 1);
         } catch (GameException e) {
             if (e instanceof StopAttackException) {
                 StopAttackException stopAttackException = (StopAttackException) e;
@@ -966,5 +968,9 @@ public class GameMenuController {
                 }
             }
         }
+    }
+
+    public static void sendToGraveYardFromHand(Game game) {
+        game.getPlayerBoard().getGraveyard().addCard(game.getPlayerHandCards().remove(cellNumber - 1));
     }
 }

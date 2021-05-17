@@ -62,6 +62,7 @@ public class Game {
         rivalLimits = new Limits();
         playerBoard = new Board();
         rivalBoard = new Board();
+        canSummonCard = true;
     }
 
     public void changeTurn() {
@@ -96,10 +97,10 @@ public class Game {
 
     private void deleteUsedEnumsForBoard(Board board) {
         for (Cell cell : board.getMonsterZone()) {
-            deleteUsedEnums(cell.getCard());
+            if (cell.isOccupied()) deleteUsedEnums(cell.getCard());
         }
         for (Cell cell : board.getSpellZone()) {
-            deleteUsedEnums(cell.getCard());
+            if (cell.isOccupied()) deleteUsedEnums(cell.getCard());
         }
     }
 
