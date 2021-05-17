@@ -1,7 +1,6 @@
 package controller;
 
 import controller.EffectController.EffectController;
-import controller.EffectController.MonsterEffectController;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
@@ -10,11 +9,9 @@ import model.card.monster.MonsterCardType;
 import model.deck.Graveyard;
 import model.exceptions.*;
 import model.game.*;
-import view.CardEffectsView;
 import view.TributeMenu;
 import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
-import view.responses.CardEffectsResponses;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 import java.util.ArrayList;
@@ -210,7 +207,9 @@ public class GameMenuController {
     }
 
     public static void tribute(Game game, int[] cellNumbers) {
-        for (int i : cellNumbers) game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+        for (int i : cellNumbers) {
+            game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+        }
     }
 
     private static boolean cardHasSummonEffect(ArrayList<CardFeatures> features) {
@@ -904,7 +903,7 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.getCard() == card) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
@@ -924,8 +923,9 @@ public class GameMenuController {
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
+            //ToDo duplicate code
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.getCard() == card) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {

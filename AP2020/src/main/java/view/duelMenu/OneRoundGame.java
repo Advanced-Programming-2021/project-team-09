@@ -8,6 +8,7 @@ import model.card.spell_traps.SpellType;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
+import model.game.State;
 import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
 import view.regexes.RegexFunctions;
@@ -81,6 +82,8 @@ public class OneRoundGame {
                 surrender();
             else if (command.matches(OneRoundGameRegexes.nextPhase))
                 goToNextPhase();
+            else if (command.equals("help"))
+                showHelp();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
@@ -537,6 +540,7 @@ public class OneRoundGame {
         return currentPhase;
     }
 
+
     public void respond(OneRoundGameResponses responses) {
         if (responses.equals(OneRoundGameResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
@@ -659,5 +663,25 @@ public class OneRoundGame {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, "^[\\D]*(?<cellNumber>[\\d]{1,9})[\\D]*$");
         if (matcher.find()) return Integer.parseInt(matcher.group("cellNumber"));
         return 0;
+    }
+
+    public void showHelp() {
+        System.out.println("next phase\n" +
+                "show table\n" +
+                "summon\n" +
+                "set\n" +
+                "flip summon\n" +
+                "attack <cell number>\n" +
+                "attack direct\n" +
+                "active effect\n" +
+                "show graveyard\n" +
+                "card show --selected\n" +
+                "surrender\n" +
+                "select --monster <cell number>\n --opponent(optional)" +
+                "select --spell <cell number> --opponent(optional)\n" +
+                "select --field --opponent(optional)\n" +
+                "select --hand <number>\n" +
+                "set --position attack\n" +
+                "set --position defense\n");
     }
 }

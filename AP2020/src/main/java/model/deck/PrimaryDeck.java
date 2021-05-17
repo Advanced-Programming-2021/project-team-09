@@ -20,6 +20,7 @@ public abstract class PrimaryDeck {
     @JsonIgnore
     protected String deckName;
 
+
     public boolean hasCapacity(){
         if (cards == null) System.out.println("fik");
         return cards.size() < maxCapacity;
@@ -71,7 +72,8 @@ public abstract class PrimaryDeck {
         return temp.toString();
     }
 
-    public abstract String toString(String deckName);
+    @Override
+    public abstract String toString();
 
     @JsonIgnore
     public boolean isValid() {

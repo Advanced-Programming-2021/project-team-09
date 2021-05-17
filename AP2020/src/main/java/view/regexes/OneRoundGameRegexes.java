@@ -12,7 +12,6 @@ abstract public class OneRoundGameRegexes {
     public static final String attackDirect = "attack direct";
     public static final String activeEffect = "active effect";
     public static final String showGraveyard = "show graveyard";
-    public static final String back = "back";
     public static final String showCard = "card show --selected";
     public static final String surrender = "surrender";
 

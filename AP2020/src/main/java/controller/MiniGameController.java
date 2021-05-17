@@ -2,11 +2,13 @@ package controller;
 
 import model.game.MiniGame;
 
+import java.util.Random;
+
 public class MiniGameController {
     public static int dice() {
         int randomNumber;
-        randomNumber = (int) (Math.random() * 1_000_000);
-        return (randomNumber % 6) + 1;
+        Random rand = new Random();
+        return rand.nextInt(6) + 1;
     }
     public static void playDice(MiniGame miniGame) {
         int firstUserDice = dice();
@@ -26,9 +28,8 @@ public class MiniGameController {
             miniGame.setWinner(miniGame.getSecondUser());
     }
     public static String throwCoin() {
-        int randomNumber;
-        randomNumber = (int) (Math.random() * 1_000_000);
-        int headOrTale = randomNumber % 2;
+        Random rand = new Random();
+        int headOrTale = rand.nextInt(2);
         if (headOrTale == 0)
             return "Head";
         else

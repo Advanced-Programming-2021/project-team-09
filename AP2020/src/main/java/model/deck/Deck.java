@@ -120,7 +120,7 @@ public class Deck implements Cloneable{
     @JsonIgnore
     public boolean isValid() {
         HashMap<String, Integer> temp = new HashMap<>();
-        ArrayList<Card> tempCards = mainDeck.cards;
+        ArrayList<Card> tempCards = new ArrayList<>(mainDeck.cards);
         tempCards.addAll(sideDeck.cards);
         for (Card card : tempCards) {
             if (temp.containsKey(card.getCardName())) {

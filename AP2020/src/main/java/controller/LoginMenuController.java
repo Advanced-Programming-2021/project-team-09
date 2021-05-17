@@ -33,6 +33,7 @@ public class LoginMenuController {
     public static boolean isPasswordCorrect(String username, String password) {
         if (doesUsernameExists(username)) {
             User user = ReadAndWriteDataBase.getUser(username + ".json");
+            if (user == null) return false;
             return user.getPassword().equals(password);
         } else return false;
     }
