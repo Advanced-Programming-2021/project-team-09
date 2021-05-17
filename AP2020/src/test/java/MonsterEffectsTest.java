@@ -5,7 +5,6 @@ import controller.database.*;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
-import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterEffectType;
 import model.deck.Deck;
 import model.deck.Graveyard;
@@ -567,8 +566,8 @@ public class MonsterEffectsTest {
                     "please select a card number from your hand\n" +
                     "Please select a valid monster !\n" +
                     "please select a card number from your hand",stream.toString().trim());
-            Assertions.assertEquals("","");
-
+            Assertions.assertNotNull(board.getMonsterZoneCellByCard(card11));
+            Assertions.assertFalse(cards.contains(card11));
         }
 
     }
