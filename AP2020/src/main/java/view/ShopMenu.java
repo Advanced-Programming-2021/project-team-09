@@ -17,13 +17,13 @@ public class ShopMenu {
     }
 
     public static ShopMenu getInstance(Scanner scanner) {
-        if (shopMenu == null)  shopMenu = new ShopMenu(scanner);
+        if (shopMenu == null) shopMenu = new ShopMenu(scanner);
         return shopMenu;
     }
 
-    public void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
             if (ShopMenuRegexes.isItShowAllCards(command))
                 showAllCards();
@@ -35,8 +35,7 @@ public class ShopMenu {
                 respond(ShopMenuResponses.CURRENT_MENU_SHOP_MENU);
             else if (command.matches("menu exit")) {
                 return;
-            }
-            else respond(ShopMenuResponses.INVALID_COMMAND);
+            } else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
     }
@@ -54,7 +53,7 @@ public class ShopMenu {
             System.out.println("you are in shop menu");
     }
 
-    private void buyCard (String command) {
+    private void buyCard(String command) {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, ShopMenuRegexes.shopCardRegex);
         if (matcher.find()) {
             String cardName = matcher.group("cardName");
@@ -63,7 +62,7 @@ public class ShopMenu {
         }
     }
 
-    private void showAllCards () {
+    private void showAllCards() {
         String allCardsInfo = ShopController.showAllCards();
         System.out.println(allCardsInfo);
     }

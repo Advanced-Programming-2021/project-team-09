@@ -81,7 +81,8 @@ public class DuelMenu {
         }
 
     }
-    public void duelNewAi(String command){
+
+    public void duelNewAi(String command) {
         int numberOfRounds = Integer.parseInt(DuelMenuRegex.getRightMatcherForDuelNewAi(command).group("rounds"));
         if (numberOfRounds == 1)
             singlePlayerOneRoundGame();
@@ -93,12 +94,12 @@ public class DuelMenu {
 
     public void singleRoundGame(User player, User rival) {
         try {
-            OneRoundGame oneRoundGame = new OneRoundGame(player,rival,scanner);
+            OneRoundGame oneRoundGame = new OneRoundGame(player, rival, scanner);
             oneRoundGame.run();
         } catch (WinnerException oneRoundGameException) {
             this.oneRoundGameException = oneRoundGameException;
         }
-        GameMenuController.cashOut(oneRoundGameException.getWinnerLP(),false, oneRoundGameException.getWinner(), oneRoundGameException.getLoser());
+        GameMenuController.cashOut(oneRoundGameException.getWinnerLP(), false, oneRoundGameException.getWinner(), oneRoundGameException.getLoser());
     }
 
     public void tripleRoundGame(User player, User rival) throws CloneNotSupportedException {
@@ -109,7 +110,8 @@ public class DuelMenu {
     public void singlePlayerOneRoundGame() {
         //todo
     }
-    public void singlePlayerThreeRoundGame(){
+
+    public void singlePlayerThreeRoundGame() {
         //todo
     }
 

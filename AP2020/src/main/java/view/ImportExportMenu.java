@@ -1,7 +1,7 @@
 package view;
 
 public class ImportExportMenu {
-    public static void run(){
+    public static void run() {
 
     }
 }

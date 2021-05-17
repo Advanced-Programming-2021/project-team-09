@@ -30,7 +30,7 @@ abstract public class LoginMenuRegex {
         loginRegex[3] = "^user login -p (?<password>\\S+) -u (?<username>.+)$";
     }
 
-    public static String[] getLoginRegex(){
+    public static String[] getLoginRegex() {
         return loginRegex;
     }
 
@@ -38,7 +38,7 @@ abstract public class LoginMenuRegex {
         return createUserRegex;
     }
 
-    public static Matcher getRightMatcherForCreateUser(String command){
+    public static Matcher getRightMatcherForCreateUser(String command) {
         String[] createUserRegex = getCreateUserRegex();
         for (String userRegex : createUserRegex) {
             if (command.matches(userRegex)) return RegexFunctions.getCommandMatcher(command, userRegex);
@@ -46,7 +46,7 @@ abstract public class LoginMenuRegex {
         return null;
     }
 
-    public static Matcher getRightMatcherForLogin (String command){
+    public static Matcher getRightMatcherForLogin(String command) {
         String[] loginRegex = getLoginRegex();
         for (String regex : loginRegex) {
             if (command.matches(regex)) return RegexFunctions.getCommandMatcher(command, regex);
@@ -54,7 +54,7 @@ abstract public class LoginMenuRegex {
         return null;
     }
 
-    public static boolean doesItLoginCommand (String command){
+    public static boolean doesItLoginCommand(String command) {
         String[] loginRegex = getLoginRegex();
         for (String regex : loginRegex) {
             if (command.matches(regex)) return true;
@@ -62,7 +62,7 @@ abstract public class LoginMenuRegex {
         return false;
     }
 
-    public static boolean doesItCreateUserCommand (String command){
+    public static boolean doesItCreateUserCommand(String command) {
         String[] createUserRegex = getCreateUserRegex();
         for (String userRegex : createUserRegex) {
             if (command.matches(userRegex)) return true;

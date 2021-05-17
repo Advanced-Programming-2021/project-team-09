@@ -6,6 +6,7 @@ import model.card.Card;
 import model.deck.Deck;
 import model.exceptions.WinnerException;
 import view.regexes.ThreeRoundGameRegexes;
+import view.responses.ThreeRoundGameResponses;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -44,7 +45,7 @@ public class ThreeRoundGame {
         } catch (WinnerException secondRoundException) {
             this.firstRoundException = secondRoundException;
         }
-        if (checkIfThirdRoundIsNeededOrNot()){
+        if (checkIfThirdRoundIsNeededOrNot()) {
             askPlayersIfTheyWantToChangeDeck();
             askPlayersIfTheyWantToBringCardsFromMainToSide();
             thirdRound = new OneRoundGame(secondRoundException.getWinner(), secondRoundException.getLoser(), scanner);
@@ -54,74 +55,76 @@ public class ThreeRoundGame {
                 this.thirdRoundException = thirdRoundException;
             }
             declareWinnerAndLoser(true);
-            GameMenuController.cashOut(calculateMaxLP(true),true,winner,loser);
-        }
-        else {
+            GameMenuController.cashOut(calculateMaxLP(true), true, winner, loser);
+        } else {
             declareWinnerAndLoser(false);
-            GameMenuController.cashOut(calculateMaxLP(false),true,winner,loser);
+            GameMenuController.cashOut(calculateMaxLP(false), true, winner, loser);
         }
     }
+
     public void askPlayersIfTheyWantToBringCardsFromMainToSide() throws CloneNotSupportedException {
         askPlayerToBringCardsFromMainToSide(firstUser);
         askPlayerToBringCardsFromMainToSide(secondUser);
     }
+
     public void askPlayerToBringCardsFromMainToSide(User user) throws CloneNotSupportedException {
         String command;
         while (true) {
-            System.out.println("do you want to swap cards "+ user.getNickname()+"?");
+            System.out.println("do you want to swap cards " + user.getNickname() + "?");
             command = scanner.nextLine();
-            if (command.matches("yes")){
+            if (command.matches("yes")) {
                 Deck userActiveDeck = (Deck) user.getActiveDeck().clone();
                 user.setActiveDeck(userActiveDeck);
                 getSwapCardCommands(user);
-            }
-            else if (command.matches("no"))
+            } else if (command.matches("no"))
                 break;
-            else System.out.println("invalid command!");
+            else
+                respond(ThreeRoundGameResponses.INVALID_COMMAND);
         }
     }
-    public void getSwapCardCommands(User user){
+
+    public void getSwapCardCommands(User user) {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
-            if (ThreeRoundGameRegexes.doesItSwapCardsCommand(command)){
-                swapCard(user ,command);
-            }
-            else if (command.matches("back"))
+            if (ThreeRoundGameRegexes.doesItSwapCardsCommand(command)) {
+                swapCard(user, command);
+            } else if (command.matches("back"))
                 return;
             else
-                System.out.println("invalid command!");
+                respond(ThreeRoundGameResponses.INVALID_COMMAND);
         }
     }
-    public void swapCard(User user ,String command){
+
+    public void swapCard(User user, String command) {
         Matcher matcher = ThreeRoundGameRegexes.getRightMatcherForSwapCards(command);
         assert matcher != null;
         String mainCard = matcher.group("mainCardName");
         String sideCard = matcher.group("sideCardName");
-        if (doesCardWithThisNameExistsInMainDeck(user.getActiveDeck(), mainCard)){
-            if (doesCardWithThisNameExistsInSideDeck(user.getActiveDeck(), sideCard)){
+        if (doesCardWithThisNameExistsInMainDeck(user.getActiveDeck(), mainCard)) {
+            if (doesCardWithThisNameExistsInSideDeck(user.getActiveDeck(), sideCard)) {
                 user.getActiveDeck().getMainDeck().removeCard(mainCard);
                 user.getActiveDeck().getMainDeck().addCard(user.getCardByName(sideCard));
                 user.getActiveDeck().getSideDeck().addCard(user.getCardByName(mainCard));
                 user.getActiveDeck().getSideDeck().removeCard(sideCard);
-            }
-            else
-                System.out.println("card with this name does not exist in side deck!");
-        }
-        else
-            System.out.println("card with this name does not exist in main deck!");
+            } else
+                respond(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_MAIN_DECK);
+        } else
+            respond(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_SIDE_DECK);
 
 
     }
-    public boolean doesCardWithThisNameExistsInMainDeck(Deck deck, String cardName){
-        for (Card card: deck.getMainDeck().getCards()) {
+
+    public boolean doesCardWithThisNameExistsInMainDeck(Deck deck, String cardName) {
+        for (Card card : deck.getMainDeck().getCards()) {
             if (card.getCardName().equals(cardName))
                 return true;
         }
         return false;
     }
-    public boolean doesCardWithThisNameExistsInSideDeck(Deck deck, String cardName){
-        for (Card card: deck.getSideDeck().getCards()) {
+
+    public boolean doesCardWithThisNameExistsInSideDeck(Deck deck, String cardName) {
+        for (Card card : deck.getSideDeck().getCards()) {
             if (card.getCardName().equals(cardName))
                 return true;
         }
@@ -145,7 +148,7 @@ public class ThreeRoundGame {
             else if (command.matches("next"))
                 break;
             else
-                System.out.println("invalid command!");
+                respond(ThreeRoundGameResponses.INVALID_COMMAND);
         }
     }
 
@@ -164,35 +167,49 @@ public class ThreeRoundGame {
             if (command.matches("back"))
                 return;
             else if (user.getDeckByName(command) == null)
-                System.out.println("you don't have deck with this name!");
+                respond(ThreeRoundGameResponses.YOU_DONT_HAVE_DECK_WITH_THIS_NAME);
             else if (user.getDeckByName(command).isValid()) {
                 user.setActiveDeck(user.getDeckByName(command));
                 return;
             } else
-                System.out.println("chose a valid deck!");
+                respond(ThreeRoundGameResponses.CHOSE_A_VALID_DECK);
         }
     }
-    public boolean checkIfThirdRoundIsNeededOrNot(){
+
+    public boolean checkIfThirdRoundIsNeededOrNot() {
         return !firstRoundException.getWinner().equals(secondRoundException.getWinner());
     }
-    public void declareWinnerAndLoser(boolean hasThirdRound){
-        if (hasThirdRound){
+
+    public void declareWinnerAndLoser(boolean hasThirdRound) {
+        if (hasThirdRound) {
             winner = thirdRoundException.getWinner();
             loser = thirdRoundException.getLoser();
-        }
-        else {
+        } else {
             winner = firstRoundException.getWinner();
             loser = firstRoundException.getLoser();
         }
     }
-    public int calculateMaxLP(boolean hasThirdRound){
-        if (hasThirdRound){
+
+    public int calculateMaxLP(boolean hasThirdRound) {
+        if (hasThirdRound) {
             if (thirdRoundException.getWinner().equals(secondRoundException.getWinner()))
                 return Math.max(secondRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
             return Math.max(firstRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
-        }
-        else {
+        } else {
             return Math.max(firstRoundException.getWinnerLP(), secondRoundException.getWinnerLP());
         }
+    }
+
+    public void respond(ThreeRoundGameResponses responses) {
+        if (responses.equals(ThreeRoundGameResponses.INVALID_COMMAND))
+            System.out.println("invalid command!");
+        else if (responses.equals(ThreeRoundGameResponses.CHOSE_A_VALID_DECK))
+            System.out.println("chose a valid deck");
+        else if (responses.equals(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_MAIN_DECK))
+            System.out.println("card with this name does not exist in main deck");
+        else if (responses.equals(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_SIDE_DECK))
+            System.out.println("card with this name does not exist in side deck");
+        else if (responses.equals(ThreeRoundGameResponses.YOU_DONT_HAVE_DECK_WITH_THIS_NAME))
+            System.out.println("you don't have deck with this name");
     }
 }

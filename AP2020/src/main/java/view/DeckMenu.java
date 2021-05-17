@@ -95,7 +95,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.addCardToMainDeck( deckName,cardName);
+            DeckMenuResponses response = DeckMenuController.addCardToMainDeck(deckName, cardName);
             respond(response);
         }
     }
@@ -115,7 +115,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(deckName,cardName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(deckName, cardName);
             respond(response);
         }
     }
@@ -125,7 +125,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(deckName,cardName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(deckName, cardName);
             respond(response);
         }
     }
