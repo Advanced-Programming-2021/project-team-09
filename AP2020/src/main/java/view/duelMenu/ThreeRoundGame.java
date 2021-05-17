@@ -2,10 +2,13 @@ package view.duelMenu;
 
 import controller.GameMenuController;
 import model.User;
+import model.card.Card;
 import model.deck.Deck;
 import model.exceptions.WinnerException;
+import view.regexes.ThreeRoundGameRegexes;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class ThreeRoundGame {
     private User firstUser;
@@ -26,7 +29,7 @@ public class ThreeRoundGame {
         this.scanner = scanner;
     }
 
-    public void run() {
+    public void run() throws CloneNotSupportedException {
         firstRound = new OneRoundGame(firstUser, secondUser, scanner);
         try {
             firstRound.run();
@@ -58,25 +61,71 @@ public class ThreeRoundGame {
             GameMenuController.cashOut(calculateMaxLP(false),true,winner,loser);
         }
     }
-    public void askPlayersIfTheyWantToBringCardsFromMainToSide(){
+    public void askPlayersIfTheyWantToBringCardsFromMainToSide() throws CloneNotSupportedException {
         askPlayerToBringCardsFromMainToSide(firstUser);
         askPlayerToBringCardsFromMainToSide(secondUser);
     }
-    public void askPlayerToBringCardsFromMainToSide(User user){
+    public void askPlayerToBringCardsFromMainToSide(User user) throws CloneNotSupportedException {
         String command;
         while (true) {
             System.out.println("do you want to swap cards "+ user.getNickname()+"?");
             command = scanner.nextLine();
             if (command.matches("yes")){
-                swapCard(user);
+                Deck userActiveDeck = (Deck) user.getActiveDeck().clone();
+                user.setActiveDeck(userActiveDeck);
+                getSwapCardCommands(user);
             }
             else if (command.matches("no"))
                 break;
             else System.out.println("invalid command!");
         }
     }
-    public void swapCard(User user){
-        //todo
+    public void getSwapCardCommands(User user){
+        String command;
+        while (true){
+            command = scanner.nextLine().trim();
+            if (ThreeRoundGameRegexes.doesItSwapCardsCommand(command)){
+                swapCard(user ,command);
+            }
+            else if (command.matches("back"))
+                return;
+            else
+                System.out.println("invalid command!");
+        }
+    }
+    public void swapCard(User user ,String command){
+        Matcher matcher = ThreeRoundGameRegexes.getRightMatcherForSwapCards(command);
+        assert matcher != null;
+        String mainCard = matcher.group("mainCardName");
+        String sideCard = matcher.group("sideCardName");
+        if (doesCardWithThisNameExistsInMainDeck(user.getActiveDeck(), mainCard)){
+            if (doesCardWithThisNameExistsInSideDeck(user.getActiveDeck(), sideCard)){
+                user.getActiveDeck().getMainDeck().removeCard(mainCard);
+                user.getActiveDeck().getMainDeck().addCard(user.getCardByName(sideCard));
+                user.getActiveDeck().getSideDeck().addCard(user.getCardByName(mainCard));
+                user.getActiveDeck().getSideDeck().removeCard(sideCard);
+            }
+            else
+                System.out.println("card with this name does not exist in side deck!");
+        }
+        else
+            System.out.println("card with this name does not exist in main deck!");
+
+
+    }
+    public boolean doesCardWithThisNameExistsInMainDeck(Deck deck, String cardName){
+        for (Card card: deck.getMainDeck().getCards()) {
+            if (card.getCardName().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+    public boolean doesCardWithThisNameExistsInSideDeck(Deck deck, String cardName){
+        for (Card card: deck.getSideDeck().getCards()) {
+            if (card.getCardName().equals(cardName))
+                return true;
+        }
+        return false;
     }
 
     public void askPlayersIfTheyWantToChangeDeck() {

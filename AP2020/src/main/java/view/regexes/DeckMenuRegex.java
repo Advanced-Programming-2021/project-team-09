@@ -94,71 +94,75 @@ abstract public class DeckMenuRegex {
     }
     public static boolean doesItAddCardToMainDeckCommand(String command){
         String[] addCardToMainDeckRegex = getAddCardToMainDeck();
-        for (int i = 0; i < addCardToMainDeckRegex.length; i++) {
-            if (command.matches(addCardToMainDeckRegex[i])) return true;
+        for (String cardToMainDeckRegex : addCardToMainDeckRegex) {
+            if (command.matches(cardToMainDeckRegex)) return true;
         }
         return false;
     }
     public static boolean doesItAddCardToSideDeckCommand(String command){
         String[] addCardToSideDeckRegex = getAddCardToSideDeck();
-        for (int i = 0; i < addCardToSideDeckRegex.length; i++) {
-            if (command.matches(addCardToSideDeckRegex[i])) return true;
+        for (String cardToSideDeckRegex : addCardToSideDeckRegex) {
+            if (command.matches(cardToSideDeckRegex)) return true;
         }
         return false;
     }
     public static boolean doesItRemoveCardFromMainDeckCommand(String command){
         String[] removeCardFromMainDeckRegex = getRemoveCardFromMainDeck();
-        for (int i = 0; i < removeCardFromMainDeckRegex.length; i++) {
-            if (command.matches(removeCardFromMainDeckRegex[i])) return true;
+        for (String cardFromMainDeckRegex : removeCardFromMainDeckRegex) {
+            if (command.matches(cardFromMainDeckRegex)) return true;
         }
         return false;
     }
     public static boolean doesItRemoveCardFromSideDeckCommand(String command){
         String[] removeCardFromSideDeckRegex = getRemoveCardFromSideDeck();
-        for (int i = 0; i < removeCardFromSideDeckRegex.length; i++) {
-            if (command.matches(removeCardFromSideDeckRegex[i])) return true;
+        for (String cardFromSideDeckRegex : removeCardFromSideDeckRegex) {
+            if (command.matches(cardFromSideDeckRegex)) return true;
         }
         return false;
     }
     public static boolean doesItShowSideDeckCommand(String command){
         String[] showSideDeckRegex = getShowSideDeck();
-        for (int i = 0; i < showSideDeckRegex.length; i++) {
-            if (command.matches(showSideDeckRegex[i])) return true;
+        for (String sideDeckRegex : showSideDeckRegex) {
+            if (command.matches(sideDeckRegex)) return true;
         }
         return false;
     }
     public static Matcher getRightMatcherForAddCardToMainDeck(String command){
         String[] addCardToMainDeckRegex = getAddCardToMainDeck();
-        for (int i = 0; i < addCardToMainDeckRegex.length; i++) {
-            if (command.matches(addCardToMainDeckRegex[i])) return RegexFunctions.getCommandMatcher(command, addCardToMainDeckRegex[i]);
+        for (String cardToMainDeckRegex : addCardToMainDeckRegex) {
+            if (command.matches(cardToMainDeckRegex))
+                return RegexFunctions.getCommandMatcher(command, cardToMainDeckRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForAddCardToSideDeck(String command){
         String[] addCardToSideDeckRegex = getAddCardToSideDeck();
-        for (int i = 0; i < addCardToSideDeckRegex.length; i++) {
-            if (command.matches(addCardToSideDeckRegex[i])) return RegexFunctions.getCommandMatcher(command, addCardToSideDeckRegex[i]);
+        for (String cardToSideDeckRegex : addCardToSideDeckRegex) {
+            if (command.matches(cardToSideDeckRegex))
+                return RegexFunctions.getCommandMatcher(command, cardToSideDeckRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForRemoveCardFromMainDeck(String command){
         String[] removeCardFromMainDeckRegex = getAddCardToMainDeck();
-        for (int i = 0; i < removeCardFromMainDeckRegex.length; i++) {
-            if (command.matches(removeCardFromMainDeckRegex[i])) return RegexFunctions.getCommandMatcher(command, removeCardFromMainDeckRegex[i]);
+        for (String cardFromMainDeckRegex : removeCardFromMainDeckRegex) {
+            if (command.matches(cardFromMainDeckRegex))
+                return RegexFunctions.getCommandMatcher(command, cardFromMainDeckRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForRemoveCardFromSideDeck(String command){
         String[] removeCardFromSideDeckRegex = getRemoveCardFromSideDeck();
-        for (int i = 0; i < removeCardFromSideDeckRegex.length; i++) {
-            if (command.matches(removeCardFromSideDeckRegex[i])) return RegexFunctions.getCommandMatcher(command, removeCardFromSideDeckRegex[i]);
+        for (String cardFromSideDeckRegex : removeCardFromSideDeckRegex) {
+            if (command.matches(cardFromSideDeckRegex))
+                return RegexFunctions.getCommandMatcher(command, cardFromSideDeckRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForShowSideDeck(String command){
         String[] showSideDeckRegex = getShowSideDeck();
-        for (int i = 0; i < showSideDeckRegex.length; i++) {
-            if (command.matches(showSideDeckRegex[i])) return RegexFunctions.getCommandMatcher(command, showSideDeckRegex[i]);
+        for (String sideDeckRegex : showSideDeckRegex) {
+            if (command.matches(sideDeckRegex)) return RegexFunctions.getCommandMatcher(command, sideDeckRegex);
         }
         return null;
     }

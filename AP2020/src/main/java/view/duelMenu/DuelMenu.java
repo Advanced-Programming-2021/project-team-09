@@ -1,8 +1,10 @@
 package view.duelMenu;
 
+import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
+import model.exceptions.WinnerException;
 import model.game.MiniGame;
 import org.jetbrains.annotations.NotNull;
 import view.regexes.DuelMenuRegex;
@@ -15,6 +17,7 @@ import java.util.regex.Matcher;
 public class DuelMenu {
     private final Scanner scanner;
     private static DuelMenu duelMenu;
+    private WinnerException oneRoundGameException;
 
     private DuelMenu(Scanner scanner) {
         this.scanner = scanner;
@@ -25,7 +28,7 @@ public class DuelMenu {
         return duelMenu;
     }
 
-    public void run() {
+    public void run() throws CloneNotSupportedException {
         String command;
         while (true) {
             command = scanner.nextLine().trim();
@@ -43,7 +46,7 @@ public class DuelMenu {
         }
     }
 
-    private void duelNewPlayer(String command) {
+    private void duelNewPlayer(String command) throws CloneNotSupportedException {
         HashMap<String, String> data = parseDuelNewPlayerData(command);
         String username = data.get("username");
         String rounds = data.get("rounds");
@@ -89,10 +92,18 @@ public class DuelMenu {
     }
 
     public void singleRoundGame(User player, User rival) {
+        try {
+            OneRoundGame oneRoundGame = new OneRoundGame(player,rival,scanner);
+            oneRoundGame.run();
+        } catch (WinnerException oneRoundGameException) {
+            this.oneRoundGameException = oneRoundGameException;
+        }
+        GameMenuController.cashOut(oneRoundGameException.getWinnerLP(),false, oneRoundGameException.getWinner(), oneRoundGameException.getLoser());
     }
 
-    public void tripleRoundGame(User player, User rival) {
-        //todo
+    public void tripleRoundGame(User player, User rival) throws CloneNotSupportedException {
+        ThreeRoundGame threeRoundGame = new ThreeRoundGame(player, rival, scanner);
+        threeRoundGame.run();
     }
 
     public void singlePlayerOneRoundGame() {
