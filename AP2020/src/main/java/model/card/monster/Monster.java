@@ -21,22 +21,7 @@ public class Monster extends Card {
     private Attribute attribute;
 
     public Monster(String cardName) {
-        ArrayList<String> temp = CSVInfoGetter.monsterReadFromCSV(cardName);
-        if (temp == null || temp.size() != 7) {
-            return;
-        }
-        level = Integer.parseInt(temp.get(0));
-        attribute = CSVInfoGetter.getAttribute(temp.get(1));
-        monsterType = CSVInfoGetter.getMonsterType(temp.get(2));
-        monsterCardType = CSVInfoGetter.getMonsterCardType(temp.get(3));
-        attack = Integer.parseInt(temp.get(4));
-        defense = Integer.parseInt(temp.get(5));
-        permanentAttack = attack;
-        permanentDefense = defense;
-        description = temp.get(6);
-        this.cardName = cardName;
-        this.cardType = CardType.MONSTER;
-        features = new ArrayList<>();
+        setAttributesWithName(cardName);
     }
 
     public Monster() {
@@ -184,6 +169,7 @@ public class Monster extends Card {
         description = temp.get(6);
         this.cardName = cardName;
         this.cardType = CardType.MONSTER;
+        this.features = new ArrayList<>();
         this.features.addAll(ReadAndWriteDataBase.getCardFeaturesByName(cardName));
     }
 }

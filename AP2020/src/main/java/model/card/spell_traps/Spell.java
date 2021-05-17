@@ -16,14 +16,7 @@ public class Spell extends Card {
     private Limitation limit;
 
     public Spell(String cardName) {
-        ArrayList<String> temp = CSVInfoGetter.trapAndSpellReadFromCSV(cardName);
-        if (temp == null || temp.size() != 4) return;
-        spellType = CSVInfoGetter.getSpellType(temp.get(1));
-        this.cardName = cardName;
-        description = temp.get(2);
-        limit = CSVInfoGetter.getLimitation(temp.get(3));
-        cardType = CardType.SPELL;
-        features = new ArrayList<>();
+        setAttributesByName(cardName);
     }
 
     public Spell() {
@@ -64,6 +57,7 @@ public class Spell extends Card {
         description = temp.get(2);
         limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
+        this.features = new ArrayList<>();
         this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
     }
 }

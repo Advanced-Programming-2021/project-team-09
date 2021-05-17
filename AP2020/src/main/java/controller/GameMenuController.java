@@ -129,9 +129,7 @@ public class GameMenuController {
             if (!game.canSummon()) return respond(GameMenuResponsesEnum.ALREADY_SUMMONED);
             if (!canNormalSummon(card.getFeatures())) return respond(GameMenuResponsesEnum.CANT_NORMAL_SUMMON);
             if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
-            if (cardHasScannerEffect(card.getFeatures())) {
-                return scannerController(game, card);
-            }
+            if (cardHasScannerEffect(card.getFeatures())) return scannerController(game, card);
             if (cardHasCalculatorEffect(card.getFeatures())) {
                 return specialSummon(game, card);
             }
