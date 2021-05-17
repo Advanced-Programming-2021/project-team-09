@@ -152,9 +152,7 @@ public class Monster extends Card {
     public void setPermanentDefense(int permanentDefense) {
         this.permanentDefense = permanentDefense;
     }
-
-
-
+	
     public void setAttributesWithName(String cardName) {
         ArrayList<String> temp = CSVInfoGetter.monsterReadFromCSV(cardName);
         if (temp == null || temp.size() != 7) {

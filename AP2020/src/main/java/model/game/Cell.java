@@ -1,5 +1,6 @@
 package model.game;
 
+import controller.database.CSVInfoGetter;
 import model.card.Card;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,6 +92,22 @@ public class Cell {
         return canAttack;
     }
 
+    public void setRoundCounter(int roundCounter) {
+        this.roundCounter = roundCounter;
+    }
 
+    @Override
+    public Cell clone() {
+        Cell temp = new Cell();
+        if (this.isOccupied()) {
+            Card tempCard = CSVInfoGetter.getCardByName(this.getCard().getCardName());
+            if (tempCard == null) return temp;
+            temp.addCard(tempCard);
+            temp.setState(this.getState());
+            temp.setChangedPosition(this.isChangedPosition());
+            temp.setRoundCounter(this.getRoundCounter());
+        }
+        return temp;
+    }
 
 }
