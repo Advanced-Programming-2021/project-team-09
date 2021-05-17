@@ -101,26 +101,26 @@ public class CardEffectsView {
         return true;
     }
 
-    static public String getCardName(){
+    static public String getCardName() {
         System.out.println("Please enter a card name .. Available card names :");
         ArrayList<String> names = CSVInfoGetter.getCardNames();
         for (String s : names) System.out.println(s);
         return LoginMenu.getInstance().getScanner().nextLine();
     }
-	
+
     static public int getNumberOfCardInHand(ArrayList<Card> cards) {
-		System.out.println("please select a card number from your hand");
-		Scanner scanner = LoginMenu.getInstance().getScanner();
-		String command;
-		while (true) {
-		    command = scanner.nextLine().trim();
-		    if (command.matches("^[\\d]{1,2}$")) {
-		        int temp = Integer.parseInt(command);
-		        if (!(temp < 1 || temp > cards.size())) {
-		            return temp;
+        System.out.println("please select a card number from your hand");
+        Scanner scanner = LoginMenu.getInstance().getScanner();
+        String command;
+        while (true) {
+            command = scanner.nextLine().trim();
+            if (command.matches("^[\\d]{1,2}$")) {
+                int temp = Integer.parseInt(command);
+                if (!(temp < 1 || temp > cards.size())) {
+                    return temp;
                 }
             }
-		    System.out.println("Please enter a valid number ..");
+            System.out.println("Please enter a valid number ..");
         }
     }
 
@@ -151,7 +151,7 @@ public class CardEffectsView {
                 String[] stringArray = command.split(" ");
                 for (String s : stringArray) temp.add(Integer.parseInt(s));
                 int[] output = new int[temp.size()];
-                for (int i = 0 ;i < temp.size(); i++) {
+                for (int i = 0; i < temp.size(); i++) {
                     output[i] = temp.get(i);
                 }
                 return output;
@@ -175,7 +175,7 @@ public class CardEffectsView {
         return getCardFromList(deck.getMainDeck().getCards());
     }
 
-    private static  Card getCardFromList(ArrayList<Card> cards) {
+    private static Card getCardFromList(ArrayList<Card> cards) {
         if (cards.size() == 0) return null;
         Scanner scanner = LoginMenu.getInstance().getScanner();
         while (true) {
@@ -184,7 +184,7 @@ public class CardEffectsView {
                 System.out.println((i + 1) + " : " + cards.get(i).getCardName());
             }
             String command = scanner.nextLine().trim();
-            if (command.matches("^[\\d]{1,2}$")){
+            if (command.matches("^[\\d]{1,2}$")) {
                 int temp = Integer.parseInt(command);
                 if (temp >= 1 && temp <= cards.size()) return cards.get(temp - 1);
             }
@@ -214,7 +214,7 @@ public class CardEffectsView {
                     "You can type back to cancel ..\nPlease choose a way :");
             String command = scanner.nextLine().trim();
             if (command.equals("1")) return HowToSummon.SPECIAL_NORMAL_TYPE1;
-            if (command.equals("2")) return  HowToSummon.SPECIAL_NORMAL_TYPE2;
+            if (command.equals("2")) return HowToSummon.SPECIAL_NORMAL_TYPE2;
             if (command.equals("back")) return HowToSummon.BACK;
             System.out.println("Invalid command ..");
         }
@@ -227,7 +227,7 @@ public class CardEffectsView {
                     "You can type back to cancel ..\nPlease choose a way :");
             String command = scanner.nextLine().trim();
             if (command.equals("1")) return State.FACE_UP_ATTACK;
-            if (command.equals("2")) return  State.FACE_UP_DEFENCE;
+            if (command.equals("2")) return State.FACE_UP_DEFENCE;
             if (command.equals("3")) return State.FACE_DOWN_DEFENCE;
             System.out.println("Invalid command ..");
         }

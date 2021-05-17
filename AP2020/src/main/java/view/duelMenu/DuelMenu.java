@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 public class DuelMenu {
     private final Scanner scanner;
     private static DuelMenu duelMenu;
+    private WinnerException oneRoundGameException;
 
     private DuelMenu(Scanner scanner) {
         this.scanner = scanner;
@@ -28,7 +29,7 @@ public class DuelMenu {
         return duelMenu;
     }
 
-    public void run() {
+    public void run() throws CloneNotSupportedException {
         String command;
         while (true) {
             command = scanner.nextLine().trim();
@@ -46,7 +47,7 @@ public class DuelMenu {
         }
     }
 
-    private void duelNewPlayer(String command) {
+    private void duelNewPlayer(String command) throws CloneNotSupportedException {
         HashMap<String, String> data = parseDuelNewPlayerData(command);
         String username = data.get("username");
         String rounds = data.get("rounds");
@@ -81,7 +82,8 @@ public class DuelMenu {
         }
 
     }
-    public void duelNewAi(String command){
+
+    public void duelNewAi(String command) {
         int numberOfRounds = Integer.parseInt(DuelMenuRegex.getRightMatcherForDuelNewAi(command).group("rounds"));
         if (numberOfRounds == 1)
             singlePlayerOneRoundGame();
@@ -104,14 +106,16 @@ public class DuelMenu {
         }
     }
 
-    public void tripleRoundGame(User player, User rival) {
-        //todo
+    public void tripleRoundGame(User player, User rival) throws CloneNotSupportedException {
+        ThreeRoundGame threeRoundGame = new ThreeRoundGame(player, rival, scanner);
+        threeRoundGame.run();
     }
 
     public void singlePlayerOneRoundGame() {
         //todo
     }
-    public void singlePlayerThreeRoundGame(){
+
+    public void singlePlayerThreeRoundGame() {
         //todo
     }
 

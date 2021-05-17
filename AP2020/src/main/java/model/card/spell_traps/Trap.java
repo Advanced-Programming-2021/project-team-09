@@ -8,7 +8,8 @@ import model.card.Card;
 import model.card.CardType;
 
 import java.util.ArrayList;
-@JsonIgnoreProperties({"description","cardType","cardID","trapType","limit"})
+
+@JsonIgnoreProperties({"description", "cardType", "cardID", "trapType", "limit"})
 public class Trap extends Card {
     private TrapType trapType;
     private Limitation limit;
@@ -23,17 +24,17 @@ public class Trap extends Card {
         cardType = CardType.TRAP;
     }
 
-    public Trap(){
+    public Trap() {
 
     }
 
     @JsonIgnore
-    public Limitation getLimit(){
+    public Limitation getLimit() {
         return this.limit;
     }
 
     @JsonIgnore
-    public TrapType getTrapType(){
+    public TrapType getTrapType() {
         return this.trapType;
     }
 
@@ -54,7 +55,7 @@ public class Trap extends Card {
         cardType = CardType.TRAP;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder temp = new StringBuilder();
         temp.append("Name: " + cardName + "\n");
         temp.append("Trap\n");

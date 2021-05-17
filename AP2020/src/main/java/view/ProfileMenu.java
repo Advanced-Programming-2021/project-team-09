@@ -25,7 +25,7 @@ public class ProfileMenu {
 
 
     public void changePassword(String command) {
-        HashMap<String,String> passwords = getOldAndNewPassword(command);
+        HashMap<String, String> passwords = getOldAndNewPassword(command);
         ProfileMenuResponses response = ProfileController.changePassword(passwords.get("currentPassword"), passwords.get("newPassword"));
         respond(response);
     }
@@ -44,7 +44,7 @@ public class ProfileMenu {
         while (true) {
             command = scanner.nextLine().trim().toLowerCase();
             if (command.matches(ProfileMenuRegex.changeNicknameRegex) ||
-               command.matches(ProfileMenuRegex.changeNicknameRegexShort))
+                    command.matches(ProfileMenuRegex.changeNicknameRegexShort))
                 changeNickname(command);
             else if (command.matches(ProfileMenuRegex.changePasswordRegexType1) ||
                     command.matches(ProfileMenuRegex.changePasswordRegexType2) ||
@@ -79,12 +79,12 @@ public class ProfileMenu {
             System.out.println("you are in profile menu");
     }
 
-    public HashMap<String,String> getOldAndNewPassword(String command) {
-        HashMap<String,String> passwords = new HashMap<>();
+    public HashMap<String, String> getOldAndNewPassword(String command) {
+        HashMap<String, String> passwords = new HashMap<>();
         Matcher matcher = ProfileMenuRegex.getRightMatcherForChangePassword(command);
         if (matcher.find()) {
-            passwords.put("newPassword",matcher.group("newPassword"));
-            passwords.put("currentPassword",matcher.group("currentPassword"));
+            passwords.put("newPassword", matcher.group("newPassword"));
+            passwords.put("currentPassword", matcher.group("currentPassword"));
             return passwords;
         }
         return null;

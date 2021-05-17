@@ -17,13 +17,13 @@ public class ShopMenu {
     }
 
     public static ShopMenu getInstance(Scanner scanner) {
-        if (shopMenu == null)  shopMenu = new ShopMenu(scanner);
+        if (shopMenu == null) shopMenu = new ShopMenu(scanner);
         return shopMenu;
     }
 
-    public void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
             if (ShopMenuRegexes.isItShowAllCards(command))
                 showAllCards();
@@ -56,7 +56,7 @@ public class ShopMenu {
             System.out.println("Invalid card number !");
     }
 
-    private void buyCard (String command) {
+    private void buyCard(String command) {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, ShopMenuRegexes.shopCardRegex);
         if (matcher.find()) {
             String cardName = matcher.group("cardName");
@@ -65,7 +65,7 @@ public class ShopMenu {
         }
     }
 
-    private void showAllCards () {
+    private void showAllCards() {
         String allCardsInfo = ShopController.showAllCards();
         System.out.println(allCardsInfo);
     }
