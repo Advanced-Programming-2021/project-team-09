@@ -100,127 +100,132 @@ abstract public class OneRoundGameRegexes {
     }
     public static boolean doesItSelectMyMonsterCellCommand(String command){
         String[] selectMyMonsterCellRegex = getSelectMyMonsterCell();
-        for (int i = 0; i < selectMyMonsterCellRegex.length; i++) {
-            if (command.matches(selectMyMonsterCellRegex[i])) return true;
+        for (String myMonsterCellRegex : selectMyMonsterCellRegex) {
+            if (command.matches(myMonsterCellRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectMySpellCellCommand(String command){
         String[] selectMySpellCellRegex = getSelectMySpellCell();
-        for (int i = 0; i < selectMySpellCellRegex.length; i++) {
-            if (command.matches(selectMySpellCellRegex[i])) return true;
+        for (String mySpellCellRegex : selectMySpellCellRegex) {
+            if (command.matches(mySpellCellRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectMyFieldZoneCommand(String command){
         String[] selectMyFieldZoneRegex = getSelectMyFieldZone();
-        for (int i = 0; i < selectMyFieldZoneRegex.length; i++) {
-            if (command.matches(selectMyFieldZoneRegex[i])) return true;
+        for (String myFieldZoneRegex : selectMyFieldZoneRegex) {
+            if (command.matches(myFieldZoneRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectCardFromMyHandCommand(String command){
         String[] selectCardFromMyHandRegex = getSelectCardFromMyHand();
-        for (int i = 0; i < selectCardFromMyHandRegex.length; i++) {
-            if (command.matches(selectCardFromMyHandRegex[i])) return true;
+        for (String cardFromMyHandRegex : selectCardFromMyHandRegex) {
+            if (command.matches(cardFromMyHandRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectOpponentMonsterCellCommand(String command){
         String[] selectOpponentMonsterCellRegex = getSelectOpponentMonsterCell();
-        for (int i = 0; i < selectOpponentMonsterCellRegex.length; i++) {
-            if (command.matches(selectOpponentMonsterCellRegex[i])) return true;
+        for (String opponentMonsterCellRegex : selectOpponentMonsterCellRegex) {
+            if (command.matches(opponentMonsterCellRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectOpponentSpellCellCommand(String command){
         String[] selectOpponentSpellCellRegex = getSelectOpponentSpellCell();
-        for (int i = 0; i < selectOpponentSpellCellRegex.length; i++) {
-            if (command.matches(selectOpponentSpellCellRegex[i])) return true;
+        for (String opponentSpellCellRegex : selectOpponentSpellCellRegex) {
+            if (command.matches(opponentSpellCellRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSelectOpponentFieldZoneCommand(String command){
         String[] selectOpponentFieldZoneRegex = getSelectOpponentFieldZone();
-        for (int i = 0; i < selectOpponentFieldZoneRegex.length; i++) {
-            if (command.matches(selectOpponentFieldZoneRegex[i])) return true;
+        for (String opponentFieldZoneRegex : selectOpponentFieldZoneRegex) {
+            if (command.matches(opponentFieldZoneRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSetAttackCommand(String command){
         String[] setAttackRegex = getSetAttack();
-        for (int i = 0; i < setAttackRegex.length; i++) {
-            if (command.matches(setAttackRegex[i])) return true;
+        for (String attackRegex : setAttackRegex) {
+            if (command.matches(attackRegex)) return true;
         }
         return false;
     }
     public static boolean doesItSetDefenseCommand(String command){
         String[] setDefenseRegex = getSetDefense();
-        for (int i = 0; i < setDefenseRegex.length; i++) {
-            if (command.matches(setDefenseRegex[i])) return true;
+        for (String defenseRegex : setDefenseRegex) {
+            if (command.matches(defenseRegex)) return true;
         }
         return false;
     }
     public static Matcher getRightMatcherForSelectMyMonsterCell(String command){
         String[] selectMyMonsterCellRegex = getSelectMyMonsterCell();
-        for (int i = 0; i < selectMyMonsterCellRegex.length; i++) {
-            if (command.matches(selectMyMonsterCellRegex[i])) return RegexFunctions.getCommandMatcher(command, selectMyMonsterCellRegex[i]);
+        for (String myMonsterCellRegex : selectMyMonsterCellRegex) {
+            if (command.matches(myMonsterCellRegex))
+                return RegexFunctions.getCommandMatcher(command, myMonsterCellRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectMySpellCell(String command){
         String[] selectMySpellCellRegex = getSelectMySpellCell();
-        for (int i = 0; i < selectMySpellCellRegex.length; i++) {
-            if (command.matches(selectMySpellCellRegex[i])) return RegexFunctions.getCommandMatcher(command, selectMySpellCellRegex[i]);
+        for (String mySpellCellRegex : selectMySpellCellRegex) {
+            if (command.matches(mySpellCellRegex)) return RegexFunctions.getCommandMatcher(command, mySpellCellRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectMyFieldZone(String command){
         String[] selectMyFieldZoneRegex = getSelectMyFieldZone();
-        for (int i = 0; i < selectMyFieldZoneRegex.length; i++) {
-            if (command.matches(selectMyFieldZoneRegex[i])) return RegexFunctions.getCommandMatcher(command, selectMyFieldZoneRegex[i]);
+        for (String myFieldZoneRegex : selectMyFieldZoneRegex) {
+            if (command.matches(myFieldZoneRegex)) return RegexFunctions.getCommandMatcher(command, myFieldZoneRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectCardFromMyHand(String command){
         String[] selectCardFromMyHandRegex = getSelectCardFromMyHand();
-        for (int i = 0; i < selectCardFromMyHandRegex.length; i++) {
-            if (command.matches(selectCardFromMyHandRegex[i])) return RegexFunctions.getCommandMatcher(command, selectCardFromMyHandRegex[i]);
+        for (String cardFromMyHandRegex : selectCardFromMyHandRegex) {
+            if (command.matches(cardFromMyHandRegex))
+                return RegexFunctions.getCommandMatcher(command, cardFromMyHandRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectOpponentMonsterCell(String command){
         String[] selectOpponentMonsterCellRegex = getSelectOpponentMonsterCell();
-        for (int i = 0; i < selectOpponentMonsterCellRegex.length; i++) {
-            if (command.matches(selectOpponentMonsterCellRegex[i])) return RegexFunctions.getCommandMatcher(command, selectOpponentMonsterCellRegex[i]);
+        for (String opponentMonsterCellRegex : selectOpponentMonsterCellRegex) {
+            if (command.matches(opponentMonsterCellRegex))
+                return RegexFunctions.getCommandMatcher(command, opponentMonsterCellRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectOpponentSpellCell(String command){
         String[] selectOpponentSpellCellRegex = getSelectOpponentSpellCell();
-        for (int i = 0; i < selectOpponentSpellCellRegex.length; i++) {
-            if (command.matches(selectOpponentSpellCellRegex[i])) return RegexFunctions.getCommandMatcher(command, selectOpponentSpellCellRegex[i]);
+        for (String opponentSpellCellRegex : selectOpponentSpellCellRegex) {
+            if (command.matches(opponentSpellCellRegex))
+                return RegexFunctions.getCommandMatcher(command, opponentSpellCellRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSelectOpponentFieldZone(String command){
         String[] selectOpponentFieldZoneRegex = getSelectOpponentFieldZone();
-        for (int i = 0; i < selectOpponentFieldZoneRegex.length; i++) {
-            if (command.matches(selectOpponentFieldZoneRegex[i])) return RegexFunctions.getCommandMatcher(command, selectOpponentFieldZoneRegex[i]);
+        for (String opponentFieldZoneRegex : selectOpponentFieldZoneRegex) {
+            if (command.matches(opponentFieldZoneRegex))
+                return RegexFunctions.getCommandMatcher(command, opponentFieldZoneRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSetAttack(String command){
         String[] setAttackRegex = getSetAttack();
-        for (int i = 0; i < setAttackRegex.length; i++) {
-            if (command.matches(setAttackRegex[i])) return RegexFunctions.getCommandMatcher(command, setAttackRegex[i]);
+        for (String attackRegex : setAttackRegex) {
+            if (command.matches(attackRegex)) return RegexFunctions.getCommandMatcher(command, attackRegex);
         }
         return null;
     }
     public static Matcher getRightMatcherForSetDefense(String command){
         String[] setDefenseRegex = getSetDefense();
-        for (int i = 0; i < setDefenseRegex.length; i++) {
-            if (command.matches(setDefenseRegex[i])) return RegexFunctions.getCommandMatcher(command, setDefenseRegex[i]);
+        for (String defenseRegex : setDefenseRegex) {
+            if (command.matches(defenseRegex)) return RegexFunctions.getCommandMatcher(command, defenseRegex);
         }
         return null;
     }

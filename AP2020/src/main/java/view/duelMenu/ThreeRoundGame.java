@@ -78,7 +78,7 @@ public class ThreeRoundGame {
             System.out.println("do you want to swap cards " + user.getNickname() + "?");
             command = scanner.nextLine();
             if (command.matches("yes")) {
-                Deck userActiveDeck = user.getActiveDeck().clone();
+                Deck userActiveDeck = (Deck) user.getActiveDeck().clone();
                 user.setActiveDeck(userActiveDeck);
                 getSwapCardCommands(user);
             } else if (command.matches("no"))

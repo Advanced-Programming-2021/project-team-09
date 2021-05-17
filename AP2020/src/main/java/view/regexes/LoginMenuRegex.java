@@ -40,32 +40,32 @@ abstract public class LoginMenuRegex {
 
     public static Matcher getRightMatcherForCreateUser(String command){
         String[] createUserRegex = getCreateUserRegex();
-        for (int i = 0; i < createUserRegex.length; ++i){
-            if (command.matches(createUserRegex[i])) return RegexFunctions.getCommandMatcher(command,createUserRegex[i]);
+        for (String userRegex : createUserRegex) {
+            if (command.matches(userRegex)) return RegexFunctions.getCommandMatcher(command, userRegex);
         }
         return null;
     }
 
     public static Matcher getRightMatcherForLogin (String command){
         String[] loginRegex = getLoginRegex();
-        for (int i = 0; i < loginRegex.length; ++i){
-            if (command.matches(loginRegex[i])) return RegexFunctions.getCommandMatcher(command,loginRegex[i]);
+        for (String regex : loginRegex) {
+            if (command.matches(regex)) return RegexFunctions.getCommandMatcher(command, regex);
         }
         return null;
     }
 
     public static boolean doesItLoginCommand (String command){
         String[] loginRegex = getLoginRegex();
-        for (int i = 0; i < loginRegex.length; ++i){
-            if (command.matches(loginRegex[i])) return true;
+        for (String regex : loginRegex) {
+            if (command.matches(regex)) return true;
         }
         return false;
     }
 
     public static boolean doesItCreateUserCommand (String command){
         String[] createUserRegex = getCreateUserRegex();
-        for (int i = 0; i < createUserRegex.length; ++i){
-            if (command.matches(createUserRegex[i])) return true;
+        for (String userRegex : createUserRegex) {
+            if (command.matches(userRegex)) return true;
         }
         return false;
     }
