@@ -17,9 +17,6 @@ public class ThreeRoundGame {
     private User winner;
     private User loser;
     private final Scanner scanner;
-    private OneRoundGame firstRound;
-    private OneRoundGame secondRound;
-    private OneRoundGame thirdRound;
     private WinnerException firstRoundException;
     private WinnerException secondRoundException;
     private WinnerException thirdRoundException;
@@ -31,7 +28,7 @@ public class ThreeRoundGame {
     }
 
     public void run() throws CloneNotSupportedException {
-        firstRound = new OneRoundGame(firstUser, secondUser, scanner);
+        OneRoundGame firstRound = new OneRoundGame(firstUser, secondUser, scanner);
         try {
             firstRound.run();
         } catch (WinnerException firstRoundException) {
@@ -39,7 +36,7 @@ public class ThreeRoundGame {
         }
         askPlayersIfTheyWantToChangeDeck();
         askPlayersIfTheyWantToBringCardsFromMainToSide();
-        secondRound = new OneRoundGame(firstRoundException.getWinner(), firstRoundException.getLoser(), scanner);
+        OneRoundGame secondRound = new OneRoundGame(firstRoundException.getWinner(), firstRoundException.getLoser(), scanner);
         try {
             secondRound.run();
         } catch (WinnerException secondRoundException) {
@@ -48,7 +45,7 @@ public class ThreeRoundGame {
         if (checkIfThirdRoundIsNeededOrNot()) {
             askPlayersIfTheyWantToChangeDeck();
             askPlayersIfTheyWantToBringCardsFromMainToSide();
-            thirdRound = new OneRoundGame(secondRoundException.getWinner(), secondRoundException.getLoser(), scanner);
+            OneRoundGame thirdRound = new OneRoundGame(secondRoundException.getWinner(), secondRoundException.getLoser(), scanner);
             try {
                 thirdRound.run();
             } catch (WinnerException thirdRoundException) {
@@ -73,7 +70,7 @@ public class ThreeRoundGame {
             System.out.println("do you want to swap cards " + user.getNickname() + "?");
             command = scanner.nextLine();
             if (command.matches("yes")) {
-                Deck userActiveDeck = (Deck) user.getActiveDeck().clone();
+                Deck userActiveDeck = user.getActiveDeck().clone();
                 user.setActiveDeck(userActiveDeck);
                 getSwapCardCommands(user);
             } else if (command.matches("no"))
@@ -91,6 +88,8 @@ public class ThreeRoundGame {
                 swapCard(user, command);
             } else if (command.matches("back"))
                 return;
+            else if (command.matches("help"))
+                showHelp();
             else
                 respond(ThreeRoundGameResponses.INVALID_COMMAND);
         }
@@ -211,5 +210,11 @@ public class ThreeRoundGame {
             System.out.println("card with this name does not exist in side deck");
         else if (responses.equals(ThreeRoundGameResponses.YOU_DONT_HAVE_DECK_WITH_THIS_NAME))
             System.out.println("you don't have deck with this name");
+    }
+
+    public void showHelp() {
+        String help = "swap --side --card <card name> --main --card <card name>\n" +
+                "(if you don't want any further changes): back\n";
+        System.out.println(help);
     }
 }

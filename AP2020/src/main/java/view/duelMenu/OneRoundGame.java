@@ -8,7 +8,6 @@ import model.card.spell_traps.SpellType;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
-import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
 import view.regexes.RegexFunctions;
 import view.responses.GameMenuResponse;
@@ -74,9 +73,9 @@ public class OneRoundGame {
             else if (OneRoundGameRegexes.doesItSelectOpponentSpellCellCommand(command))
                 selectOpponentSpellCell(command);
             else if (OneRoundGameRegexes.doesItSetAttackCommand(command))
-                setAttack(command);
+                setAttack();
             else if (OneRoundGameRegexes.doesItSetDefenseCommand(command))
-                setDefense(command);
+                setDefense();
             else if (command.matches(OneRoundGameRegexes.activeEffect))
                 activeEffect();
             else if (command.matches(OneRoundGameRegexes.set))
@@ -395,11 +394,6 @@ public class OneRoundGame {
         selectCard(gameMenuResponse, SelectState.PLAYER_MONSTER);
     }
 
-    private boolean canSelectInThisPhase() {
-        ArrayList<Phase> phases = getAllowedPhaseForSelect();
-        for (Phase p : phases) if (p == currentPhase) return true;
-        return false;
-    }
 
     public void selectMySpellCell(String command) {
         int cellNumber = getNumberFromString(command);
@@ -473,11 +467,11 @@ public class OneRoundGame {
         selectCard(gameMenuResponse, SelectState.RIVAL_FIELD);
     }
 
-    public void setAttack(String command) {
+    public void setAttack() {
         setPosition("attack");
     }
 
-    public void setDefense(String command) {
+    public void setDefense() {
         setPosition("defense");
     }
 
@@ -560,32 +554,6 @@ public class OneRoundGame {
         allowedPhaseForSummon.add(Phase.MAIN_PHASE1);
         allowedPhaseForSummon.add(Phase.MAIN_PHASE2);
         return allowedPhaseForSummon;
-    }
-
-    public ArrayList<Phase> getAllowedPhaseForSelect() {
-        ArrayList<Phase> allowedPhaseForSelect = new ArrayList<>();
-        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
-        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
-        allowedPhaseForSelect.add(Phase.BATTLE_PHASE);
-        return allowedPhaseForSelect;
-    }
-
-    public ArrayList<Phase> getAllowedPhaseForAttack() {
-        ArrayList<Phase> allowedPhaseForAttack = new ArrayList<>();
-        allowedPhaseForAttack.add(Phase.BATTLE_PHASE);
-        return allowedPhaseForAttack;
-    }
-
-    public boolean doesActionAllowedInCurrentPhases(@NotNull ArrayList<Phase> allowedPhases) {
-        for (Phase phase : allowedPhases) {
-            if (getCurrentPhase().equals(phase))
-                return true;
-        }
-        return false;
-    }
-
-    public Phase getCurrentPhase() {
-        return currentPhase;
     }
 
     public void showTable() {
