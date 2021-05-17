@@ -152,12 +152,12 @@ public class GameMenuController {
                 }
                 tribute(game, tributes);
             }
-            putCardInNearestCell(card, game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
+            putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
             game.setCanSummonCard(false);
         } else {
             if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
             Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-            putCardInNearestCell(card, tempCells, State.FACE_UP_SPELL);
+            putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), tempCells, State.FACE_UP_SPELL);
         }
         if (cardHasSummonEffect(card.getFeatures())) {
             try {

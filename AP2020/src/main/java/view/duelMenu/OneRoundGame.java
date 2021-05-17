@@ -40,7 +40,7 @@ public class OneRoundGame {
 
     protected Game game;
     protected final Scanner scanner;
-    private Phase currentPhase = Phase.STANDBY_PHASE;
+    private Phase currentPhase = Phase.DRAW_PHASE;
 
     public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) {
         try {
@@ -117,26 +117,23 @@ public class OneRoundGame {
     public void goToNextPhase() throws WinnerException {
         if (currentPhase.equals(Phase.STANDBY_PHASE))
             goToMainPhase1();
-        else if (currentPhase.equals(Phase.MAIN_PHASE1)) {
+        else if (currentPhase.equals(Phase.END_PHASE)) {
             goToDrawPhase();
             GameMenuResponse gameMenuResponse;
             if ((gameMenuResponse = GameMenuController.draw(game)).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
                 System.out.println("New Card added to hand : \n" + gameMenuResponse.getObj());
             }
         } else if (currentPhase.equals(Phase.DRAW_PHASE))
-            goToMainPhase2();
-        else if (currentPhase.equals(Phase.MAIN_PHASE2))
-            goToBattlePhase();
-        else if (currentPhase.equals(Phase.BATTLE_PHASE))
-            goToEndPhase();
-        else if (currentPhase.equals(Phase.END_PHASE))
             goToStandByPhase();
+        else if (currentPhase.equals(Phase.MAIN_PHASE2))
+            goToEndPhase();
+        else if (currentPhase.equals(Phase.BATTLE_PHASE))
+            goToMainPhase2();
+        else if (currentPhase.equals(Phase.MAIN_PHASE1))
+            goToBattlePhase();
     }
 
     public void goToStandByPhase() {
-        if (game.getPlayerHandCards().size() > 6) ;
-        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
-        game.changeTurn();
         setCurrentPhase(Phase.STANDBY_PHASE);
         respond(OneRoundGameResponses.STANDBY_PHASE);
     }
@@ -146,7 +143,12 @@ public class OneRoundGame {
         respond(OneRoundGameResponses.MAIN_PHASE1);
     }
 
-    public void goToDrawPhase() {
+    public void goToDrawPhase() throws WinnerException {
+        deselectCard(false);
+        if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run();
+        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
+        game.changeTurn();
+        deselectCard(false);
         setCurrentPhase(Phase.DRAW_PHASE);
         respond(OneRoundGameResponses.DRAW_PHASE);
     }
