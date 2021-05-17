@@ -19,12 +19,12 @@ public class EffectController {
         }
         if (game.getPlayerBoard().getGraveyard().getCards().size() != 0) {
             for (Card card1 : game.getPlayerBoard().getGraveyard().getCards()) {
-                if (card1.equals(card)) return true;
+                if (card1 == card) return true;
             }
         }
         if (game.getPlayerHandCards().size() != 0) {
             for (Card card1 : game.getPlayerHandCards()) {
-                if (card1.equals(card)) return true;
+                if (card1 == card) return true;
             }
         }
         return false;

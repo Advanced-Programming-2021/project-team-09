@@ -14,13 +14,7 @@ public class Trap extends Card {
     private Limitation limit;
 
     public Trap(String cardName) {
-        ArrayList<String> temp = CSVInfoGetter.trapAndSpellReadFromCSV(cardName);
-        if (temp == null || temp.size() != 4) return;
-        trapType = CSVInfoGetter.getTrapType(temp.get(1));
-        this.cardName = cardName;
-        description = temp.get(2);
-        limit = CSVInfoGetter.getLimitation(temp.get(3));
-        cardType = CardType.TRAP;
+        setAttributesByName(cardName);
     }
 
     public Trap(){
@@ -52,6 +46,8 @@ public class Trap extends Card {
         description = temp.get(2);
         limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.TRAP;
+        features = new ArrayList<>();
+        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
     }
 
     public String toString(){

@@ -141,6 +141,9 @@ public class MonsterEffectController extends EffectController {
                 while (true) {
                     int[] cellNumbers = CardEffectsView.getCellNumbers(3);
                     Cell[] cell = game.getPlayerBoard().getMonsterZone();
+                    cellNumbers[0] -= 1;
+                    cellNumbers[1] -= 1;
+                    cellNumbers[2] -= 1;
 
                     for (int i = 0; i < 3; i++) {
                         if (!isCellNumberValid(cellNumbers[i])) {
@@ -158,9 +161,13 @@ public class MonsterEffectController extends EffectController {
                             continue main;
                         }
                     }
+                    cellNumbers[0] += 1;
+                    cellNumbers[1] += 1;
+                    cellNumbers[2] += 1;
+
                     GameMenuController.tribute(game, cellNumbers);
                     setMonster(game, card, State.FACE_UP_ATTACK);
-                    break;
+                    return;
                 }
             } else if (howToSummon == HowToSummon.BACK) {
                 return;
@@ -260,23 +267,27 @@ public class MonsterEffectController extends EffectController {
     public static void TerratigertheEmpoweredWarrior(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
-        while (true) {
-            int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
-            if (numberOfCardInHand < cards.size()) {
-                Card chosenCard = game.getPlayerHandCards().get(numberOfCardInHand);
-                if (chosenCard != null) {
-                    if (chosenCard.isMonster()) {
-                        Monster monster = (Monster) chosenCard;
-                        if (monster.getLevel() <= 4) {
-                            setMonster(game, monster, State.FACE_DOWN_DEFENCE);
-                            break;
-                        } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
-                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
-                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
-            } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+        if (CardEffectsView.doYouWantTo("do you want to summon a normal monster with level 4 or less?")) {
+            if (board.isMonsterZoneFull()) CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
+            else {
+                while (true) {
+                    int numberOfCardInHand = CardEffectsView.getNumberOfCardInHand(cards) - 1;
+                    if (numberOfCardInHand < cards.size()) {
+                        Card chosenCard = cards.get(numberOfCardInHand);
+                        if (chosenCard != null) {
+                            if (chosenCard.isMonster()) {
+                                Monster monster = (Monster) chosenCard;
+                                if (monster.getLevel() <= 4 && !monster.hasEffect()) {
+                                    setMonster(game, monster, State.FACE_DOWN_DEFENCE);
+                                    break;
+                                } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER);
+                            } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
+                        } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                    } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER);
+                }
+            }
         }
     }
-
 
     public static void TheTricky(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);

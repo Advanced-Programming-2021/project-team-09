@@ -458,7 +458,7 @@ public class MonsterEffectsTest {
         Card card15 = CSVInfoGetter.getCardByName("Leotron");
         cards.add(card);
         Executable executable = () -> MonsterEffectController.BeastKingBarbaros(game,card);
-        setCommandInInputStream("1\n2\n");
+        setCommandInInputStream("1\n2\n"+"2\n"+"1 2 3\n"+"3 4 5\n");
         {
             board.addCardToMonsterZone(card11);
             board.addCardToMonsterZone(card12);
@@ -484,11 +484,95 @@ public class MonsterEffectsTest {
                     "2. face up defense\n" +
                     "3. face down defenseYou can type back to cancel ..\n" +
                     "Please choose a way :",stream.toString().trim());
-            Assertions.assertEquals("",stream.toString());
+            Assertions.assertEquals(board.getMonsterZone(0).getCard(),card);
+            Assertions.assertFalse(cards.contains(card));
+            Assertions.assertEquals(1900,((Monster)card).getAttack());
+            stream.reset();
+        }
 
+        {
+            ((Monster) card).setAttack(3000);
+            board.getMonsterZone(0).removeCard();
+            cards.add(card);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("You can summon cards in these ways .. \n" +
+                    "1. Summon normally with 1900 ATK .. \n" +
+                    "2. Summon with 3 tributes ..\n" +
+                    "You can type back to cancel ..\n" +
+                    "Please choose a way :\n" +
+                    "Please enter 3 cell numbers .. \n" +
+                    "Invalid Cell number !\n" +
+                    "Please enter 3 cell numbers ..",stream.toString().trim());
+            Assertions.assertEquals(game.getPlayerBoard().getMonsterZone(0).getCard(), card);
+            Assertions.assertTrue(board.getGraveyard().getCards().contains(card13));
+            Assertions.assertTrue(board.getGraveyard().getCards().contains(card14));
+            Assertions.assertTrue(board.getGraveyard().getCards().contains(card15));
+            Assertions.assertFalse(board.getMonsterZone(2).isOccupied());
+            Assertions.assertFalse(board.getMonsterZone(3).isOccupied());
+            Assertions.assertFalse(board.getMonsterZone(4).isOccupied());
+            Assertions.assertEquals(3000,((Monster) card).getAttack());
         }
     }
-    
+
+    @Test
+    public void testTerratigertheEmpoweredWarrior() {
+        Board board = game.getPlayerBoard();
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        ByteArrayOutputStream stream = getOutPutStream();
+        Card card = CSVInfoGetter.getCardByName("Terratiger, the Empowered Warrior");
+        Card card11 = CSVInfoGetter.getCardByName("Leotron");
+        Card card12 = CSVInfoGetter.getCardByName("Leotron");
+        Card card13 = CSVInfoGetter.getCardByName("Leotron");
+        Card card14 = CSVInfoGetter.getCardByName("Leotron");
+        Card card15 = CSVInfoGetter.getCardByName("Gate Guardian");
+        cards.add(card15);
+        board.addCardToMonsterZone(card);
+        Executable executable = () -> MonsterEffectController.TerratigertheEmpoweredWarrior(game,card);
+        setCommandInInputStream("yes\n"+"yes\n"+"1\n2\n");
+
+        //Not Null test
+        {
+            Assertions.assertNotNull(card);
+            Assertions.assertNotNull(card11);
+            Assertions.assertNotNull(card12);
+            Assertions.assertNotNull(card13);
+            Assertions.assertNotNull(card14);
+            Assertions.assertNotNull(card15);
+        }
+        //preparing
+        {
+            ((Monster) card).setMonsterEffectType(MonsterEffectType.TRIGGER);
+            ((Monster) card11).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card12).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card13).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card14).setMonsterEffectType(MonsterEffectType.NONE);
+            ((Monster) card15).setMonsterEffectType(MonsterEffectType.NONE);
+        }
+        {
+            board.addCardToMonsterZone(card11);
+            board.addCardToMonsterZone(card12);
+            board.addCardToMonsterZone(card13);
+            board.addCardToMonsterZone(card14);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("do you want to summon a normal monster with level 4 or less?\n" +
+                    "Monster zone is full !",stream.toString().trim());
+            stream.reset();
+
+        }
+        {
+            board.removeCardFromMonsterZone(card11);
+            cards.add(card11);
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals("do you want to summon a normal monster with level 4 or less?\n" +
+                    "please select a card number from your hand\n" +
+                    "Please select a valid monster !\n" +
+                    "please select a card number from your hand",stream.toString().trim());
+            Assertions.assertEquals("","");
+
+        }
+
+    }
+
     @AfterEach
     public void afterEachTest() {
         resetStreams();

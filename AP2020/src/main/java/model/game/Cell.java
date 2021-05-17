@@ -1,6 +1,7 @@
 package model.game;
 
 import model.card.Card;
+import org.jetbrains.annotations.NotNull;
 
 public class Cell {
     private Card card;
@@ -31,7 +32,7 @@ public class Cell {
         return returningCard;
     }
 
-    public void addCard(Card card) {
+    public void addCard(@NotNull Card card) {
         this.card = card;
         changedPosition = false;
         roundCounter = 0;
