@@ -20,6 +20,16 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class OneRoundGame {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     protected Game game;
     protected final Scanner scanner;
     private Phase currentPhase = Phase.STANDBY_PHASE;
@@ -71,7 +81,7 @@ public class OneRoundGame {
                 flipSummon();
             else if (command.matches(OneRoundGameRegexes.attackToOpponentMonster))
                 attackToOpponentMonster(command);
-            else if (command.matches(OneRoundGameRegexes.showCard))
+            else if (OneRoundGameRegexes.showSelectedCard(command))
                 showSelectedCard();
             else if (command.matches(OneRoundGameRegexes.showGraveyard))
                 showGraveyard();
@@ -83,6 +93,10 @@ public class OneRoundGame {
                 goToNextPhase();
             else if (command.equals("help"))
                 showHelp();
+            else if (command.matches(OneRoundGameRegexes.SHOW_TABLE))
+                showTable();
+            else if (command.matches(OneRoundGameRegexes.SHOW_PHASE))
+                showPhase();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
@@ -99,7 +113,7 @@ public class OneRoundGame {
             goToDrawPhase();
             GameMenuResponse gameMenuResponse;
             if ((gameMenuResponse = GameMenuController.draw(game)).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
-                System.out.println("New Card added to hand : " + ((Card)gameMenuResponse.getObj()).getCardName());
+                System.out.println("New Card added to hand : \n" + gameMenuResponse.getObj());
             }
         } else if (currentPhase.equals(Phase.DRAW_PHASE))
             goToMainPhase2();
@@ -158,7 +172,7 @@ public class OneRoundGame {
     }
 
     public void summon() {
-        if (canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        if (!canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
@@ -539,6 +553,10 @@ public class OneRoundGame {
         return currentPhase;
     }
 
+    public void showTable() {
+        System.out.println(ANSI_PURPLE + GameMenuController.showTable(game) + ANSI_RESET);
+    }
+
     public void respond(OneRoundGameResponses responses) {
         if (responses.equals(OneRoundGameResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
@@ -664,22 +682,47 @@ public class OneRoundGame {
     }
 
     public void showHelp() {
-        System.out.println("next phase\n" +
+        System.out.println("summon\n" +
                 "show table\n" +
-                "summon\n" +
                 "set\n" +
-                "flip summon\n" +
+                "flip-summon\n" +
                 "attack <cell number>\n" +
                 "attack direct\n" +
                 "active effect\n" +
                 "show graveyard\n" +
                 "card show --selected\n" +
-                "surrender\n" +
-                "select --monster <cell number>\n --opponent(optional)" +
+                "select --monster <cell number> --opponent(optional)\n" +
                 "select --spell <cell number> --opponent(optional)\n" +
                 "select --field --opponent(optional)\n" +
                 "select --hand <number>\n" +
                 "set --position attack\n" +
-                "set --position defense\n");
+                "set --position defense\n" +
+                "next phase\n" +
+                "surrender\n" +
+                "select -d\n" +
+                "show phase");
+    }
+
+    public void showPhase() {
+        switch (currentPhase) {
+            case BATTLE_PHASE:
+                respond(OneRoundGameResponses.BATTLE_PHASE);
+                break;
+            case DRAW_PHASE:
+                respond(OneRoundGameResponses.DRAW_PHASE);
+                break;
+            case END_PHASE:
+                respond(OneRoundGameResponses.END_PHASE);
+                break;
+            case MAIN_PHASE1:
+                respond(OneRoundGameResponses.MAIN_PHASE1);
+                break;
+            case MAIN_PHASE2:
+                respond(OneRoundGameResponses.MAIN_PHASE2);
+                break;
+            case STANDBY_PHASE:
+                respond(OneRoundGameResponses.STANDBY_PHASE);
+                break;
+        }
     }
 }

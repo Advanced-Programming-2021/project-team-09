@@ -299,55 +299,55 @@ public class Game {
     }
 
     public String showTable() {
-        StringBuilder table = new StringBuilder();
-        table.append(rival.getNickname()).append(":").append(rivalLP).append("\n");
+        String dis = "\t\t\t\t";
+        StringBuilder table = new StringBuilder("\n\n" + dis);
+        table.append(rival.getNickname()).append(" : ").append(rivalLP).append("\n").append(dis);
         ArrayList<Card> temp = rivalHandCards;
         for (Card card : temp) table.append("    c");
-        table.append("\n").append(rivalDeck.getMainDeck().getNumberOfAllCards()).append("\n");
+        table.append("\n").append(dis).append(rivalDeck.getMainDeck().getNumberOfAllCards()).append("\n\n").append(dis);
         Cell[] tempCellArray = rivalBoard.getSpellZone();
         table.append(tempCellArray[3].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[1].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[2].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
-        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n    " : "    H\n    ") : "    E\n    ");
+        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n" : "    H\n") : "    E\n").append(dis);
         tempCellArray = rivalBoard.getMonsterZone();
         table.append(monsterStateToString(tempCellArray[4]));
         table.append(monsterStateToString(tempCellArray[2]));
         table.append(monsterStateToString(tempCellArray[0]));
         table.append(monsterStateToString(tempCellArray[1]));
         table.append(monsterStateToString(tempCellArray[3]));
-        table.append("\n");
-        table.append(rivalBoard.getGraveyard().getNumberOfAllCards()).append("\\t\\t\\t\\t\\t\\t").append(rivalBoard.getFieldZone().isOccupied() ? "O\n" : "E\n");
-        table.append("\n------------------------------------------\n\n");
-        table.append(playerBoard.getFieldZone().isOccupied() ? "O" : "E" + "\\t\\t\\t\\t\\t\\t" + playerBoard.getGraveyard().getNumberOfAllCards() + "\n");
+        table.append("\n\n").append(dis);
+        table.append(rivalBoard.getGraveyard().getNumberOfAllCards()).append("\t\t\t\t\t\t").append(rivalBoard.getFieldZone().isOccupied() ? "O\n" : "E\n");
+        table.append("\n----------------------------------------------------------------\n\n").append(dis);
+        table.append(playerBoard.getFieldZone().isOccupied() ? "O" : "E" + "\t\t\t\t\t\t" + playerBoard.getGraveyard().getNumberOfAllCards() + "\n\n").append(dis);
         tempCellArray = playerBoard.getMonsterZone();
-        table.append("    ");
         table.append(monsterStateToString(tempCellArray[3]));
         table.append(monsterStateToString(tempCellArray[1]));
         table.append(monsterStateToString(tempCellArray[0]));
         table.append(monsterStateToString(tempCellArray[2]));
         table.append(monsterStateToString(tempCellArray[4]));
-        table.append("\n");
+        table.append("\n").append(dis);
         tempCellArray = playerBoard.getSpellZone();
         table.append(tempCellArray[3].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[1].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[2].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
-        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O\n    " : "    H\n    ") : "    E\n    ");
-        table.append("\\t\\t\\t\\t\\t\\t").append(playerDeck.getMainDeck().getNumberOfAllCards()).append("\n");
+        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O\n\n" : "    H\n\n") : "    E\n\n");
+        table.append(dis).append("\t\t\t\t\t\t").append(playerDeck.getMainDeck().getNumberOfAllCards()).append("\n").append(dis);
         temp = playerHandCards;
         for (Card card : temp) table.append("    c");
-        table.append("\n");
-        table.append(player.getNickname()).append(":").append(playerLP);
+        table.append("\n").append(dis);
+        table.append(player.getNickname()).append(" : ").append(playerLP).append("\n\n");
         return table.toString();
     }
 
     private String monsterStateToString(Cell cell) {
-        if (!cell.isOccupied()) return "E   ";
+        if (!cell.isOccupied()) return "    E";
         State state = cell.getState();
-        if (state == State.FACE_UP_ATTACK) return "OO  ";
-        else if (state == State.FACE_UP_DEFENCE) return "DO  ";
-        return "DH  ";
+        if (state == State.FACE_UP_ATTACK) return "   OO";
+        else if (state == State.FACE_UP_DEFENCE) return "   DO";
+        return "   DH";
     }
 
     public Graveyard getGraveyard() {

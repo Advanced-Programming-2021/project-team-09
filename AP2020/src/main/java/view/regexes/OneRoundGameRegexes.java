@@ -7,12 +7,18 @@ abstract public class OneRoundGameRegexes {
     public static final String nextPhase = "next phase";
     public static final String summon = "summon";
     public static final String set = "set";
+    public static final String SHOW_TABLE = "^show table$";
+    public static final String SHOW_PHASE = "^show phase$";
     public static final String flipSummon = "flip-summon";
     public static final String attackToOpponentMonster = "attack (?<cellNumber>\\d+)";
     public static final String attackDirect = "attack direct";
     public static final String activeEffect = "active effect";
     public static final String showGraveyard = "show graveyard";
-    public static final String showCard = "card show --selected";
+    public static final String[] showCard = new String[2];
+    static {
+        showCard[0] = "card show --selected";
+        showCard[1] = "card show -s";
+    }
     public static final String surrender = "surrender";
 
 
@@ -222,5 +228,9 @@ abstract public class OneRoundGameRegexes {
             if (command.matches(setDefenseRegex[i])) return RegexFunctions.getCommandMatcher(command, setDefenseRegex[i]);
         }
         return null;
+    }
+
+    public static boolean showSelectedCard(String command) {
+        return command.matches(showCard[0]) || command.matches(showCard[1]);
     }
 }
