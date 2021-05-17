@@ -25,16 +25,17 @@ public class LoginMenu {
     public void run() {
         String command;
         while (true) {
-            command = scanner.nextLine().trim();
+            command = scanner.nextLine().trim().toLowerCase();
             if (LoginMenuRegex.doesItLoginCommand(command))
                 login(command);
             else if (LoginMenuRegex.doesItCreateUserCommand(command))
                 createUser(command);
             else if (command.matches("help"))
                 showHelp();
-            else if (command.matches("menu show-current"))
+            else if(command.matches("menu show-current"))
                 respond(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU);
-            else if (command.matches("exit menu")) return;
+            else if (command.matches("exit menu"))
+                return;
             else respond(LoginMenuResponses.INVALID_COMMAND);
         }
 
@@ -76,7 +77,7 @@ public class LoginMenu {
             System.out.println("user with this nickname already exists!");
         else if (response.equals(LoginMenuResponses.USER_WITH_THIS_USERNAME_EXITS))
             System.out.println("user with this username already exists!");
-        else if (response.equals(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU))
+        else if(response.equals(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU))
             System.out.println("you are in login menu");
     }
 
@@ -108,7 +109,7 @@ public class LoginMenu {
         System.out.println(help);
     }
 
-    public Scanner getScanner() {
+    public Scanner getScanner(){
         return this.scanner;
     }
 

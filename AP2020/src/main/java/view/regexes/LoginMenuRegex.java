@@ -30,7 +30,7 @@ abstract public class LoginMenuRegex {
         loginRegex[3] = "^user login -p (?<password>\\S+) -u (?<username>.+)$";
     }
 
-    public static String[] getLoginRegex() {
+    public static String[] getLoginRegex(){
         return loginRegex;
     }
 
@@ -38,34 +38,34 @@ abstract public class LoginMenuRegex {
         return createUserRegex;
     }
 
-    public static Matcher getRightMatcherForCreateUser(String command) {
+    public static Matcher getRightMatcherForCreateUser(String command){
         String[] createUserRegex = getCreateUserRegex();
-        for (String userRegex : createUserRegex) {
-            if (command.matches(userRegex)) return RegexFunctions.getCommandMatcher(command, userRegex);
+        for (int i = 0; i < createUserRegex.length; ++i){
+            if (command.matches(createUserRegex[i])) return RegexFunctions.getCommandMatcher(command,createUserRegex[i]);
         }
         return null;
     }
 
-    public static Matcher getRightMatcherForLogin(String command) {
+    public static Matcher getRightMatcherForLogin (String command){
         String[] loginRegex = getLoginRegex();
-        for (String regex : loginRegex) {
-            if (command.matches(regex)) return RegexFunctions.getCommandMatcher(command, regex);
+        for (int i = 0; i < loginRegex.length; ++i){
+            if (command.matches(loginRegex[i])) return RegexFunctions.getCommandMatcher(command,loginRegex[i]);
         }
         return null;
     }
 
-    public static boolean doesItLoginCommand(String command) {
+    public static boolean doesItLoginCommand (String command){
         String[] loginRegex = getLoginRegex();
-        for (String regex : loginRegex) {
-            if (command.matches(regex)) return true;
+        for (int i = 0; i < loginRegex.length; ++i){
+            if (command.matches(loginRegex[i])) return true;
         }
         return false;
     }
 
-    public static boolean doesItCreateUserCommand(String command) {
+    public static boolean doesItCreateUserCommand (String command){
         String[] createUserRegex = getCreateUserRegex();
-        for (String userRegex : createUserRegex) {
-            if (command.matches(userRegex)) return true;
+        for (int i = 0; i < createUserRegex.length; ++i){
+            if (command.matches(createUserRegex[i])) return true;
         }
         return false;
     }

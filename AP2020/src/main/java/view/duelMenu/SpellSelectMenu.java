@@ -52,7 +52,7 @@ public class SpellSelectMenu extends OneRoundGame {
                 super.selectOpponentSpellCell(command);
             else if (command.matches(OneRoundGameRegexes.activeEffect))
                 activeEffect();
-            else if (OneRoundGameRegexes.showSelectedCard(command))
+            else if (command.matches(OneRoundGameRegexes.showCard))
                 super.showSelectedCard();
             else if (command.equalsIgnoreCase("quit"))
                 return null;

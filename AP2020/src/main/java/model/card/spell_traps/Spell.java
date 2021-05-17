@@ -9,7 +9,7 @@ import model.card.CardType;
 
 import java.util.ArrayList;
 
-@JsonIgnoreProperties({"description", "cardType", "cardID", "spellType", "limit"})
+@JsonIgnoreProperties({"description","cardType","cardID","spellType","limit"})
 public class Spell extends Card {
     private SpellType spellType;
     @JsonIgnore
@@ -19,18 +19,18 @@ public class Spell extends Card {
        setAttributesByName(cardName);
     }
 
-    public Spell() {
+    public Spell(){
 
     }
 
     @JsonIgnore
-    public Limitation getLimit() {
+    public Limitation getLimit(){
         return this.limit;
     }
 
 
     @JsonIgnore
-    public SpellType getSpellType() {
+    public SpellType getSpellType(){
         return this.spellType;
     }
 
@@ -42,7 +42,6 @@ public class Spell extends Card {
         temp.append("Description: " + description);
         return temp.toString();
     }
-
     @Override
     public void setCardName(String cardName) {
         this.cardName = cardName;

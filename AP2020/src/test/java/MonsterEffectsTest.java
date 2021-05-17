@@ -5,6 +5,7 @@ import controller.database.*;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
+import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterEffectType;
 import model.deck.Deck;
 import model.deck.Graveyard;
@@ -25,9 +26,8 @@ import java.util.HashSet;
 public class MonsterEffectsTest {
     static User user1, user2;
     static Game game;
-    static InputStream defaultInputStream = System.in;
     static PrintStream defaultStream = System.out;
-
+    static InputStream defaultInputStream = System.in;
 
     @BeforeEach
     public void createTestArea() {
@@ -250,7 +250,7 @@ public class MonsterEffectsTest {
         Card card = CSVInfoGetter.getCardByName("Mirage Dragon");
         game.getRivalBoard().addCardToMonsterZone(card);
         game.getRivalBoard().getMonsterZoneCellByCard(card).setState(State.FACE_UP_ATTACK);
-        Executable executable = () -> MonsterEffectController.MirageDragon(game,card);
+        Executable executable = () -> MonsterEffectController.MirageDragon(game, card);
         Assertions.assertDoesNotThrow(executable);
         Assertions.assertNotNull(game.getPlayerLimits().getLimitations());
         Assertions.assertTrue(game.getPlayerLimits().getLimitations().contains(EffectLimitations.CANT_ACTIVATE_TRAP));
@@ -599,5 +599,6 @@ public class MonsterEffectsTest {
         System.setOut(defaultStream);
 
     }
+
 
 }
