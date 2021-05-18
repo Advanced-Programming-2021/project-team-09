@@ -31,41 +31,40 @@ public class DeckMenu {
         String command;
         while (true) {
             command = scanner.nextLine().trim();
-            if (command.matches(DeckMenuRegex.CREATE_DECK_REGEX))
+            if (command.matches(DeckMenuRegex.creatDeckRegex))
                 creatDeck(command);
-            else if (command.matches(DeckMenuRegex.DELETE_DECK_REGEX))
+            else if (command.matches(DeckMenuRegex.deleteDeckRegex))
                 deleteDeck(command);
-            else if (DeckMenuRegex.showMainDeck(command))
+            else if (command.matches(DeckMenuRegex.showMainDeckRegex))
                 showMainDeck(command);
             else if (DeckMenuRegex.doesItShowSideDeckCommand(command))
                 showSideDeck(command);
-            else if (DeckMenuRegex.showAllDecks(command))
+            else if (command.matches(DeckMenuRegex.showAllDecksRegex))
                 showAllDecks();
-            else if (DeckMenuRegex.showAllCards(command))
+            else if (command.matches(DeckMenuRegex.showAllCardsRegex))
                 showAllCards();
             else if (DeckMenuRegex.doesItAddCardToMainDeckCommand(command))
                 addCardToMainDeck(command);
-            else if (DeckMenuRegex.doesItAddCardToSideDeckCommand(command))
+            else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
                 addCardToSideDeck(command);
             else if (DeckMenuRegex.doesItRemoveCardFromMainDeckCommand(command))
                 removeCardFromMainDeck(command);
             else if (DeckMenuRegex.doesItRemoveCardFromSideDeckCommand(command))
                 removeCardFromSideDeck(command);
-            else if (command.matches(DeckMenuRegex.ACTIVE_DECK_REGEX))
+            else if (command.matches(DeckMenuRegex.activeDeckRegex))
                 activeDeck(command);
-            else if (command.matches(DeckMenuRegex.SHOW_HELP))
+            else if (command.matches(DeckMenuRegex.showHelp))
                 showHelp();
             else if (command.matches("menu show-current"))
                 respond(DeckMenuResponses.CURRENT_MENU_DECK_MENU);
-            else if (command.matches("menu exit")) {
-                System.out.println("Entering main menu");
+            else if (command.matches("menu exit"))
                 return;
-            } else respond(DeckMenuResponses.INVALID_COMMAND);
+            else respond(DeckMenuResponses.INVALID_COMMAND);
         }
     }
 
     private void creatDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.CREATE_DECK_REGEX);
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.creatDeckRegex);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             DeckMenuResponses response = DeckMenuController.createDeck(deckName);
@@ -74,7 +73,7 @@ public class DeckMenu {
     }
 
     private void deleteDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.DELETE_DECK_REGEX);
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.deleteDeckRegex);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             DeckMenuResponses response = DeckMenuController.deleteDeck(deckName);
@@ -83,7 +82,7 @@ public class DeckMenu {
     }
 
     private void activeDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.ACTIVE_DECK_REGEX);
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.activeDeckRegex);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             DeckMenuResponses response = DeckMenuController.activateDeck(deckName);
@@ -96,7 +95,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.addCardToMainDeck(deckName, cardName);
+            DeckMenuResponses response = DeckMenuController.addCardToMainDeck( deckName,cardName);
             respond(response);
         }
     }
@@ -116,7 +115,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(deckName, cardName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromMainDeck(deckName,cardName);
             respond(response);
         }
     }
@@ -126,7 +125,7 @@ public class DeckMenu {
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             String cardName = matcher.group("cardName");
-            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(deckName, cardName);
+            DeckMenuResponses response = DeckMenuController.removeCardFromSideDeck(deckName,cardName);
             respond(response);
         }
     }
@@ -142,18 +141,11 @@ public class DeckMenu {
     }
 
     private void showMainDeck(String command) {
-        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.SHOW_MAIN_DECK_REGEX[0]);
+        Matcher matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.showMainDeckRegex);
         if (matcher.find()) {
             String deckName = matcher.group("deckName");
             DeckMenuResponses response = DeckMenuController.showMainDeck(deckName);
             respond(response);
-        } else {
-            matcher = RegexFunctions.getCommandMatcher(command, DeckMenuRegex.SHOW_MAIN_DECK_REGEX[1]);
-            if (matcher.find()) {
-                String deckName = matcher.group("deckName");
-                DeckMenuResponses response = DeckMenuController.showMainDeck(deckName);
-                respond(response);
-            }
         }
     }
 
@@ -188,13 +180,13 @@ public class DeckMenu {
     }
 
     public void showHelp() {
-        String help = "deck create <deckName>\n";
-        help += "deck delete <deckName>\n";
-        help += "deck set-activate <deckName>\n";
+        String help = "deck create <deckname>\n";
+        help += "deck delete <deckname>\n";
+        help += "deck set-activate <deckname>\n";
         help += "deck add-card --card <card name> --deck <deck name> --side(optional)\n";
         help += "deck rm-card --card <card name> --deck <deck name> --side(optional)\n";
         help += "deck show --all\n";
-        help += "deck show --deck-name <deck name> --side(optional)\n";
+        help += "deck show --deck-name <deck name> --side(opttional)\n";
         help += "deck show --cards\n";
         help += "menu show-current\n";
         help += "menu exit";

@@ -45,7 +45,8 @@ public class DeckMenuController {
         User user = LoginMenuController.getCurrentUser();
         PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
         Deck deck = user.getDeckByName(deckName);
-        return DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck,deck);
+        DeckMenuResponses response = DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck,deck);
+        return response;
     }
 
     public static DeckMenuResponses addCardToSideDeck(String deckName, String cardName) {
@@ -87,11 +88,10 @@ public class DeckMenuController {
         StringBuilder outputString = new StringBuilder("Decks:\nActive Deck:\n");
         Deck activeDeck = user.getActiveDeck();
         if (activeDeck != null) {
-            outputString.append(deckToString(activeDeck) + "\n");
+            outputString.append(deckToString(activeDeck));
         }
-        outputString.append("Other decks :\n");
         for (Deck deck : temp) {
-            outputString.append(deckToString(deck) + "\n");
+            outputString.append("\n" + deckToString(deck));
         }
         return outputString.toString();
     }

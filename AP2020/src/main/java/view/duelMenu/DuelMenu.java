@@ -1,13 +1,10 @@
 package view.duelMenu;
 
-import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
-import model.exceptions.WinnerException;
 import model.game.MiniGame;
 import org.jetbrains.annotations.NotNull;
-import view.LoginMenu;
 import view.regexes.DuelMenuRegex;
 import view.responses.StartingGameResponses;
 
@@ -18,7 +15,6 @@ import java.util.regex.Matcher;
 public class DuelMenu {
     private final Scanner scanner;
     private static DuelMenu duelMenu;
-    private WinnerException oneRoundGameException;
 
     private DuelMenu(Scanner scanner) {
         this.scanner = scanner;
@@ -29,7 +25,7 @@ public class DuelMenu {
         return duelMenu;
     }
 
-    public void run() throws CloneNotSupportedException {
+    public void run() {
         String command;
         while (true) {
             command = scanner.nextLine().trim();
@@ -47,7 +43,7 @@ public class DuelMenu {
         }
     }
 
-    private void duelNewPlayer(String command) throws CloneNotSupportedException {
+    private void duelNewPlayer(String command) {
         HashMap<String, String> data = parseDuelNewPlayerData(command);
         String username = data.get("username");
         String rounds = data.get("rounds");
@@ -82,8 +78,7 @@ public class DuelMenu {
         }
 
     }
-
-    public void duelNewAi(String command) {
+    public void duelNewAi(String command){
         int numberOfRounds = Integer.parseInt(DuelMenuRegex.getRightMatcherForDuelNewAi(command).group("rounds"));
         if (numberOfRounds == 1)
             singlePlayerOneRoundGame();
@@ -94,28 +89,16 @@ public class DuelMenu {
     }
 
     public void singleRoundGame(User player, User rival) {
-        try {
-            new OneRoundGame(player, rival, LoginMenu.getInstance().getScanner()).run();
-        } catch (WinnerException winnerException) {
-            System.out.println(winnerException.getWinner().getUsername()
-                    + " Won the game and the score is :\n"
-                    + winnerException.getWinner().getUsername() + " 1000\n"
-                    + winnerException.getLoser().getUsername() + " 0");
-            GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner()
-                    , winnerException.getLoser());
-        }
     }
 
-    public void tripleRoundGame(User player, User rival) throws CloneNotSupportedException {
-        ThreeRoundGame threeRoundGame = new ThreeRoundGame(player, rival, scanner);
-        threeRoundGame.run();
+    public void tripleRoundGame(User player, User rival) {
+        //todo
     }
 
     public void singlePlayerOneRoundGame() {
         //todo
     }
-
-    public void singlePlayerThreeRoundGame() {
+    public void singlePlayerThreeRoundGame(){
         //todo
     }
 
@@ -144,13 +127,13 @@ public class DuelMenu {
 
     public void showHelp() {
         StringBuilder help = new StringBuilder();
-        help.append("duel --new --second-player <player2 username> --rounds<1/3>\n");
-        help.append("duel --new single player\n");
+        help.append("duel new --second-player <player2 username> --rounds<1/3>\n");
+        help.append("duel new single player\n");
         help.append("menu show-current\n");
         help.append("menu exit\n");
         help.append("\n");
         help.append("shortcut:\n");
-        help.append("duel -n -s-p <player2 username> -r <1/3>");
+        help.append("duel new -s-p <player2 username> -r<1/3>");
         System.out.println(help);
     }
 }
