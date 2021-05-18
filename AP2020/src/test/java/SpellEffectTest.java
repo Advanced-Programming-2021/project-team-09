@@ -72,5 +72,6 @@ public class SpellEffectTest extends TestEssentials {
         Assertions.assertNotNull(card);
         Executable executable = () -> SpellEffectController.SolemnWarning(game, card);
         board.addCardToSpellZone(card);
+        
     }
 }
