@@ -53,6 +53,8 @@ public class EndPhaseMenu extends OneRoundGame{
                 showHelp();
             else if (command.matches(OneRoundGameRegexes.deselectCard))
                 deselectCard(true);
+            else if (command.matches(OneRoundGameRegexes.SHOW_TABLE))
+                showTable();
             else respond(OneRoundGameResponses.INVALID_COMMAND);
         }
     }
