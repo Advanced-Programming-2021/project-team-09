@@ -170,6 +170,6 @@ public class Monster extends Card {
         this.cardName = cardName;
         this.cardType = CardType.MONSTER;
         this.features = new ArrayList<>();
-        this.features.addAll(ReadAndWriteDataBase.getCardFeaturesByName(cardName));
+        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
     }
 }

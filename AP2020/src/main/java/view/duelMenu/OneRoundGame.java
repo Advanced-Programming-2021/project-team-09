@@ -181,7 +181,7 @@ public class OneRoundGame {
         }
     }
 
-    public void summon() {
+    public void summon() throws WinnerException {
         if (!canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
@@ -201,6 +201,7 @@ public class OneRoundGame {
                 else if (answer == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS)
                     respond(OneRoundGameResponses.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE);
                 else if (answer == GameMenuResponsesEnum.ABORTED) respond(OneRoundGameResponses.ABORTED);
+                deselectCard(false);
             }
         }
     }
@@ -285,7 +286,7 @@ public class OneRoundGame {
     }
 
     public void attackDirect() throws WinnerException {
-        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        if (!(currentPhase == Phase.BATTLE_PHASE)) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
@@ -304,12 +305,6 @@ public class OneRoundGame {
         }
     }
 
-    private boolean canAttackInThisPhase() {
-        return canChangePosition();
-    }
-
-
-    //todo new menu
     public void activeEffect() throws WinnerException {
         if (!canActiveEffect()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else { // action allowed
@@ -372,9 +367,9 @@ public class OneRoundGame {
         else if (selectState == SelectState.PLAYER_FIELD)
             System.out.println(game.getPlayerBoard().getFieldZone().getCard().toString());
         else if (selectState == SelectState.PLAYER_SPELL)
-            System.out.println(game.getRivalBoard().getSpellZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+            System.out.println(game.getPlayerBoard().getSpellZone(GameMenuController.getCellNumber() - 1).getCard().toString());
         else if (selectState == SelectState.PLAYER_MONSTER)
-            System.out.println(game.getRivalBoard().getMonsterZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+            System.out.println(game.getPlayerBoard().getMonsterZone(GameMenuController.getCellNumber() - 1).getCard().toString());
         else if (selectState == SelectState.RIVAL_FIELD)
             System.out.println(game.getRivalBoard().getFieldZone().getCard().toString());
         else if (selectState == SelectState.RIVAL_MONSTER) {
@@ -500,7 +495,10 @@ public class OneRoundGame {
             else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
                 respond(OneRoundGameResponses.MONSTER_CARD_POSITION_CHANGED_SUCCESSFULLY);
                 deselectCard(false);
-            } else unknownError();
+            } else if (answer == GameMenuResponsesEnum.CANT_CHANGE)
+                respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
+            else unknownError();
+            deselectCard(false);
         }
     }
 
@@ -512,7 +510,7 @@ public class OneRoundGame {
 
     public void attackToOpponentMonster(String command) throws WinnerException {
         int cellNumber = getNumberFromString(command);
-        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        if (!(currentPhase == Phase.BATTLE_PHASE)) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);

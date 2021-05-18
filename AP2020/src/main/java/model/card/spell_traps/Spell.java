@@ -57,7 +57,6 @@ public class Spell extends Card {
         description = temp.get(2);
         limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
-        this.features = new ArrayList<>();
         this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
     }
 }

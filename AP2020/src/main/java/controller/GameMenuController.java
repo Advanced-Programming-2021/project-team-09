@@ -6,6 +6,8 @@ import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.SpellType;
 import model.deck.Graveyard;
 import model.exceptions.*;
 import model.game.*;
@@ -93,7 +95,6 @@ public class GameMenuController {
 
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) throws WinnerException {
-        if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
             throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
@@ -102,6 +103,7 @@ public class GameMenuController {
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
+
     public static GameMenuResponse drawRival(Game game) throws WinnerException {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
@@ -119,7 +121,7 @@ public class GameMenuController {
         return respondWithObj(tempCards.get(cardNumber - 1), GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse summon(Game game, int cardNumberInHand) {
+    public static GameMenuResponse summon(Game game, int cardNumberInHand) throws WinnerException {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1)
             return respond(GameMenuResponsesEnum.INVALID_SELECTION);
@@ -152,7 +154,20 @@ public class GameMenuController {
             }
             putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
             game.setCanSummonCard(false);
-        } else {
+        } else { // card is spell or trap
+            if (card.isSpell()) {
+                Spell tempSpell = (Spell) card;
+                if (tempSpell.getSpellType() == SpellType.FIELD) {
+                    Cell fieldZoneCell = game.getPlayerBoard().getFieldZone();
+                    if (fieldZoneCell.isOccupied()) sendToGraveyardFromFieldZone(game, true);
+                    game.getPlayerBoard().getFieldZone().addCard(tempSpell);
+                    try {
+                        card.activeEffect(game);
+                    } catch (Exception ignored) {
+                    }
+                    return respond(GameMenuResponsesEnum.SUCCESSFUL);
+                }
+            }
             if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
             Cell[] tempCells = game.getPlayerBoard().getSpellZone();
             putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), tempCells, State.FACE_UP_SPELL);
@@ -173,6 +188,15 @@ public class GameMenuController {
         if (hasSpecialSummonAfterNormalSummon(card.getFeatures()))
             specialSummon(game, card);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    public static void sendToGraveyardFromFieldZone(Game game, boolean fromPlayer) {
+        Card tempCard;
+        if (fromPlayer)
+            game.getPlayerBoard().getGraveyard().addCard(tempCard = game.getPlayerBoard().getFieldZone().removeCard());
+        else
+            game.getRivalBoard().getGraveyard().addCard(tempCard = game.getPlayerBoard().getFieldZone().removeCard());
+        tempCard.destroy(game);
     }
 
     private static boolean hasSpecialSummonAfterNormalSummon(ArrayList<CardFeatures> cardFeatures) {
@@ -538,9 +562,11 @@ public class GameMenuController {
         State tempState = attackOrDefence.equals("attack") ? State.FACE_UP_ATTACK : State.FACE_UP_DEFENCE;
         if (tempCells[cellNumber - 1].getState() == tempState)
             return respond(GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION);
+        Cell cardCell = tempCells[cellNumber - 1];
+        if (cardCell.getRoundCounter() == 0) return respond(GameMenuResponsesEnum.CANT_CHANGE);
         if (tempCells[cellNumber - 1].isChangedPosition()) return respond(GameMenuResponsesEnum.ALREADY_CHANGED);
-        tempCells[cellNumber - 1].setState(tempState);
-        tempCells[cellNumber - 1].setChangedPosition(true);
+        cardCell.setState(tempState);
+        cardCell.setChangedPosition(true);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
@@ -651,6 +677,7 @@ public class GameMenuController {
                 hasMonster = true;
                 break;
             }
+        tempCells = game.getPlayerBoard().getMonsterZone();
         if (hasMonster) return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);

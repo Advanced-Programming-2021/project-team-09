@@ -155,7 +155,7 @@ public class Game {
     }
 
     public boolean playerHasCapacityToDraw() {
-        return getNumberOfCardsInHand() < 5;
+        return getNumberOfCardsInHand() < 6;
     }
 
     public boolean rivalHasCapacityToDraw() {
@@ -321,7 +321,7 @@ public class Game {
         table.append("\n\n").append(dis);
         table.append(rivalBoard.getGraveyard().getNumberOfAllCards()).append("\t\t\t\t\t\t").append(rivalBoard.getFieldZone().isOccupied() ? "O\n" : "E\n");
         table.append("\n----------------------------------------------------------------\n\n").append(dis);
-        table.append(playerBoard.getFieldZone().isOccupied() ? "O" : "E" + "\t\t\t\t\t\t" + playerBoard.getGraveyard().getNumberOfAllCards() + "\n\n").append(dis);
+        table.append(playerBoard.getFieldZone().isOccupied() ? "O" : "E").append("\t\t\t\t\t\t" + playerBoard.getGraveyard().getNumberOfAllCards() + "\n\n").append(dis);
         tempCellArray = playerBoard.getMonsterZone();
         table.append(monsterStateToString(tempCellArray[3]));
         table.append(monsterStateToString(tempCellArray[1]));
