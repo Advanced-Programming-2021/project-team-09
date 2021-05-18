@@ -10,15 +10,23 @@ public class MiniGameController {
         Random rand = new Random();
         return rand.nextInt(6) + 1;
     }
-    public static void playDice(MiniGame miniGame) {
+    public static void playDice(MiniGame miniGame, String playerChoice) {
         int firstUserDice = dice();
         int secondUserDice = dice();
-        if (firstUserDice > secondUserDice)
-            miniGame.setWinner(miniGame.getFirstUser());
+        if (firstUserDice > secondUserDice){
+            if (playerChoice.equals("higher"))
+                miniGame.setWinner(miniGame.getFirstUser());
+            else
+                miniGame.setWinner(miniGame.getSecondUser());
+        }
         else if (firstUserDice == secondUserDice)
-            playDice(miniGame);
-        else
-            miniGame.setWinner(miniGame.getSecondUser());
+            playDice(miniGame, playerChoice);
+        else{
+            if (playerChoice.equals("higher"))
+                miniGame.setWinner(miniGame.getSecondUser());
+            else
+                miniGame.setWinner(miniGame.getFirstUser());
+        }
     }
     public static void playCoin(MiniGame miniGame, String playerChoice) {
         String coin = throwCoin();
