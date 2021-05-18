@@ -138,7 +138,7 @@ public class Game {
 
     public void playerDrawCard() {
         MainDeck tempDeck = playerDeck.getMainDeck();
-        if (tempDeck.getNumberOfAllCards() != 0)
+        if (playerHasCapacityToDraw() && tempDeck.getNumberOfAllCards() != 0)
             playerHandCards.add(tempDeck.removeCard(tempDeck.getCards().get(0).getCardName()));
     }
 
