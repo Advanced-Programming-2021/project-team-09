@@ -1,7 +1,7 @@
-import java.io.IOException;
+import view.LoginMenu;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        System.out.println("MIReBOZORG was here");
+    public static void main(String[] args) {
+        LoginMenu.getInstance().run();
     }
 }

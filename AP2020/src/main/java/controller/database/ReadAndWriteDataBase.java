@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import model.User;
 import model.card.CardFeatures;
 import model.card.FeatureWrapper;
+import model.deck.Deck;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +24,22 @@ public class ReadAndWriteDataBase {
         } catch (IOException e) {
             return null;
         }
-        return user;
+        ArrayList<Deck> decks = user.getDecks();
+        for (Deck deck : decks) {
+            deck.getMainDeck().setDeckName(deck.getDeckName());
+            deck.getSideDeck().setDeckName(deck.getDeckName());
+        }
+        if (user.getActiveDeck() == null) return user;
+        else {
+            Deck activeDeck = user.getActiveDeck();
+            for (Deck deck : decks) {
+                if (deck.getDeckName().equals(activeDeck.getDeckName())) {
+                    user.setActiveDeck(deck);
+                    break;
+                }
+            }
+            return user;
+        }
     }
 
 
@@ -69,7 +85,4 @@ public class ReadAndWriteDataBase {
         }
         return wrapper.features;
     }
-
-
-
 }

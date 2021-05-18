@@ -8,8 +8,6 @@ import model.card.spell_traps.SpellType;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
-import model.game.State;
-import org.jetbrains.annotations.NotNull;
 import view.regexes.OneRoundGameRegexes;
 import view.regexes.RegexFunctions;
 import view.responses.GameMenuResponse;
@@ -21,9 +19,27 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class OneRoundGame {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
     protected Game game;
     protected final Scanner scanner;
-    private Phase currentPhase = Phase.STANDBY_PHASE;
+    private Phase currentPhase = Phase.DRAW_PHASE;
 
     public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) {
         try {
@@ -57,9 +73,9 @@ public class OneRoundGame {
             else if (OneRoundGameRegexes.doesItSelectOpponentSpellCellCommand(command))
                 selectOpponentSpellCell(command);
             else if (OneRoundGameRegexes.doesItSetAttackCommand(command))
-                setAttack(command);
+                setAttack();
             else if (OneRoundGameRegexes.doesItSetDefenseCommand(command))
-                setDefense(command);
+                setDefense();
             else if (command.matches(OneRoundGameRegexes.activeEffect))
                 activeEffect();
             else if (command.matches(OneRoundGameRegexes.set))
@@ -72,7 +88,7 @@ public class OneRoundGame {
                 flipSummon();
             else if (command.matches(OneRoundGameRegexes.attackToOpponentMonster))
                 attackToOpponentMonster(command);
-            else if (command.matches(OneRoundGameRegexes.showCard))
+            else if (OneRoundGameRegexes.showSelectedCard(command))
                 showSelectedCard();
             else if (command.matches(OneRoundGameRegexes.showGraveyard))
                 showGraveyard();
@@ -82,6 +98,12 @@ public class OneRoundGame {
                 surrender();
             else if (command.matches(OneRoundGameRegexes.nextPhase))
                 goToNextPhase();
+            else if (command.equals("help"))
+                showHelp();
+            else if (command.matches(OneRoundGameRegexes.SHOW_TABLE))
+                showTable();
+            else if (command.matches(OneRoundGameRegexes.SHOW_PHASE))
+                showPhase();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
@@ -91,23 +113,23 @@ public class OneRoundGame {
         this.currentPhase = currentPhase;
     }
 
-    public void goToNextPhase() throws WinnerException{
+    public void goToNextPhase() throws WinnerException {
         if (currentPhase.equals(Phase.STANDBY_PHASE))
             goToMainPhase1();
-        else if (currentPhase.equals(Phase.MAIN_PHASE1)) {
+        else if (currentPhase.equals(Phase.END_PHASE)) {
             goToDrawPhase();
             GameMenuResponse gameMenuResponse;
             if ((gameMenuResponse = GameMenuController.draw(game)).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
-                System.out.println("New Card added to hand : " + ((Card)gameMenuResponse.getObj()).getCardName());
+                System.out.println("New Card added to hand : \n" + gameMenuResponse.getObj());
             }
         } else if (currentPhase.equals(Phase.DRAW_PHASE))
-            goToMainPhase2();
-        else if (currentPhase.equals(Phase.MAIN_PHASE2))
-            goToBattlePhase();
-        else if (currentPhase.equals(Phase.BATTLE_PHASE))
-            goToEndPhase();
-        else if (currentPhase.equals(Phase.END_PHASE))
             goToStandByPhase();
+        else if (currentPhase.equals(Phase.MAIN_PHASE2))
+            goToEndPhase();
+        else if (currentPhase.equals(Phase.BATTLE_PHASE))
+            goToMainPhase2();
+        else if (currentPhase.equals(Phase.MAIN_PHASE1))
+            goToBattlePhase();
     }
 
     public void goToStandByPhase() {
@@ -120,7 +142,12 @@ public class OneRoundGame {
         respond(OneRoundGameResponses.MAIN_PHASE1);
     }
 
-    public void goToDrawPhase() {
+    public void goToDrawPhase() throws WinnerException {
+        deselectCard(false);
+        if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run();
+        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
+        game.changeTurn();
+        deselectCard(false);
         setCurrentPhase(Phase.DRAW_PHASE);
         respond(OneRoundGameResponses.DRAW_PHASE);
     }
@@ -138,8 +165,6 @@ public class OneRoundGame {
     public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
-        System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
-        game.changeTurn();
     }
 
     public void surrender() throws WinnerException {
@@ -156,8 +181,8 @@ public class OneRoundGame {
         }
     }
 
-    public void summon() {
-        if (canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+    public void summon() throws WinnerException {
+        if (!canSummonInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
@@ -165,12 +190,18 @@ public class OneRoundGame {
             else {
                 GameMenuResponse gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber());
                 GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
-                if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED) respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
-                else if (answer == GameMenuResponsesEnum.CANT_NORMAL_SUMMON) respond(OneRoundGameResponses.CANT_NORMAL_SUMMON);
-                else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL) respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
-                else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL) respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
-                else if (answer == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS) respond(OneRoundGameResponses.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE);
+                if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED)
+                    respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
+                else if (answer == GameMenuResponsesEnum.CANT_NORMAL_SUMMON)
+                    respond(OneRoundGameResponses.CANT_NORMAL_SUMMON);
+                else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL)
+                    respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
+                else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL)
+                    respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+                else if (answer == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS)
+                    respond(OneRoundGameResponses.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE);
                 else if (answer == GameMenuResponsesEnum.ABORTED) respond(OneRoundGameResponses.ABORTED);
+                deselectCard(false);
             }
         }
     }
@@ -200,8 +231,10 @@ public class OneRoundGame {
         GameMenuResponse gameMenuResponse = GameMenuController.setMonsterCard(game, cellNumber);
         GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
         if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
-        else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL) respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
-        else if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED) respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
+        else if (answer == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL)
+            respond(OneRoundGameResponses.MONSTER_CARD_ZONE_IS_FULL);
+        else if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED)
+            respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
         else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
             respond(OneRoundGameResponses.SET_SUCCESSFULLY);
             deselectCard(false);
@@ -212,7 +245,8 @@ public class OneRoundGame {
         GameMenuResponse gameMenuResponse = GameMenuController.setSpellAndTrap(game, cellNumber);
         GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
         if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
-        else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL) respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+        else if (answer == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL)
+            respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
         else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
             respond(OneRoundGameResponses.SET_SUCCESSFULLY);
             deselectCard(false);
@@ -224,9 +258,9 @@ public class OneRoundGame {
         return canChangePosition();
     }
 
-    public void flipSummon() throws WinnerException{
+    public void flipSummon() throws WinnerException {
         if (!canFlipIntThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
-        else  {
+        else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
             else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.PLEASE_SELECT_MONSTER);
@@ -239,8 +273,10 @@ public class OneRoundGame {
                     return;
                 }
                 GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
-                if (answer == GameMenuResponsesEnum.CANT_FLIP_SUMMON) respond(OneRoundGameResponses.YOU_CANT_FLIP_SUMMON_THIS_CARD);
-                else if (answer == GameMenuResponsesEnum.SUCCESSFUL) respond(OneRoundGameResponses.FLIP_SUMMONED_SUCCESSFULLY);
+                if (answer == GameMenuResponsesEnum.CANT_FLIP_SUMMON)
+                    respond(OneRoundGameResponses.YOU_CANT_FLIP_SUMMON_THIS_CARD);
+                else if (answer == GameMenuResponsesEnum.SUCCESSFUL)
+                    respond(OneRoundGameResponses.FLIP_SUMMONED_SUCCESSFULLY);
             }
         }
     }
@@ -249,17 +285,19 @@ public class OneRoundGame {
         return canChangePosition();
     }
 
-    public void attackDirect() throws WinnerException{
-        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+    public void attackDirect() throws WinnerException {
+        if (!(currentPhase == Phase.BATTLE_PHASE)) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
-            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.YOU_CANT_ATTACK_WITH_THIS_CARD);
+            else if (selectState != SelectState.PLAYER_MONSTER)
+                respond(OneRoundGameResponses.YOU_CANT_ATTACK_WITH_THIS_CARD);
             else {
                 GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, GameMenuController.getCellNumber());
                 GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
                 if (answer == GameMenuResponsesEnum.CANT_ATTACK) respond(OneRoundGameResponses.CANT_ATTACK_DIRECTLY);
-                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED) respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
+                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED)
+                    respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
                 else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
                     System.out.println("Opponent received " + gameMenuResponse.getObj() + " damage.");
                 }
@@ -267,12 +305,6 @@ public class OneRoundGame {
         }
     }
 
-    private boolean canAttackInThisPhase() {
-        return canChangePosition();
-    }
-
-
-    //todo new menu
     public void activeEffect() throws WinnerException {
         if (!canActiveEffect()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else { // action allowed
@@ -307,8 +339,9 @@ public class OneRoundGame {
                     } catch (Exception e) {
                         if (e instanceof WinnerException) throw (WinnerException) e;
                         if (e instanceof StopSpell) {
-                            if (((StopSpell) e).getState() == StopEffectState.DESTROY_SPELL) GameMenuController.sendToGraveYard(game,
-                                    card);
+                            if (((StopSpell) e).getState() == StopEffectState.DESTROY_SPELL)
+                                GameMenuController.sendToGraveYard(game,
+                                        card);
                         }
                         return;
                     }
@@ -334,9 +367,9 @@ public class OneRoundGame {
         else if (selectState == SelectState.PLAYER_FIELD)
             System.out.println(game.getPlayerBoard().getFieldZone().getCard().toString());
         else if (selectState == SelectState.PLAYER_SPELL)
-            System.out.println(game.getRivalBoard().getSpellZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+            System.out.println(game.getPlayerBoard().getSpellZone(GameMenuController.getCellNumber() - 1).getCard().toString());
         else if (selectState == SelectState.PLAYER_MONSTER)
-            System.out.println(game.getRivalBoard().getMonsterZone(GameMenuController.getCellNumber() - 1).getCard().toString());
+            System.out.println(game.getPlayerBoard().getMonsterZone(GameMenuController.getCellNumber() - 1).getCard().toString());
         else if (selectState == SelectState.RIVAL_FIELD)
             System.out.println(game.getRivalBoard().getFieldZone().getCard().toString());
         else if (selectState == SelectState.RIVAL_MONSTER) {
@@ -356,11 +389,6 @@ public class OneRoundGame {
         selectCard(gameMenuResponse, SelectState.PLAYER_MONSTER);
     }
 
-    private boolean canSelectInThisPhase() {
-        ArrayList<Phase> phases = getAllowedPhaseForSelect();
-        for (Phase p : phases) if (p == currentPhase) return true;
-        return false;
-    }
 
     public void selectMySpellCell(String command) {
         int cellNumber = getNumberFromString(command);
@@ -377,11 +405,16 @@ public class OneRoundGame {
             respond(OneRoundGameResponses.INVALID_SELECTION);
         } else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
             Object obj = gameMenuResponse.getObj();
-            if (!(obj instanceof Card)) {
-                unknownError();
-                return;
+            if (!(obj instanceof Cell)) {
+                if (!(obj instanceof Card)) {
+                    unknownError();
+                    return;
+                } else {
+                    GameMenuController.setCellNumber(getCellNumberFromCard((Card) obj));
+                }
+            } else {
+                GameMenuController.setCellNumber(getCellNumberFromCard(((Cell) obj).getCard()));
             }
-            GameMenuController.setCellNumber(getCellNumberFromCard((Card) obj));
             GameMenuController.setSelectState(selectState);
             respond(OneRoundGameResponses.CARD_SELECTED);
         } else unknownError();
@@ -398,7 +431,7 @@ public class OneRoundGame {
         for (int i = 0; i < 5; i++) if (temp[i].getCard() == card) return i + 1;
         ArrayList<Card> tempHands = game.getPlayerHandCards();
         for (int i = 0; i < tempHands.size(); i++) if (tempHands.get(i) == card) return i + 1;
-        return  -1;
+        return -1;
     }
 
     public void selectMyFieldZone() {
@@ -429,11 +462,11 @@ public class OneRoundGame {
         selectCard(gameMenuResponse, SelectState.RIVAL_FIELD);
     }
 
-    public void setAttack(String command) {
+    public void setAttack() {
         setPosition("attack");
     }
 
-    public void setDefense(String command) {
+    public void setDefense() {
         setPosition("defense");
     }
 
@@ -451,14 +484,21 @@ public class OneRoundGame {
             GameMenuResponse gameMenuResponse = GameMenuController.setMonsterPosition(game, GameMenuController.getCellNumber(), position);
             GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
             if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
-            else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND) respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
-            else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET) respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
-            else if (answer == GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION) respond(OneRoundGameResponses.THIS_CARD_IS_ALREADY_IN_THE_WANTED_POSITION);
-            else if (answer == GameMenuResponsesEnum.ALREADY_CHANGED) respond(OneRoundGameResponses.YOU_ALREADY_CHANGED_THIS_CARD_POSITION_THIS_TURN);
+            else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND)
+                respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
+            else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET)
+                respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
+            else if (answer == GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION)
+                respond(OneRoundGameResponses.THIS_CARD_IS_ALREADY_IN_THE_WANTED_POSITION);
+            else if (answer == GameMenuResponsesEnum.ALREADY_CHANGED)
+                respond(OneRoundGameResponses.YOU_ALREADY_CHANGED_THIS_CARD_POSITION_THIS_TURN);
             else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
                 respond(OneRoundGameResponses.MONSTER_CARD_POSITION_CHANGED_SUCCESSFULLY);
                 deselectCard(false);
-            } else unknownError();
+            } else if (answer == GameMenuResponsesEnum.CANT_CHANGE)
+                respond(OneRoundGameResponses.YOU_CANT_CHANGE_THIS_CARDS_POSITION);
+            else unknownError();
+            deselectCard(false);
         }
     }
 
@@ -468,9 +508,9 @@ public class OneRoundGame {
         return false;
     }
 
-    public void attackToOpponentMonster(String command) throws WinnerException{
+    public void attackToOpponentMonster(String command) throws WinnerException {
         int cellNumber = getNumberFromString(command);
-        if (!canAttackInThisPhase()) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
+        if (!(currentPhase == Phase.BATTLE_PHASE)) respond(OneRoundGameResponses.ACTION_NOT_ALLOWED_IN_THIS_PHASE);
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
@@ -480,7 +520,7 @@ public class OneRoundGame {
                 try {
                     gameMenuResponse = GameMenuController.attack(game, GameMenuController.getCellNumber(), cellNumber);
                 } catch (GameException e) {
-                    if (e instanceof WinnerException) throw (WinnerException)e;
+                    if (e instanceof WinnerException) throw (WinnerException) e;
                     else if (e instanceof StopAttackException) {
                         if (((StopAttackException) e).getState() == StopEffectState.END_BATTLE_PHASE) {
                             goToNextPhase();
@@ -490,15 +530,17 @@ public class OneRoundGame {
                 }
                 GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
                 if (answer == GameMenuResponsesEnum.INVALID_SELECTION) respond(OneRoundGameResponses.INVALID_SELECTION);
-                else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND) respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
-                else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET) respond(OneRoundGameResponses.NOT_SUMMONED_YET);
-                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED) respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
+                else if (answer == GameMenuResponsesEnum.NO_CARD_FOUND)
+                    respond(OneRoundGameResponses.NO_CARD_FOUND_IN_GIVEN_POSITION);
+                else if (answer == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET)
+                    respond(OneRoundGameResponses.NOT_SUMMONED_YET);
+                else if (answer == GameMenuResponsesEnum.ALREADY_ATTACKED)
+                    respond(OneRoundGameResponses.THIS_CARD_ALREADY_ATTACKED);
                 else if (answer == GameMenuResponsesEnum.ABORTED) {
                     respond(OneRoundGameResponses.ABORTED);
                     deselectCard(false);
-                }
-                else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
-                    System.out.println((String)gameMenuResponse.getObj());
+                } else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
+                    System.out.println((String) gameMenuResponse.getObj());
                     deselectCard(false);
                 }
             }
@@ -512,32 +554,9 @@ public class OneRoundGame {
         return allowedPhaseForSummon;
     }
 
-    public ArrayList<Phase> getAllowedPhaseForSelect() {
-        ArrayList<Phase> allowedPhaseForSelect = new ArrayList<>();
-        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
-        allowedPhaseForSelect.add(Phase.MAIN_PHASE2);
-        allowedPhaseForSelect.add(Phase.BATTLE_PHASE);
-        return allowedPhaseForSelect;
+    public void showTable() {
+        System.out.println(ANSI_RED + ANSI_CYAN_BACKGROUND + GameMenuController.showTable(game) + ANSI_RESET);
     }
-
-    public ArrayList<Phase> getAllowedPhaseForAttack() {
-        ArrayList<Phase> allowedPhaseForAttack = new ArrayList<>();
-        allowedPhaseForAttack.add(Phase.BATTLE_PHASE);
-        return allowedPhaseForAttack;
-    }
-
-    public boolean doesActionAllowedInCurrentPhases(@NotNull ArrayList<Phase> allowedPhases) {
-        for (Phase phase : allowedPhases) {
-            if (getCurrentPhase().equals(phase))
-                return true;
-        }
-        return false;
-    }
-
-    public Phase getCurrentPhase() {
-        return currentPhase;
-    }
-
 
     public void respond(OneRoundGameResponses responses) {
         if (responses.equals(OneRoundGameResponses.INVALID_COMMAND))
@@ -661,5 +680,50 @@ public class OneRoundGame {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, "^[\\D]*(?<cellNumber>[\\d]{1,9})[\\D]*$");
         if (matcher.find()) return Integer.parseInt(matcher.group("cellNumber"));
         return 0;
+    }
+
+    public void showHelp() {
+        System.out.println(ANSI_BLACK_BACKGROUND + ANSI_YELLOW + "summon\n" +
+                "show table\n" +
+                "set\n" +
+                "flip-summon\n" +
+                "attack <cell number>\n" +
+                "attack direct\n" +
+                "active effect\n" +
+                "show graveyard\n" +
+                "card show --selected\n" +
+                "select --monster <cell number> --opponent(optional)\n" +
+                "select --spell <cell number> --opponent(optional)\n" +
+                "select --field --opponent(optional)\n" +
+                "select --hand <number>\n" +
+                "set --position attack\n" +
+                "set --position defense\n" +
+                "next phase\n" +
+                "surrender\n" +
+                "select -d\n" +
+                "show phase\n" + ANSI_RESET);
+    }
+
+    public void showPhase() {
+        switch (currentPhase) {
+            case BATTLE_PHASE:
+                respond(OneRoundGameResponses.BATTLE_PHASE);
+                break;
+            case DRAW_PHASE:
+                respond(OneRoundGameResponses.DRAW_PHASE);
+                break;
+            case END_PHASE:
+                respond(OneRoundGameResponses.END_PHASE);
+                break;
+            case MAIN_PHASE1:
+                respond(OneRoundGameResponses.MAIN_PHASE1);
+                break;
+            case MAIN_PHASE2:
+                respond(OneRoundGameResponses.MAIN_PHASE2);
+                break;
+            case STANDBY_PHASE:
+                respond(OneRoundGameResponses.STANDBY_PHASE);
+                break;
+        }
     }
 }
