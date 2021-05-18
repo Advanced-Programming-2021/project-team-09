@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class SpellEffectController extends EffectController {
 
-    public void MonsterReborn(Game game, Card card) throws GameException {
+    public static void MonsterReborn(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         if (board.isMonsterZoneFull()) {
             CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
@@ -42,7 +42,7 @@ public class SpellEffectController extends EffectController {
 
     }
 
-    public void TerraForming(Game game, Card card) throws GameException {
+    public static void TerraForming(Game game, Card card) throws GameException {
         boolean hasFieldZoneSpell = false;
         for (Card tempCard : game.getPlayerDeck().getAllCards()) {
             if (tempCard.isSpell()) {
@@ -63,7 +63,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void PotofGreed(Game game, Card card) throws GameException {
+    public static void PotofGreed(Game game, Card card) throws GameException {
         ArrayList<Card> cardsInHands = getCardsInHand(game, card);
         Deck deck = getDeck(game, card);
         if (deck.getAllCards().size() >= 2) {
@@ -74,14 +74,14 @@ public class SpellEffectController extends EffectController {
         } else game.setWinner(game.getRival());
     }
 
-    public void Raigeki(Game game, Card card) throws GameException {
+    public static void Raigeki(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         for (Cell tempCell : board.getMonsterZone()) {
             if (tempCell.isOccupied()) board.removeCardFromMonsterZone(tempCell.getCard());
         }
     }
 
-    public void ChangeofHeart(Game game, Card card) throws GameException {
+    public static void ChangeofHeart(Game game, Card card) throws GameException {
         Limits limits = getRivalsLimits(game, card);
         Board rivalBoard = getRivalBoard(game, card);
         if (rivalBoard.getMonsterZone().length == 0) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
@@ -96,14 +96,14 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void harpiesFeatherDuster(Game game, Card card) throws GameException {
+    public static void harpiesFeatherDuster(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         for (Cell tempCell : board.getSpellZone()) {
             if (tempCell.isOccupied()) board.removeCardFromSpellZone(tempCell.getCard());
         }
     }
 
-    public void SwordsofRevealingLight(Game game, Card card) throws GameException {
+    public static void SwordsofRevealingLight(Game game, Card card) throws GameException {
         Limits limits = getRivalsLimits(game, card);
         Board board = getRivalBoard(game, card);
         Cell[] cells = board.getMonsterZone();
@@ -115,11 +115,11 @@ public class SpellEffectController extends EffectController {
         limits.addLimit(EffectLimitations.CANT_ATTACK);
     }
 
-    public void DarkHole(Game game, Card card) throws GameException {
+    public static void DarkHole(Game game, Card card) throws GameException {
         destroyAllMonsters(game);
     }
 
-    public void SupplySquad(Game game, Card card) throws GameException {
+    public static void SupplySquad(Game game, Card card) throws GameException {
         Deck deck = getDeck(game, card);
         if (deck.getMainDeck().getCards().size() == 0) {
             game.setWinner(getWinner(game, card));
@@ -132,7 +132,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void SpellAbsorption(Game game, Card card) throws GameException {
+    public static void SpellAbsorption(Game game, Card card) throws GameException {
         if (doesCardBelongsToPlayer(game, card)) {
             game.increaseHealth(500);
         } else {
@@ -140,7 +140,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void Messengerofpeace(Game game, Card card) throws GameException {
+    public static void Messengerofpeace(Game game, Card card) throws GameException {
         game.getPlayerLimits().setAttackBound(1500);
         game.getPlayerLimits().addCardLimitOnATKBound(card);
         game.getRivalLimits().setAttackBound(1500);
@@ -153,7 +153,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void TwinTwisters(Game game, Card card) throws GameException {
+    public static void TwinTwisters(Game game, Card card) throws GameException {
         ArrayList<Card> cardsInHand = getCardsInHand(game, card);
         Board board = getBoard(game, card);
         if (cardsInHand.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
@@ -184,7 +184,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void Mysticalspacetyphoon(Game game, Card card) throws GameException {
+    public static void Mysticalspacetyphoon(Game game, Card card) throws GameException {
         Card chosenCard;
         while (true) {
             chosenCard = CardEffectsView.getCardFromBothBoards(game.getPlayerBoard().getSpellZone(), game.getRivalBoard().getSpellZone());
@@ -196,11 +196,11 @@ public class SpellEffectController extends EffectController {
         board.removeCardFromSpellZone(chosenCard);
     }
 
-    public void RingofDefense(Game game, Card card) throws GameException {
+    public static void RingofDefense(Game game, Card card) throws GameException {
         //ToDo
     }
 
-    public void Yami(Game game, Card card) throws GameException {
+    public static void Yami(Game game, Card card) throws GameException {
         Limits playerLimits = game.getPlayerLimits();
         Limits rivalLimits = game.getRivalLimits();
         addPowerNumbersToType(playerLimits, rivalLimits, MonsterType.FAIRY, -200);
@@ -208,7 +208,7 @@ public class SpellEffectController extends EffectController {
         addPowerNumbersToType(playerLimits, rivalLimits, MonsterType.SPELLCASTER, +200);
     }
 
-    public void Forest(Game game, Card card) throws GameException {
+    public static void Forest(Game game, Card card) throws GameException {
         Limits playerLimits = game.getPlayerLimits();
         Limits rivalLimits = game.getRivalLimits();
         addPowerNumbersToType(playerLimits, rivalLimits, MonsterType.BEAST, 200);
@@ -216,14 +216,14 @@ public class SpellEffectController extends EffectController {
         addPowerNumbersToType(playerLimits, rivalLimits, MonsterType.INSECT, 200);
     }
 
-    public void ClosedForest(Game game, Card card) throws GameException {
+    public static void ClosedForest(Game game, Card card) throws GameException {
         Limits limits;
         if (doesCardBelongsToPlayer(game, card)) limits = game.getPlayerLimits();
         else limits = game.getRivalLimits();
         limits.addFieldZoneATK(MonsterType.BEAST, 100);
     }
 
-    public void UMIIRUKA(Game game, Card card) throws GameException {
+    public static void UMIIRUKA(Game game, Card card) throws GameException {
         Limits playerLimits = game.getPlayerLimits();
         Limits rivalLimits = game.getRivalLimits();
         playerLimits.addFieldZoneATK(MonsterType.AQUA, 500);
@@ -232,7 +232,7 @@ public class SpellEffectController extends EffectController {
         rivalLimits.addFieldZoneDEF(MonsterType.AQUA, -400);
     }
 
-    public void SwordofDarkDestruction(Game game, Card card) throws GameException {
+    public static void SwordofDarkDestruction(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Limits limits = getLimits(game, card);
         if (!isThereAnyFaceUpMonsters(board)) {
@@ -261,7 +261,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void BlackPendant(Game game, Card card) throws GameException {
+    public static void BlackPendant(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Limits limits = getLimits(game, card);
         if (!isThereAnyFaceUpMonsters(board)) {
@@ -272,7 +272,7 @@ public class SpellEffectController extends EffectController {
         addLimitationForEquipments(card, board, limits, 500, 0);
     }
 
-    public void UnitedWeStand(Game game, Card card) throws GameException {
+    public static void UnitedWeStand(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Limits limits = getLimits(game, card);
         if (!isThereAnyFaceUpMonsters(board)) {
@@ -289,7 +289,7 @@ public class SpellEffectController extends EffectController {
         addLimitationForEquipments(card, board, limits, 800 * countFaceUpMonsters, 800 * countFaceUpMonsters);
     }
 
-    public void MagnumShield(Game game, Card card) throws GameException {
+    public static void MagnumShield(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Limits limits = getLimits(game, card);
         if (!isThereAnyFaceUpMonsters(board) && !isThereAnyFaceUpCardWithType(board, MonsterType.WARRIOR)) {
@@ -315,7 +315,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void AdvancedRitualArt(Game game, Card card) throws GameException {
+    public static void AdvancedRitualArt(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         ArrayList<Card> cardsInHand = getCardsInHand(game, card);
         if (canRitualSummon(game, card)) {
@@ -353,7 +353,7 @@ public class SpellEffectController extends EffectController {
 
 
     //traps!
-    public void magicCylinder(Game game, Card card) throws GameException {
+    public static void magicCylinder(Game game, Card card) throws GameException {
         throw new StopAttackException(StopEffectState.REDUCE_FROM_ATTACKERS_LP);
     }
 
@@ -369,7 +369,7 @@ public class SpellEffectController extends EffectController {
         throw new StopAttackException(StopEffectState.JUST_STOP_ATTACK);
     }
 
-    public void mindCrush(Game game, Card card) throws GameException {
+    public static void mindCrush(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Board opponentsBoard = getRivalBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
@@ -386,31 +386,31 @@ public class SpellEffectController extends EffectController {
         } else removeARandomCardFromHand(board, cards);
     }
 
-    public void trapHole(Game game, Card card) throws GameException {
+    public static void trapHole(Game game, Card card) throws GameException {
         throw new StopSpell(StopEffectState.STOP_SUMMON);
     }
 
-    public void TorrentialTribute(Game game, Card card) throws GameException {
+    public static void TorrentialTribute(Game game, Card card) throws GameException {
         destroyAllMonsters(game);
         throw new StopAttackException(StopEffectState.STOP_SUMMON);
     }
 
-    public void timeSeal(Game game, Card card) throws GameException {
+    public static void timeSeal(Game game, Card card) throws GameException {
         Limits limits = getRivalsLimits(game, card);
         limits.addLimit(EffectLimitations.HAS_NO_DRAW_PHASE);
     }
 
-    public void negateAttack(Game game, Card card) throws GameException {
+    public static void negateAttack(Game game, Card card) throws GameException {
         throw new StopAttackException(StopEffectState.END_BATTLE_PHASE);
     }
 
-    public void SolemnWarning(Game game, Card card) throws GameException {
+    public static void SolemnWarning(Game game, Card card) throws GameException {
         if (doesCardBelongsToPlayer(game, card)) game.decreaseHealth(2000);
         else game.decreaseRivalHealth(2000);
         throw new StopSpell(StopEffectState.DESTROY_SPELL);
     }
 
-    public void MagicJammer(Game game, Card card) throws GameException {
+    public static void MagicJammer(Game game, Card card) throws GameException {
         ArrayList<Card> cards = getCardsInHand(game, card);
         if (cards.size() == 0) CardEffectsView.respond(CardEffectsResponses.HAVE_NO_CARDS);
         else {
@@ -426,7 +426,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public void calloftheHaunted(Game game, Card card) throws GameException {
+    public static void calloftheHaunted(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Graveyard graveyard = board.getGraveyard();
         Limits limits = getLimits(game, card);
@@ -448,21 +448,21 @@ public class SpellEffectController extends EffectController {
 
     //helping functions!
 
-    private boolean isThereAnyMonsters(PrimaryDeck deck) {
+    private static boolean isThereAnyMonsters(PrimaryDeck deck) {
         for (Card card : deck.getCards()) {
             if (card.isMonster()) return true;
         }
         return false;
     }
 
-    private void addPowerNumbersToType(Limits playerLimits, Limits rivalLimits, MonsterType type, int amount) {
+    private static void addPowerNumbersToType(Limits playerLimits, Limits rivalLimits, MonsterType type, int amount) {
         playerLimits.addFieldZoneATK(type, amount);
         playerLimits.addFieldZoneDEF(type, amount);
         rivalLimits.addFieldZoneATK(type, amount);
         rivalLimits.addFieldZoneDEF(type, amount);
     }
 
-    public int getCellNumberOfSpell(Game game, Card card) {
+    public static int getCellNumberOfSpell(Game game, Card card) {
         Board board;
         board = getBoard(game, card);
         Cell[] cells = board.getSpellZone();
@@ -472,7 +472,7 @@ public class SpellEffectController extends EffectController {
         return 0;
     }
 
-    private void addLimitationForEquipments(Card card, Board board, Limits limits, int atk, int def) {
+    private static void addLimitationForEquipments(Card card, Board board, Limits limits, int atk, int def) {
         while (true) {
             int cellNumber = CardEffectsView.getCellNumber() - 1;
             if (isCellNumberValid(cellNumber)) {
@@ -485,14 +485,14 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    private void setEquipmentInLimits(Card card, Board board, Limits limits, int atk, int def, int cellNumber) {
+    private static void setEquipmentInLimits(Card card, Board board, Limits limits, int atk, int def, int cellNumber) {
         Monster monster = (Monster) board.getMonsterZone(cellNumber).getCard();
         limits.equipGadgetATKAddition(card, atk);
         limits.equipGadgetDEFAddition(card, def);
         limits.equipMonsterToCard(card, monster);
     }
 
-    private boolean isThereAnyFaceUpMonsters(Board board) {
+    private static boolean isThereAnyFaceUpMonsters(Board board) {
         Cell[] cells = board.getMonsterZone();
         for (Cell cell : cells) {
             if (cell.isOccupied() && cell.isOccupied()) return true;
@@ -500,7 +500,7 @@ public class SpellEffectController extends EffectController {
         return false;
     }
 
-    private boolean isThereAnyFaceUpCardWithType(Board board, MonsterType monsterType) {
+    private static boolean isThereAnyFaceUpCardWithType(Board board, MonsterType monsterType) {
         Cell[] cells = board.getMonsterZone();
         for (Cell cell : cells) {
             if (cell.isOccupied() && cell.isFaceUp() && ((Monster) cell.getCard()).getMonsterType().equals(monsterType))
@@ -509,13 +509,13 @@ public class SpellEffectController extends EffectController {
         return false;
     }
 
-    private void cantRitualSummon(Game game, Card card, Board board) {
+    private static void cantRitualSummon(Game game, Card card, Board board) {
         CardEffectsView.respond(CardEffectsResponses.CANT_RITUAL_SUMMON);
         int cellNumberSpell = getCellNumberOfSpell(game, card);
         board.getSpellZone(cellNumberSpell).setState(State.FACE_DOWN_SPELL);
     }
 
-    private boolean isThereAnyCombinationOfCardsThatTheyLevelEqualsTo(Board board, int level) {
+    private static boolean isThereAnyCombinationOfCardsThatTheyLevelEqualsTo(Board board, int level) {
         if (level < 0) return false;
         if (level == 0) return true;
         ArrayList<Integer> levels = new ArrayList<>();
@@ -525,7 +525,7 @@ public class SpellEffectController extends EffectController {
         return haveAnySubSequenceWithSum(levels,level);
     }
 
-    private boolean haveAnySubSequenceWithSum(ArrayList<Integer> integers , int sum) {
+    private static boolean haveAnySubSequenceWithSum(ArrayList<Integer> integers , int sum) {
         if (sum < 0) return false;
         if (sum == 0) return true;
         if (integers.size() == 0) return false;
@@ -534,7 +534,7 @@ public class SpellEffectController extends EffectController {
         return haveAnySubSequenceWithSum(integers,sum-temp) || haveAnySubSequenceWithSum(integers,sum);
     }
 
-    private ArrayList<Integer> getLevesOfRitualMonstersInHand(ArrayList<Card> cardsInHand) {
+    private static ArrayList<Integer> getLevesOfRitualMonstersInHand(ArrayList<Card> cardsInHand) {
         ArrayList<Integer> levelsOfRitualMonsters = new ArrayList<>();
         for (Card card1 : cardsInHand) {
             if (card1.getFeatures().contains(CardFeatures.RITUAL_SUMMON))
@@ -543,7 +543,7 @@ public class SpellEffectController extends EffectController {
         return levelsOfRitualMonsters;
     }
 
-    private boolean canRitualSummon(Game game, Card card) {
+    private static boolean canRitualSummon(Game game, Card card) {
         Board board = getBoard(game, card);
         ArrayList<Card> cardsInHand = getCardsInHand(game, card);
         ArrayList<Integer> levelsOfRitualMonsters = getLevesOfRitualMonstersInHand(cardsInHand);
@@ -562,24 +562,24 @@ public class SpellEffectController extends EffectController {
         return canSummon;
     }
 
-    private boolean doWeHaveACardWithNameInHand(String cardName, ArrayList<Card> cards) {
+    private static boolean doWeHaveACardWithNameInHand(String cardName, ArrayList<Card> cards) {
         for (Card card : cards) {
             if (card.getCardName().equals(cardName)) return true;
         }
         return false;
     }
 
-    private void removeARandomCardFromHand(Board board, ArrayList<Card> cards) {
+    private static void removeARandomCardFromHand(Board board, ArrayList<Card> cards) {
         int cardToBeDeleted = LocalDateTime.now().getSecond() % cards.size();
         removeCardFromHand(board, cards, cardToBeDeleted);
     }
 
-    private void removeCardFromHand(Board board, ArrayList<Card> cards, int cardToBeDeleted) {
+    private static void removeCardFromHand(Board board, ArrayList<Card> cards, int cardToBeDeleted) {
         board.sendToGraveYard(cards.get(cardToBeDeleted));
         cards.remove(cardToBeDeleted);
     }
 
-    private void destroyAllMonsters(Game game) {
+    private static void destroyAllMonsters(Game game) {
         for (Cell cell : game.getPlayerBoard().getMonsterZone()) {
             if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
         }
