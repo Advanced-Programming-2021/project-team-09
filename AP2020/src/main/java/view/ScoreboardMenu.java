@@ -8,13 +8,14 @@ public class ScoreboardMenu {
     private final Scanner scanner;
     private static ScoreboardMenu scoreboardMenu;
 
-    public void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim().toLowerCase();
-            if (command.equals("exit menu"))
+            if (command.equals("menu exit")) {
+                System.out.println("Entering main menu");
                 return;
-            else if (command.matches("show scoreboard"))
+            } else if (command.matches("show scoreboard"))
                 showScoreBoard();
             else if (command.matches("help"))
                 showHelp();
@@ -24,22 +25,22 @@ public class ScoreboardMenu {
         }
     }
 
-    public static ScoreboardMenu getInstance(Scanner scanner){
+    public static ScoreboardMenu getInstance(Scanner scanner) {
         if (scoreboardMenu == null) scoreboardMenu = new ScoreboardMenu(scanner);
         return scoreboardMenu;
     }
 
-    private ScoreboardMenu (Scanner scanner){
+    private ScoreboardMenu(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    private void showScoreBoard(){
+    private void showScoreBoard() {
         String scoreboard = ScoreboardController.getScoreBoard();
         System.out.println(scoreboard);
     }
 
     public void showHelp() {
-        String help = "scoreboard show\n";
+        String help = "show scoreboard\n";
         help += "menu show-current\n";
         help += "menu exit";
         System.out.println(help);

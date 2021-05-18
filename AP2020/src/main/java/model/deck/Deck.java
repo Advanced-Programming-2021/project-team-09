@@ -6,7 +6,7 @@ import model.card.Card;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Deck implements Cloneable{
+public class Deck implements Cloneable {
     private MainDeck mainDeck;
     private SideDeck sideDeck;
     private String deckName;
@@ -17,10 +17,15 @@ public class Deck implements Cloneable{
         mainDeck = new MainDeck(deckName);
         sideDeck = new SideDeck(deckName);
     }
+
     @Override
-    public Object clone() throws CloneNotSupportedException{
-        return super.clone();
+    public Deck clone() throws CloneNotSupportedException {
+        Deck outputDeck = new Deck(this.getDeckName());
+        outputDeck.setMainDeck(this.getMainDeck().clone());
+        outputDeck.setSideDeck(this.getSideDeck().clone());
+        return outputDeck;
     }
+
     public void addCardToMainDeck(Card card) {
         mainDeck.addCard(card);
     }
@@ -120,7 +125,7 @@ public class Deck implements Cloneable{
     @JsonIgnore
     public boolean isValid() {
         HashMap<String, Integer> temp = new HashMap<>();
-        ArrayList<Card> tempCards = mainDeck.cards;
+        ArrayList<Card> tempCards = new ArrayList<>(mainDeck.cards);
         tempCards.addAll(sideDeck.cards);
         for (Card card : tempCards) {
             if (temp.containsKey(card.getCardName())) {
@@ -132,5 +137,4 @@ public class Deck implements Cloneable{
         for (String key : temp.keySet()) if (temp.get(key) > 3) return false;
         return mainDeck.isValid() && sideDeck.isValid();
     }
-//todo clone public
 }

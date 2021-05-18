@@ -10,7 +10,7 @@ public class TributeMenu {
 
     public static int[] run(int numberOfTributes) {
         Scanner scanner = LoginMenu.getInstance().getScanner();
-        System.out.println("Please select " + numberOfTributes + " cards that you want to tribute." +
+        System.out.println("Please select cards that you want to tribute." +
                 "\nCard number must be between 1 and 5 and please select them in this format :1 2 3 ..");
         String command;
         while (true) {
@@ -18,7 +18,7 @@ public class TributeMenu {
             if (command.matches(TributeMenuRegex.CANCEL_REGEX)) return null;
             Matcher matcher = RegexFunctions.getCommandMatcher(command, TributeMenuRegex.NUMBERS_REGEX);
             if (!matcher.find()) {
-                System.out.println("Invalid Command");
+                System.err.println("Invalid Command");
                 continue;
             }
             String[] stringArray = command.split(" ");
@@ -26,12 +26,11 @@ public class TributeMenu {
             for (int i = 0; i < temp.length; i++) {
                 temp[i] = Integer.parseInt(stringArray[i]);
             }
-            if (temp.length == numberOfTributes) return temp;
-            else System.out.println("Invalid Command");
+            return temp;
         }
     }
 
     public static void invalidTributes() {
-        System.out.println("You cant tribute this card(s) .. please select again or type cancel to abort");
+        System.err.println("You cant tribute this card(s) .. please select again or type cancel to abort");
     }
 }

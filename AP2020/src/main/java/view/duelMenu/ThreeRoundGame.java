@@ -17,9 +17,9 @@ public class ThreeRoundGame {
     private User winner;
     private User loser;
     private final Scanner scanner;
-    private WinnerStatus firstRoundStatus;
-    private WinnerStatus secondRoundStatus;
-    private WinnerStatus thirdRoundStatus;
+    private WinnerException firstRoundException;
+    private WinnerException secondRoundException;
+    private WinnerException thirdRoundException;
 
     public ThreeRoundGame(User firstUser, User secondUser, Scanner scanner) {
         this.firstUser = firstUser;
@@ -32,38 +32,30 @@ public class ThreeRoundGame {
         try {
             firstRound.run();
         } catch (WinnerException firstRoundException) {
-            firstRoundStatus = new WinnerStatus(firstRoundException.getWinner(),
-                    firstRoundException.getLoser(), firstRoundException.getWinnerLP(),
-                    firstRoundException.getLoserLP());
+            this.firstRoundException = firstRoundException;
         }
         askPlayersIfTheyWantToChangeDeck();
         askPlayersIfTheyWantToBringCardsFromMainToSide();
-        OneRoundGame secondRound = new OneRoundGame(firstRoundStatus.getWinner(), firstRoundStatus.getLoser(), scanner);
+        OneRoundGame secondRound = new OneRoundGame(firstRoundException.getWinner(), firstRoundException.getLoser(), scanner);
         try {
             secondRound.run();
         } catch (WinnerException secondRoundException) {
-            secondRoundStatus = new WinnerStatus(secondRoundException.getWinner(),
-                    secondRoundException.getLoser(), secondRoundException.getWinnerLP(),
-                    secondRoundException.getLoserLP());
+            this.firstRoundException = secondRoundException;
         }
         if (checkIfThirdRoundIsNeededOrNot()) {
             askPlayersIfTheyWantToChangeDeck();
             askPlayersIfTheyWantToBringCardsFromMainToSide();
-            OneRoundGame thirdRound = new OneRoundGame(secondRoundStatus.getWinner(), secondRoundStatus.getLoser(), scanner);
+            OneRoundGame thirdRound = new OneRoundGame(secondRoundException.getWinner(), secondRoundException.getLoser(), scanner);
             try {
                 thirdRound.run();
             } catch (WinnerException thirdRoundException) {
-                thirdRoundStatus = new WinnerStatus(thirdRoundException.getWinner(),
-                        thirdRoundException.getLoser(), thirdRoundException.getWinnerLP(),
-                        thirdRoundException.getLoserLP());
+                this.thirdRoundException = thirdRoundException;
             }
             declareWinnerAndLoser(true);
             GameMenuController.cashOut(calculateMaxLP(true), true, winner, loser);
-            System.out.println(winner.getUsername()+" won the whole match with score: 3000 - 1000");
         } else {
             declareWinnerAndLoser(false);
             GameMenuController.cashOut(calculateMaxLP(false), true, winner, loser);
-            System.out.println(winner.getUsername()+" won the whole match with score: 3000 - 0");
         }
     }
 
@@ -78,7 +70,7 @@ public class ThreeRoundGame {
             System.out.println("do you want to swap cards " + user.getNickname() + "?");
             command = scanner.nextLine();
             if (command.matches("yes")) {
-                Deck userActiveDeck = (Deck) user.getActiveDeck().clone();
+                Deck userActiveDeck = user.getActiveDeck().clone();
                 user.setActiveDeck(userActiveDeck);
                 getSwapCardCommands(user);
             } else if (command.matches("no"))
@@ -184,26 +176,26 @@ public class ThreeRoundGame {
     }
 
     public boolean checkIfThirdRoundIsNeededOrNot() {
-        return !firstRoundStatus.getWinner().equals(secondRoundStatus.getWinner());
+        return !firstRoundException.getWinner().equals(secondRoundException.getWinner());
     }
 
     public void declareWinnerAndLoser(boolean hasThirdRound) {
         if (hasThirdRound) {
-            winner = thirdRoundStatus.getWinner();
-            loser = thirdRoundStatus.getLoser();
+            winner = thirdRoundException.getWinner();
+            loser = thirdRoundException.getLoser();
         } else {
-            winner = firstRoundStatus.getWinner();
-            loser = firstRoundStatus.getLoser();
+            winner = firstRoundException.getWinner();
+            loser = firstRoundException.getLoser();
         }
     }
 
     public int calculateMaxLP(boolean hasThirdRound) {
         if (hasThirdRound) {
-            if (thirdRoundStatus.getWinner().equals(secondRoundStatus.getWinner()))
-                return Math.max(secondRoundStatus.getWinnerLP(), thirdRoundStatus.getWinnerLP());
-            return Math.max(firstRoundStatus.getWinnerLP(), thirdRoundStatus.getWinnerLP());
+            if (thirdRoundException.getWinner().equals(secondRoundException.getWinner()))
+                return Math.max(secondRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
+            return Math.max(firstRoundException.getWinnerLP(), thirdRoundException.getWinnerLP());
         } else {
-            return Math.max(firstRoundStatus.getWinnerLP(), secondRoundStatus.getWinnerLP());
+            return Math.max(firstRoundException.getWinnerLP(), secondRoundException.getWinnerLP());
         }
     }
 

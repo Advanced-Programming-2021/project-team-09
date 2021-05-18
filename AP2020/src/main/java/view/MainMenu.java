@@ -1,6 +1,7 @@
 package view;
 
 import controller.LoginMenuController;
+import view.duelMenu.DuelMenu;
 import view.regexes.RegexFunctions;
 import view.responses.MainMenuResponses;
 
@@ -13,28 +14,27 @@ public class MainMenu {
     private final Scanner scanner;
     private static MainMenu mainMenu;
 
-    private MainMenu(Scanner scanner){
+    private MainMenu(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    public static MainMenu getInstance(Scanner scanner){
+    public static MainMenu getInstance(Scanner scanner) {
         if (mainMenu == null) mainMenu = new MainMenu(scanner);
         return mainMenu;
     }
 
-    public  void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim().toLowerCase();
             if (command.matches("^menu enter (?<menuName>\\w+)$"))
                 gotoMenu(command);
-            else if(command.matches("menu show-current"))
+            else if (command.matches("menu show-current"))
                 respond(MainMenuResponses.CURRENT_MENU_MAIN_MENU);
-            else if (command.matches("logout")){
+            else if (command.matches("logout")) {
                 logout();
                 return;
-            }
-            else if (command.matches("help")) showHelp();
+            } else if (command.matches("help")) showHelp();
             else respond(MainMenuResponses.INVALID_COMMAND);
         }
     }
@@ -47,60 +47,68 @@ public class MainMenu {
                 Method method = MainMenu.class.getDeclaredMethod(menuName);
                 method.invoke(this);
             } catch (Exception e) {
-                respond(MainMenuResponses.INVALID_MENU);
+                if (e instanceof NullPointerException) e.printStackTrace();
+                else respond(MainMenuResponses.INVALID_MENU);
             }
         }
     }
 
-    private void respond(MainMenuResponses response){
-        if(response.equals(MainMenuResponses.CURRENT_MENU_MAIN_MENU))
+    private void respond(MainMenuResponses response) {
+        if (response.equals(MainMenuResponses.CURRENT_MENU_MAIN_MENU))
             System.out.println("you are in main menu");
-        else if(response.equals(MainMenuResponses.INVALID_COMMAND))
+        else if (response.equals(MainMenuResponses.INVALID_COMMAND))
             System.out.println("invalid command!");
-        else if(response.equals(MainMenuResponses.INVALID_MENU))
+        else if (response.equals(MainMenuResponses.INVALID_MENU))
             System.out.println("menu navigation is not possible");
-        else if(response.equals(MainMenuResponses.LOGOUT_SUCCESSFUL))
+        else if (response.equals(MainMenuResponses.LOGOUT_SUCCESSFUL))
             System.out.println("user logged out successfully!");
     }
 
     private void shop(){
+        System.out.println("Now Entering shop ..");
         ShopMenu shopMenu = ShopMenu.getInstance(scanner);
         shopMenu.run();
     }
 
-    public void scoreboard(){
+    public void scoreboard() {
         ScoreboardMenu scoreboardMenu = ScoreboardMenu.getInstance(scanner);
         scoreboardMenu.run();
     }
 
     private void profile(){
+        System.out.println("Now Entering profile menu ..");
         ProfileMenu profileMenu = ProfileMenu.getInstance(scanner);
         profileMenu.run();
     }
 
     private void deck(){
+        System.out.println("Now Entering deck menu ..");
         DeckMenu deckMenu = DeckMenu.getInstance(scanner);
         deckMenu.run();
     }
 
-    private void importexport(){
+    private void importexport() {
 
     }
 
-    private void duel(){
-
+    private void duel() {
+        System.out.println("Now Entering duel menu  ..");
+        try {
+            DuelMenu.getInstance(LoginMenu.getInstance().getScanner()).run();
+        } catch (CloneNotSupportedException ignored) {
+            System.out.println("problem occurred .. please try again");
+        }
     }
 
-    private void logout(){
+    private void logout() {
         LoginMenuController.logout();
         respond(MainMenuResponses.LOGOUT_SUCCESSFUL);
     }
 
     public void showHelp() {
-        String help = "user logout\n";
+        String help = "logout\n";
         help += "menu show-current\n";
-        help += "menu enter <menu name>\n";
-        help += "menu exit";
+        help += "menu enter <menu name>\nAvailable menus : \n\tduel\n\tshop\n\tscoreboard\n\tdeck\n\tprofile";
         System.out.println(help);
     }
 
