@@ -30,7 +30,7 @@ public class MainMenu {
                 gotoMenu(command);
             else if(command.matches("menu show-current"))
                 respond(MainMenuResponses.CURRENT_MENU_MAIN_MENU);
-            else if (command.matches("logout")){
+            else if (command.matches("user logout")){
                 logout();
                 return;
             }

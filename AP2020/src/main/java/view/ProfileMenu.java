@@ -54,7 +54,7 @@ public class ProfileMenu {
             else if (command.matches(ProfileMenuRegex.showHelp)) showHelp();
             else if (command.matches("menu show-current"))
                 respond(ProfileMenuResponses.CURRENT_MENU_PROFILE_MENU);
-            else if (command.matches("exit menu"))
+            else if (command.matches("menu exit"))
                 return;
             else respond(ProfileMenuResponses.INVALID_COMMAND);
         }

@@ -34,7 +34,7 @@ public class LoginMenu {
                 showHelp();
             else if(command.matches("menu show-current"))
                 respond(LoginMenuResponses.CURRENT_MENU_LOGIN_MENU);
-            else if (command.matches("exit menu"))
+            else if (command.matches("menu exit"))
                 return;
             else respond(LoginMenuResponses.INVALID_COMMAND);
         }
@@ -106,6 +106,7 @@ public class LoginMenu {
         String help = "user create --username <username> --nickname <nickname> --password <password>\n";
         help += "user login --username <username> --password <password>\n";
         help += "menu show-current\n";
+        help += "menu exit";
         System.out.println(help);
     }
 
