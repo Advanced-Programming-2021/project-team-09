@@ -34,7 +34,7 @@ public class SpellEffectController extends EffectController {
             if (chosenCard == null) return;
             if (!chosenCard.isMonster()) {
                 board.addCardToMonsterZone(chosenCard);
-                int cellNumber = MonsterEffectController.getCellNumberOfMonster(game, chosenCard);
+                int cellNumber = EffectController.getCellNumberOfMonster(game, chosenCard);
                 board.getMonsterZone(cellNumber).setState(State.FACE_UP_ATTACK);
                 return;
             } else CardEffectsView.respond(CardEffectsResponses.PLEASE_SELECT_MONSTER);
@@ -141,11 +141,9 @@ public class SpellEffectController extends EffectController {
     }
 
     public static void Messengerofpeace(Game game, Card card) throws GameException {
-        game.getPlayerLimits().setAttackBound(1500);
-        game.getPlayerLimits().addCardLimitOnATKBound(card);
-        game.getRivalLimits().setAttackBound(1500);
-        game.getRivalLimits().addCardLimitOnATKBound(card);
-        if (CardEffectsView.doYouWantTo("do you want to 100 LP to keep this card?")) {
+        game.getPlayerLimits().addCardLimitOnATKBound(card,1500);
+        game.getRivalLimits().addCardLimitOnATKBound(card,1500);
+        if (CardEffectsView.doYouWantTo("do you want to pay 100 LP to keep this card?")) {
             if (doesCardBelongsToPlayer(game, card)) game.decreaseHealth(100);
             else game.decreaseRivalHealth(100);
         } else {
@@ -217,9 +215,7 @@ public class SpellEffectController extends EffectController {
     }
 
     public static void ClosedForest(Game game, Card card) throws GameException {
-        Limits limits;
-        if (doesCardBelongsToPlayer(game, card)) limits = game.getPlayerLimits();
-        else limits = game.getRivalLimits();
+        Limits limits = getLimits(game,card);
         limits.addFieldZoneATK(MonsterType.BEAST, 100);
     }
 
@@ -426,7 +422,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public static void calloftheHaunted(Game game, Card card) throws GameException {
+    public static void CalloftheHaunted(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Graveyard graveyard = board.getGraveyard();
         Limits limits = getLimits(game, card);
@@ -437,7 +433,7 @@ public class SpellEffectController extends EffectController {
                 Card card1 = CardEffectsView.getCardFromGraveyard(graveyard);
                 if (card1.isMonster()) {
                     MonsterEffectController.setMonster(game, card1, State.FACE_UP_ATTACK);
-                    int cellNumber = MonsterEffectController.getCellNumberOfMonster(game, card1);
+                    int cellNumber = EffectController.getCellNumberOfMonster(game, card1);
                     setEquipmentInLimits(card, board, limits, 0, 0, cellNumber);
                     break;
                 } else CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
