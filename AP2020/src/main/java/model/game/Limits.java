@@ -7,13 +7,13 @@ import model.card.monster.MonsterType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 public class Limits {
 
     int atkAddition = 0;
     int defAddition = 0;
-    int attackBound = 0;
-    HashSet<Card> atkBounders = new HashSet<>();
+    Hashtable<Card, Integer> atkBounders = new Hashtable<>();
     ArrayList<EffectLimitations> limitations = new ArrayList<>();
     HashMap<Integer, Integer> spellUsageLimit = new HashMap<>();
     HashMap<MonsterType, Integer> fieldZoneATKAddition = new HashMap<>();
@@ -27,16 +27,16 @@ public class Limits {
 
     public void removeCardLimitOnATKBound(Card card) {
         atkBounders.remove(card);
-        if (atkBounders.size() == 0) attackBound = 0;
     }
 
-    public void addCardLimitOnATKBound(Card card) {
-        atkBounders.add(card);
+    public void addCardLimitOnATKBound(Card card, int bound) {
+        if (!atkBounders.containsKey(card)) atkBounders.put(card, bound);
     }
 
-    public HashSet<Card> getAtkBounders() {
+    public Hashtable<Card, Integer> getAtkBounders() {
         return atkBounders;
     }
+
     public void equipMonsterToCard(Card spell, Card monster) {
         equipMonster.put(spell, monster);
     }
@@ -161,25 +161,20 @@ public class Limits {
         cantAttackCells.remove(cellNumber);
     }
 
-    public void setAttackBound(int attackBound) {
-        if (attackBound > this.attackBound)
-            this.attackBound = attackBound;
-    }
-
-    public void removeAttackBound() {
-        attackBound = 0;
-    }
-
 
     public int getAttackBound() {
-        return attackBound;
+        int max = 0;
+        for (Integer integer : atkBounders.values()) if (integer > max) max = integer;
+        return max;
     }
 
     public boolean canAttackByThisLimitations(Card card) {
         if (limitations.contains(EffectLimitations.CANT_ATTACK) || !hasControlOnMonster(card)) return false;
         else {
+            int attackBound = getAttackBound();
             if (attackBound != 0) return true;
             else {
+
                 return ((Monster) card).getAttack() + getATKAddition(card) <= attackBound;
             }
         }

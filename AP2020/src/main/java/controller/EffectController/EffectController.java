@@ -97,4 +97,15 @@ public class EffectController {
         return rivalBoard;
     }
 
+    //helping functions!
+    static public int getCellNumberOfMonster(Game game, Card card) {
+        Board board;
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
+        else board = game.getRivalBoard();
+        Cell[] cells = board.getMonsterZone();
+        for (int i = 0; i < cells.length; i++) {
+            if (cells[i].isOccupied() && cells[i].getCard().equals(card)) return i;
+        }
+        return 0;
+    }
 }

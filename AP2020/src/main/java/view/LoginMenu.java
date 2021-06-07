@@ -113,4 +113,7 @@ public class LoginMenu {
         return this.scanner;
     }
 
+    public void setScanner(Scanner scanner) {
+        this.scanner = scanner;
+    }
 }
