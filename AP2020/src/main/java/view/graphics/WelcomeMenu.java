@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class WelcomeMenu extends Menu implements Initializable {
+
     @FXML
     private BorderPane mainPane;
     @FXML
@@ -35,7 +36,7 @@ public class WelcomeMenu extends Menu implements Initializable {
     private Button loginButton;
 
     //FixMe
-    private static final Image BG = new Image(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/Images/backgroundMolaee2.jpg").toURI().toString());
+    private static final Image BG = new Image(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/Images/backgroundMolaee2.jpg").toURI().toString(),600,370,true,true);
 
     public void goToSignInMenu(ActionEvent actionEvent) {
     }
@@ -53,10 +54,6 @@ public class WelcomeMenu extends Menu implements Initializable {
     }
 
     public static void  goToMainMenu() {
-    }
-
-    public static void main(String[] args) {
-
     }
 
     public void shadowEffectButtonEnter(MouseEvent mouseEvent) {
@@ -77,7 +74,4 @@ public class WelcomeMenu extends Menu implements Initializable {
     public void setFocuse(MouseEvent mouseEvent) {
         loginButton.getScene().getWindow().requestFocus();
     }
-
-
-
 }
