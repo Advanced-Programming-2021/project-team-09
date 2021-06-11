@@ -14,7 +14,7 @@
 .hyperlink {
     -fx-font: Bold 11px Chalkboard;
     -fx-text-fill: #000000;
-    -fx-effect: dropShadow(one-pass-box, #8b8a8a, 0.5, 0.0, 2, 0);
+    -fx-effect: dropShadow(one-pass-box, #8a8a8a, 0.5, 0.0, 1, 0);
 }
 
 .password-field {

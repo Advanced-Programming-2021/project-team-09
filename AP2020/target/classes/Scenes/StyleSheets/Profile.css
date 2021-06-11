@@ -1,9 +1,9 @@
 .button {
     -fx-background-color: Transparent;
     -fx-background-radius: 10;
-    -fx-border-color: #321a1a;
+    -fx-border-color: #000000;
 
-
+    -fx-text-fill: #6e6e6f;
     -fx-border-radius: 10;
     -fx-border-style: solid;
     -fx-border-width: 1;
@@ -11,11 +11,6 @@
 
 }
 
-.hyperlink {
-    -fx-font: Bold 11px Chalkboard;
-    -fx-text-fill: #000000;
-    -fx-effect: dropShadow(one-pass-box, #8a8a8a, 0.5, 0.0, 1, 0);
-}
 
 .password-field {
     -fx-background-radius: 10;
@@ -38,10 +33,6 @@
 
 }
 
-.label * {
-    -fx-font: Bold 20px Chalkboard;
-    -fx-text-fill: #000000;
-}
 
 .menuBar {
     -fx-background-radius: 7;
@@ -58,7 +49,3 @@
     -fx-font: 10px Chalkboard;
 }
 
-/*#mainPane {*/
-/*    -fx-background-image: url("Scenes/Images/backgroundMolaee.jpg");*/
-/*    */
-/*}*/

@@ -10,11 +10,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class User {
+    @JsonIgnore
+    public final static int NUMBER_OF_PROFILES = 5;
     private String username;
     private String nickname;
     private String password;
     private int balance;
     private int score;
+    private int profilePhoto;
     private ArrayList<Card> cards;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
@@ -29,8 +32,13 @@ public class User {
         this.decks = new ArrayList<>();
         activeDeck  = null;
     }
+
     public User(){
 
+    }
+
+    public void setProfilePhoto(int profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
     public void setActiveDeck(Deck activeDeck) {
@@ -63,6 +71,10 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getProfilePhoto() {
+        return profilePhoto;
     }
 
     public ArrayList<Deck> getDecks(){

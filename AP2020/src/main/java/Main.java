@@ -17,9 +17,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Main.stage = stage;
-        BorderPane pane = (BorderPane) Menu.getNode("MainMenu");
-      //  pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
+        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
+//        BorderPane pane = (BorderPane) Menu.getNode("MainMenu");
+//        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
         stage.setScene(new Scene(pane));
+        Menu.setCurrentScene(stage.getScene());
         pane.requestFocus();
         stage.show();
     }

@@ -32,19 +32,19 @@ public class MainMenuController extends Menu implements Initializable {
     private ImageView BabeFace;
     boolean isHappy = false;
 
-    private final static Image SETTING_MENU_IMG = getImage("SettingIcon","png");
-    private final static Image DECK_MENU_IMG = getImage("DeckMenuIcon","png");
-    private final static Image PROFILE_MENU_IMG = getImage("ProfileMenuIcon","png");
-    private final static Image SCOREBOARD_MENU_IMG = getImage("ScoreboardMenuIcon","png");
-    private final static Image HAPPY_FACE_IMG = getImage("HappyFace","png");
-    private final static Image NORMAL_FACE_IMG = getImage("NormalFace","png");
-    private final static Image GAME_MENU_IMG = getImage("StartGameMenu","png");
-    private final static Image GAME_IMG = getImage("Game","png");
-    private final static Image SETTING_IMG = getImage("Setting","png");
-    private final static Image SCOREBOARD_IMG = getImage("Setting","png");
-    private final static Image PROFILE_IMG = getImage("Profile","png");
-    private final static Image DECK_IMG = getImage("Deck","png");
-    private final static Image SAD_COMPUTER_IMG = getImage("SadComputer","png");
+    public final static Image SETTING_MENU_IMG = getImage("SettingIcon","png");
+    public final static Image DECK_MENU_IMG = getImage("DeckMenuIcon","png");
+    public final static Image PROFILE_MENU_IMG = getImage("ProfileMenuIcon","png");
+    public final static Image SCOREBOARD_MENU_IMG = getImage("ScoreboardMenuIcon","png");
+    public final static Image HAPPY_FACE_IMG = getImage("HappyFace","png");
+    public final static Image NORMAL_FACE_IMG = getImage("NormalFace","png");
+    public final static Image GAME_MENU_IMG = getImage("StartGameMenu","png");
+    public final static Image GAME_IMG = getImage("Game","png");
+    public final static Image SETTING_IMG = getImage("Setting","png");
+    public final static Image SCOREBOARD_IMG = getImage("Scoreboard","png");
+    public final static Image PROFILE_IMG = getImage("Profile","png");
+    public final static Image DECK_IMG = getImage("Deck","png");
+    public final static Image SAD_COMPUTER_IMG = getImage("SadComputer","png");
 
 
     public void changeFace(MouseEvent mouseEvent) {

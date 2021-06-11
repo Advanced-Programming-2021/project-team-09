@@ -37,7 +37,7 @@ public class WelcomeMenu extends Menu implements Initializable {
 
     //FixMe
     private static final Image BG = new Image(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/Images/backgroundMolaee2.jpg").toURI().toString(),600,370,true,true);
-
+   // private static final Image BG = getImage("Profile","png");
     public void goToSignInMenu(ActionEvent actionEvent) {
     }
 

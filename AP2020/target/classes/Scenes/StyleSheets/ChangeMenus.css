@@ -7,14 +7,8 @@
     -fx-border-radius: 10;
     -fx-border-style: solid;
     -fx-border-width: 1;
-    -fx-font: Bold 13px Chalkboard;
+    -fx-font: Bold 10px Chalkboard;
 
-}
-
-.hyperlink {
-    -fx-font: Bold 11px Chalkboard;
-    -fx-text-fill: #000000;
-    -fx-effect: dropShadow(one-pass-box, #8a8a8a, 0.5, 0.0, 1, 0);
 }
 
 .password-field {
@@ -39,7 +33,7 @@
 }
 
 .label * {
-    -fx-font: Bold 20px Chalkboard;
+    -fx-font: 18px Chalkboard;
     -fx-text-fill: #000000;
 }
 
@@ -57,8 +51,3 @@
 .menu-item {
     -fx-font: 10px Chalkboard;
 }
-
-/*#mainPane {*/
-/*    -fx-background-image: url("Scenes/Images/backgroundMolaee.jpg");*/
-/*    */
-/*}*/

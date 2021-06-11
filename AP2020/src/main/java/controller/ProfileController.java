@@ -5,6 +5,15 @@ import model.User;
 import view.responses.ProfileMenuResponses;
 
 public class ProfileController {
+
+    public static void changeProfilePhoto(int numberOfProfile) {
+        User user = LoginMenuController.getCurrentUser();
+        if (numberOfProfile > -1 && numberOfProfile < User.NUMBER_OF_PROFILES) {
+            user.setProfilePhoto(numberOfProfile);
+            ReadAndWriteDataBase.updateUser(user);
+        }
+    }
+
     public static ProfileMenuResponses changePassword(String oldPassword, String newPassword) {
         User user = LoginMenuController.getCurrentUser();
         if (user.getPassword().equals(oldPassword)) {
@@ -16,9 +25,9 @@ public class ProfileController {
         } else return ProfileMenuResponses.CURRENT_PASSWORD_IS_INVALID;
     }
 
-    public static ProfileMenuResponses changeNickname(String nickname){
+    public static ProfileMenuResponses changeNickname(String nickname) {
         User user = LoginMenuController.getCurrentUser();
-        if (!LoginMenuController.doesNicknameExists(nickname)){
+        if (!LoginMenuController.doesNicknameExists(nickname)) {
             user.changeNickname(nickname);
             ReadAndWriteDataBase.updateUser(user);
             return ProfileMenuResponses.NICKNAME_CHANGED_SUCCESSFULLY;
