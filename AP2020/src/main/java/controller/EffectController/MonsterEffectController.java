@@ -20,10 +20,7 @@ import java.util.ArrayList;
 public class MonsterEffectController extends EffectController {
 
     public static void CommandKnight(Game game, Card card) {
-        Limits limits;
-        limits = game.getPlayerLimits();
-        limits.increaseATKAddition(400);
-        limits = game.getRivalLimits();
+        Limits limits = getLimits(game,card);
         limits.increaseATKAddition(400);
         int cellNumber = getCellNumberOfMonster(game, card);
         limits = getRivalsLimits(game, card);
@@ -219,15 +216,8 @@ public class MonsterEffectController extends EffectController {
     }
 
     public static void MirageDragon(Game game, Card card) {
-        Limits limits;
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) {
-            limits = game.getRivalLimits();
-            board = game.getPlayerBoard();
-        } else {
-            limits = game.getPlayerLimits();
-            board = game.getRivalBoard();
-        }
+        Limits limits = getRivalsLimits(game,card);
+        Board board = getBoard(game,card);
         if (board.getMonsterZoneCellByCard(card).isFaceUp()) {
             limits.addLimit(EffectLimitations.CANT_ACTIVATE_TRAP);
         }
@@ -315,17 +305,7 @@ public class MonsterEffectController extends EffectController {
     }
 
 
-    //helping functions!
-    static public int getCellNumberOfMonster(Game game, Card card) {
-        Board board;
-        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
-        else board = game.getRivalBoard();
-        Cell[] cells = board.getMonsterZone();
-        for (int i = 0; i < cells.length; i++) {
-            if (cells[i].isOccupied() && cells[i].getCard().equals(card)) return i;
-        }
-        return 0;
-    }
+    //helping functions
 
     static protected void setMonster(Game game, Card card, State state) throws GameException {
         Deck deck = getDeck(game,card);
