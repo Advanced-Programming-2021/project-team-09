@@ -19,7 +19,7 @@ public class Deck implements Cloneable {
     }
 
     @Override
-    public Deck clone() throws CloneNotSupportedException {
+    public Deck clone() {
         Deck outputDeck = new Deck(this.getDeckName());
         outputDeck.setMainDeck(this.getMainDeck().clone());
         outputDeck.setSideDeck(this.getSideDeck().clone());

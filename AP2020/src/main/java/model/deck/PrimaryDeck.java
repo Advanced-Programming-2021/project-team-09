@@ -88,31 +88,14 @@ public abstract class PrimaryDeck {
         shuffle(this.cards);
     }
 
-    public static void shuffle(ArrayList<Card> cards) {
-        int elementsCount = cards.size();
-        if (elementsCount <= 1) return;
-        int index1 = 0, index2 = 0;
-        Random rand = new Random();
-        for (int i = 0; i < elementsCount*elementsCount; i++){
-            index1 = rand.nextInt(elementsCount);
-            index2 = rand.nextInt(elementsCount);
-            while(index1 == index2){
-                index1 = rand.nextInt(elementsCount);
-                index2 = rand.nextInt(elementsCount);
-            }
-            swap(index1, index2, cards);
+    public void shuffle(ArrayList<Card> cards) {
+        ArrayList<Card> newCards = new ArrayList<>();
+        Random random = new Random();
+        while (cards.size() != 0) {
+            int rand = random.nextInt(cards.size());
+            newCards.add(cards.remove(rand));
         }
-    }
-
-    public static void swap(int index1, int index2, ArrayList<Card> cards){
-        int min = Math.min(index1, index2);
-        int max = Math.max(index1, index2);
-        Card tempMin = cards.get(min);
-        Card tempMax = cards.get(max);
-        cards.remove(max);
-        cards.remove(min);
-        cards.add(min, tempMax);
-        cards.add(max, tempMin);
+        this.cards = newCards;
     }
 
     @JsonIgnore
