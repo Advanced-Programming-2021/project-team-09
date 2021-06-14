@@ -89,7 +89,8 @@ public class MainMenu {
     }
 
     private void duel(){
-        DuelMenu.getInstance(scanner).run();
+        DuelMenu duelMenu = DuelMenu.getInstance(scanner);
+        duelMenu.run();
     }
 
     private void logout(){
