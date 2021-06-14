@@ -39,7 +39,7 @@ public class ScoreboardMenu {
     }
 
     public void showHelp() {
-        String help = "scoreboard show\n";
+        String help = "show scoreboard\n";
         help += "menu show-current\n";
         help += "menu exit";
         System.out.println(help);
