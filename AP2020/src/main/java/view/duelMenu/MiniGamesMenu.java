@@ -58,7 +58,7 @@ public class MiniGamesMenu {
             } else if (command.matches("throw coin")) {
                 playCoin();
                 System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                        miniGame.getWinner().getUsername() + " won the mini game!");
                 return;
             } else if (command.matches("help"))
                 showHelp();
