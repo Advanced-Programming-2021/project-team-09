@@ -18,7 +18,7 @@ public class ScoreboardController {
                     Collections.swap(users, j, j + 1);
                 }
                 if (users.get(j).getScore() == users.get(j + 1).getScore()) {
-                    if (users.get(j).getNickname().compareToIgnoreCase(users.get(j + 1).getNickname()) > 0) {
+                    if (users.get(j).getNickname().compareToIgnoreCase(users.get(j + 1).getNickname()) < 0) {
                         Collections.swap(users, j, j + 1);
                     }
                 }
@@ -29,20 +29,24 @@ public class ScoreboardController {
     }
 
     public static String getScoreBoard() {
-        //todo those who have same score have same rank, you are not handling it!
+
         ArrayList<User> users = sortUsers();
         AsciiTable asciiTable = new AsciiTable();
         asciiTable.addRule();
         asciiTable.addRow("Rank", "Username", "Nickname", "Score");
         asciiTable.addRule();
         int i = 1;
-        for (User user : users) {
+        for (int j = users.size(); j > 0; j--) {
+            if (j != users.size()) {
+                if (users.get(j - 1).getScore() != users.get(j).getScore()) {
+                    i = users.size() - j + 1;
+                }
+            }
             asciiTable.addRow(i,
-                    user.getUsername(),
-                    user.getNickname(),
-                    user.getScore());
+                    users.get(j - 1).getUsername(),
+                    users.get(j - 1).getNickname(),
+                    users.get(j - 1).getScore());
             asciiTable.addRule();
-            ++i;
         }
         return asciiTable.render();
     }

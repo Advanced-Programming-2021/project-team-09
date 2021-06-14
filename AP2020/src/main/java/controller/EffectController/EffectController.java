@@ -17,9 +17,15 @@ public class EffectController {
         for (Cell cell : cells) {
             if (cell.isOccupied() && cell.getCard().equals(card)) return true;
         }
-        if (game.getPlayerHandCards().size() == 0) return false;
-        for (Card card1 : game.getPlayerHandCards()) {
-            if (card1.equals(card)) return true;
+        if (game.getPlayerBoard().getGraveyard().getCards().size() != 0) {
+            for (Card card1 : game.getPlayerBoard().getGraveyard().getCards()) {
+                if (card1 == card) return true;
+            }
+        }
+        if (game.getPlayerHandCards().size() != 0) {
+            for (Card card1 : game.getPlayerHandCards()) {
+                if (card1 == card) return true;
+            }
         }
         return false;
     }
@@ -91,4 +97,15 @@ public class EffectController {
         return rivalBoard;
     }
 
+    //helping functions!
+    static public int getCellNumberOfMonster(Game game, Card card) {
+        Board board;
+        if (doesCardBelongsToPlayer(game, card)) board = game.getPlayerBoard();
+        else board = game.getRivalBoard();
+        Cell[] cells = board.getMonsterZone();
+        for (int i = 0; i < cells.length; i++) {
+            if (cells[i].isOccupied() && cells[i].getCard().equals(card)) return i;
+        }
+        return 0;
+    }
 }

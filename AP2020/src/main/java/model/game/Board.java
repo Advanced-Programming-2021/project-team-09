@@ -1,6 +1,5 @@
 package model.game;
 
-import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.deck.Graveyard;
@@ -39,7 +38,10 @@ public class Board {
 
     public void addCardToMonsterZone(Card card) {
         for (int i = 0; i < 5; i++) {
-            if (!monsterZone[i].isOccupied() && card.isMonster()) monsterZone[i].addCard(card);
+            if (!monsterZone[i].isOccupied() && card.isMonster()) {
+                monsterZone[i].addCard(card);
+                break;
+            }
         }
     }
     public Cell getMonsterZoneCellByCard(Card card){
@@ -56,7 +58,10 @@ public class Board {
     }
     public void addCardToSpellZone(Card card) {
         for (int i = 0; i < 5; i++) {
-            if (!spellZone[i].isOccupied() && card.isSpell()) spellZone[i].addCard(card);
+            if (!spellZone[i].isOccupied() && card.isSpell()) {
+                spellZone[i].addCard(card);
+                break;
+            }
         }
     }
 
@@ -122,6 +127,13 @@ public class Board {
         return monsterZone;
     }
 
+    public int getNumberOfMonstersInMonsterZone() {
+        int count = 0;
+        for (Cell cell : monsterZone) {
+            if (cell.isOccupied()) count++;
+        }
+        return count;
+    }
     public Cell[] getSpellZone() {
         return spellZone;
     }
@@ -137,8 +149,8 @@ public class Board {
     public Cell getSpellZone(int spellZoneNumber) {
         return spellZone[spellZoneNumber];
     }
-
-    @Override
+	
+	@Override
     public Board clone() {
         Board outputBoard = new Board();
         outputBoard.setMonsterZone(cloneCells(this.getMonsterZone()));
@@ -147,7 +159,6 @@ public class Board {
         outputBoard.setFieldZone(this.fieldZone.clone());
         return outputBoard;
     }
-
     private static Cell[] cloneCells(Cell[] cells) {
         Cell[] outputCells = new Cell[5];
         for (int i = 0; i < 5; i++) {
@@ -158,19 +169,15 @@ public class Board {
         }
         return outputCells;
     }
-
     public void setMonsterZone(Cell[] monsterZone) {
         this.monsterZone = monsterZone;
     }
-
     public void setSpellZone(Cell[] spellZone) {
         this.spellZone = spellZone;
     }
-
     public void setFieldZone(Cell fieldZone) {
         this.fieldZone = fieldZone;
     }
-
     public void setGraveyard(Graveyard graveyard) {
         this.graveyard = graveyard;
     }
