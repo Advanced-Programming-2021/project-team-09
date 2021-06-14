@@ -75,7 +75,7 @@ public class MiniGamesMenu {
             userChoice = scanner.nextLine().trim();
             if (userChoice.equals("higher"))
                 break;
-            else if (userChoice.equals("lowe"))
+            else if (userChoice.equals("lower"))
                 break;
             else
                 System.out.println("please chose higher or lower!");

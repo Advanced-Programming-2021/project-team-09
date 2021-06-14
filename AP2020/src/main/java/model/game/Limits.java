@@ -223,6 +223,130 @@ public class Limits {
     public int getDefAddition() {
         return defAddition;
     }
+
+    public void setAtkAddition(int atkAddition) {
+        this.atkAddition = atkAddition;
+    }
+
+    public void setDefAddition(int defAddition) {
+        this.defAddition = defAddition;
+    }
+
+    public void setAtkBounders(Board oldBoard, Board newBoard, Hashtable<Card, Integer> atkBounders) {
+        Hashtable<Card, Integer> temp = new Hashtable<>();
+        for (Card card : atkBounders.keySet()) {
+            int cellNumber = getCellNumberMonster(oldBoard, card);
+            if (cellNumber == -1) {
+                cellNumber = getCellNumberSpell(oldBoard, card);
+                if (cellNumber != -1) temp.put(newBoard.getSpellZone(cellNumber).getCard(), atkBounders.get(card));
+            } else temp.put(newBoard.getMonsterZone(cellNumber).getCard(), atkBounders.get(card));
+        }
+        this.atkBounders = temp;
+    }
+
+    public void setLimitations(ArrayList<EffectLimitations> effectLimitations) {
+        this.limitations = new ArrayList<>(effectLimitations);;
+    }
+
+    public void setSpellUsageLimit(HashMap<Integer, Integer> spellUsageLimit) {
+        HashMap<Integer, Integer> output = new HashMap<>();
+        for (int i : spellUsageLimit.keySet()) output.put(i, spellUsageLimit.get(i));
+        this.spellUsageLimit = output;
+    }
+
+    public void setFieldZoneATKAddition(HashMap<MonsterType, Integer> fieldZoneATKAddition) {
+        HashMap<MonsterType, Integer> output = new HashMap<>();
+        for (MonsterType m : fieldZoneATKAddition.keySet()) output.put(m, fieldZoneATKAddition.get(m));
+        this.fieldZoneATKAddition = output;
+    }
+
+    public void setFieldZoneDEFAddition(HashMap<MonsterType, Integer> fieldZoneDEFAddition) {
+        HashMap<MonsterType, Integer> output = new HashMap<>();
+        for (MonsterType m : fieldZoneDEFAddition.keySet()) output.put(m, fieldZoneDEFAddition.get(m));
+        this.fieldZoneDEFAddition = output;
+    }
+
+    public void setEquipMonster(Board oldBoard, Board newBoard, HashMap<Card, Card> equipMonster) {
+        HashMap<Card, Card> output = new HashMap<>();
+        for (Card card : equipMonster.keySet()) {
+            int spellNumber = getCellNumberSpell(oldBoard, card);
+            int monsterNumber = getCellNumberMonster(oldBoard, card);
+            if (spellNumber == -1 || monsterNumber == -1) {
+                continue;
+            }
+            output.put(newBoard.getSpellZone(spellNumber).getCard(), newBoard.getMonsterZone(monsterNumber).getCard());
+        }
+        this.equipMonster = output;
+    }
+
+    public void setEquipGadgetATKAddition(Board oldBoard, Board newBoard, HashMap<Card, Integer> equipGadgetATKAddition) {
+        this.equipGadgetATKAddition = getEquipGadget(oldBoard, newBoard, equipGadgetATKAddition);
+    }
+
+    public void setEquipGadgetDEFAddition(Board oldBoard, Board newBoard, HashMap<Card, Integer> equipGadgetDEFAddition) {
+        this.equipGadgetDEFAddition = getEquipGadget(oldBoard, newBoard, equipGadgetDEFAddition);
+    }
+
+    private HashMap<Card, Integer> getEquipGadget(Board oldBoard, Board newBoard, HashMap<Card, Integer> equipGadget) {
+        HashMap<Card, Integer> output = new HashMap<>();
+        for (Card card : equipMonster.keySet()) {
+            int spellNumber = getCellNumberSpell(oldBoard, card);
+            if (spellNumber == -1) continue;
+            output.put(newBoard.getSpellZone(spellNumber).getCard(), equipGadget.get(card));
+        }
+        return output;
+    }
+
+    public void setCantAttackCells(HashSet<Integer> cantAttackCells) {
+        this.cantAttackCells = new HashSet<>(cantAttackCells);
+    }
+
+    public void setMonstersWeDontHaveControl(Board oldBoard, Board newBoard, ArrayList<Card> monstersWeDontHaveControl) {
+        ArrayList<Card> output = new ArrayList<>();
+        for (Card card : monstersWeDontHaveControl) {
+            int monsterNumber = getCellNumberMonster(oldBoard, card);
+            if (monsterNumber == -1) continue;
+            output.add(newBoard.getMonsterZone(monsterNumber).getCard());
+        }
+        this.monstersWeDontHaveControl = output;
+    }
+
+    private int getCellNumberMonster(Board board, Card card) {
+        Cell[] cells = board.getMonsterZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].getCard() == card) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int getCellNumberSpell(Board board, Card card) {
+        Cell[] cells = board.getSpellZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].getCard() == card) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public Limits cloneLimits(Board oldBoard, Board newBoard) {
+        Limits output = new Limits();
+        output.setAtkAddition(this.atkAddition);
+        output.setDefAddition(this.defAddition);
+        output.setAtkBounders(oldBoard, newBoard, this.atkBounders);
+        output.setLimitations(this.limitations);
+        output.setSpellUsageLimit(this.spellUsageLimit);
+        output.setFieldZoneATKAddition(this.fieldZoneATKAddition);
+        output.setFieldZoneDEFAddition(this.fieldZoneDEFAddition);
+        output.setEquipMonster(oldBoard, newBoard, this.equipMonster);
+        output.setEquipGadgetATKAddition(oldBoard, newBoard, this.equipGadgetATKAddition);
+        output.setEquipGadgetDEFAddition(oldBoard, newBoard, this.equipGadgetDEFAddition);
+        output.setCantAttackCells(this.cantAttackCells);
+        output.setMonstersWeDontHaveControl(oldBoard, newBoard, this.monstersWeDontHaveControl);
+        return output;
+    }
 }
 
 
