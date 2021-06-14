@@ -148,7 +148,9 @@ public class OneRoundGame {
     public void goToMainPhase1() {
         setCurrentPhase(Phase.MAIN_PHASE1);
         respond(OneRoundGameResponses.MAIN_PHASE1);
-        System.out.println(game.showTable());
+        System.out.println(ANSI_BLACK + ANSI_BLUE_BACKGROUND +
+                game.showTable() +
+                ANSI_RESET);
     }
 
     public void goToDrawPhase() throws WinnerException {
