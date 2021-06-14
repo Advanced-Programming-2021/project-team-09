@@ -47,18 +47,18 @@ public class MiniGamesMenu {
             command = scanner.nextLine().trim();
             if (command.matches("rock paper scissors")) {
                 playRockPaperScissor();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("dice")) {
                 playDice();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("throw coin")) {
                 playCoin();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + " won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("help"))
                 showHelp();
