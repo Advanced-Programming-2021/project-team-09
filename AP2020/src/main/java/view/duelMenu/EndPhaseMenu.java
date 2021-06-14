@@ -41,6 +41,8 @@ public class EndPhaseMenu extends OneRoundGame{
                     System.out.println("Now you can change your turn ..");
                     return;
                 }
+            }else if (command.matches(OneRoundGameRegexes.SHOW_TABLE)) {
+                showTable();
             } else if (OneRoundGameRegexes.showSelectedCard(command))
                 showSelectedCard();
             else if (command.matches(OneRoundGameRegexes.showGraveyard))

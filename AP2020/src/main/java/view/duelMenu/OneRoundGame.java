@@ -564,7 +564,7 @@ public class OneRoundGame {
     }
 
     public void showTable() {
-        System.out.println(ANSI_RED + ANSI_CYAN_BACKGROUND + GameMenuController.showTable(game) + ANSI_RESET);
+        System.out.println(ANSI_BLACK + ANSI_YELLOW_BACKGROUND + GameMenuController.showTable(game) + ANSI_RESET);
     }
 
     public void respond(OneRoundGameResponses responses) {
