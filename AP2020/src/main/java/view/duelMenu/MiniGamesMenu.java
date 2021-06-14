@@ -48,12 +48,12 @@ public class MiniGamesMenu {
             if (command.matches("rock paper scissors")) {
                 playRockPaperScissor();
                 System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                        miniGame.getWinner().getUsername() + " won the mini game!");
                 return;
             } else if (command.matches("dice")) {
                 playDice();
                 System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                        miniGame.getWinner().getUsername() + " won the mini game!");
                 return;
             } else if (command.matches("throw coin")) {
                 playCoin();

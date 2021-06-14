@@ -104,8 +104,16 @@ public class OneRoundGame {
                 showTable();
             else if (command.matches(OneRoundGameRegexes.SHOW_PHASE))
                 showPhase();
+            else if (command.matches(OneRoundGameRegexes.showHandCards))
+                showHandCards();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
+        }
+    }
+
+    private void showHandCards() {
+        for (int i = 0; i < game.getPlayerHandCards().size(); i++) {
+            System.out.println(game.getPlayerHandCards().get(i).toString());
         }
     }
 
@@ -140,6 +148,7 @@ public class OneRoundGame {
     public void goToMainPhase1() {
         setCurrentPhase(Phase.MAIN_PHASE1);
         respond(OneRoundGameResponses.MAIN_PHASE1);
+        System.out.println(game.showTable());
     }
 
     public void goToDrawPhase() throws WinnerException {
@@ -691,6 +700,8 @@ public class OneRoundGame {
                 "attack direct\n" +
                 "active effect\n" +
                 "show graveyard\n" +
+                "send to graveyard\n" +
+                "show all hand cards\n" +
                 "card show --selected\n" +
                 "select --monster <cell number> --opponent(optional)\n" +
                 "select --spell <cell number> --opponent(optional)\n" +
