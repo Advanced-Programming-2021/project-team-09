@@ -36,8 +36,8 @@ public abstract class PrimaryDeck {
         cards.add(card);
     }
 
-    public Card removeCard(String cardName){
-        for (int i = cards.size() - 1; i >= 0 ; i--){
+    public Card removeCard(String cardName) {
+        for (int i = 0; i < cards.size() ; i++){
             if (cards.get(i).getCardName().equals(cardName)) {
                 Card card = cards.get(i);
                 cards.remove(i);
@@ -85,17 +85,13 @@ public abstract class PrimaryDeck {
     }
 
     public void shuffle() {
-        shuffle(this.cards);
-    }
-
-    public void shuffle(ArrayList<Card> cards) {
         ArrayList<Card> newCards = new ArrayList<>();
         Random random = new Random();
         while (cards.size() != 0) {
             int rand = random.nextInt(cards.size());
             newCards.add(cards.remove(rand));
         }
-        this.cards = newCards;
+        cards.addAll(newCards);
     }
 
     @JsonIgnore

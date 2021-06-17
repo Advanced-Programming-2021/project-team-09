@@ -16,6 +16,7 @@ import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
+
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -301,14 +302,14 @@ public class GameMenuController {
                     case END_BATTLE_PHASE:
                         throw e;
                     case REDUCE_FROM_ATTACKERS_LP:
-                        if (EffectController.doesCardBelongsToPlayer(game,attackerMonster)) game.decreaseHealth(attackerMonster.getAttack());
+                        if (EffectController.doesCardBelongsToPlayer(game, attackerMonster))
+                            game.decreaseHealth(attackerMonster.getAttack());
                         else game.decreaseRivalHealth(attackerMonster.getAttack());
                 }
             } else if (e instanceof WinnerException) {
                 throw e;
             }
         }
-
 
 
         if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
@@ -333,13 +334,13 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.ABORTED);
         }
 
-        if (cardHasVariableATKAndDEF(defenderMonster.getFeatures())){
+        if (cardHasVariableATKAndDEF(defenderMonster.getFeatures())) {
             try {
                 activeEffect(game, defenderMonster, game.getRival(), 0);
             } catch (Exception ignored) {
             }
         }
-        if (cardHasVariableATKAndDEF(attackerMonster.getFeatures())){
+        if (cardHasVariableATKAndDEF(attackerMonster.getFeatures())) {
             try {
                 activeEffect(game, attackerMonster, game.getPlayer(), 0);
             } catch (Exception ignored) {
@@ -514,7 +515,7 @@ public class GameMenuController {
         return false;
     }
 
-    private static int decreasePlayerLP (Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
+    private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
         game.decreaseRivalHealth(damage);
@@ -604,7 +605,7 @@ public class GameMenuController {
                     switch (state) {
                         case STOP_SUMMON:
                             Card card = game.getPlayerBoard().getMonsterZone(cellNumber - 1).getCard();
-                            sendToGraveYard(game,card);
+                            sendToGraveYard(game, card);
                         default:
                             break;
                     }
@@ -618,11 +619,11 @@ public class GameMenuController {
         tempCell.setState(State.FACE_UP_DEFENCE);
 
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
-           try {
-               activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
-           } catch (GameException e) {
-               if (e instanceof  WinnerException) throw e;
-        }
+            try {
+                activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
+            } catch (GameException e) {
+                if (e instanceof WinnerException) throw e;
+            }
     }
 
     private static boolean cardHasFlipEffect(ArrayList<CardFeatures> cardFeatures) {
@@ -633,37 +634,6 @@ public class GameMenuController {
     private static boolean monsterHasFlipEffect(ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.FLIP_EFFECT) return true;
         return false;
-    }
-
-    // todo tribute level check
-    public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
-        if (!cards.get(cardNumberInHand - 1).isMonster()) return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
-        if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
-            return respond(GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL);
-        if (game.getPlayerBoard().getSumLevel(new int[]{1, 2, 3, 4, 5}) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
-            return respond(GameMenuResponsesEnum.CANT_RITUAL_SUMMON);
-        if (game.getPlayerBoard().getSumLevel(tributeCellNumbers) != ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
-            return respond(GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH);
-        tribute(game, tributeCellNumbers);
-        Cell[] cells = game.getPlayerBoard().getSpellZone();
-        for (int i = 1; i <= 5; i++) {
-            if (cells[i - 1].isOccupied()) {
-                if (cells[i - 1].getCard().getCardName().equals("Advanced Ritual Art")) {
-                    moveToPlayerGraveyard(game, i, false);
-                    break;
-                }
-            }
-        }
-        cells = game.getPlayerBoard().getMonsterZone();
-        for (Cell cell : cells) {
-            if (!cell.isOccupied()) {
-                cell.addCard(game.getPlayerHandCards().get(cardNumberInHand - 1));
-                break;
-            }
-        }
-        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse directAttack(Game game, int cellNumber) throws WinnerException {
@@ -682,7 +652,7 @@ public class GameMenuController {
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Card tempCard = tempCells[cellNumber - 1].getCard();
-        int ATK = ((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard);
+        int ATK = ((Monster) tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard);
         game.decreaseRivalHealth(ATK);
         tempCells[cellNumber - 1].setCanAttack(false);
         return respondWithObj(ATK, GameMenuResponsesEnum.SUCCESSFUL);
@@ -827,14 +797,14 @@ public class GameMenuController {
         GameMenuResponse temp = selectPlayerFieldZone(game);
         Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
         if (temp.getGameMenuResponseEnum() != GameMenuResponsesEnum.NO_CARD_FOUND) {
-            sendToGraveYard(game, ((Cell)temp.getObj()).getCard());
+            sendToGraveYard(game, ((Cell) temp.getObj()).getCard());
         }
         Cell tempCell = game.getPlayerBoard().getFieldZone();
         tempCell.addCard(card);
         tempCell.setState(State.FACE_UP_SPELL);
         try {
             activeEffect(game, card, game.getRival(), 0);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
     }
 
@@ -848,7 +818,7 @@ public class GameMenuController {
 
     public static void activeEffect(Game game, Card card, User player, int speed) throws GameException {
         User rival = getOtherUser(game, player);
-        if (card!= null) faceUpCard(game, card);
+        if (card != null) faceUpCard(game, card);
         //ToDo never leaves loop
         if (speed != 0) {
             Card chosenCard = new SpellSelectMenu(game).run(speed);
@@ -997,5 +967,36 @@ public class GameMenuController {
 
     public static void sendToGraveYardFromHand(Game game) {
         game.getPlayerBoard().getGraveyard().addCard(game.getPlayerHandCards().remove(cellNumber - 1));
+    }
+
+    // todo tribute level check
+    public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (!cards.get(cardNumberInHand - 1).isMonster()) return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
+        if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
+            return respond(GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL);
+        if (game.getPlayerBoard().getSumLevel(new int[]{1, 2, 3, 4, 5}) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+            return respond(GameMenuResponsesEnum.CANT_RITUAL_SUMMON);
+        if (game.getPlayerBoard().getSumLevel(tributeCellNumbers) != ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+            return respond(GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH);
+        tribute(game, tributeCellNumbers);
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (int i = 1; i <= 5; i++) {
+            if (cells[i - 1].isOccupied()) {
+                if (cells[i - 1].getCard().getCardName().equals("Advanced Ritual Art")) {
+                    moveToPlayerGraveyard(game, i, false);
+                    break;
+                }
+            }
+        }
+        cells = game.getPlayerBoard().getMonsterZone();
+        for (Cell cell : cells) {
+            if (!cell.isOccupied()) {
+                cell.addCard(game.getPlayerHandCards().get(cardNumberInHand - 1));
+                break;
+            }
+        }
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 }
