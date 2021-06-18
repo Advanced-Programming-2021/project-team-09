@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class WelcomeMenu extends Menu implements Initializable {
+public class WelcomeMenuController extends Menu implements Initializable {
 
     @FXML
     private BorderPane mainPane;

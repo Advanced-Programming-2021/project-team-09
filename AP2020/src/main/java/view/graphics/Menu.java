@@ -1,5 +1,6 @@
 package view.graphics;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
@@ -40,6 +41,7 @@ public class Menu {
         try {
             return FXMLLoader.load(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/" + nodeName + ".fxml").toURI().toURL());
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -76,6 +78,15 @@ public class Menu {
     public static void exitButton(Button button ,MouseEvent mouseEvent) {
         button.setEffect(null);
         changeCursor(Cursor.DEFAULT, mouseEvent);
+    }
+
+    public static void justifyButton(Button button, Cursor enterCursor) {
+        button.onMouseEnteredProperty().set(mouseEvent -> enterButton(button,enterCursor,mouseEvent));
+        button.onMouseExitedProperty().set(mouseEvent -> exitButton(button, mouseEvent));
+    }
+
+    public static Image getCard(String cardName) {
+        return getImage("Cards/" + cardName.trim().replace(" ",""),"jpg");
     }
 
 }

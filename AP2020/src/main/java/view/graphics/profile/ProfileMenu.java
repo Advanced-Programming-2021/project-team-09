@@ -50,7 +50,6 @@ public class ProfileMenu extends Menu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         AKALabel.setStyle("-fx-font: Bold 12px Chalkboard;");
-        LoginMenuController.setCurrentUser("sia");
         setImageInCircle(LoginMenuController.getCurrentUser().getProfilePhoto());
         username.setText(LoginMenuController.getCurrentUser().getUsername());
         nickname.setText(LoginMenuController.getCurrentUser().getNickname());
