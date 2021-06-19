@@ -91,7 +91,9 @@ public class OneRoundGame {
             else if (OneRoundGameRegexes.showSelectedCard(command))
                 showSelectedCard();
             else if (command.matches(OneRoundGameRegexes.showGraveyard))
-                showGraveyard();
+                showGraveyard(true);
+            else if (command.matches(OneRoundGameRegexes.SHOW_GRAVEYARD_RIVAL))
+                showGraveyard(false);
             else if (command.matches(OneRoundGameRegexes.summon))
                 summon();
             else if (command.matches(OneRoundGameRegexes.surrender))
@@ -262,7 +264,6 @@ public class OneRoundGame {
             respond(OneRoundGameResponses.SET_SUCCESSFULLY);
             deselectCard(false);
         }
-
     }
 
     private boolean canSetInThisPhase() {
@@ -366,8 +367,11 @@ public class OneRoundGame {
         return canChangePosition();
     }
 
-    public void showGraveyard() {
-        System.out.println(game.getPlayerBoard().getGraveyard());
+    public void showGraveyard(boolean myGraveYard) {
+        String graveYard;
+        if (myGraveYard) graveYard = (String) GameMenuController.showPlayerGraveYard(game).getObj();
+        else graveYard = (String) GameMenuController.showRivalGraveYard(game).getObj();
+        System.out.println(graveYard);
     }
 
     public void showSelectedCard() {
@@ -525,7 +529,7 @@ public class OneRoundGame {
         else {
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
-            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.PLEASE_SELECT_MONSTER);
+            else if (selectState != SelectState.PLAYER_MONSTER) respond(OneRoundGameResponses.SELECT_FROM_TABLE);
             else {
                 GameMenuResponse gameMenuResponse;
                 try {
@@ -680,6 +684,8 @@ public class OneRoundGame {
             System.out.println("Action was aborted .");
         else if (responses.equals(OneRoundGameResponses.CANT_NORMAL_SUMMON))
             System.out.println("This card can't normal summon !");
+        else if (responses.equals(OneRoundGameResponses.SELECT_FROM_TABLE))
+            System.out.println("Please select from table .");
         else unknownError();
     }
 

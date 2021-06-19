@@ -162,6 +162,7 @@ public class GameMenuController {
                     Cell fieldZoneCell = game.getPlayerBoard().getFieldZone();
                     if (fieldZoneCell.isOccupied()) sendToGraveyardFromFieldZone(game, true);
                     game.getPlayerBoard().getFieldZone().addCard(tempSpell);
+                    cardsInHand.remove(cardNumberInHand - 1);
                     try {
                         card.activeEffect(game);
                     } catch (Exception ignored) {
@@ -541,7 +542,7 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
         if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
         if (!game.canSummon()) return respond(GameMenuResponsesEnum.ALREADY_SUMMONED);
-        Card card = handCards.get(cardNumberInHand - 1);
+        Card card = handCards.remove(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) continue;
@@ -573,11 +574,20 @@ public class GameMenuController {
 
     public static GameMenuResponse setSpellAndTrap(Game game, int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
-        if (cardNumberInHand < handCards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (cardNumberInHand > handCards.size() || cardNumberInHand == 0) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         if (handCards.get(cardNumberInHand - 1).isMonster())
             return respond(GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP);
         if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
-        Card tempCard = handCards.get(cardNumberInHand - 1);
+        Card tempCard = handCards.remove(cardNumberInHand - 1);
+        if (tempCard.isSpell()) {
+            Spell tempSpell = (Spell) tempCard;
+            if (tempSpell.getSpellType() == SpellType.FIELD) {
+                game.getPlayerBoard().getFieldZone().removeCard();
+                game.getPlayerBoard().getFieldZone().addCard(tempCard);
+                game.getPlayerBoard().getFieldZone().setState(State.FACE_UP_SPELL);
+                return respond(GameMenuResponsesEnum.SUCCESSFUL);
+            }
+        }
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) continue;

@@ -46,7 +46,9 @@ public class EndPhaseMenu extends OneRoundGame{
             } else if (OneRoundGameRegexes.showSelectedCard(command))
                 showSelectedCard();
             else if (command.matches(OneRoundGameRegexes.showGraveyard))
-                showGraveyard();
+                showGraveyard(true);
+            else if (command.matches(OneRoundGameRegexes.SHOW_GRAVEYARD_RIVAL))
+                showGraveyard(false);
             else if (command.matches(OneRoundGameRegexes.summon))
                 summon();
             else if (command.matches(OneRoundGameRegexes.surrender))

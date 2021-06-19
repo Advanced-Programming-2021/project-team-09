@@ -11,6 +11,7 @@ abstract public class OneRoundGameRegexes {
     public static final String SHOW_PHASE = "^show phase$";
     public static final String flipSummon = "flip-summon";
     public static final String attackToOpponentMonster = "attack (?<cellNumber>\\d+)";
+    public static final String SHOW_GRAVEYARD_RIVAL = "show graveyard -r";
     public static final String attackDirect = "attack direct";
     public static final String activeEffect = "active effect";
     public static final String showGraveyard = "show graveyard";

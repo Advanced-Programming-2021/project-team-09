@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
+import controller.EffectController.MonsterEffectController;
+import controller.EffectController.SpellEffectController;
 import model.exceptions.GameException;
 import model.game.Game;
 import model.card.monster.Monster;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.Trap;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 @JsonTypeInfo(
@@ -87,6 +91,17 @@ public abstract class Card {
     }
 
     public void activeEffect(Game game) throws GameException {
+        if (isMonster()) {
+            try {
+                Method method = MonsterEffectController.class.getDeclaredMethod(this.getCardName(), Game.class, Card.class);
+                method.invoke(null, game, this);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
+        } else {
+            try {
+                Method method = SpellEffectController.class.getDeclaredMethod(this.getCardName(), Game.class, Card.class);
+                method.invoke(null, game, this);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
+        }
 
     }
 
