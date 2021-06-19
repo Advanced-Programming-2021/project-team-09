@@ -71,6 +71,7 @@ public class MainMenu {
     }
 
     public void scoreboard() {
+        System.out.println("Now Entering scoreboard menu ..");
         ScoreboardMenu scoreboardMenu = ScoreboardMenu.getInstance(scanner);
         scoreboardMenu.run();
     }

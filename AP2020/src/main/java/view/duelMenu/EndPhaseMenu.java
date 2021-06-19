@@ -68,8 +68,6 @@ public class EndPhaseMenu extends OneRoundGame{
                 "select --spell <cell number> --opponent(optional)\n" +
                 "select --field --opponent(optional)\n" +
                 "select --hand <number>\n" +
-                "set --position attack\n" +
-                "set --position defense\n" +
                 "surrender\n" +
                 "select -d\n" + ANSI_RESET);
     }

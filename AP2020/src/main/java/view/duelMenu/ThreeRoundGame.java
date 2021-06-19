@@ -1,6 +1,7 @@
 package view.duelMenu;
 
 import controller.GameMenuController;
+import controller.database.ReadAndWriteDataBase;
 import model.User;
 import model.card.Card;
 import model.deck.Deck;
@@ -63,10 +64,15 @@ public class ThreeRoundGame {
             declareWinnerAndLoser(true);
             System.out.println(winner.getUsername() + " won the whole match with score: 3000-1000");
             GameMenuController.cashOut(calculateMaxLP(true), true, winner, loser);
+            ReadAndWriteDataBase.updateUser(winner);
+            ReadAndWriteDataBase.updateUser(loser);
+
         } else {
             declareWinnerAndLoser(false);
             System.out.println(winner.getUsername() + " won the whole match with score 3000-0");
             GameMenuController.cashOut(calculateMaxLP(false), true, winner, loser);
+            ReadAndWriteDataBase.updateUser(winner);
+            ReadAndWriteDataBase.updateUser(loser);
         }
     }
 

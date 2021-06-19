@@ -41,9 +41,10 @@ public class DuelMenu {
                 showHelp();
             else if (command.matches("menu show-current"))
                 respond(StartingGameResponses.CURRENT_MENU_DUEL_MENU);
-            else if (command.matches("menu exit"))
+            else if (command.matches("menu exit")) {
+                System.out.println("Now Entering Main Menu");
                 return;
-            else respond(StartingGameResponses.INVALID_COMMAND);
+            } else respond(StartingGameResponses.INVALID_COMMAND);
         }
     }
 
@@ -103,6 +104,8 @@ public class DuelMenu {
                     + winnerException.getLoser().getUsername() + " 0");
             GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner()
                     , winnerException.getLoser());
+            ReadAndWriteDataBase.updateUser(player);
+            ReadAndWriteDataBase.updateUser(rival);
         }
     }
 
