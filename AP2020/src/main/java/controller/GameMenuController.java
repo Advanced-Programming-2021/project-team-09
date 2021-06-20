@@ -162,6 +162,7 @@ public class GameMenuController {
                     Cell fieldZoneCell = game.getPlayerBoard().getFieldZone();
                     if (fieldZoneCell.isOccupied()) sendToGraveyardFromFieldZone(game, true);
                     game.getPlayerBoard().getFieldZone().addCard(tempSpell);
+                    game.getPlayerBoard().getFieldZone().setState(State.FACE_UP_SPELL);
                     cardsInHand.remove(cardNumberInHand - 1);
                     try {
                         card.activeEffect(game);
@@ -234,7 +235,7 @@ public class GameMenuController {
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (int i : cellNumbers) {
             if (tempCells[i].isOccupied()) {
-                sendToGraveYard(game, tempCells[i].getCard());
+                sendToGraveYard(game, tempCells[i].removeCard());
             }
         }
     }
@@ -683,7 +684,7 @@ public class GameMenuController {
         return false;
     }
 
-    private static String trimName(String name) {
+    public static String trimName(String name) {
         return name.replace(" ", "").replace(",", "").replace("-", "");
     }
 
@@ -832,8 +833,7 @@ public class GameMenuController {
         //ToDo never leaves loop
         if (speed != 0) {
             Card chosenCard = new SpellSelectMenu(game).run(speed);
-            if (chosenCard == null) return;
-            else {
+            if (chosenCard != null) {
                 try {
                     activeEffect(game, chosenCard, rival, getSpeed(chosenCard.getFeatures()));
                 } catch (GameException e) {

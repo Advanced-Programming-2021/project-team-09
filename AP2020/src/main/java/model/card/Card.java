@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.*;
+import controller.EffectController.Destroy;
 import controller.EffectController.MonsterEffectController;
 import controller.EffectController.SpellEffectController;
+import controller.GameMenuController;
 import model.exceptions.GameException;
 import model.game.Game;
 import model.card.monster.Monster;
@@ -87,22 +89,24 @@ public abstract class Card {
     }
 
     public void destroy(Game game) {
-
+        try {
+            Method method = Destroy.class.getDeclaredMethod(GameMenuController.trimName(this.getCardName()), Game.class, Card.class);
+            method.invoke(null, game, this);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
     }
 
     public void activeEffect(Game game) throws GameException {
         if (isMonster()) {
             try {
-                Method method = MonsterEffectController.class.getDeclaredMethod(this.getCardName(), Game.class, Card.class);
+                Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.getCardName()), Game.class, Card.class);
                 method.invoke(null, game, this);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
         } else {
             try {
-                Method method = SpellEffectController.class.getDeclaredMethod(this.getCardName(), Game.class, Card.class);
+                Method method = SpellEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.getCardName()), Game.class, Card.class);
                 method.invoke(null, game, this);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
         }
-
     }
 
     public abstract String toString();

@@ -22,7 +22,7 @@ public class SpellSelectMenu extends OneRoundGame {
         this.speed = speed;
         game.switchReferences();
         System.out.println("Now its " + game.getPlayer().getNickname() + "'s turn .");
-        System.out.println(GameMenuController.showTable(game));
+        System.out.println(ANSI_GREEN_BACKGROUND + ANSI_BLACK + GameMenuController.showTable(game) + ANSI_RESET);
         String command;
         while (true) {
             System.out.println("Do you want to select a card ? Y/N");
@@ -31,8 +31,11 @@ public class SpellSelectMenu extends OneRoundGame {
                 System.out.println("You can quit this menu if you want by typing quit .. \nin this way you will choose not to activate a spell.");
                 break;
             }
-            if (command.equalsIgnoreCase("n")) return null;
-            else System.out.println("Invalid command .. please type y (for yes ) and n (for no) .");
+            if (command.equalsIgnoreCase("n")) {
+                game.switchReferences();
+                System.out.println("Now its " + game.getPlayer().getNickname() + "'s turn .");
+                return null;
+            } else System.out.println("Invalid command .. please type y (for yes ) and n (for no) .");
         }
         while (true) {
             command = scanner.nextLine();
@@ -54,8 +57,12 @@ public class SpellSelectMenu extends OneRoundGame {
                 activeEffect();
             else if (OneRoundGameRegexes.showSelectedCard(command))
                 super.showSelectedCard();
-            else if (command.equalsIgnoreCase("quit"))
+            else if (command.equalsIgnoreCase("quit")) {
+                game.switchReferences();
+                System.out.println("Now its " + game.getPlayer().getNickname() + "'s turn .");
                 return null;
+            } else if (command.matches("^help$"))
+                help();
             else if (OneRoundGameRegexes.doesItSetAttackCommand(command)
                     || OneRoundGameRegexes.doesItSetDefenseCommand(command)
                     || command.matches(OneRoundGameRegexes.set)
@@ -79,7 +86,7 @@ public class SpellSelectMenu extends OneRoundGame {
     }
 
     @Override
-    public void activeEffect() throws WinnerException {
+    public void activeEffect() {
         SelectState selectState = GameMenuController.getSelectState();
         if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
         else if (selectState != SelectState.PLAYER_SPELL) {
@@ -103,5 +110,20 @@ public class SpellSelectMenu extends OneRoundGame {
 
     private static void youCantDoThisHere() {
         System.out.println("It’s not your turn to play this kind of moves");
+    }
+
+    private static void help() {
+        System.out.println(ANSI_BLACK_BACKGROUND + ANSI_YELLOW + "summon\n" +
+                "show table\n" +
+                "active effect\n" +
+                "show graveyard -r\n" +
+                "show all hand cards\n" +
+                "card show --selected\n" +
+                "select --monster <cell number> --opponent(optional)\n" +
+                "select --spell <cell number> --opponent(optional)\n" +
+                "select --field --opponent(optional)\n" +
+                "select --hand <number>\n" +
+                "select -d\n" +
+                "show phase\n" + ANSI_RESET);
     }
 }

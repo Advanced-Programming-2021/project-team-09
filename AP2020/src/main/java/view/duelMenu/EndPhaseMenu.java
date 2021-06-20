@@ -57,6 +57,8 @@ public class EndPhaseMenu extends OneRoundGame{
                 showHelp();
             else if (command.matches(OneRoundGameRegexes.deselectCard))
                 deselectCard(true);
+            else if (command.matches(OneRoundGameRegexes.showHandCards))
+                super.showHandCards();
             else respond(OneRoundGameResponses.INVALID_COMMAND);
         }
     }
@@ -65,12 +67,14 @@ public class EndPhaseMenu extends OneRoundGame{
     public void showHelp() {
         System.out.println(ANSI_BLACK_BACKGROUND + ANSI_YELLOW + "show table\n" +
                 "show graveyard\n" +
+                "show graveyard -r\n" +
                 "card show --selected\n" +
                 "select --monster <cell number> --opponent(optional)\n" +
                 "select --spell <cell number> --opponent(optional)\n" +
                 "select --field --opponent(optional)\n" +
                 "select --hand <number>\n" +
                 "surrender\n" +
+                "show all hand cards\n" +
                 "select -d\n" + ANSI_RESET);
     }
 

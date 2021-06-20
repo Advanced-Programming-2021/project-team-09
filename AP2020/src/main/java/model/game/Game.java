@@ -81,7 +81,7 @@ public class Game {
         for (Cell cell : temp) {
             cell.setChangedPosition(false);
             if (cell.isOccupied()) cell.increaseRoundCounter();
-            cell.setCanAttack(false);
+            cell.setCanAttack(true);
         }
 
         temp = board.getSpellZone();
@@ -307,11 +307,11 @@ public class Game {
         for (Card card : temp) table.append("    c");
         table.append("\n").append(dis).append(rivalDeck.getMainDeck().getNumberOfAllCards()).append("\n\n").append(dis);
         Cell[] tempCellArray = rivalBoard.getSpellZone();
-        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O" : "    H") : "    E");
-        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[4].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[2].isFaceUp() ? "    O" : "    H") : "    E");
         table.append(tempCellArray[0].isOccupied() ? (tempCellArray[0].isFaceUp() ? "    O" : "    H") : "    E");
-        table.append(tempCellArray[2].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
-        table.append(tempCellArray[4].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n" : "    H\n") : "    E\n").append(dis);
+        table.append(tempCellArray[1].isOccupied() ? (tempCellArray[1].isFaceUp() ? "    O" : "    H") : "    E");
+        table.append(tempCellArray[3].isOccupied() ? (tempCellArray[3].isFaceUp() ? "    O\n" : "    H\n") : "    E\n").append(dis);
         tempCellArray = rivalBoard.getMonsterZone();
         table.append(monsterStateToString(tempCellArray[4]));
         table.append(monsterStateToString(tempCellArray[2]));

@@ -46,9 +46,11 @@ public class MainMenu {
             try {
                 Method method = MainMenu.class.getDeclaredMethod(menuName);
                 method.invoke(this);
-            } catch (Exception e) {
-                if (e instanceof NullPointerException) e.printStackTrace();
-                else respond(MainMenuResponses.INVALID_MENU);
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                respond(MainMenuResponses.INVALID_MENU);
+                e.printStackTrace(); // todo remove
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         }
     }

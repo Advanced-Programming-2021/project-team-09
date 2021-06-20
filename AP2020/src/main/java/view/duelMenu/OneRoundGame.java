@@ -113,10 +113,9 @@ public class OneRoundGame {
         }
     }
 
-    private void showHandCards() {
-        for (int i = 0; i < game.getPlayerHandCards().size(); i++) {
-            System.out.println(game.getPlayerHandCards().get(i).toString());
-        }
+    public void showHandCards() {
+        for (int i = 0; i < game.getPlayerHandCards().size(); i++)
+            System.out.println((i + 1) + " : " + game.getPlayerHandCards().get(i).toString());
     }
 
     public void setCurrentPhase(Phase currentPhase) {
@@ -322,25 +321,26 @@ public class OneRoundGame {
         else { // action allowed
             SelectState selectState = GameMenuController.getSelectState();
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
-            else if (selectState == SelectState.HAND) {
-                Card card = game.getPlayerHandCards().get(GameMenuController.getCellNumber() - 1);
-                if (!card.isSpell()) respond(OneRoundGameResponses.ACTIVE_EFFECT_IS_ONLY_FOR_SPELL_CARDS);
-                else { // card is in hand and is spell or trap
-                    if (card.isSpell()) {
-                        Spell tempSpell = (Spell) card;
-                        if (tempSpell.getSpellType() == SpellType.FIELD) {
-                            GameMenuController.setCardInPlayerFieldZone(game, GameMenuController.getCellNumber());
-                            respond(OneRoundGameResponses.SPELL_ACTIVATED);
-                            return;
-                        }
-                    }
-                    if (game.isSpellZoneFull()) {
-                        respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
-                        return;
-                    }
-                    GameMenuController.summon(game, GameMenuController.getCellNumber());
-                }
-            } else if (selectState != SelectState.PLAYER_SPELL)
+//            else if (selectState == SelectState.HAND) {
+//                Card card = game.getPlayerHandCards().get(GameMenuController.getCellNumber() - 1);
+//                if (!card.isSpell()) respond(OneRoundGameResponses.ACTIVE_EFFECT_IS_ONLY_FOR_SPELL_CARDS);
+//                else { // card is in hand and is spell or trap
+//                    if (card.isSpell()) {
+//                        Spell tempSpell = (Spell) card;
+//                        if (tempSpell.getSpellType() == SpellType.FIELD) {
+//                            GameMenuController.setCardInPlayerFieldZone(game, GameMenuController.getCellNumber());
+//                            respond(OneRoundGameResponses.SPELL_ACTIVATED);
+//                            return;
+//                        }
+//                    }
+//                    if (game.isSpellZoneFull()) {
+//                        respond(OneRoundGameResponses.SPELL_CARD_ZONE_IS_FULL);
+//                        return;
+//                    }
+//                    GameMenuResponse gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber());
+//                }
+//            }
+            else if (selectState != SelectState.PLAYER_SPELL)
                 respond(OneRoundGameResponses.ACTIVE_EFFECT_IS_ONLY_FOR_SPELL_CARDS);
             else { // card is in spell zone
                 Cell tempCell = game.getPlayerBoard().getSpellZone(GameMenuController.getCellNumber() - 1);
@@ -557,7 +557,8 @@ public class OneRoundGame {
                 } else if (answer == GameMenuResponsesEnum.SUCCESSFUL) {
                     System.out.println((String) gameMenuResponse.getObj());
                     deselectCard(false);
-                }
+                } else if (answer == GameMenuResponsesEnum.CANT_ATTACK)
+                    System.out.println("This card cant Attack !");
             }
         }
     }
@@ -708,6 +709,7 @@ public class OneRoundGame {
                 "attack direct\n" +
                 "active effect\n" +
                 "show graveyard\n" +
+                "show to graveyard -r\n" +
                 "send to graveyard\n" +
                 "show all hand cards\n" +
                 "card show --selected\n" +
@@ -720,6 +722,7 @@ public class OneRoundGame {
                 "next phase\n" +
                 "surrender\n" +
                 "select -d\n" +
+                "show all hand cards\n" +
                 "show phase\n" + ANSI_RESET);
     }
 
