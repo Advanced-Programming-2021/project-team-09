@@ -1,10 +1,9 @@
 package view.duelMenu;
 
+import controller.AI;
 import controller.GameMenuController;
 import model.User;
 import model.card.Card;
-import model.card.spell_traps.Spell;
-import model.card.spell_traps.SpellType;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
@@ -39,6 +38,7 @@ public class OneRoundGame {
 
     protected Game game;
     protected final Scanner scanner;
+    private AI ai = null;
     private Phase currentPhase = Phase.DRAW_PHASE;
 
     public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) {
@@ -47,6 +47,16 @@ public class OneRoundGame {
         } catch (CloneNotSupportedException ignored) {
         }
         this.scanner = scanner;
+    }
+    public OneRoundGame(User currentPlayer, AI ai, Scanner scanner){
+        try {
+            game = new Game(currentPlayer, ai.getAI());
+        }
+        catch (CloneNotSupportedException ignored){
+
+        }
+        this.scanner = scanner;
+        this.ai = ai;
     }
 
     public OneRoundGame(Game game, Scanner scanner) {
@@ -177,6 +187,9 @@ public class OneRoundGame {
     public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
+        if (ai != null){
+            ai.run();
+        }
     }
 
     public void surrender() throws WinnerException {

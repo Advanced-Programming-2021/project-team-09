@@ -1,5 +1,6 @@
 package view.duelMenu;
 
+import controller.AI;
 import controller.GameMenuController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
@@ -87,7 +88,10 @@ public class DuelMenu {
     public void duelNewAi(String command) {
         int numberOfRounds = Integer.parseInt(DuelMenuRegex.getRightMatcherForDuelNewAi(command).group("rounds"));
         if (numberOfRounds == 1)
-            singlePlayerOneRoundGame();
+        {
+            AI ai = new AI();
+            singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
+        }
         else if (numberOfRounds == 3)
             singlePlayerThreeRoundGame();
         else
@@ -114,8 +118,19 @@ public class DuelMenu {
         threeRoundGame.run();
     }
 
-    public void singlePlayerOneRoundGame() {
-        //todo
+    public void singlePlayerOneRoundGame(User player, AI ai) {
+        try {
+            new OneRoundGame(player, ai, LoginMenu.getInstance().getScanner()).run();
+        }
+        catch (WinnerException winnerException){
+            System.out.println(winnerException.getWinner().getUsername()
+                    + " Won the game and the score is :\n"
+                    + winnerException.getWinner().getUsername() + " 1000\n"
+                    + winnerException.getLoser().getUsername() + " 0");
+            GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner()
+                    , winnerException.getLoser());
+            ReadAndWriteDataBase.updateUser(player);
+        }
     }
 
     public void singlePlayerThreeRoundGame() {
