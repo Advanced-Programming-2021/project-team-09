@@ -1,28 +1,47 @@
 package controller;
 
+import controller.database.CSVInfoGetter;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
+import model.deck.Deck;
+import model.deck.MainDeck;
 import model.exceptions.GameException;
 import model.exceptions.WinnerException;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
 import view.duelMenu.SelectState;
+import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
-
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class AI {
     private final static User AI = new User("AI_MADE_BY_MIREBOZORG_AND_KASMAL_BEJOZ_SIA"
             , "NOONEWILLKNOW", "AI_MADE_BY_MIREBOZORG_AND_KASMAL_BEJOZ_SIA");
     private Game game;
+    public enum AIState {EASY, NORMAL, HARD}
+    private AIState aiState;
 
-    public AI(){
+    public AI(AIState aiState){
+        this.aiState = aiState;
+        loadAI();
+    }
 
+    private void loadAI() {
+        switch (aiState) {
+            case EASY:
+                loadEasy();
+                break;
+            case NORMAL:
+                loadNormal();
+                break;
+            case HARD:
+            default:
+                loadHard();
+                break;
+        }
     }
 
     public void run(Game game) throws WinnerException{
@@ -129,6 +148,89 @@ public class AI {
                     }
                 }
             }
+        }
+    }
+
+    private void loadEasy() {
+        if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
+        MainDeck deck = AI.getActiveDeck().getMainDeck();
+        removeAllCard();
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Battle OX"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Axe Raider"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Silver Fang"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Baby dragon"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Hero of the east"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Battle warrior"));
+        }
+    }
+
+    private void loadNormal() {
+        if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
+        MainDeck deck = AI.getActiveDeck().getMainDeck();
+        removeAllCard();
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Haniwa"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Bitron"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Feral Imp"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Warrior Dai Grepher"));
+        }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Dark Blade"));
+        }
+    }
+
+    private void loadHard() {
+        if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
+        MainDeck deck = AI.getActiveDeck().getMainDeck();
+        removeAllCard();
+        for (int i = 0; i < 10; i++) {
+            Card card = CSVInfoGetter.getCardByName("Spiral Serpent");
+            ((Monster) card).setLevel(1);
+            deck.addCard(card);
+        }
+        for (int i = 0; i < 10; i++) {
+            Card card = CSVInfoGetter.getCardByName("Wattaildragon");
+            ((Monster) card).setLevel(1);
+            deck.addCard(card);
+        }
+        for (int i = 0; i < 10; i++) {
+            Card card = CSVInfoGetter.getCardByName("Slot Machine");
+            ((Monster) card).setLevel(1);
+            deck.addCard(card);
+        }
+        for (int i = 0; i < 20; i++) {
+            Card card = CSVInfoGetter.getCardByName("Blue-Eyes white dragon");
+            ((Monster) card).setLevel(1);
+            deck.addCard(card);
+        }
+        for (int i = 0; i < 10; i++) {
+            Card card = CSVInfoGetter.getCardByName("Dark magician");
+            ((Monster) card).setLevel(1);
+            deck.addCard(card);
+        }
+    }
+
+    private void removeAllCard() {
+        MainDeck deck = AI.getActiveDeck().getMainDeck();
+        for (int i = deck.getCards().size() - 1; i >= 0; i--) {
+            deck.getCards().remove(i);
         }
     }
 }

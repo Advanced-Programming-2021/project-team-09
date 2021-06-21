@@ -683,7 +683,7 @@ public class GameMenuController {
     }
 
     public static String trimName(String name) {
-        return name.replace(" ", "").replace(",", "").replace("-", "");
+        return name.replace(" ", "").replace(",", "").replace("-", "").replace("'", "");
     }
 
     public static GameMenuResponse showPlayerGraveYard(Game game) {

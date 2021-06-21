@@ -86,10 +86,11 @@ public class DuelMenu {
     }
 
     public void duelNewAi(String command) {
-        int numberOfRounds = Integer.parseInt(DuelMenuRegex.getRightMatcherForDuelNewAi(command).group("rounds"));
-        if (numberOfRounds == 1)
-        {
-            AI ai = new AI();
+        Matcher matcher = DuelMenuRegex.getRightMatcherForDuelNewAi(command);
+        matcher.find();
+        int numberOfRounds = Integer.parseInt(matcher.group("rounds"));
+        if (numberOfRounds == 1) {
+            AI ai = new AI(AI.AIState.EASY); // TODO: 6/21/2021
             singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
         }
         else if (numberOfRounds == 3)
@@ -169,7 +170,7 @@ public class DuelMenu {
         help.append("\n");
         help.append("shortcut:\n");
         help.append("duel -n -s-p <player2 username> -r <1/3>\n");
-        help.append("duel -n -ai -r <1/3>");
+        help.append("duel -n -a -r <1/3>");
         System.out.println(help);
     }
 }
