@@ -33,8 +33,7 @@ public class MiniGamesMenu {
     }
 
     public static MiniGamesMenu getInstance(Scanner scanner, MiniGame miniGame) {
-        if (miniGameMenu == null) miniGameMenu = new MiniGamesMenu(scanner, miniGame);
-        return miniGameMenu;
+        return miniGameMenu = new MiniGamesMenu(scanner, miniGame);
     }
 
     public void run() {

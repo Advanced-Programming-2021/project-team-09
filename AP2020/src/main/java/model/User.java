@@ -29,6 +29,7 @@ public class User {
         this.decks = new ArrayList<>();
         activeDeck  = null;
     }
+
     public User(){
 
     }
