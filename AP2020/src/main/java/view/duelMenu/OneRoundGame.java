@@ -44,17 +44,15 @@ public class OneRoundGame {
     public OneRoundGame(User firstPlayer, User secondPlayer, Scanner scanner) {
         try {
             game = new Game(firstPlayer, secondPlayer);
-        } catch (CloneNotSupportedException ignored) {
-        }
+        } catch (CloneNotSupportedException ignored) { }
         this.scanner = scanner;
     }
+
     public OneRoundGame(User currentPlayer, AI ai, Scanner scanner){
         try {
             game = new Game(currentPlayer, ai.getAI());
         }
-        catch (CloneNotSupportedException ignored){
-
-        }
+        catch (CloneNotSupportedException ignored){ }
         this.scanner = scanner;
         this.ai = ai;
     }
@@ -169,6 +167,11 @@ public class OneRoundGame {
         if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run();
         System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
         game.changeTurn();
+        if (ai != null){
+            ai.run(game);
+            System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
+            game.changeTurn();
+        }
         deselectCard(false);
         setCurrentPhase(Phase.DRAW_PHASE);
         respond(OneRoundGameResponses.DRAW_PHASE);
@@ -187,9 +190,6 @@ public class OneRoundGame {
     public void goToEndPhase() {
         setCurrentPhase(Phase.END_PHASE);
         respond(OneRoundGameResponses.END_PHASE);
-        if (ai != null){
-            ai.run();
-        }
     }
 
     public void surrender() throws WinnerException {
