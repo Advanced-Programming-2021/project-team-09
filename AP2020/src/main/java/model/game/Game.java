@@ -133,6 +133,9 @@ public class Game {
         tempLimits = playerLimits;
         playerLimits = rivalLimits;
         rivalLimits = tempLimits;
+        int tempLP = playerLP;
+        playerLP = rivalLP;
+        rivalLP = tempLP;
     }
     //todo board bayad User begire be nazaram!
 
