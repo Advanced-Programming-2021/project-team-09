@@ -3,13 +3,18 @@ package controller;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
+import model.exceptions.GameException;
 import model.exceptions.WinnerException;
+import model.game.Cell;
 import model.game.Game;
+import model.game.State;
 import view.duelMenu.SelectState;
 import view.responses.GameMenuResponsesEnum;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class AI {
     private final static User AI = new User("AI_MADE_BY_MIREBOZORG_AND_KASMAL_BEJOZ_SIA"
@@ -21,27 +26,30 @@ public class AI {
     }
 
     public void run(Game game) throws WinnerException{
+        if (game == null) return;
         this.game = game;
-        summon(game);
+        GameMenuController.draw(game);
+        summon();
+        attack();
     }
 
     public User getAI() {
         return AI;
     }
 
-    public void summon(Game game) throws WinnerException {
+    public void summon() throws WinnerException {
         ArrayList<Card> cardsInAiHand = game.getPlayerHandCards();
         int[] cardsNumbersRankedByAttAndDef = rankMonstersAttAndDef(cardsInAiHand);
         GameMenuController.setSelectState(SelectState.HAND);
         for (int i : cardsNumbersRankedByAttAndDef) {
             GameMenuController.setCellNumber(i);
-            if (GameMenuController.summon(game, i).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) break;
+            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) break;
         }
         int[] cardNumbersOfSpells = getSpellAndTrapNumbers(cardsInAiHand);
         int played = 0;
         for (int i : cardNumbersOfSpells) {
             GameMenuController.setCellNumber(i);
-            if (GameMenuController.summon(game, i).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) played++;
+            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) played++;
             if (played == 2) break;
         }
     }
@@ -72,7 +80,7 @@ public class AI {
         return fill(tempCards, cards);
     }
 
-    public int[] fill(ArrayList<Card> cards1, ArrayList<Card> cards2) {
+    private int[] fill(ArrayList<Card> cards1, ArrayList<Card> cards2) {
         int[] ret = new int[cards1.size()];
         for (int i = 0; i < cards1.size(); i++) {
             for (int j = 0; j < cards2.size(); j++) {
@@ -83,5 +91,44 @@ public class AI {
             }
         }
         return ret;
+    }
+
+    public void attack() throws WinnerException{
+        Cell[] aiMonsters = game.getPlayerBoard().getMonsterZone();
+        Cell[] rivalMonsters = game.getRivalBoard().getMonsterZone();
+        boolean[] attacked = new boolean[5];
+        GameMenuController.setSelectState(SelectState.PLAYER_MONSTER);
+        for (int i = 0; i < 5; i++) {
+            if (!aiMonsters[i].isOccupied()) attacked[i] = true;
+        }
+        for (int i = 0; i < 5; i++) {
+            if (!attacked[i]) attackWithAIMonster(i + 1, aiMonsters, rivalMonsters);
+        }
+    }
+
+    private void attackWithAIMonster(int cellNumber, Cell[] aiMonsters, Cell[] rivalMonsters) throws WinnerException{
+        int monsters = 0;
+        for (Cell rivalMonster : rivalMonsters) if (rivalMonster.isOccupied()) monsters++;
+        if (monsters == 0) {
+            GameMenuController.setCellNumber(cellNumber);
+            GameMenuController.directAttack(game, cellNumber);
+        } else {
+            for (int i = 0; i < 5; i++) {
+                if (rivalMonsters[i].isOccupied()) {
+                    if ((rivalMonsters[i].getState() == State.FACE_UP_ATTACK
+                            && ((Monster)rivalMonsters[i].getCard()).getAttack() < ((Monster)aiMonsters[cellNumber - 1].getCard()).getAttack())
+                            ||(rivalMonsters[i].getState() == State.FACE_UP_DEFENCE
+                            && ((Monster)rivalMonsters[i].getCard()).getDefense() < ((Monster)aiMonsters[cellNumber - 1].getCard()).getAttack())) {
+                        try {
+                            GameMenuController.attack(game, cellNumber, i + 1, true);
+                        } catch (GameException e) {
+                            if (e instanceof WinnerException) {
+                                throw (WinnerException) e;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

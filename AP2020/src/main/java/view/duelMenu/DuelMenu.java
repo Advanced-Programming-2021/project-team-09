@@ -163,12 +163,13 @@ public class DuelMenu {
     public void showHelp() {
         StringBuilder help = new StringBuilder();
         help.append("duel --new --second-player <player2 username> --rounds<1/3>\n");
-        help.append("duel --new single player\n");
+        help.append("duel --new --ai --rounds<1/3>\n");
         help.append("menu show-current\n");
         help.append("menu exit\n");
         help.append("\n");
         help.append("shortcut:\n");
-        help.append("duel -n -s-p <player2 username> -r <1/3>");
+        help.append("duel -n -s-p <player2 username> -r <1/3>\n");
+        help.append("duel -n -ai -r <1/3>");
         System.out.println(help);
     }
 }

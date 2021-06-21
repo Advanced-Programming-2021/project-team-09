@@ -122,7 +122,7 @@ public class GameMenuController {
         return respondWithObj(tempCards.get(cardNumber - 1), GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse summon(Game game, int cardNumberInHand) throws WinnerException {
+    public static GameMenuResponse summon(Game game, int cardNumberInHand, boolean ai) throws WinnerException {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1)
             return respond(GameMenuResponsesEnum.INVALID_SELECTION);
@@ -159,15 +159,7 @@ public class GameMenuController {
             if (card.isSpell()) {
                 Spell tempSpell = (Spell) card;
                 if (tempSpell.getSpellType() == SpellType.FIELD) {
-                    Cell fieldZoneCell = game.getPlayerBoard().getFieldZone();
-                    if (fieldZoneCell.isOccupied()) sendToGraveyardFromFieldZone(game, true);
-                    game.getPlayerBoard().getFieldZone().addCard(tempSpell);
-                    game.getPlayerBoard().getFieldZone().setState(State.FACE_UP_SPELL);
-                    cardsInHand.remove(cardNumberInHand - 1);
-                    try {
-                        card.activeEffect(game);
-                    } catch (Exception ignored) {
-                    }
+                    setCardInPlayerFieldZone(game, cardNumberInHand);
                     return respond(GameMenuResponsesEnum.SUCCESSFUL);
                 }
             }
@@ -177,7 +169,8 @@ public class GameMenuController {
         }
         if (cardHasSummonEffect(card.getFeatures())) {
             try {
-                activeEffect(game, card, game.getRival(), 1);
+                if (!ai) activeEffect(game, card, game.getRival(), 1);
+                else activeEffect(game, card, game.getRival(), 0);
             } catch (GameException e) {
                 if (e instanceof StopSpell) {
                     StopSpell stopSpell = (StopSpell) e;
@@ -266,7 +259,7 @@ public class GameMenuController {
         return false;
     }
 
-    public static GameMenuResponse attack(Game game, int attackerCellNumber, int defenderCellNumber) throws GameException {
+    public static GameMenuResponse attack(Game game, int attackerCellNumber, int defenderCellNumber, boolean ai) throws GameException {
         //ToDo extract check!
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         if (attackerCellNumber > 5 || attackerCellNumber < 1 || defenderCellNumber > 5 || defenderCellNumber < 1)
@@ -293,7 +286,8 @@ public class GameMenuController {
 
 
         try {
-            activeEffect(game, null, game.getRival(), 1);
+            if (!ai) activeEffect(game, null, game.getRival(), 1);
+            else activeEffect(game, null, game.getRival(), 0);
         } catch (GameException e) {
             if (e instanceof StopAttackException) {
                 StopAttackException stopAttackException = (StopAttackException) e;
@@ -323,7 +317,8 @@ public class GameMenuController {
         if (cardHasStopAttackFeature(defenderMonster.getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
             if (cardHasSpecialAfterDefending(defenderMonster.getFeatures())) {
                 try {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 } catch (GameException e) {
                     if (e instanceof WinnerException) {
                         throw e;
@@ -377,7 +372,8 @@ public class GameMenuController {
                     }
                 } else answer = " and the defense position monster was not destroyed";
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName()
                                 + answer + tempString,
@@ -386,7 +382,8 @@ public class GameMenuController {
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint, attackerMonster, defenderMonster);
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
                         + damage + " battle damage", GameMenuResponsesEnum.SUCCESSFUL);
@@ -599,7 +596,7 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse flipSummon(Game game, int cellNumber) throws GameException {
+    public static GameMenuResponse flipSummon(Game game, int cellNumber, boolean ai) throws GameException {
         if (cellNumber > 5 || cellNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
@@ -608,7 +605,8 @@ public class GameMenuController {
         tempCell.setState(State.FACE_UP_ATTACK);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
             try {
-                activeEffect(game, tempCell.getCard(), game.getRival(), 1);
+                if (!ai) activeEffect(game, tempCell.getCard(), game.getRival(), 1);
+                else activeEffect(game, tempCell.getCard(), game.getRival(), 0);
             } catch (GameException e) {
                 if (e instanceof StopSpell) {
                     StopSpell stopSpell = (StopSpell) e;

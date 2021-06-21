@@ -213,7 +213,9 @@ public class OneRoundGame {
             if (selectState == null) respond(OneRoundGameResponses.NO_CARD_IS_SELECTED_YET);
             else if (selectState != SelectState.HAND) respond(OneRoundGameResponses.YOU_CANT_SUMMON_THIS_CARD);
             else {
-                GameMenuResponse gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber());
+                GameMenuResponse gameMenuResponse;
+                if (ai == null) gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber(), false);
+                else gameMenuResponse = GameMenuController.summon(game, GameMenuController.getCellNumber(), true);
                 GameMenuResponsesEnum answer = gameMenuResponse.getGameMenuResponseEnum();
                 if (answer == GameMenuResponsesEnum.ALREADY_SUMMONED)
                     respond(OneRoundGameResponses.YOU_ALREADY_SUMMONED_OR_SET_ON_THIS_TURN);
@@ -291,7 +293,8 @@ public class OneRoundGame {
             else {
                 GameMenuResponse gameMenuResponse;
                 try {
-                    gameMenuResponse = GameMenuController.flipSummon(game, GameMenuController.getCellNumber());
+                    if (ai == null) gameMenuResponse = GameMenuController.flipSummon(game, GameMenuController.getCellNumber(), false);
+                    else gameMenuResponse = GameMenuController.flipSummon(game, GameMenuController.getCellNumber(), true);
                 } catch (GameException e) {
                     if (e instanceof WinnerException) throw (WinnerException) e;
                     return;
@@ -360,7 +363,10 @@ public class OneRoundGame {
                 Card card = tempCell.getCard();
                 if (GameMenuController.hasNotUsedEffect(card.getFeatures())) {
                     try {
-                        GameMenuController.activeEffect(game, card, game.getRival(), GameMenuController.getSpeed(card.getFeatures()));
+                        if (ai == null)
+                            GameMenuController.activeEffect(game, card, game.getRival(), GameMenuController.getSpeed(card.getFeatures()));
+                        else
+                            GameMenuController.activeEffect(game, card, game.getRival(), 0);
                     } catch (Exception e) {
                         if (e instanceof WinnerException) throw (WinnerException) e;
                         if (e instanceof StopSpell) {
@@ -546,7 +552,8 @@ public class OneRoundGame {
             else {
                 GameMenuResponse gameMenuResponse;
                 try {
-                    gameMenuResponse = GameMenuController.attack(game, GameMenuController.getCellNumber(), cellNumber);
+                    if (ai == null) gameMenuResponse = GameMenuController.attack(game, GameMenuController.getCellNumber(), cellNumber, false);
+                    else gameMenuResponse = GameMenuController.attack(game, GameMenuController.getCellNumber(), cellNumber, true);
                 } catch (GameException e) {
                     if (e instanceof WinnerException) throw (WinnerException) e;
                     else if (e instanceof StopAttackException) {
