@@ -1,6 +1,8 @@
 package view.duelMenu;
 
+import controller.AI;
 import controller.GameMenuController;
+import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
 import model.card.Card;
@@ -17,6 +19,7 @@ public class ThreeRoundGame {
     private User secondUser;
     private User winner;
     private User loser;
+    private AI ai = null;
     private final Scanner scanner;
     private WinnerStatus firstRoundStatus;
     private WinnerStatus secondRoundStatus;
@@ -27,20 +30,37 @@ public class ThreeRoundGame {
         this.secondUser = secondUser;
         this.scanner = scanner;
     }
+    public ThreeRoundGame(AI ai, Scanner scanner) {
+        this.ai = ai;
+        this.scanner = scanner;
+    }
 
     public void run() throws CloneNotSupportedException {
-        OneRoundGame firstRound = new OneRoundGame(firstUser, secondUser, scanner);
-        try {
-            firstRound.run();
-        } catch (WinnerException firstRoundException) {
-            firstRoundStatus = new WinnerStatus(firstRoundException.getWinner(),
-                    firstRoundException.getLoser(),
-                    firstRoundException.getWinnerLP(),
-                    firstRoundException.getLoserLP());
+        OneRoundGame firstRound;
+        if (ai == null){
+            firstRound = new OneRoundGame(firstUser, secondUser, scanner);
         }
+        else {
+            firstRound = new OneRoundGame(LoginMenuController.getCurrentUser(),ai,scanner);
+        }
+            try {
+                firstRound.run();
+            } catch (WinnerException firstRoundException) {
+                firstRoundStatus = new WinnerStatus(firstRoundException.getWinner(),
+                        firstRoundException.getLoser(),
+                        firstRoundException.getWinnerLP(),
+                        firstRoundException.getLoserLP());
+                System.out.println(firstRoundStatus.getWinner().getNickname() + "won first match!");
+            }
         askPlayersIfTheyWantToChangeDeck();
         askPlayersIfTheyWantToBringCardsFromMainToSide();
-        OneRoundGame secondRound = new OneRoundGame(firstRoundStatus.getWinner(), firstRoundStatus.getLoser(), scanner);
+        OneRoundGame secondRound;
+        if (ai == null){
+            secondRound = new OneRoundGame(firstUser, secondUser, scanner);
+        }
+        else {
+            secondRound = new OneRoundGame(LoginMenuController.getCurrentUser(),ai,scanner);
+        }
         try {
             secondRound.run();
         } catch (WinnerException secondRoundException) {
@@ -48,11 +68,18 @@ public class ThreeRoundGame {
                     secondRoundException.getLoser(),
                     secondRoundException.getWinnerLP(),
                     secondRoundException.getLoserLP());
+            System.out.println(secondRoundStatus.getWinner().getNickname() + "won second match!");
         }
         if (checkIfThirdRoundIsNeededOrNot()) {
             askPlayersIfTheyWantToChangeDeck();
             askPlayersIfTheyWantToBringCardsFromMainToSide();
-            OneRoundGame thirdRound = new OneRoundGame(secondRoundStatus.getWinner(), secondRoundStatus.getLoser(), scanner);
+            OneRoundGame thirdRound;
+            if (ai == null){
+                thirdRound = new OneRoundGame(firstUser, secondUser, scanner);
+            }
+            else {
+                thirdRound = new OneRoundGame(LoginMenuController.getCurrentUser(),ai,scanner);
+            }
             try {
                 thirdRound.run();
             } catch (WinnerException thirdRoundException) {
@@ -60,6 +87,7 @@ public class ThreeRoundGame {
                         thirdRoundException.getLoser(),
                         thirdRoundException.getWinnerLP(),
                         thirdRoundException.getLoserLP());
+                System.out.println(thirdRoundStatus.getWinner().getNickname() + "won third match!");
             }
             declareWinnerAndLoser(true);
             System.out.println(winner.getUsername() + " won the whole match with score: 3000-1000");
@@ -76,12 +104,16 @@ public class ThreeRoundGame {
         }
     }
 
-    public void askPlayersIfTheyWantToBringCardsFromMainToSide() throws CloneNotSupportedException {
-        askPlayerToBringCardsFromMainToSide(firstUser);
-        askPlayerToBringCardsFromMainToSide(secondUser);
+    public void askPlayersIfTheyWantToBringCardsFromMainToSide() {
+        if (ai != null)
+            askPlayerToBringCardsFromMainToSide(LoginMenuController.getCurrentUser());
+        else {
+            askPlayerToBringCardsFromMainToSide(firstUser);
+            askPlayerToBringCardsFromMainToSide(secondUser);
+        }
     }
 
-    public void askPlayerToBringCardsFromMainToSide(User user) throws CloneNotSupportedException {
+    public void askPlayerToBringCardsFromMainToSide(User user) {
         String command;
         while (true) {
             System.out.println("do you want to swap cards " + user.getNickname() + "?");
@@ -127,8 +159,6 @@ public class ThreeRoundGame {
                 respond(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_MAIN_DECK);
         } else
             respond(ThreeRoundGameResponses.CARD_WITH_THIS_NAME_DOES_NOT_EXIST_IN_SIDE_DECK);
-
-
     }
 
     public boolean doesCardWithThisNameExistsInMainDeck(Deck deck, String cardName) {
@@ -148,8 +178,12 @@ public class ThreeRoundGame {
     }
 
     public void askPlayersIfTheyWantToChangeDeck() {
-        askPlayerToChangeDeck(firstUser);
-        askPlayerToChangeDeck(secondUser);
+        if (ai != null)
+            askPlayerToChangeDeck(LoginMenuController.getCurrentUser());
+        else {
+            askPlayerToChangeDeck(firstUser);
+            askPlayerToChangeDeck(secondUser);
+        }
     }
 
     private void askPlayerToChangeDeck(User user) {

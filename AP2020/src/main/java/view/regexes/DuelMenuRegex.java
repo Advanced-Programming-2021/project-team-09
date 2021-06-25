@@ -20,21 +20,64 @@ abstract public class DuelMenuRegex {
         duelNewPlayer[11] = "duel -s-p (?<username>.+) -r (?<rounds>\\d+) -n";
     }
 
-    private static final String[] duelNewAi = new String[12];
+    private static final String[] duelNewAi = new String[48];
 
     static {
-        duelNewAi[0] = "duel --new --ai --rounds (?<rounds>\\d+)";
-        duelNewAi[1] = "duel --rounds (?<rounds>\\d+) --ai --new";
-        duelNewAi[2] = "duel --ai --rounds (?<rounds>\\d+) --new";
-        duelNewAi[3] = "duel --ai --new --rounds (?<rounds>\\d+)";
-        duelNewAi[4] = "duel --rounds (?<rounds>\\d+) --new --ai";
-        duelNewAi[5] = "duel --new --rounds (?<rounds>\\d+) --ai";
-        duelNewAi[6] = "duel -n -a -r (?<rounds>\\d+)";
-        duelNewAi[7] = "duel -r (?<rounds>\\d+) -a -n";
-        duelNewAi[8] = "duel -a -r (?<rounds>\\d+) -n";
-        duelNewAi[9] = "duel -a -n -r (?<rounds>\\d+)";
-        duelNewAi[10] = "duel -r (?<rounds>\\d+) -n -a";
-        duelNewAi[11] = "duel -n -r (?<rounds>\\d+) -a";
+        duelNewAi[0] = "duel --new --ai --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[1] = "duel --new --ai --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+)";
+        duelNewAi[2] = "duel --new --rounds (?<rounds>\\d+) --ai --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[3] = "duel --new --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+) --ai";
+        duelNewAi[4] = "duel --new --difficulty (?<difficulty>[A-Za-z]+) --ai --rounds (?<rounds>\\d+)";
+        duelNewAi[5] = "duel --new --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+) --ai";
+
+        duelNewAi[6] = "duel --difficulty (?<difficulty>[A-Za-z]+) --new --ai --rounds (?<rounds>\\d+)";
+        duelNewAi[7] = "duel --difficulty (?<difficulty>[A-Za-z]+) --new --rounds (?<rounds>\\d+) --ai";
+        duelNewAi[8] = "duel --difficulty (?<difficulty>[A-Za-z]+) --ai --new --rounds (?<rounds>\\d+)";
+        duelNewAi[9] = "duel --difficulty (?<difficulty>[A-Za-z]+) --ai --rounds (?<rounds>\\d+) --new";
+        duelNewAi[10] = "duel --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+) --new --ai";
+        duelNewAi[11] = "duel --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+) --ai --new";
+
+        duelNewAi[12] = "duel --ai --new --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[13] = "duel --ai --new --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+)";
+        duelNewAi[14] = "duel --ai --rounds (?<rounds>\\d+) --new --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[15] = "duel --ai --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+) --new";
+        duelNewAi[16] = "duel --ai --difficulty (?<difficulty>[A-Za-z]+) --new --rounds (?<rounds>\\d+)";
+        duelNewAi[17] = "duel --ai --difficulty (?<difficulty>[A-Za-z]+) --rounds (?<rounds>\\d+) --new";
+
+        duelNewAi[18] = "duel --rounds (?<rounds>\\d+) --new --ai --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[19] = "duel --rounds (?<rounds>\\d+) --new --difficulty (?<difficulty>[A-Za-z]+) --ai";
+        duelNewAi[20] = "duel --rounds (?<rounds>\\d+) --ai --new --difficulty (?<difficulty>[A-Za-z]+)";
+        duelNewAi[21] = "duel --rounds (?<rounds>\\d+) --ai --difficulty (?<difficulty>[A-Za-z]+) --new";
+        duelNewAi[22] = "duel --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+) --new --ai";
+        duelNewAi[23] = "duel --rounds (?<rounds>\\d+) --difficulty (?<difficulty>[A-Za-z]+) --ai --new";
+
+        duelNewAi[24] = "duel -n -a -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[25] = "duel -n -a -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+)";
+        duelNewAi[26] = "duel -n -r (?<rounds>\\d+) -a -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[27] = "duel -n -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+) -a";
+        duelNewAi[28] = "duel -n -d (?<difficulty>[A-Za-z]+) -a -r (?<rounds>\\d+)";
+        duelNewAi[29] = "duel -n -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+) -a";
+
+        duelNewAi[30] = "duel -d (?<difficulty>[A-Za-z]+) -n -a -r (?<rounds>\\d+)";
+        duelNewAi[31] = "duel -d (?<difficulty>[A-Za-z]+) -n -r (?<rounds>\\d+) -a";
+        duelNewAi[32] = "duel -d (?<difficulty>[A-Za-z]+) -a -n -r (?<rounds>\\d+)";
+        duelNewAi[33] = "duel -d (?<difficulty>[A-Za-z]+) -a -r (?<rounds>\\d+) -n";
+        duelNewAi[34] = "duel -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+) -n -a";
+        duelNewAi[35] = "duel -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+) -a -n";
+
+        duelNewAi[36] = "duel -a -n -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[37] = "duel -a -n -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+)";
+        duelNewAi[38] = "duel -a -r (?<rounds>\\d+) -n -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[39] = "duel -a -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+) -n";
+        duelNewAi[40] = "duel -a -d (?<difficulty>[A-Za-z]+) -n -r (?<rounds>\\d+)";
+        duelNewAi[41] = "duel -a -d (?<difficulty>[A-Za-z]+) -r (?<rounds>\\d+) -n";
+
+        duelNewAi[42] = "duel -r (?<rounds>\\d+) -n -a -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[43] = "duel -r (?<rounds>\\d+) -n -d (?<difficulty>[A-Za-z]+) -a";
+        duelNewAi[44] = "duel -r (?<rounds>\\d+) -a -n -d (?<difficulty>[A-Za-z]+)";
+        duelNewAi[45] = "duel -r (?<rounds>\\d+) -a -d (?<difficulty>[A-Za-z]+) -n";
+        duelNewAi[46] = "duel -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+) -n -a";
+        duelNewAi[47] = "duel -r (?<rounds>\\d+) -d (?<difficulty>[A-Za-z]+) -a -n";
     }
 
     public static String[] getDuelNewPlayer() {
