@@ -9,6 +9,7 @@ import model.card.monster.MonsterCardType;
 import model.card.spell_traps.Spell;
 import model.card.spell_traps.SpellType;
 import model.deck.Graveyard;
+import model.deck.MainDeck;
 import model.exceptions.*;
 import model.game.*;
 import view.TributeMenu;
@@ -114,6 +115,17 @@ public class GameMenuController {
         String temp = game.getRivalDeck().getMainDeck().getCards().get(0).toString();
         game.rivalDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    public static void firstDraw(Game game) {
+        ArrayList<Card> playerCards = game.getPlayerHandCards();
+        ArrayList<Card> rivalCards = game.getRivalHandCards();
+        MainDeck playerMainDeck = game.getPlayerDeck().getMainDeck();
+        MainDeck rivalMainDeck = game.getRivalDeck().getMainDeck();
+        for (int i = 0; i < 5; i++) {
+            playerCards.add(playerMainDeck.getCards().remove(0));
+            rivalCards.add(rivalMainDeck.getCards().remove(0));
+        }
     }
 
     public static GameMenuResponse selectCardFromHand(Game game, int cardNumber) {

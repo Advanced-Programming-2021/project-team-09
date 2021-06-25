@@ -161,7 +161,7 @@ public class DuelMenu {
         }
         catch (WinnerException winnerException){
             System.out.println(winnerException.getWinner().getUsername()
-                    + " Won the game and the score is :\n"
+                    + " Won the game\nAnd the score is :\n"
                     + winnerException.getWinner().getUsername() + " 1000\n"
                     + winnerException.getLoser().getUsername() + " 0");
             GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner()

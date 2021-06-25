@@ -45,13 +45,20 @@ public class AI {
     public void run(Game game) throws WinnerException{
         if (game == null) return;
         this.game = game;
-        GameMenuController.draw(game);
+        drawCard();
         summon();
         attack();
     }
 
     public User getAI() {
         return AI;
+    }
+
+    public void drawCard() throws WinnerException {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        if (cards.size() != 6) {
+            GameMenuController.draw(game);
+        }
     }
 
     public void summon() throws WinnerException {
@@ -110,7 +117,7 @@ public class AI {
         return ret;
     }
 
-    public void attack() throws WinnerException{
+    public void attack() throws WinnerException {
         Cell[] aiMonsters = game.getPlayerBoard().getMonsterZone();
         Cell[] rivalMonsters = game.getRivalBoard().getMonsterZone();
         boolean[] attacked = new boolean[5];
@@ -192,37 +199,13 @@ public class AI {
         for (int i = 0; i < 10; i++) {
             deck.addCard(CSVInfoGetter.getCardByName("Dark Blade"));
         }
+        for (int i = 0; i < 10; i++) {
+            deck.addCard(CSVInfoGetter.getCardByName("Leotron"));
+        }
     }
 
     private void loadHard() {
-        if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
-        MainDeck deck = AI.getActiveDeck().getMainDeck();
-        removeAllCards();
-        for (int i = 0; i < 10; i++) {
-            Card card = CSVInfoGetter.getCardByName("Spiral Serpent");
-            ((Monster) card).setLevel(1);
-            deck.addCard(card);
-        }
-        for (int i = 0; i < 10; i++) {
-            Card card = CSVInfoGetter.getCardByName("Wattaildragon");
-            ((Monster) card).setLevel(1);
-            deck.addCard(card);
-        }
-        for (int i = 0; i < 10; i++) {
-            Card card = CSVInfoGetter.getCardByName("Slot Machine");
-            ((Monster) card).setLevel(1);
-            deck.addCard(card);
-        }
-        for (int i = 0; i < 20; i++) {
-            Card card = CSVInfoGetter.getCardByName("Blue-Eyes white dragon");
-            ((Monster) card).setLevel(1);
-            deck.addCard(card);
-        }
-        for (int i = 0; i < 10; i++) {
-            Card card = CSVInfoGetter.getCardByName("Dark magician");
-            ((Monster) card).setLevel(1);
-            deck.addCard(card);
-        }
+        loadNormal();
     }
 
     private void removeAllCards() {
