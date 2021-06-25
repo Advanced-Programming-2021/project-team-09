@@ -146,7 +146,7 @@ public class User {
     public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
         if (deck.canAddCardByName(card.getCardName())) {
-           deck.addCardToSideDeck(card);
+           deck.addCardToMainDeck(card);
         }
     }
 

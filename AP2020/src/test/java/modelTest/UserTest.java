@@ -4,17 +4,17 @@ import controller.database.CSVInfoGetter;
 import model.User;
 import model.card.Card;
 import model.card.monster.Monster;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 public class UserTest {
     private static User user;
-    @BeforeAll
-    static void init() {
+
+    @BeforeEach
+    public void init() {
         user = new User("sia","sia","sia");
     }
     @Test
+    @Order(1)
     public void userTest () {
         Card monster = CSVInfoGetter.getCardByName("Battle OX");
         user.addCard(monster);
@@ -35,11 +35,30 @@ public class UserTest {
         Assertions.assertEquals("sia",user.getUsername());
     }
     @Test
+    @Order(2)
     public void userDeckTests() {
+        Card monster = CSVInfoGetter.getCardByName("Battle OX");
+        Card monster1 = CSVInfoGetter.getCardByName("Battle OX");
+        Assertions.assertNotNull(monster);
+        Assertions.assertNotNull(monster1);
+
         user.createDeck("ali");
         Assertions.assertNotNull(user.getDeckByName("ali"));
+
+        user.addCardToMainDeck(monster,"ali");
+        Assertions.assertTrue(user.getDeckByName("ali").getMainDeck().getCards().contains(monster));
+
+        user.addCardToSideDeck(monster1,"ali");
+        Assertions.assertTrue(user.getDeckByName("ali").getSideDeck().getCards().contains(monster1));
+
+        user.removeCardFromMainDeck(monster.getCardName(),"ali");
+        user.removeCardFromSideDeck(monster1.getCardName(),"ali");
+        Assertions.assertFalse(user.getDeckByName("ali").getMainDeck().getCards().contains(monster));
+        Assertions.assertFalse(user.getDeckByName("ali").getSideDeck().getCards().contains(monster1));
+
         user.activeDeck("ali");
         Assertions.assertNotNull(user.getActiveDeck());
+
         user.removeDeck("ali");
         Assertions.assertNull(user.getDeckByName("ali"));
     }
