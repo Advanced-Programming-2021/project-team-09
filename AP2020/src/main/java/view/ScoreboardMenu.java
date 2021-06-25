@@ -1,6 +1,7 @@
 package view;
 
 import controller.ScoreboardController;
+import controller.database.ReadAndWriteDataBase;
 
 import java.util.Scanner;
 
@@ -35,7 +36,7 @@ public class ScoreboardMenu {
     }
 
     private void showScoreBoard() {
-        String scoreboard = ScoreboardController.getScoreBoard();
+        String scoreboard = ScoreboardController.getScoreBoard(ReadAndWriteDataBase.getAllUsers());
         System.out.println(scoreboard);
     }
 
