@@ -768,4 +768,8 @@ public class OneRoundGame {
                 break;
         }
     }
+
+    public static void soutForAI(String msg) {
+        System.out.println(msg);
+    }
 }

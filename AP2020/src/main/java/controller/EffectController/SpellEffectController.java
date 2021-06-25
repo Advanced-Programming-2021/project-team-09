@@ -349,11 +349,11 @@ public class SpellEffectController extends EffectController {
 
 
     //traps!
-    public static void magicCylinder(Game game, Card card) throws GameException {
+    public static void MagicCylinder(Game game, Card card) throws GameException {
         throw new StopAttackException(StopEffectState.REDUCE_FROM_ATTACKERS_LP);
     }
 
-    public void mirrorForce(Game game, Card card) throws GameException {
+    public void MirrorForce(Game game, Card card) throws GameException {
         Board board = getRivalBoard(game, card);
         Cell[] monsterZone = board.getMonsterZone();
         for (Cell cell : monsterZone) {
@@ -365,7 +365,7 @@ public class SpellEffectController extends EffectController {
         throw new StopAttackException(StopEffectState.JUST_STOP_ATTACK);
     }
 
-    public static void mindCrush(Game game, Card card) throws GameException {
+    public static void MindCrush(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Board opponentsBoard = getRivalBoard(game, card);
         ArrayList<Card> cards = getCardsInHand(game, card);
@@ -382,7 +382,7 @@ public class SpellEffectController extends EffectController {
         } else removeARandomCardFromHand(board, cards);
     }
 
-    public static void trapHole(Game game, Card card) throws GameException {
+    public static void TrapHole(Game game, Card card) throws GameException {
         throw new StopSpell(StopEffectState.STOP_SUMMON);
     }
 
@@ -391,12 +391,12 @@ public class SpellEffectController extends EffectController {
         throw new StopAttackException(StopEffectState.STOP_SUMMON);
     }
 
-    public static void timeSeal(Game game, Card card) throws GameException {
+    public static void TimeSeal(Game game, Card card) throws GameException {
         Limits limits = getRivalsLimits(game, card);
         limits.addLimit(EffectLimitations.HAS_NO_DRAW_PHASE);
     }
 
-    public static void negateAttack(Game game, Card card) throws GameException {
+    public static void NegateAttack(Game game, Card card) throws GameException {
         throw new StopAttackException(StopEffectState.END_BATTLE_PHASE);
     }
 
@@ -422,7 +422,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public static void CalloftheHaunted(Game game, Card card) throws GameException {
+    public static void CallofTheHaunted(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Graveyard graveyard = board.getGraveyard();
         Limits limits = getLimits(game, card);
