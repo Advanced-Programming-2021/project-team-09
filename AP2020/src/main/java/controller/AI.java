@@ -11,6 +11,7 @@ import model.exceptions.WinnerException;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
+import view.duelMenu.OneRoundGame;
 import view.duelMenu.SelectState;
 import view.responses.GameMenuResponsesEnum;
 import java.util.ArrayList;
@@ -45,19 +46,51 @@ public class AI {
     public void run(Game game) throws WinnerException{
         if (game == null) return;
         this.game = game;
-        drawCard();
+        GameMenuController.draw(game);
         summon();
+        changeAllCardsToAttack();
         attack();
+        removeExtraCards();
+        rearrangeMonsters();
     }
 
     public User getAI() {
         return AI;
     }
 
-    public void drawCard() throws WinnerException {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        if (cards.size() != 6) {
-            GameMenuController.draw(game);
+    public void removeExtraCards() {
+        // TODO: 6/25/2021
+    }
+
+    public void rearrangeMonsters() {
+        Cell[] monsters = game.getPlayerBoard().getMonsterZone();
+        for (Cell cell : monsters) {
+            if (cell.isOccupied()) {
+                Monster monster = (Monster) cell.getCard();
+                if (cell.isAttack()) {
+                    if (monster.getDefense() > monster.getAttack())
+                        GameMenuController.setMonsterPosition(game, getMonsterCellNumber(monsters, monster), "defence");
+                } else {
+                    if (monster.getAttack() > monster.getDefense())
+                        GameMenuController.setMonsterPosition(game, getMonsterCellNumber(monsters, monster), "attack");
+                }
+            }
+        }
+    }
+
+    public int getMonsterCellNumber(Cell[] cells, Card card) {
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].getCard() == card) return i + 1;
+        }
+        return -1;
+    }
+
+    public void changeAllCardsToAttack() {
+        Cell[] monsters = game.getPlayerBoard().getMonsterZone();
+        for (int i = 0; i < 5; i++) {
+            if (monsters[i].isOccupied()) {
+                GameMenuController.setMonsterPosition(game, i + 1, "attack");
+            }
         }
     }
 
@@ -67,13 +100,19 @@ public class AI {
         GameMenuController.setSelectState(SelectState.HAND);
         for (int i : cardsNumbersRankedByAttAndDef) {
             GameMenuController.setCellNumber(i);
-            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) break;
+            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+                OneRoundGame.soutForAI("AI summoned a monster : " + cardsInAiHand.get(i - 1).getCardName());
+                break;
+            }
         }
         int[] cardNumbersOfSpells = getSpellAndTrapNumbers(cardsInAiHand);
         int played = 0;
         for (int i : cardNumbersOfSpells) {
             GameMenuController.setCellNumber(i);
-            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) played++;
+            if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+                played++;
+                OneRoundGame.soutForAI("AI summoned a " + cardsInAiHand.get(i - 1).getCardType() + " : " + cardsInAiHand.get(i - 1).getCardName());
+            }
             if (played == 2) break;
         }
     }
