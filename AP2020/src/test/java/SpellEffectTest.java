@@ -66,11 +66,12 @@ public class SpellEffectTest extends TestEssentials {
     @Test
     public void testCalloftheHaunted() {
         Board board = game.getRivalBoard();
-        Card card = CSVInfoGetter.getCardByName("Call of the Haunted");
+        Card card = CSVInfoGetter.getCardByName("Call of The Haunted");
         Card card1 = CSVInfoGetter.getCardByName("Battle OX");
         Card card2 = CSVInfoGetter.getCardByName("Battle OX");
         Assertions.assertNotNull(card);
         Executable executable = () -> SpellEffectController.SolemnWarning(game, card);
         board.addCardToSpellZone(card);
+
     }
 }

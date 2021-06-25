@@ -85,16 +85,52 @@ public class DuelMenu {
 
     }
 
-    public void duelNewAi(String command) {
+    public void duelNewAi(String command) throws CloneNotSupportedException {
         Matcher matcher = DuelMenuRegex.getRightMatcherForDuelNewAi(command);
         matcher.find();
         int numberOfRounds = Integer.parseInt(matcher.group("rounds"));
+        String difficulty = matcher.group("difficulty");
         if (numberOfRounds == 1) {
-            AI ai = new AI(AI.AIState.EASY); // TODO: 6/21/2021
-            singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
+            switch (difficulty) {
+                case "easy": {
+                    AI ai = new AI(AI.AIState.EASY);
+                    singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
+                    break;
+                }
+                case "normal": {
+                    AI ai = new AI(AI.AIState.NORMAL);
+                    singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
+                    break;
+                }
+                case "hard": {
+                    AI ai = new AI(AI.AIState.HARD);
+                    singlePlayerOneRoundGame(LoginMenuController.getCurrentUser(), ai);
+                    break;
+                }
+                default:
+                    respond(StartingGameResponses.DIFFICULTY_IS_NOT_SUPPORTED);
+                    break;
+            }
         }
-        else if (numberOfRounds == 3)
-            singlePlayerThreeRoundGame();
+        else if (numberOfRounds == 3){
+            switch (difficulty) {
+                case "easy": {
+                    singlePlayerThreeRoundGame(AI.AIState.EASY);
+                    break;
+                }
+                case "normal": {
+                    singlePlayerThreeRoundGame(AI.AIState.NORMAL);
+                    break;
+                }
+                case "hard": {
+                    singlePlayerThreeRoundGame(AI.AIState.HARD);
+                    break;
+                }
+                default:
+                    respond(StartingGameResponses.DIFFICULTY_IS_NOT_SUPPORTED);
+                    break;
+            }
+        }
         else
             respond(StartingGameResponses.NUMBER_OF_ROUNDS_IS_NOT_SUPPORTED);
     }
@@ -134,8 +170,10 @@ public class DuelMenu {
         }
     }
 
-    public void singlePlayerThreeRoundGame() {
-        //todo
+    public void singlePlayerThreeRoundGame(AI.AIState difficulty) throws CloneNotSupportedException {
+        AI ai = new AI(difficulty);
+        ThreeRoundGame threeRoundGame = new ThreeRoundGame(ai,scanner);
+        threeRoundGame.run();
     }
 
     private void respond(@NotNull StartingGameResponses response) {
@@ -147,6 +185,8 @@ public class DuelMenu {
             System.out.println("number of rounds is not supported");
         else if (response.equals(StartingGameResponses.THERE_IS_NO_PLAYER_WITH_THIS_USERNAME))
             System.out.println("there is no player with this username");
+        else if (response.equals(StartingGameResponses.DIFFICULTY_IS_NOT_SUPPORTED))
+            System.out.println("difficulty is not supported");
     }
 
     @NotNull
@@ -162,15 +202,14 @@ public class DuelMenu {
     }
 
     public void showHelp() {
-        StringBuilder help = new StringBuilder();
-        help.append("duel --new --second-player <player2 username> --rounds<1/3>\n");
-        help.append("duel --new --ai --rounds<1/3>\n");
-        help.append("menu show-current\n");
-        help.append("menu exit\n");
-        help.append("\n");
-        help.append("shortcut:\n");
-        help.append("duel -n -s-p <player2 username> -r <1/3>\n");
-        help.append("duel -n -a -r <1/3>");
+        String help = "duel --new --second-player <player2 username> --rounds <1/3>\n" +
+                "duel --new --ai --rounds <1/3> --difficulty <easy/normal/hard>\n" +
+                "menu show-current\n" +
+                "menu exit\n" +
+                "\n" +
+                "shortcut:\n" +
+                "duel -n -s-p <player2 username> -r <1/3>\n" +
+                "duel -n -a -r <1/3> -d <easy/normal/hard>";
         System.out.println(help);
     }
 }

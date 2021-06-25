@@ -55,14 +55,16 @@ public class MonsterEffectController extends EffectController {
             while (true) {
                 int[] cellNumbers = TributeMenu.run(3);
                 if (cellNumbers == null) return;
+                for (int i = 0; i < 3; i++) cellNumbers[i]--;
                 if (cellNumbers[0] != cellNumbers[1] &&
                         cellNumbers[0] != cellNumbers[2] &&
                         cellNumbers[1] != cellNumbers[2]) {
                     Cell[] cells = new Cell[3];
-                    cells[0] = board.getMonsterZone(cellNumbers[0] - 1);
-                    cells[1] = board.getMonsterZone(cellNumbers[1] - 1);
-                    cells[2] = board.getMonsterZone(cellNumbers[2] - 1);
+                    cells[0] = board.getMonsterZone(cellNumbers[0]);
+                    cells[1] = board.getMonsterZone(cellNumbers[1]);
+                    cells[2] = board.getMonsterZone(cellNumbers[2]);
                     if (cells[0].isOccupied() && cells[1].isOccupied() && cells[2].isOccupied()) {
+
                         GameMenuController.tribute(game, cellNumbers);
                         setMonster(game, card, State.FACE_UP_ATTACK);
                         break;
@@ -158,10 +160,6 @@ public class MonsterEffectController extends EffectController {
                             continue main;
                         }
                     }
-                    cellNumbers[0] += 1;
-                    cellNumbers[1] += 1;
-                    cellNumbers[2] += 1;
-
                     GameMenuController.tribute(game, cellNumbers);
                     setMonster(game, card, State.FACE_UP_ATTACK);
                     return;

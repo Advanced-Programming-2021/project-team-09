@@ -69,6 +69,7 @@ public class User {
     public ArrayList<Deck> getDecks(){
         return decks;
     }
+
     public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
     }
@@ -98,9 +99,10 @@ public class User {
 
     @JsonIgnore
     public Card getCardByName(String cardName) {
+        if (cardName == null) return null;
         ArrayList<Card> cards = getCards();
         for (Card card : cards) {
-            if (card.getCardName().equals(cardName)) return card;
+            if (cardName.equals(card.getCardName())) return card;
         }
         return null;
     }
@@ -144,7 +146,7 @@ public class User {
     public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
         if (deck.canAddCardByName(card.getCardName())) {
-           deck.addCardToSideDeck(card);
+           deck.addCardToMainDeck(card);
         }
     }
 
