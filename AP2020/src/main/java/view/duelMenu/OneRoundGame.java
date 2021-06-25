@@ -66,6 +66,7 @@ public class OneRoundGame {
 
     public void run() throws WinnerException {
         String command;
+        GameMenuController.firstDraw(game);
         while (true) {
             command = scanner.nextLine().trim();
             if (OneRoundGameRegexes.doesItSelectMyMonsterCellCommand(command))
