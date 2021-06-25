@@ -517,14 +517,14 @@ public class GameMenuController {
     private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseRivalHealth(damage);
+        game.decreaseHealth(damage);
         return damage;
     }
 
     private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseHealth(damage);
+        game.decreaseRivalHealth(damage);
         return damage;
     }
 
@@ -911,63 +911,71 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    game.getPlayerLimits().unEquipMonster(spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getPlayerLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    game.getRivalLimits().unEquipMonster(spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getRivalLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
         } else {
             cells = game.getPlayerBoard().getSpellZone();
             gy = game.getPlayerBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
             cells = game.getRivalBoard().getSpellZone();
             gy = game.getRivalBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
         }

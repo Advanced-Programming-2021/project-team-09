@@ -96,7 +96,7 @@ public class SpellEffectController extends EffectController {
         }
     }
 
-    public static void harpiesFeatherDuster(Game game, Card card) throws GameException {
+    public static void HarpiesFeatherDuster(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         for (Cell tempCell : board.getSpellZone()) {
             if (tempCell.isOccupied()) board.removeCardFromSpellZone(tempCell.getCard());

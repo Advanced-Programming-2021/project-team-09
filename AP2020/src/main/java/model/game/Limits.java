@@ -150,7 +150,7 @@ public class Limits {
     }
 
     public boolean canAttackCell(int cellNumber) {
-        return cantAttackCells.contains(cellNumber);
+        return !cantAttackCells.contains(cellNumber);
     }
 
     public void banAttackingToCell(int cellNumber) {
@@ -172,10 +172,10 @@ public class Limits {
         if (limitations.contains(EffectLimitations.CANT_ATTACK) || !hasControlOnMonster(card)) return false;
         else {
             int attackBound = getAttackBound();
-            if (attackBound != 0) return true;
+            if (attackBound == 0) return true;
             else {
 
-                return ((Monster) card).getAttack() + getATKAddition(card) <= attackBound;
+                return ((Monster) card).getAttack() + getATKAddition(card) >= attackBound;
             }
         }
     }

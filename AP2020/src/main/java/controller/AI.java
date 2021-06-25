@@ -12,7 +12,6 @@ import model.game.Cell;
 import model.game.Game;
 import model.game.State;
 import view.duelMenu.SelectState;
-import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,6 @@ public class AI {
                 loadNormal();
                 break;
             case HARD:
-            default:
                 loadHard();
                 break;
         }
@@ -154,7 +152,7 @@ public class AI {
     private void loadEasy() {
         if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
         MainDeck deck = AI.getActiveDeck().getMainDeck();
-        removeAllCard();
+        removeAllCards();
         for (int i = 0; i < 10; i++) {
             deck.addCard(CSVInfoGetter.getCardByName("Battle OX"));
         }
@@ -178,7 +176,7 @@ public class AI {
     private void loadNormal() {
         if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
         MainDeck deck = AI.getActiveDeck().getMainDeck();
-        removeAllCard();
+        removeAllCards();
         for (int i = 0; i < 10; i++) {
             deck.addCard(CSVInfoGetter.getCardByName("Haniwa"));
         }
@@ -199,7 +197,7 @@ public class AI {
     private void loadHard() {
         if (AI.getActiveDeck() == null) AI.setActiveDeck(new Deck(AI.getNickname()));
         MainDeck deck = AI.getActiveDeck().getMainDeck();
-        removeAllCard();
+        removeAllCards();
         for (int i = 0; i < 10; i++) {
             Card card = CSVInfoGetter.getCardByName("Spiral Serpent");
             ((Monster) card).setLevel(1);
@@ -227,7 +225,7 @@ public class AI {
         }
     }
 
-    private void removeAllCard() {
+    private void removeAllCards() {
         MainDeck deck = AI.getActiveDeck().getMainDeck();
         for (int i = deck.getCards().size() - 1; i >= 0; i--) {
             deck.getCards().remove(i);
