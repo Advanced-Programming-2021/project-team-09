@@ -25,7 +25,6 @@ public class Game {
     private ArrayList<Card> rivalHandCards;
     private int playerLP;
     private int rivalLP;
-    private int phaseCounter;
     private int roundCounter;
     private boolean canSummonCard;
     private Board playerBoard;
@@ -69,7 +68,6 @@ public class Game {
 
     public void changeTurn() {
         canSummonCard = true;
-        phaseCounter = 0;
         roundCounter++;
         switchReferences();
         updateCellData(playerBoard);
@@ -139,8 +137,6 @@ public class Game {
         playerLP = rivalLP;
         rivalLP = tempLP;
     }
-    //todo board bayad User begire be nazaram!
-
 
     public void playerDrawCard() {
         MainDeck tempDeck = playerDeck.getMainDeck();
@@ -159,16 +155,8 @@ public class Game {
         }
     }
 
-    public boolean playerHasCapacityToDraw() {
-        return getNumberOfCardsInHand() < 6;
-    }
-
     public boolean rivalHasCapacityToDraw() {
-        return getNumberOfCardsInHandFromRival() < 5;
-    }
-
-    public int getNumberOfCardsInHand() {
-        return playerHandCards.size();
+        return getNumberOfCardsInHandFromRival() < 6;
     }
 
     public int getNumberOfCardsInHandFromRival() {
@@ -181,18 +169,6 @@ public class Game {
 
     public boolean isSpellZoneFull() {
         return playerBoard.isSpellZoneFull();
-    }
-
-    public void changePosition(State state, int cellNumber) {
-        playerBoard.getMonsterZone(cellNumber).setState(state);
-    }
-
-    public boolean isThereEnoughMonstersToTribute(int amount) {
-        int counter = 0;
-        for (int i = 0; i < 5; i++) {
-            if (playerBoard.getMonsterZone(i).isOccupied()) counter++;
-        }
-        return amount <= counter;
     }
 
     public void increaseHealth(int amount) {
@@ -217,44 +193,9 @@ public class Game {
         } else rivalLP -= amount;
     }
 
-    public String getGraveyardPlayer() {
-        return playerBoard.getGraveyard().toString();
-    }
-
-    public String getGraveyardRival() {
-        return rivalBoard.getGraveyard().toString();
-    }
-
     public void directAttack(int cellNumber) throws WinnerException {
         Monster tempMonster = (Monster) playerBoard.getMonsterZone(cellNumber).getCard();
         decreaseRivalHealth(tempMonster.getAttack());
-    }
-
-    public void changePhase() {
-        phaseCounter++;
-    }
-
-    public void removeCardFromPlayerHand(Card card) {
-        for (int i = 0; i < 5; i++) {
-            if (card.equals(playerHandCards.get(i)))
-                playerHandCards.remove(i);
-        }
-    }
-
-
-    public void summonMonster(Card card) {
-        if (!isMonsterZoneFull()) {
-            playerBoard.addCardToMonsterZone(card);
-            canSummonCard = false;
-        }
-    }
-
-    public void summonSpell(Card card) {
-        if (!isSpellZoneFull()) {
-            playerBoard.addCardToSpellZone(card);
-            canSummonCard = false;
-        }
-
     }
 
     public void setWinner(User user) throws WinnerException {
@@ -272,36 +213,6 @@ public class Game {
             winnerLP = rivalLP;
         }
         throw new WinnerException(winner, loser, winnerLP, loserLP);
-    }
-
-    public boolean hasWinner() {
-        return winner != null;
-    }
-
-    public User getWinner() {
-        if (hasWinner()) return winner;
-        else return null;
-    }
-
-    //todo methods!
-    public void activeEffect(int cellNumber) {
-
-    }
-
-    public void activeEffectRival(int cellNumber) {
-
-    }
-
-    public boolean canRivalActiveSpell() {
-        return false;
-    }
-
-    public boolean canRitualSummon() {
-        return false;
-    }
-
-    public void attack(int numberOfAttackersCell, int numberOfDefendersCell) {
-
     }
 
     public String showTable() {
@@ -356,33 +267,12 @@ public class Game {
         return "   DH";
     }
 
-    public Graveyard getGraveyard() {
-        return null;
-    }
-
-
     public boolean canSummon() {
         return canSummonCard;
     }
 
     public void setCanSummonCard(boolean canSummonCard) {
         this.canSummonCard = canSummonCard;
-    }
-
-    public void summonWithTribute(Card card) {
-
-    }
-
-    public void ritualSummon(int handNumber, int spellZoneNumber) {
-        if (canRitualSummon(handNumber, spellZoneNumber)) {
-            summonMonster(playerHandCards.get(handNumber));
-            playerBoard.removeCardFromSpellZone(playerBoard.getSpellZone(spellZoneNumber).getCard());
-            canSummonCard = false;
-        }
-    }
-
-    public boolean canRitualSummon(int handNumber, int spellZoneNumber) {
-        return playerHandCards.get(handNumber) != null && playerBoard.getSpellZone(spellZoneNumber).isOccupied();
     }
 
     public Board getPlayerBoard() {

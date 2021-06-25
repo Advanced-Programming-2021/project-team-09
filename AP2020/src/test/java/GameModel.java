@@ -5,6 +5,7 @@ import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
+import model.exceptions.WinnerException;
 import model.game.Board;
 import model.game.Cell;
 import model.game.Game;
@@ -122,6 +123,50 @@ public class GameModel {
     @Test
     @Order(4)
     public void drawCardTest() {
+        Card card = game.getPlayerDeck().getMainDeck().getCards().get(0);
+        game.playerDrawCard();
+        Assertions.assertTrue(game.getPlayerHandCards().contains(card));
+        Assertions.assertFalse(game.getPlayerDeck().getMainDeck().getCards().contains(card));
+        card = game.getRivalDeck().getMainDeck().getCards().get(0);
+        game.rivalDrawCard();
+        Assertions.assertTrue(game.getRivalHandCards().contains(card));
+        Assertions.assertFalse(game.getRivalDeck().getMainDeck().getCards().contains(card));
+    }
 
+    @Test
+    @Order(5)
+    public void changeOfHealthTest() {
+        Game testGame;
+        try {
+            testGame = new Game(mir, mmd);
+        } catch (CloneNotSupportedException e) {
+            testGame = null;
+            Assertions.fail();
+        }
+        testGame.increaseHealth(500);
+        testGame.increaseRivalHealth(500);
+        Assertions.assertEquals(8500,testGame.getPlayerLP());
+        Assertions.assertEquals(8500,testGame.getPlayerLP());
+        Game finalTestGame = testGame;
+        Assertions.assertThrows(WinnerException.class, () -> {
+            for (int i = 0; i < 20; i++) {
+                finalTestGame.decreaseHealth(500);
+            }
+        });
+        Assertions.assertThrows(WinnerException.class, () -> {
+            for (int i = 0; i < 20; i++) {
+                finalTestGame.decreaseRivalHealth(500);
+            }
+        });
+    }
+    @Test
+    @Order(6)
+    public void directAttackTest() {
+        Monster monster = (Monster) CSVInfoGetter.getCardByName("Battle OX");
+//        game.summonMonster(monster);
+        Executable executable = () -> game.directAttack(0);
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertFalse(game.canSummon());
+        Assertions.assertEquals(8000 - monster.getAttack(),game.getRivalLP());
     }
 }
