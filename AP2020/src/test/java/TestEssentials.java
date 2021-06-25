@@ -38,14 +38,14 @@ public class TestEssentials {
         resetStreams();
     }
 
-    ByteArrayOutputStream getOutPutStream() {
+    public static ByteArrayOutputStream getOutPutStream() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(stream);
         System.setOut(printStream);
         return stream;
     }
 
-    void setCommandInInputStream(String command1) {
+    public static void setCommandInInputStream(String command1) {
         try {
             System.in.reset();
         } catch (IOException ignored) {
@@ -54,7 +54,7 @@ public class TestEssentials {
         System.setIn(stream1);
     }
 
-    void resetStreams() {
+    public static void resetStreams() {
         System.setIn(defaultInputStream);
         System.setOut(defaultStream);
 

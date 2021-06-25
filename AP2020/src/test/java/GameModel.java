@@ -172,4 +172,40 @@ public class GameModel {
         Assertions.assertFalse(game.canSummon());
         Assertions.assertEquals(8000 - monster.getAttack(),game.getRivalLP());
     }
+
+    @Test
+    @Order(7)
+    public void setterGetterTest() {
+        board.setFieldZone(null);
+        board.setSpellZone(null);
+        board.setGraveyard(null);
+        board.setMonsterZone(null);
+        game.setCanSummonCard(false);
+        game.setPlayer(null);
+        game.setPlayerBoard(null);
+        game.setPlayerDeck(null);
+        game.setPlayerHandCards(null);
+        game.setPlayerLimits(null);
+        game.setPlayerLP(0);
+        game.setRival(null);
+        game.setRivalBoard(null);
+        game.setRivalDeck(null);
+        game.setRivalHandCards(null);
+        game.setRivalLimits(null);
+        game.setRivalLP(0);
+        game.setRoundCounter(0);
+        Assertions.assertNull(game.getPlayerLimits());
+        Assertions.assertNull(game.getRivalLimits());
+        Assertions.assertNull(game.getPlayerBoard());
+        Assertions.assertNull(game.getRivalBoard());
+        Assertions.assertNull(game.getPlayer());
+        Assertions.assertNull(game.getRival());
+        Assertions.assertNull(game.getPlayerHandCards());
+        Assertions.assertNull(game.getRivalHandCards());
+        Assertions.assertNull(game.getPlayerDeck());
+        Assertions.assertNull(game.getRivalDeck());
+        Assertions.assertEquals(0,game.getRoundCounter());
+        Assertions.assertEquals(0,game.getRivalLP());
+        Assertions.assertEquals(0,game.getPlayerLP());
+    }
 }
