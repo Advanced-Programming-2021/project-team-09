@@ -228,7 +228,7 @@ public class GameMenuController {
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (int i : cellNumbers) {
             if (tempCells[i].isOccupied()) {
-                sendToGraveYard(game, tempCells[i].removeCard());
+                sendToGraveYard(game, tempCells[i].getCard());
             }
         }
     }

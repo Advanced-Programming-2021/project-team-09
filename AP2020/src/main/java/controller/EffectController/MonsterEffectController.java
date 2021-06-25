@@ -160,10 +160,6 @@ public class MonsterEffectController extends EffectController {
                             continue main;
                         }
                     }
-                    cellNumbers[0] += 1;
-                    cellNumbers[1] += 1;
-                    cellNumbers[2] += 1;
-
                     GameMenuController.tribute(game, cellNumbers);
                     setMonster(game, card, State.FACE_UP_ATTACK);
                     return;
