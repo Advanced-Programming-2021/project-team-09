@@ -382,7 +382,7 @@ public class SpellEffectController extends EffectController {
         } else removeARandomCardFromHand(board, cards);
     }
 
-    public static void trapHole(Game game, Card card) throws GameException {
+    public static void TrapHole(Game game, Card card) throws GameException {
         throw new StopSpell(StopEffectState.STOP_SUMMON);
     }
 

@@ -11,19 +11,18 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        LoginMenu.getInstance().run();
-//        ArrayList<String> names = CSVInfoGetter.getCardNames();
-//        for (String s : names) {
-//            try {
-//                Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(s), Game.class, Card.class);
-//            } catch (NoSuchMethodException e) {
-//                System.out.println(s );
-//            }
-//            try {
-//                Method method = SpellEffectController.class.getDeclaredMethod(GameMenuController.trimName(s), Game.class, Card.class);
-//                method.invoke(null, null, null);
-//            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-//            }
-//        }
+//        LoginMenu.getInstance().run();
+        ArrayList<String> names = CSVInfoGetter.getCardNames();
+        for (String s : names) {
+            try {
+                Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(s), Game.class, Card.class);
+            } catch (NoSuchMethodException e) {
+                try {
+                    Method method1 = SpellEffectController.class.getDeclaredMethod(GameMenuController.trimName(s), Game.class, Card.class);
+                } catch (NoSuchMethodException e1) {
+                    System.out.println(s + (CSVInfoGetter.getCardByName(s).isMonster()?" \t\tMonster" : " \t\tNot Monster"));
+                }
+            }
+        }
     }
 }

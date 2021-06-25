@@ -1,6 +1,8 @@
 package view;
 
+import controller.LoginMenuController;
 import controller.ShopController;
+import view.regexes.CheatRegex;
 import view.regexes.RegexFunctions;
 import view.regexes.ShopMenuRegexes;
 import view.responses.ShopMenuResponses;
@@ -36,7 +38,11 @@ public class ShopMenu {
             else if (command.matches("menu exit")) {
                 System.out.println("Entering main menu");
                 return;
-            } else respond(ShopMenuResponses.INVALID_COMMAND);
+            } else if (command.matches(CheatRegex.INCREASE_MONEY))
+                LoginMenuController.getCurrentUser().increaseBalance(MainMenu.getInt(command));
+            else if (command.matches(CheatRegex.ADD_ALL_CARDS))
+                ShopController.addAllCards();
+            else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
     }

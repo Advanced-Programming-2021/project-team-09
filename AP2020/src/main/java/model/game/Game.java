@@ -157,7 +157,6 @@ public class Game {
             rivalHandCards.add(rivalDeck.getMainDeck().getCards().get(0));
             rivalDeck.getMainDeck().getCards().remove(0);
         }
-
     }
 
     public boolean playerHasCapacityToDraw() {

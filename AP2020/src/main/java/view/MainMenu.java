@@ -1,10 +1,11 @@
 package view;
 
+import com.sun.tools.javac.Main;
 import controller.LoginMenuController;
 import view.duelMenu.DuelMenu;
+import view.regexes.CheatRegex;
 import view.regexes.RegexFunctions;
 import view.responses.MainMenuResponses;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Scanner;
@@ -35,8 +36,16 @@ public class MainMenu {
                 logout();
                 return;
             } else if (command.matches("help")) showHelp();
+            else if (command.matches(CheatRegex.INCREASE_MONEY))
+                LoginMenuController.getCurrentUser().increaseBalance(getInt(command));
             else respond(MainMenuResponses.INVALID_COMMAND);
         }
+    }
+
+    public static int getInt(String string) {
+        Matcher matcher = RegexFunctions.getCommandMatcher(string, "(\\d+)");
+        matcher.find();
+        return Integer.parseInt(matcher.group(1));
     }
 
     private void gotoMenu(String command) {

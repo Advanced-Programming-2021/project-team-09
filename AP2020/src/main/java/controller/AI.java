@@ -253,4 +253,38 @@ public class AI {
             deck.getCards().remove(i);
         }
     }
+
+    private class SummonMonsterMove {
+        final int cellNumber;
+        final Game game;
+
+        public SummonMonsterMove(Game game, int cellNumber) {
+            this.cellNumber = cellNumber;
+            this.game = game;
+        }
+
+        public void run() throws WinnerException {
+            GameMenuController.summon(game, cellNumber, true);
+        }
+    }
+
+    private class AttackMove {
+        final int cellNumber;
+        final int cellNumberToAttack;
+        final Game game;
+
+        public AttackMove(Game game, int cellNumber, int cellNumberToAttack) {
+            this.cellNumber = cellNumber;
+            this.cellNumberToAttack = cellNumberToAttack;
+            this.game = game;
+        }
+
+        public void run() throws WinnerException {
+            try {
+                GameMenuController.attack(game, cellNumber, cellNumberToAttack, true);
+            } catch (GameException gameException) {
+                if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+            }
+        }
+    }
 }

@@ -31,6 +31,14 @@ public class ShopController {
         return asciiTable.render();
     }
 
+    public static void addAllCards() {
+        User user = LoginMenuController.getCurrentUser();
+        ArrayList<String> names = CSVInfoGetter.getCardNames();
+        for (String name : names) {
+            user.addCard(CSVInfoGetter.getCardByName(name));
+        }
+    }
+
     public static ShopMenuResponses BuyCard(String cardName) {
         User user = LoginMenuController.getCurrentUser();
         if (CSVInfoGetter.cardNameExists(cardName)) {
