@@ -2,6 +2,7 @@
 package model.game;
 
 import controller.DeckMenuController;
+import controller.GameMenuController;
 import controller.database.CSVInfoGetter;
 import model.User;
 import model.card.Card;
@@ -63,6 +64,7 @@ public class Game {
         playerBoard = new Board();
         rivalBoard = new Board();
         canSummonCard = true;
+        GameMenuController.firstDraw(this);
     }
 
     public void changeTurn() {
