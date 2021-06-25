@@ -1,12 +1,9 @@
-import controller.GameMenuController;
-import controller.database.ReadAndWriteDataBase;
-import model.User;
-import model.game.Game;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
-import java.util.ArrayList;
+public class GameControllerTest extends TestEssentials {
 
-public class GameControllerTest {
+    @BeforeAll
+    static void init() {
 
+    }
 }
