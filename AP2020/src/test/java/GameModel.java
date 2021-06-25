@@ -9,6 +9,7 @@ import model.exceptions.WinnerException;
 import model.game.Board;
 import model.game.Cell;
 import model.game.Game;
+import model.game.State;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -163,7 +164,9 @@ public class GameModel {
     @Order(6)
     public void directAttackTest() {
         Monster monster = (Monster) CSVInfoGetter.getCardByName("Battle OX");
-//        game.summonMonster(monster);
+        game.getPlayerBoard().getMonsterZone(0).addCard(monster);
+        game.getPlayerBoard().getMonsterZone(0).setState(State.FACE_UP_ATTACK);
+        game.setCanSummonCard(false);
         Executable executable = () -> game.directAttack(0);
         Assertions.assertDoesNotThrow(executable);
         Assertions.assertFalse(game.canSummon());

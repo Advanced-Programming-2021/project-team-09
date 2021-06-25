@@ -105,6 +105,7 @@ public class LoginMenu {
         String help = "user create --username <username> --nickname <nickname> --password <password>\n";
         help += "user login --username <username> --password <password>\n";
         help += "menu show-current\n";
+        help += "exit menu";
         System.out.println(help);
     }
 
