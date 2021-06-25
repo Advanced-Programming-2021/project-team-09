@@ -9,8 +9,7 @@ import java.util.Collections;
 
 public class ScoreboardController {
 
-    private static ArrayList<User> sortUsers() {
-        ArrayList<User> users = ReadAndWriteDataBase.getAllUsers();
+    private static ArrayList<User> sortUsers(ArrayList<User> users) {
         int numberOfUsers = users.size();
         for (int i = 0; i < numberOfUsers - 1; i++) {
             for (int j = 0; j < numberOfUsers - i - 1; j++) {
@@ -28,24 +27,24 @@ public class ScoreboardController {
         return users;
     }
 
-    public static String getScoreBoard() {
+    public static String getScoreBoard(ArrayList<User> users) {
 
-        ArrayList<User> users = sortUsers();
+        ArrayList<User> sortedUsers = sortUsers(users);
         AsciiTable asciiTable = new AsciiTable();
         asciiTable.addRule();
         asciiTable.addRow("Rank", "Username", "Nickname", "Score");
         asciiTable.addRule();
         int i = 1;
-        for (int j = users.size(); j > 0; j--) {
-            if (j != users.size()) {
-                if (users.get(j - 1).getScore() != users.get(j).getScore()) {
-                    i = users.size() - j + 1;
+        for (int j = sortedUsers.size(); j > 0; j--) {
+            if (j != sortedUsers.size()) {
+                if (sortedUsers.get(j - 1).getScore() != sortedUsers.get(j).getScore()) {
+                    i = sortedUsers.size() - j + 1;
                 }
             }
             asciiTable.addRow(i,
-                    users.get(j - 1).getUsername(),
-                    users.get(j - 1).getNickname(),
-                    users.get(j - 1).getScore());
+                    sortedUsers.get(j - 1).getUsername(),
+                    sortedUsers.get(j - 1).getNickname(),
+                    sortedUsers.get(j - 1).getScore());
             asciiTable.addRule();
         }
         return asciiTable.render();

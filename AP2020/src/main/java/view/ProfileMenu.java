@@ -42,7 +42,7 @@ public class ProfileMenu {
     public void run() {
         String command;
         while (true) {
-            command = scanner.nextLine().trim().toLowerCase();
+            command = scanner.nextLine().trim();
             if (command.matches(ProfileMenuRegex.changeNicknameRegex) ||
                     command.matches(ProfileMenuRegex.changeNicknameRegexShort))
                 changeNickname(command);
@@ -54,7 +54,7 @@ public class ProfileMenu {
             else if (command.matches(ProfileMenuRegex.showHelp)) showHelp();
             else if (command.matches("menu show-current"))
                 respond(ProfileMenuResponses.CURRENT_MENU_PROFILE_MENU);
-            else if (command.matches("exit menu")) {
+            else if (command.matches("menu exit")) {
                 System.out.println("Entering main menu");
                 return;
             }
