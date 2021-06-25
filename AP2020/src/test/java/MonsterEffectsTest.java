@@ -30,9 +30,9 @@ public class MonsterEffectsTest {
 
     @BeforeEach
     public void createTestArea() {
-        user1 = ReadAndWriteDataBase.getUser("sia.json");
-        user2 = ReadAndWriteDataBase.getUser("ali.json");
-        LoginMenuController.login("sia", "1234");
+        user1 = ReadAndWriteDataBase.getUser("mmd.json");
+        user2 = ReadAndWriteDataBase.getUser("mir.json");
+        LoginMenuController.login("mmd", "m");
         Assertions.assertNotNull(LoginMenuController.getCurrentUser());
         Assertions.assertNotNull(user1);
         Assertions.assertNotNull(user2);
