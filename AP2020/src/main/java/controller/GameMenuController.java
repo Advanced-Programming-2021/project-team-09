@@ -96,7 +96,7 @@ public class GameMenuController {
 
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) throws WinnerException {
-        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
+          if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
             throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
         }
@@ -911,7 +911,7 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.isOccupied() && cell.getCard().equals(card)) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
@@ -933,7 +933,7 @@ public class GameMenuController {
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
+                if (cell.isOccupied() && cell.getCard().equals(card)) {
                     gy.addCard(tempCard = cell.removeCard());
                     Cell[] tempCells = game.getPlayerBoard().getSpellZone();
                     for (Cell spellCell : tempCells) {
