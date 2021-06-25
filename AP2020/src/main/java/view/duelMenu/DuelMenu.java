@@ -85,7 +85,7 @@ public class DuelMenu {
 
     }
 
-    public void duelNewAi(String command) {
+    public void duelNewAi(String command) throws CloneNotSupportedException {
         Matcher matcher = DuelMenuRegex.getRightMatcherForDuelNewAi(command);
         matcher.find();
         int numberOfRounds = Integer.parseInt(matcher.group("rounds"));
@@ -170,8 +170,10 @@ public class DuelMenu {
         }
     }
 
-    public void singlePlayerThreeRoundGame(AI.AIState difficulty) {
-        //todo
+    public void singlePlayerThreeRoundGame(AI.AIState difficulty) throws CloneNotSupportedException {
+        AI ai = new AI(difficulty);
+        ThreeRoundGame threeRoundGame = new ThreeRoundGame(ai,scanner);
+        threeRoundGame.run();
     }
 
     private void respond(@NotNull StartingGameResponses response) {
@@ -200,15 +202,14 @@ public class DuelMenu {
     }
 
     public void showHelp() {
-        StringBuilder help = new StringBuilder();
-        help.append("duel --new --second-player <player2 username> --rounds<1/3>\n");
-        help.append("duel --new --ai --rounds<1/3> --difficulty<easy/normal/hard>\n");
-        help.append("menu show-current\n");
-        help.append("menu exit\n");
-        help.append("\n");
-        help.append("shortcut:\n");
-        help.append("duel -n -s-p <player2 username> -r <1/3>\n");
-        help.append("duel -n -a -r <1/3> -d<easy/normal/hard>");
+        String help = "duel --new --second-player <player2 username> --rounds <1/3>\n" +
+                "duel --new --ai --rounds <1/3> --difficulty <easy/normal/hard>\n" +
+                "menu show-current\n" +
+                "menu exit\n" +
+                "\n" +
+                "shortcut:\n" +
+                "duel -n -s-p <player2 username> -r <1/3>\n" +
+                "duel -n -a -r <1/3> -d <easy/normal/hard>";
         System.out.println(help);
     }
 }
