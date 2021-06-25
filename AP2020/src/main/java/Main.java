@@ -23,7 +23,7 @@ public class Main extends Application {
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
 //        Pane pane = new CardHolder();
-        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
+        BorderPane pane = (BorderPane) Menu.getNode("ShopMenu");
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
         stage.setScene(new Scene(pane));
