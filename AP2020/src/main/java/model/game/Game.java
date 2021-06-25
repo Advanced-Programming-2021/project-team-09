@@ -141,6 +141,7 @@ public class Game {
     }
     //todo board bayad User begire be nazaram!
 
+
     public void playerDrawCard() {
         MainDeck tempDeck = playerDeck.getMainDeck();
         if (tempDeck.getNumberOfAllCards() != 0)

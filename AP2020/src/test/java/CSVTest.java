@@ -1,5 +1,3 @@
-package databaseTest;
-
 import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.monster.Monster;
