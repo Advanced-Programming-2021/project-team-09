@@ -19,7 +19,7 @@ public class SpellEffectTest extends TestEssentials {
         ArrayList<Card> cards = game.getRivalHandCards();
         Board board = game.getRivalBoard();
         Card card1 = CSVInfoGetter.getCardByName("Battle OX");
-        Card card = CSVInfoGetter.getCardByName("Magic Jamamer");
+        Card card = CSVInfoGetter.getCardByName("Magic Jammer");
         Assertions.assertNotNull(card);
         Executable executable = () -> SpellEffectController.MagicJammer(game, card);
         board.addCardToSpellZone(card);

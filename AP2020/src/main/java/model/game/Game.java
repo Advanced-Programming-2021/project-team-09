@@ -63,7 +63,6 @@ public class Game {
         playerBoard = new Board();
         rivalBoard = new Board();
         canSummonCard = true;
-        GameMenuController.firstDraw(this);
     }
 
     public void changeTurn() {

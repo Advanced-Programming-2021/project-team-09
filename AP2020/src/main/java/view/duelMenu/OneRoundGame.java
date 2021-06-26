@@ -7,6 +7,8 @@ import model.card.Card;
 import model.exceptions.*;
 import model.game.Cell;
 import model.game.Game;
+import view.MainMenu;
+import view.regexes.CheatRegex;
 import view.regexes.OneRoundGameRegexes;
 import view.regexes.RegexFunctions;
 import view.responses.GameMenuResponse;
@@ -64,6 +66,7 @@ public class OneRoundGame {
 
     public void run() throws WinnerException {
         String command;
+        GameMenuController.firstDraw(game);
         while (true) {
             command = scanner.nextLine().trim();
             if (OneRoundGameRegexes.doesItSelectMyMonsterCellCommand(command))
@@ -116,6 +119,11 @@ public class OneRoundGame {
                 showPhase();
             else if (command.matches(OneRoundGameRegexes.showHandCards))
                 showHandCards();
+            else if (command.matches(CheatRegex.WIN_GAME)) winGame();
+            else if (command.matches(CheatRegex.INCREASE_HEALTH))
+                increaseHealth(MainMenu.getInt(command));
+            else if (command.matches(CheatRegex.MIREBOZORG_CHEAT))
+                mireBozorgCheat();
             else
                 respond(OneRoundGameResponses.INVALID_COMMAND);
         }
@@ -194,6 +202,19 @@ public class OneRoundGame {
 
     public void surrender() throws WinnerException {
         throw new WinnerException(game.getRival(), game.getPlayer(), game.getRivalLP(), game.getPlayerLP());
+    }
+
+    public void winGame() throws WinnerException {
+        throw new WinnerException(game.getPlayer(), game.getRival(), game.getPlayerLP(), game.getRivalLP());
+    }
+
+    public void increaseHealth(int LP) {
+        game.increaseHealth(LP);
+    }
+
+    public void mireBozorgCheat() {
+        Cell[] monsters = game.getRivalBoard().getMonsterZone();
+        for (Cell cell : monsters) cell.removeCard();
     }
 
     public void deselectCard(boolean printNeeded) {

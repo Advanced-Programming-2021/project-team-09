@@ -100,7 +100,8 @@ public class MainMenu {
     }
 
     private void importexport() {
-
+        System.out.println("Now entering import export ..");
+        new ImportExportMenu().run();
     }
 
     private void duel() {
@@ -120,7 +121,7 @@ public class MainMenu {
     public void showHelp() {
         String help = "logout\n";
         help += "menu show-current\n";
-        help += "menu enter <menu name>\nAvailable menus : \n\tduel\n\tshop\n\tscoreboard\n\tdeck\n\tprofile";
+        help += "menu enter <menu name>\nAvailable menus : \n\tduel\n\tshop\n\tscoreboard\n\tdeck\n\tprofile\n\timportexport";
         System.out.println(help);
     }
 

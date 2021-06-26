@@ -42,7 +42,7 @@ public class SpellEffectController extends EffectController {
 
     }
 
-    public static void TerraForming(Game game, Card card) throws GameException {
+    public static void Terraforming(Game game, Card card) throws GameException {
         boolean hasFieldZoneSpell = false;
         for (Card tempCard : game.getPlayerDeck().getAllCards()) {
             if (tempCard.isSpell()) {
@@ -194,7 +194,7 @@ public class SpellEffectController extends EffectController {
         board.removeCardFromSpellZone(chosenCard);
     }
 
-    public static void RingofDefense(Game game, Card card) throws GameException {
+    public static void Ringofdefense(Game game, Card card) throws GameException {
         //ToDo
     }
 
@@ -219,7 +219,7 @@ public class SpellEffectController extends EffectController {
         limits.addFieldZoneATK(MonsterType.BEAST, 100);
     }
 
-    public static void UMIIRUKA(Game game, Card card) throws GameException {
+    public static void Umiiruka(Game game, Card card) throws GameException {
         Limits playerLimits = game.getPlayerLimits();
         Limits rivalLimits = game.getRivalLimits();
         playerLimits.addFieldZoneATK(MonsterType.AQUA, 500);
@@ -228,7 +228,7 @@ public class SpellEffectController extends EffectController {
         rivalLimits.addFieldZoneDEF(MonsterType.AQUA, -400);
     }
 
-    public static void SwordofDarkDestruction(Game game, Card card) throws GameException {
+    public static void Swordofdarkdestruction(Game game, Card card) throws GameException {
         Board board = getBoard(game, card);
         Limits limits = getLimits(game, card);
         if (!isThereAnyFaceUpMonsters(board)) {

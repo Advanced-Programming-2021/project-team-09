@@ -37,9 +37,10 @@ public class ShopController {
         for (String name : names) {
             user.addCard(CSVInfoGetter.getCardByName(name));
         }
+        ReadAndWriteDataBase.updateUser(user);
     }
 
-    public static ShopMenuResponses BuyCard(String cardName) {
+    public static ShopMenuResponses buyCard(String cardName) {
         User user = LoginMenuController.getCurrentUser();
         if (CSVInfoGetter.cardNameExists(cardName)) {
             if (user.hasEnoughBalance(CSVInfoGetter.getPriceByCardName(cardName))) {
@@ -50,7 +51,7 @@ public class ShopController {
             } else return ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE;
         } else if (cardName.matches("^[\\d]{1,2}$")) {
             int cardNumber = Integer.parseInt(cardName);
-            if (cardNumber > 76 || cardNumber < 1) return ShopMenuResponses.INVALID_CARD_NUMBER;
+            if (cardNumber > 74 || cardNumber < 1) return ShopMenuResponses.INVALID_CARD_NUMBER;
             String cardNameByCardNumber = CSVInfoGetter.getCardNames().get(cardNumber - 1);
             if (user.hasEnoughBalance(CSVInfoGetter.getPriceByCardName(cardNameByCardNumber))) {
                 user.addCard(CSVInfoGetter.getCardByName(cardNameByCardNumber));
@@ -60,10 +61,5 @@ public class ShopController {
             } else return ShopMenuResponses.USER_HAS_NOT_ENOUGH_BALANCE;
         } else return ShopMenuResponses.INVALID_CARD_NAME;
     }
-
-/*    private static ArrayList<Card> sortCards (ArrayList<Card> cards){
-        //ToDo
-        return null;
-    }*/
 
 }

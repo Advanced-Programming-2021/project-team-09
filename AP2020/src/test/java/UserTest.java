@@ -4,7 +4,7 @@ import model.card.Card;
 import model.card.monster.Monster;
 import org.junit.jupiter.api.*;
 
-public class UserTest {
+public class UserTest extends TestEssentials {
     private static User user;
 
     @BeforeEach

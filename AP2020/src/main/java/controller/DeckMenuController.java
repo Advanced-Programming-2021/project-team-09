@@ -17,7 +17,7 @@ import java.util.Comparator;
 public class DeckMenuController {
 
     public static DeckMenuResponses createDeck(String deckName) {
-        User user = LoginMenuController.getCurrentUser(); // todo ina bayad static shan
+        User user = LoginMenuController.getCurrentUser();
         Deck tempDeck = user.getDeckByName(deckName);
         if (tempDeck != null) return DeckMenuResponses.DECK_ALREADY_EXISTS;
         user.createDeck(deckName);
@@ -43,23 +43,29 @@ public class DeckMenuController {
 
     public static DeckMenuResponses addCardToMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
-        PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
-        Deck deck = user.getDeckByName(deckName);
-        return DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck,deck);
+        if (user.doesDeckExist(deckName)) {
+            PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
+            Deck deck = user.getDeckByName(deckName);
+            return DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck, deck);
+        } else return DeckMenuResponses.DECK_DOESNT_EXIST;
     }
 
     public static DeckMenuResponses addCardToSideDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getSideDeck(), user.getDeckByName(deckName));
     }
 
-    public static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
+    private static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
         User user = LoginMenuController.getCurrentUser();
         if (!CSVInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
-        if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
-        if (!deck.canAddCardByName(cardName) && !canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
+        if (!primaryDeck.hasCapacity()) {
+            if (primaryDeck instanceof MainDeck) return DeckMenuResponses.MAIN_DECK_IS_FULL;
+            else return DeckMenuResponses.SIDE_DECK_IS_FULL;
+        }
+        if (!canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
         Card card = user.removeCard(cardName);
         primaryDeck.addCard(card);
         ReadAndWriteDataBase.updateUser(user);
@@ -73,11 +79,13 @@ public class DeckMenuController {
 
     public static DeckMenuResponses removeCardFromMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return removeCardFromDeck(deckName, cardName, user.getDeckByName(deckName).getMainDeck(), user.getDeckByName(deckName));
     }
 
     public static DeckMenuResponses removeCardFromSideDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return removeCardFromDeck(deckName, cardName, user.getDeckByName(deckName).getSideDeck(), user.getDeckByName(deckName));
     }
 
