@@ -225,5 +225,4 @@ public class CardEffectsView {
             System.out.println("Invalid command ..");
         }
     }
-
 }

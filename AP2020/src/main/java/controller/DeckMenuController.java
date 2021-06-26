@@ -17,7 +17,7 @@ import java.util.Comparator;
 public class DeckMenuController {
 
     public static DeckMenuResponses createDeck(String deckName) {
-        User user = LoginMenuController.getCurrentUser(); // todo ina bayad static shan
+        User user = LoginMenuController.getCurrentUser();
         Deck tempDeck = user.getDeckByName(deckName);
         if (tempDeck != null) return DeckMenuResponses.DECK_ALREADY_EXISTS;
         user.createDeck(deckName);
@@ -65,7 +65,7 @@ public class DeckMenuController {
             if (primaryDeck instanceof MainDeck) return DeckMenuResponses.MAIN_DECK_IS_FULL;
             else return DeckMenuResponses.SIDE_DECK_IS_FULL;
         }
-        if (!deck.canAddCardByName(cardName) && !canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
+        if (!canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
         Card card = user.removeCard(cardName);
         primaryDeck.addCard(card);
         ReadAndWriteDataBase.updateUser(user);
