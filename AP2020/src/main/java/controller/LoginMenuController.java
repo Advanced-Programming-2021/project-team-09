@@ -70,4 +70,7 @@ public class LoginMenuController {
     public static void setCurrentUser(String username) {
         currentUser = ReadAndWriteDataBase.getUser(username + ".json");
     }
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
 }

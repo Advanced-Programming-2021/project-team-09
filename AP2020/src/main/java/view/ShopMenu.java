@@ -66,7 +66,7 @@ public class ShopMenu {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, ShopMenuRegexes.shopCardRegex);
         if (matcher.find()) {
             String cardName = matcher.group("cardName");
-            ShopMenuResponses response = ShopController.BuyCard(cardName);
+            ShopMenuResponses response = ShopController.buyCard(cardName);
             respond(response);
         }
     }
