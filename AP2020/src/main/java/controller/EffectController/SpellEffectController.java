@@ -29,6 +29,10 @@ public class SpellEffectController extends EffectController {
             CardEffectsView.respond(CardEffectsResponses.MONSTER_ZONE_IS_FULL);
             return;
         }
+        if (getNumberOfMonstersOfGraveyard(game) == 0) {
+            CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
+            return;
+        }
         while (true) {
             Card chosenCard = CardEffectsView.getCardFromBothGraveyards(game.getPlayerBoard().getGraveyard(), game.getRivalBoard().getGraveyard());
             if (chosenCard == null) return;
@@ -582,6 +586,14 @@ public class SpellEffectController extends EffectController {
         for (Cell cell : game.getRivalBoard().getMonsterZone()) {
             if (cell.isOccupied()) GameMenuController.sendToGraveYard(game, cell.getCard());
         }
+    }
+
+    private static int getNumberOfMonstersOfGraveyard(Game game) {
+        int count = 0;
+        ArrayList<Card> allCards = new ArrayList<>(game.getPlayerBoard().getGraveyard().getCards());
+        allCards.addAll(game.getRivalBoard().getGraveyard().getCards());
+        for (Card card : allCards) if (card.isMonster()) ++count;
+        return count;
     }
 
 }
