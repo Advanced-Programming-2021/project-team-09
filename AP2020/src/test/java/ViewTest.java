@@ -52,8 +52,7 @@
                 "profile change --nickname testingChangeNickname\n" +
                 "menu exit\n" +
                 "logout\n" +
-                "exit menu"
-                ;
+                "exit menu";
         setCommandInInputStream(command);
         LoginMenu.getInstance().run();
         User testUser = ReadAndWriteDataBase.getUser("kasraForTest.json");
@@ -63,7 +62,7 @@
     }
 
     @Test
-    public void testScoreBoardTest() {
+    public void ScoreBoardTest() {
         User kasraTest = new User("kasraTest","kasramalihi","kasiTest");
         User kasraTest2 = new User("kasriTest","kasrimalihi","kasriTest");
         User amirTest = new User("amirTest","amirAbedi","mirTest");
@@ -97,6 +96,35 @@
         asciiTable.addRule();
         String expectedScoreBoard = asciiTable.render();
         Assertions.assertEquals(expectedScoreBoard, testScoreBoard);
+    }
+
+    @Test
+    public void deckViewTest(){
+        String command = "user create -u kasraForTest -p kasraForTest1380 -n kasiForTest\n" +
+                "user login --username kasraForTest --password kasraForTest1380\n" +
+                "menu enter shop\n" +
+                "add all cards bro\n" +
+                "menu exit\n" +
+                "menu enter deck\n" +
+                "help\n" +
+                "deck create kasrasdeck\n" +
+                "deck set-activate kasrasdeck\n" +
+                "deck add-card --card Battle OX --deck kasrasdeck\n" +
+                "deck add-card --card Axe Raider --deck kasrasdeck --side\n"+
+                "deck show --deck-name kasrasdeck\n" +
+                "deck show --deck-name kasrasdeck --side\n" +
+                "deck show --all\n" +
+                "deck delete kasrasdeck\n" +
+                "menu exit\n" +
+                "logout\n" +
+                "exit menu";
+
+        setCommandInInputStream(command);
+
+        LoginMenu.getInstance().run();
+
+        File testFile = new File("src/resources/Users/kasraForTest.json");
+        testFile.delete();
     }
 
     @AfterEach
