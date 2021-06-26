@@ -57,6 +57,10 @@ public class AI {
         rearrangeMonsters();
     }
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
     public User getAI() {
         return AI;
     }

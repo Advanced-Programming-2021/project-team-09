@@ -55,7 +55,7 @@ public class Board {
 
     public Cell getSpellZoneCellByCard(Card card) {
         for (int i = 0; i < 5; i++) {
-            if (spellZone[i].getCard().equals(card)) return spellZone[i];
+            if (spellZone[i].isOccupied() && spellZone[i].getCard().equals(card)) return spellZone[i];
         }
         return null;
     }

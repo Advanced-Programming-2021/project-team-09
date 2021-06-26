@@ -848,7 +848,6 @@ public class GameMenuController {
     public static void activeEffect(Game game, Card card, User player, int speed) throws GameException {
         User rival = getOtherUser(game, player);
         if (card != null) faceUpCard(game, card);
-        //ToDo never leaves loop
         if (speed != 0) {
             Card chosenCard = new SpellSelectMenu(game).run(speed);
             if (chosenCard != null) {
