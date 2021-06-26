@@ -208,4 +208,19 @@ public class GameModel {
         Assertions.assertEquals(0,game.getRivalLP());
         Assertions.assertEquals(0,game.getPlayerLP());
     }
+
+    @Test
+    public void gameCloneTest() {
+        Game game2 = game.clone();
+        game2.getPlayerBoard().getSpellZone()[3].addCard(CSVInfoGetter.getCardByName("Supply Squad"));
+        game2.getPlayerBoard().getSpellZone()[2].addCard(CSVInfoGetter.getCardByName("Supply Squad"));
+        Assertions.assertTrue(game2.getPlayer() == game.getPlayer()
+                && game2.getRival() == game.getRival());
+        try {
+            game2.setWinner(game.getPlayer());
+        } catch (WinnerException e) {
+            Assertions.assertTrue(e.getWinner() == game.getPlayer());
+        }
+
+    }
 }

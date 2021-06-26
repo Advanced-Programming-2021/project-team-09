@@ -1,7 +1,9 @@
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import controller.EffectController.SpellEffectController;
+import controller.GameMenuController;
 import controller.database.CSVInfoGetter;
 import model.card.Card;
+import model.exceptions.GameException;
 import model.exceptions.StopSpell;
 import model.exceptions.WinnerException;
 import model.game.Board;
@@ -61,6 +63,22 @@ public class SpellEffectTest extends TestEssentials {
             Assertions.assertEquals(0, game.getRivalLP());
 
         }
+    }
+
+    @Test
+    public void monsterRebornTest() {
+        setCommandInInputStream("y");
+        Card card = CSVInfoGetter.getCardByName("Monster Reborn");
+        Board myBoard = game.getPlayerBoard();
+        Board rivalBoard = game.getRivalBoard();
+        game.getPlayerHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game,1);
+        try {
+            GameMenuController.activeEffect(game,card,game.getPlayer(),1);
+        } catch (GameException e) {
+
+        }
+
     }
 
     @Test
