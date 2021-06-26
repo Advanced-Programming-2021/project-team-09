@@ -33,6 +33,33 @@ public class UserTest extends TestEssentials {
         Assertions.assertEquals("sia",user.getUsername());
     }
     @Test
+    public void testUserSetterAndGetter(){
+        User testUser = new User("test","test","test");
+        testUser.setScore(3000);
+        testUser.setDecks(null);
+        testUser.setActiveDeck(null);
+        testUser.setBalance(10000);
+        testUser.setUsername("testUsername");
+        testUser.setPassword("testPassword");
+        testUser.setCards(null);
+        testUser.setNickname("testNickName");
+        Assertions.assertEquals(3000,testUser.getScore());
+        Assertions.assertEquals("testUsername",testUser.getUsername());
+        Assertions.assertEquals("testPassword",testUser.getPassword());
+        Assertions.assertEquals("testNickName",testUser.getNickname());
+        Assertions.assertEquals(10000,testUser.getBalance());
+        Assertions.assertNull(testUser.getDecks());
+        Assertions.assertNull(testUser.getActiveDeck());
+        Assertions.assertNull(testUser.getCards());
+    }
+
+    @Test
+    public void testIsPasswordCorrect(){
+        User testUser = new User("test","test","test");
+        boolean test = testUser.isPasswordCorrect("testingPassword");
+        Assertions.assertFalse(test);
+    }
+    @Test
     @Order(2)
     public void userDeckTests() {
         Card monster = CSVInfoGetter.getCardByName("Battle OX");

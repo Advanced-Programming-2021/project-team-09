@@ -55,4 +55,16 @@ public class DeckTest {
         Assertions.assertEquals(deck.getMainDeck().getCardCount(card1.getCardName()),deck1.getMainDeck().getCardCount(card1.getCardName()));
         Assertions.assertEquals(deck.getSideDeck().getCards().size(),deck1.getSideDeck().getCards().size());
     }
+
+    @Test
+    public void testDecksSetterAndGetter(){
+        Deck testDeck = new Deck("testDeck");
+        testDeck.setDeckName("test");
+        testDeck.setMainDeck(null);
+        testDeck.setSideDeck(null);
+        Assertions.assertEquals("test", testDeck.getDeckName());
+        Assertions.assertNull(testDeck.getMainDeck());
+        Assertions.assertNull(testDeck.getSideDeck());
+
+    }
 }
