@@ -24,8 +24,7 @@ public class RockPaperScissors {
     }
 
     public static RockPaperScissors getInstance(Scanner scanner, MiniGame miniGame) {
-        if (rockPaperScissors == null) rockPaperScissors = new RockPaperScissors(scanner, miniGame);
-        return rockPaperScissors;
+        return rockPaperScissors = new RockPaperScissors(scanner, miniGame);
     }
 
     public void run() {
