@@ -23,26 +23,31 @@
         LoginMenu.getInstance().run();
         User testUser = ReadAndWriteDataBase.getUser("kasraForTest.json");
         Assertions.assertNotNull(testUser);
+        File testFile = new File("src/resources/Users/kasraForTest.json");
+        testFile.delete();
     }
 
     @Test
     public void profileMenuViewChangePassTest(){
-        String command = "user login --username kasraForTest --password kasraForTest1380\n" +
+        String command ="user create -u kasraForTest -p kasraForTest1380 -n kasiForTest\n" +
+                "user login --username kasraForTest --password kasraForTest1380\n" +
                 "menu enter profile\n" +
                 "profile change -p -c kasraForTest1380 -n kasiii\n" +
                 "menu exit\n" +
                 "logout\n" +
-                "exit menu"
-                ;
+                "exit menu";
         setCommandInInputStream(command);
         LoginMenu.getInstance().run();
         User testUser = ReadAndWriteDataBase.getUser("kasraForTest.json");
         Assertions.assertEquals("kasiii", testUser.getPassword());
+        File testFile = new File("src/resources/Users/kasraForTest.json");
+        testFile.delete();
     }
 
     @Test
     public void profileMenuViewChangeNickTest(){
-        String command = "user login --username kasraForTest --password kasraForTest1380\n" +
+        String command ="user create -u kasraForTest -p kasraForTest1380 -n kasiForTest\n" +
+                "user login --username kasraForTest --password kasraForTest1380\n" +
                 "menu enter profile\n" +
                 "profile change --nickname testingChangeNickname\n" +
                 "menu exit\n" +
@@ -53,6 +58,8 @@
         LoginMenu.getInstance().run();
         User testUser = ReadAndWriteDataBase.getUser("kasraForTest.json");
         Assertions.assertEquals("testingChangeNickname", testUser.getNickname());
+        File testFile = new File("src/resources/Users/kasraForTest.json");
+        testFile.delete();
     }
 
     @Test
