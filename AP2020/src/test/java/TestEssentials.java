@@ -5,6 +5,7 @@ import model.game.Game;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import view.LoginMenu;
 
 import java.io.*;
 

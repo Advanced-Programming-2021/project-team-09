@@ -1,9 +1,10 @@
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class GameControllerTest extends TestEssentials {
 
-    @BeforeAll
-    static void init() {
+    @Test
+    public void testInputChange() {
 
     }
 }
