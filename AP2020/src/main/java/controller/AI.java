@@ -25,7 +25,7 @@ public class AI {
     public enum AIState {EASY, NORMAL, HARD}
     private AIState aiState;
 
-    public AI(AIState aiState){
+    public AI(AIState aiState) {
         this.aiState = aiState;
         loadAI();
     }
@@ -114,7 +114,6 @@ public class AI {
         for (int i : cardsNumbersRankedByAttAndDef) {
             GameMenuController.setCellNumber(i);
             if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
-                OneRoundGame.soutForAI("AI summoned a monster : " + cardsInAiHand.get(i - 1).getCardName());
                 break;
             }
         }
@@ -124,7 +123,6 @@ public class AI {
             GameMenuController.setCellNumber(i);
             if (GameMenuController.summon(game, i, true).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
                 played++;
-                OneRoundGame.soutForAI("AI summoned a " + cardsInAiHand.get(i - 1).getCardType() + " : " + cardsInAiHand.get(i - 1).getCardName());
             }
             if (played == 2) break;
         }

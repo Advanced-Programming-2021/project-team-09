@@ -502,7 +502,14 @@ public class GameMenuController {
     }
 
     public static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
-        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) return false;
+        boolean used = false;
+        boolean oneUse = false;
+        boolean oneUseRound = false;
+        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) used = true;
+        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_USE_ONLY) oneUse = true;
+        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_EFFECT_PER_ROUND) oneUseRound = true;
+        if (oneUse && used) return false;
+        if (oneUseRound && used) return false;
         return true;
     }
 
