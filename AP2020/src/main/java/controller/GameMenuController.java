@@ -645,7 +645,7 @@ public class GameMenuController {
 
     public static void rivalFlipSummon(Game game, int cellNumber) throws GameException {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
-        tempCell.setState(State.FACE_UP_DEFENCE);
+        tempCell.setState(State.FACE_UP_ATTACK);
 
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
             try {

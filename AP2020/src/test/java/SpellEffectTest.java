@@ -76,9 +76,7 @@ public class SpellEffectTest extends TestEssentials {
         Card card2 = CSVInfoGetter.getCardByName("Battle OX");
         Board myBoard = game.getPlayerBoard();
         Board rivalBoard = game.getRivalBoard();
-        game.getPlayerHandCards().add(card);
-        game.getRivalHandCards().add(card);
-        GameMenuController.setSpellAndTrap(game, 1);
+        addCardToPlayerSpellZone(card);
         Executable executable = () -> SpellEffectController.MonsterReborn(game, card);
         Assertions.assertDoesNotThrow(executable);
         GameMenuController.setSpellAndTrap(game, 1);
@@ -125,8 +123,7 @@ public class SpellEffectTest extends TestEssentials {
         Card fieldCard = CSVInfoGetter.getCardByName("Yami");
         Assertions.assertNotNull(fieldCard);
         Executable executable = () -> SpellEffectController.Terraforming(game, card);
-        game.getPlayerHandCards().add(card);
-        GameMenuController.setSpellAndTrap(game, 1);
+        addCardToPlayerSpellZone(card);
         Assertions.assertDoesNotThrow(executable);
         game.getPlayerDeck().getMainDeck().getCards().add(fieldCard);
         Assertions.assertDoesNotThrow(executable);
@@ -140,8 +137,7 @@ public class SpellEffectTest extends TestEssentials {
         Card card = CSVInfoGetter.getCardByName("Pot of Greed");
         Assertions.assertNotNull(card);
         ArrayList<Card> cards = game.getPlayerHandCards();
-        cards.add(card);
-        GameMenuController.setSpellAndTrap(game, 1);
+        addCardToPlayerSpellZone(card);
         Executable executable = () -> SpellEffectController.PotofGreed(game, card);
         Assertions.assertDoesNotThrow(executable);
         Assertions.assertEquals(2, cards.size());
@@ -160,8 +156,7 @@ public class SpellEffectTest extends TestEssentials {
         Board board = game.getRivalBoard();
         Card card = CSVInfoGetter.getCardByName("Raigeki");
         Assertions.assertNotNull(card);
-        game.getPlayerHandCards().add(card);
-        GameMenuController.setSpellAndTrap(game, 1);
+        addCardToPlayerSpellZone(card);
         Card cards[] = new Card[5];
         for (int i = 0; i < 5; i++) {
             cards[i] = CSVInfoGetter.getCardByName("Battle OX");
@@ -184,8 +179,7 @@ public class SpellEffectTest extends TestEssentials {
         Limits limits = game.getRivalLimits();
         Card card = CSVInfoGetter.getCardByName("Change of Heart");
         Assertions.assertNotNull(card);
-        game.getPlayerHandCards().add(card);
-        GameMenuController.setSpellAndTrap(game, 1);
+        addCardToPlayerSpellZone(card);
         Executable executable = () -> SpellEffectController.ChangeofHeart(game, card);
         Assertions.assertDoesNotThrow(executable);
         Card cards[] = new Card[5];
@@ -213,9 +207,9 @@ public class SpellEffectTest extends TestEssentials {
         for (int i = 0; i < 5; i++) {
             cards[i] = CSVInfoGetter.getCardByName("Mind Crush");
             game.addCardToHand(cards[i]);
-            GameMenuController.setSpellAndTrap(game,1);
+            GameMenuController.setSpellAndTrap(game, 1);
         }
-        Executable executable = () -> SpellEffectController.HarpiesFeatherDuster(game,card);
+        Executable executable = () -> SpellEffectController.HarpiesFeatherDuster(game, card);
         Assertions.assertDoesNotThrow(executable);
         for (int i = 0; i < 5; i++) {
             Assertions.assertNull(game.getPlayerBoard().getSpellZoneCellByCard(cards[i]));
@@ -223,6 +217,76 @@ public class SpellEffectTest extends TestEssentials {
         }
     }
 
+    @Test
+    public void swordsOfRevealingLight() {
+        Board rivalBoard = game.getRivalBoard();
+        Limits rivalLimits = game.getRivalLimits();
+        Card card = CSVInfoGetter.getCardByName("Swords of Revealing Light");
+        addCardToPlayerSpellZone(card);
+        Assertions.assertNotNull(card);
+        Executable executable = () -> SpellEffectController.SwordsofRevealingLight(game, card);
+        Card[] cards = new Card[5];
+        for (int i = 0; i < 5; i++) {
+            cards[i] = CSVInfoGetter.getCardByName("Battle OX");
+            rivalBoard.addCardToMonsterZone(cards[i]);
+            State state = State.FACE_UP_ATTACK;
+            if (i % 2 == 0) state = State.FACE_DOWN_DEFENCE;
+            rivalBoard.getMonsterZoneCellByCard(cards[i]).setState(state);
+        }
+        Assertions.assertDoesNotThrow(executable);
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertEquals(State.FACE_UP_ATTACK, rivalBoard.getMonsterZoneCellByCard(cards[i]).getState());
+        }
+        Assertions.assertTrue(rivalLimits.getLimitations().contains(EffectLimitations.CANT_ATTACK));
+        game.changeTurn();
+        Assertions.assertEquals(1, game.getRivalBoard().getSpellZoneCellByCard(card).getRoundCounter());
+    }
+
+    @Test
+    public void DarkHoleTest() {
+        Card card = CSVInfoGetter.getCardByName("Dark Hole");
+        addCardToPlayerSpellZone(card);
+        Card[] cards = new Card[5];
+        Card[] cards1 = new Card[5];
+        for (int i = 0; i < 5; i++) {
+            cards[i] = CSVInfoGetter.getCardByName("Battle OX");
+            cards1[i] = CSVInfoGetter.getCardByName("Battle OX");
+            game.getRivalBoard().addCardToMonsterZone(cards1[i]);
+            game.getRivalBoard().getMonsterZoneCellByCard(cards1[i]).setState(State.FACE_UP_ATTACK);
+            game.getPlayerBoard().addCardToMonsterZone(cards[i]);
+            game.getPlayerBoard().getMonsterZoneCellByCard(cards[i]).setState(State.FACE_UP_ATTACK);
+        }
+        Executable executable = () -> SpellEffectController.DarkHole(game, card);
+        Assertions.assertDoesNotThrow(executable);
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertNull(game.getPlayerBoard().getMonsterZoneCellByCard(cards[i]));
+            Assertions.assertNull(game.getRivalBoard().getMonsterZoneCellByCard(cards1[i]));
+            Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(cards[i]));
+            Assertions.assertTrue(game.getRivalBoard().getGraveyard().getCards().contains(cards1[i]));
+        }
+    }
+
+    @Test
+    public void SupplySquadTest() {
+        Card card = CSVInfoGetter.getCardByName("Supply Squad");
+        Assertions.assertNotNull(card);
+        addCardToPlayerSpellZone(card);
+        Executable executable = () -> SpellEffectController.SupplySquad(game, card);
+        for (int i = 0; i < 8; i++) {
+            Assertions.assertDoesNotThrow(executable);
+            Assertions.assertEquals(i + 1,game.getPlayerHandCards().size());
+        }
+        Assertions.assertThrows(WinnerException.class,executable);
+    }
+
+    @Test
+    public void SpellAbsorptionTest() {
+        Card card = CSVInfoGetter.getCardByName("Spell Absorption");
+        addCardToPlayerSpellZone(card);
+        Executable executable = () -> SpellEffectController.SpellAbsorption(game,card);
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals(8500,game.getPlayerLP());
+    }
 
     @Test
     public void testCalloftheHaunted() {
@@ -236,4 +300,11 @@ public class SpellEffectTest extends TestEssentials {
         board.addCardToSpellZone(card);
 
     }
+
+    private void addCardToPlayerSpellZone(Card card) {
+        game.getPlayerHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+    }
+
+
 }

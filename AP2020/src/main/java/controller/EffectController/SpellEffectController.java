@@ -119,7 +119,7 @@ public class SpellEffectController extends EffectController {
         Cell[] cells = board.getMonsterZone();
         for (int i = 0; i < cells.length; i++) {
             if (cells[i].isOccupied() && cells[i].isFaceDown()) {
-                GameMenuController.rivalFlipSummon(game, i);
+                GameMenuController.rivalFlipSummon(game, i + 1);
             }
         }
         limits.addLimit(EffectLimitations.CANT_ATTACK);
