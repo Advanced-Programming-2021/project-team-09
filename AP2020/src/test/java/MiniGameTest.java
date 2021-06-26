@@ -7,8 +7,6 @@ import view.LoginMenu;
 import view.duelMenu.RockPaperScissors;
 import view.duelMenu.WinnerStatus;
 
-import java.util.Scanner;
-
 public class MiniGameTest extends TestEssentials {
 
     @Test
@@ -73,6 +71,7 @@ public class MiniGameTest extends TestEssentials {
                 "scissors\n" +
                 "rock\n" +
                 "paper\n" +
+                "mio\n" +
                 "scissors";
         setCommandInInputStream(command);
         RockPaperScissors rockPaperScissors = RockPaperScissors.getInstance(LoginMenu.getInstance().getScanner(),

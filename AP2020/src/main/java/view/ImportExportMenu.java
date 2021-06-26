@@ -69,6 +69,6 @@ public class ImportExportMenu {
     }
 
     public static void showHelp() {
-        System.out.println("update\nimport\nexport\nmenu show-current\nmenu exit\n");
+        System.out.println("import\nexport\nmenu show-current\nmenu exit\n");
     }
 }

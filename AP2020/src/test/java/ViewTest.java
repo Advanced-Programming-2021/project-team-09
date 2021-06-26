@@ -10,7 +10,8 @@
         import java.util.ArrayList;
 
         public class ViewTest {
-    static PrintStream defaultStream = System.out;
+
+            static PrintStream defaultStream = System.out;
     static InputStream defaultInputStream = System.in;
 
     @Test

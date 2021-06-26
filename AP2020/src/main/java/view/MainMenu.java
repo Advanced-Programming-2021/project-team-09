@@ -1,6 +1,5 @@
 package view;
 
-import com.sun.tools.javac.Main;
 import controller.LoginMenuController;
 import view.duelMenu.DuelMenu;
 import view.regexes.CheatRegex;
