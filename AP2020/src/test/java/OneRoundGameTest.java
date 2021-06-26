@@ -154,7 +154,47 @@ public class OneRoundGameTest extends TestEssentials{
                 "select -m 1\n" +
                 "attack 1\n" +
                 "attack direct\n" +
-                "surrender";
+                "select -h 1\n" +
+                "set --oposition defense\n" +
+                "select -m 1\n" +
+                "set --position attack\n" +
+                "select -s 1\n" +
+                "attack\n" +
+                "card show -s\n" +
+                "select\n" +
+                "show phase\n" +
+                "select -f -op\n" +
+                "card show -s\n" +
+                "select -f\n" +
+                "card show -s\n" +
+                "\n" +
+                "next phase\n" +
+                "show phase\n" +
+                "select -m 1\n" +
+                "card show -s\n" +
+                "select -m 1 -op\n" +
+                "card show -s\n" +
+                "select -m 1\n" +
+                "attack 1\n" +
+                "select -m 2\n" +
+                "attack direct\n" +
+                "select -h 1\n" +
+                "summon\n" +
+                "select -h 2\n" +
+                "set\n" +
+                "show phase\n" +
+                "select -s 1\n" +
+                "card show -s\n" +
+                "select -s 1 -op\n" +
+                "card show -s\n" +
+                "\n" +
+                "im mirebozorg bro\n" +
+                "\n" +
+                "n\n" +
+                "\n" +
+                "im mirebozorg bro\n" +
+                "\n" +
+                "surrender\n";
         setCommandInInputStream(command);
         OneRoundGame oneRoundGame = new OneRoundGame(user, user2, LoginMenu.getInstance().getScanner());
         try {
@@ -162,5 +202,10 @@ public class OneRoundGameTest extends TestEssentials{
         } catch (WinnerException e) {
             Assertions.assertTrue(e.getWinner() == user || e.getWinner() == user2);
         }
+    }
+
+    @Test
+    public void DuelMenu() {
+
     }
 }
