@@ -16,6 +16,7 @@ import view.duelMenu.SelectState;
 import view.responses.GameMenuResponsesEnum;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class AI {
     private final static User AI = new User("AI_MADE_BY_MIREBOZORG_AND_KASMAL_BEJOZ_SIA"
@@ -47,9 +48,11 @@ public class AI {
         if (game == null) return;
         this.game = game;
         GameMenuController.draw(game);
-        summon();
+        if (aiState == AIState.HARD) ;
+        else summon();
         changeAllCardsToAttack();
-        attack();
+        if (aiState == AIState.HARD) ;
+        else attack();
         removeExtraCards();
         rearrangeMonsters();
     }
@@ -59,7 +62,17 @@ public class AI {
     }
 
     public void removeExtraCards() {
-        // TODO: 6/25/2021
+        ArrayList<Card> cardsInHand = game.getPlayerHandCards();
+        if (cardsInHand.size() <= 6) return;
+        while (cardsInHand.size() != 6) {
+            removeOneCardFromHand();
+        }
+    }
+
+    public void removeOneCardFromHand() {
+        ArrayList<Card> cardsInHand = game.getPlayerHandCards();
+        int rand = new Random().nextInt(cardsInHand.size());
+        game.getPlayerBoard().getGraveyard().addCard(cardsInHand.remove(rand));
     }
 
     public void rearrangeMonsters() {
