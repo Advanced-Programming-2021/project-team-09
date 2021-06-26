@@ -17,7 +17,7 @@ import java.util.Comparator;
 public class DeckMenuController {
 
     public static DeckMenuResponses createDeck(String deckName) {
-        User user = LoginMenuController.getCurrentUser(); // todo ina bayad static shan
+        User user = LoginMenuController.getCurrentUser();
         Deck tempDeck = user.getDeckByName(deckName);
         if (tempDeck != null) return DeckMenuResponses.DECK_ALREADY_EXISTS;
         user.createDeck(deckName);

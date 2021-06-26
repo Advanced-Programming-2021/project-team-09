@@ -923,63 +923,71 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.isOccupied() && cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    game.getPlayerLimits().unEquipMonster(spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getPlayerLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.isOccupied() && cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    game.getRivalLimits().unEquipMonster(spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getRivalLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
         } else {
             cells = game.getPlayerBoard().getSpellZone();
             gy = game.getPlayerBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
             cells = game.getRivalBoard().getSpellZone();
             gy = game.getRivalBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
         }
@@ -988,8 +996,6 @@ public class GameMenuController {
     public static void sendToGraveYardFromHand(Game game) {
         game.getPlayerBoard().getGraveyard().addCard(game.getPlayerHandCards().remove(cellNumber - 1));
     }
-
-    // todo tribute level check
     public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
