@@ -97,7 +97,7 @@ public class GameMenuController {
 
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) throws WinnerException {
-          if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
+        if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
             throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
         }
@@ -591,7 +591,8 @@ public class GameMenuController {
 
     public static GameMenuResponse setSpellAndTrap(Game game, int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
-        if (cardNumberInHand > handCards.size() || cardNumberInHand == 0) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (cardNumberInHand > handCards.size() || cardNumberInHand == 0)
+            return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         if (handCards.get(cardNumberInHand - 1).isMonster())
             return respond(GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP);
         if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
@@ -1003,6 +1004,7 @@ public class GameMenuController {
     public static void sendToGraveYardFromHand(Game game) {
         game.getPlayerBoard().getGraveyard().addCard(game.getPlayerHandCards().remove(cellNumber - 1));
     }
+
     public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
         ArrayList<Card> cards = game.getPlayerHandCards();
         if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
