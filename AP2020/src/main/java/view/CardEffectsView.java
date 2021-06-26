@@ -159,7 +159,7 @@ public class CardEffectsView {
     }
 
     static public Card getCardFromBothGraveyards(Graveyard playerGraveyard, Graveyard rivalGraveyard) {
-        ArrayList<Card> cards = playerGraveyard.getCards();
+        ArrayList<Card> cards = (ArrayList<Card>) playerGraveyard.getCards().clone();
         cards.addAll(rivalGraveyard.getCards());
         return getCardFromList(cards);
     }

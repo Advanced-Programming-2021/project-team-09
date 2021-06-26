@@ -3,13 +3,15 @@ import controller.EffectController.SpellEffectController;
 import controller.GameMenuController;
 import controller.database.CSVInfoGetter;
 import model.card.Card;
+import model.card.spell_traps.Spell;
 import model.exceptions.GameException;
 import model.exceptions.StopSpell;
 import model.exceptions.WinnerException;
-import model.game.Board;
+import model.game.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.csv.Csv;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -67,19 +69,160 @@ public class SpellEffectTest extends TestEssentials {
 
     @Test
     public void monsterRebornTest() {
-        setCommandInInputStream("y");
+        setCommandInInputStream("1\n4\n2\n");
+        ByteArrayOutputStream outputStream = getOutPutStream();
         Card card = CSVInfoGetter.getCardByName("Monster Reborn");
+        Card card1 = CSVInfoGetter.getCardByName("Battle OX");
+        Card card2 = CSVInfoGetter.getCardByName("Battle OX");
         Board myBoard = game.getPlayerBoard();
         Board rivalBoard = game.getRivalBoard();
         game.getPlayerHandCards().add(card);
-        GameMenuController.setSpellAndTrap(game,1);
-        try {
-            GameMenuController.activeEffect(game,card,game.getPlayer(),1);
-        } catch (GameException e) {
+        game.getRivalHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+        Executable executable = () -> SpellEffectController.MonsterReborn(game, card);
+        Assertions.assertDoesNotThrow(executable);
+        GameMenuController.setSpellAndTrap(game, 1);
+        myBoard.getGraveyard().addCard(CSVInfoGetter.getCardByName("Mind Crush"));
+        myBoard.getGraveyard().addCard(card1);
+        rivalBoard.getGraveyard().addCard(card2);
+        rivalBoard.getGraveyard().addCard(CSVInfoGetter.getCardByName("Mind Crush"));
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertNotNull(myBoard.getMonsterZoneCellByCard(card1));
+        Assertions.assertFalse(myBoard.getGraveyard().getCards().contains(card1));
+        myBoard.addCardToMonsterZone(CSVInfoGetter.getCardByName("Battle OX"));
+        myBoard.addCardToMonsterZone(CSVInfoGetter.getCardByName("Battle OX"));
+        myBoard.addCardToMonsterZone(CSVInfoGetter.getCardByName("Battle OX"));
+        myBoard.addCardToMonsterZone(CSVInfoGetter.getCardByName("Battle OX"));
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals("You have no monsters !\n" +
+                "Please select a card from this item(s) :\n" +
+                "1 : Mind Crush\n" +
+                "2 : Battle OX\n" +
+                "3 : Battle OX\n" +
+                "4 : Mind Crush\n" +
+                "Please select monster !\n" +
+                "Please select a card from this item(s) :\n" +
+                "1 : Mind Crush\n" +
+                "2 : Battle OX\n" +
+                "3 : Battle OX\n" +
+                "4 : Mind Crush\n" +
+                "Please select monster !\n" +
+                "Please select a card from this item(s) :\n" +
+                "1 : Mind Crush\n" +
+                "2 : Battle OX\n" +
+                "3 : Battle OX\n" +
+                "4 : Mind Crush\n" +
+                "Monster zone is full !", outputStream.toString().trim());
+        outputStream.reset();
+    }
 
+    @Test
+    public void terraforming() {
+        setCommandInInputStream("1\n4\n9");
+        ByteArrayOutputStream outputStream = getOutPutStream();
+        Card card = CSVInfoGetter.getCardByName("Terraforming");
+        Assertions.assertNotNull(card);
+        Card fieldCard = CSVInfoGetter.getCardByName("Yami");
+        Assertions.assertNotNull(fieldCard);
+        Executable executable = () -> SpellEffectController.Terraforming(game, card);
+        game.getPlayerHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+        Assertions.assertDoesNotThrow(executable);
+        game.getPlayerDeck().getMainDeck().getCards().add(fieldCard);
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertFalse(game.getPlayerDeck().getMainDeck().getCards().contains(fieldCard));
+        Assertions.assertTrue(game.getPlayerHandCards().contains(fieldCard));
+    }
+
+    @Test
+    public void potOfGridTest() {
+        ByteArrayOutputStream outputStream = getOutPutStream();
+        Card card = CSVInfoGetter.getCardByName("Pot of Greed");
+        Assertions.assertNotNull(card);
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        cards.add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+        Executable executable = () -> SpellEffectController.PotofGreed(game, card);
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals(2, cards.size());
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals(4, cards.size());
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals(6, cards.size());
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertEquals(8, cards.size());
+        Assertions.assertThrows(WinnerException.class, executable);
+    }
+
+    @Test
+    public void raigeki() {
+        ByteArrayOutputStream outputStream = getOutPutStream();
+        Board board = game.getRivalBoard();
+        Card card = CSVInfoGetter.getCardByName("Raigeki");
+        Assertions.assertNotNull(card);
+        game.getPlayerHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+        Card cards[] = new Card[5];
+        for (int i = 0; i < 5; i++) {
+            cards[i] = CSVInfoGetter.getCardByName("Battle OX");
+            board.addCardToMonsterZone(cards[i]);
+        }
+        Executable executable = () -> SpellEffectController.Raigeki(game, card);
+        Assertions.assertDoesNotThrow(executable);
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertNull(board.getMonsterZoneCellByCard(cards[i]));
+            Assertions.assertTrue(board.getGraveyard().getCards().contains(cards[i]));
         }
 
     }
+
+    @Test
+    public void changeOfHeartTest() {
+        ByteArrayOutputStream outputStream = getOutPutStream();
+        setCommandInInputStream("11\n7\n1");
+        Board board = game.getRivalBoard();
+        Limits limits = game.getRivalLimits();
+        Card card = CSVInfoGetter.getCardByName("Change of Heart");
+        Assertions.assertNotNull(card);
+        game.getPlayerHandCards().add(card);
+        GameMenuController.setSpellAndTrap(game, 1);
+        Executable executable = () -> SpellEffectController.ChangeofHeart(game, card);
+        Assertions.assertDoesNotThrow(executable);
+        Card cards[] = new Card[5];
+        for (int i = 0; i < 5; i++) {
+            cards[i] = CSVInfoGetter.getCardByName("Battle OX");
+            board.addCardToMonsterZone(cards[i]);
+        }
+        Assertions.assertDoesNotThrow(executable);
+        Assertions.assertFalse(limits.hasControlOnMonster(cards[0]));
+        Assertions.assertTrue(limits.hasControlOnMonster(cards[1]));
+        Assertions.assertTrue(limits.hasControlOnMonster(cards[2]));
+        Assertions.assertTrue(limits.hasControlOnMonster(cards[3]));
+        Assertions.assertTrue(limits.hasControlOnMonster(cards[4]));
+
+    }
+
+    @Test
+    public void harpiesFeatherTest() {
+        ArrayList<Card> cardsInHand = game.getPlayerHandCards();
+        Card card = CSVInfoGetter.getCardByName("Harpie's Feather Duster");
+        Assertions.assertNotNull(card);
+        game.getRivalBoard().getSpellZone()[0].addCard(card);
+        game.getRivalBoard().getSpellZone()[0].setState(State.FACE_UP_SPELL);
+        Card[] cards = new Card[5];
+        for (int i = 0; i < 5; i++) {
+            cards[i] = CSVInfoGetter.getCardByName("Mind Crush");
+            game.addCardToHand(cards[i]);
+            GameMenuController.setSpellAndTrap(game,1);
+        }
+        Executable executable = () -> SpellEffectController.HarpiesFeatherDuster(game,card);
+        Assertions.assertDoesNotThrow(executable);
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertNull(game.getPlayerBoard().getSpellZoneCellByCard(cards[i]));
+            Assertions.assertTrue(game.getPlayerBoard().getGraveyard().getCards().contains(cards[i]));
+        }
+    }
+
 
     @Test
     public void testCalloftheHaunted() {
@@ -88,6 +231,7 @@ public class SpellEffectTest extends TestEssentials {
         Card card1 = CSVInfoGetter.getCardByName("Battle OX");
         Card card2 = CSVInfoGetter.getCardByName("Battle OX");
         Assertions.assertNotNull(card);
+        GameMenuController.setSpellAndTrap(game, 1);
         Executable executable = () -> SpellEffectController.SolemnWarning(game, card);
         board.addCardToSpellZone(card);
 
