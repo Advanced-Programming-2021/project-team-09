@@ -58,7 +58,6 @@ public class TestEssentials {
     public static void resetStreams() {
         System.setIn(defaultInputStream);
         System.setOut(defaultStream);
-
     }
 
 
