@@ -10,11 +10,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class User {
+    @JsonIgnore
+    public static final int NUMBER_OF_PROFILES = 5;
     private String username;
     private String nickname;
     private String password;
     private int balance;
     private int score;
+    private int profilePhoto;
     private ArrayList<Card> cards;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
@@ -25,6 +28,7 @@ public class User {
         this.balance = 0;
         this.score = 0;
         this.nickname = nickname;
+        this.profilePhoto = 0;
         this.cards = new ArrayList<>();
         this.decks = new ArrayList<>();
         activeDeck  = null;
@@ -138,6 +142,22 @@ public class User {
     public int getBalance() {
         return balance;
     }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getProfilePhoto() {
+        return profilePhoto;
+    }
 
     public boolean hasEnoughBalance(int amount) {
         return balance >= amount;
@@ -198,17 +218,7 @@ public class User {
         return decks;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     class sortDeckByName implements Comparator<Deck> {
         @Override
