@@ -82,7 +82,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     public void buy(ActionEvent actionEvent) {
         String cardName = nameLabel.getText();
         if (cardName.equals("None")) return;
-        ShopMenuResponses respond = ShopController.BuyCard(cardName);
+        ShopMenuResponses respond = ShopController.buyCard(cardName);
         System.out.println(respond);
         //ToDo
         updateBalanceLabel();
