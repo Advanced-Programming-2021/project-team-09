@@ -48,11 +48,9 @@ public class AI {
         if (game == null) return;
         this.game = game;
         GameMenuController.draw(game);
-        if (aiState == AIState.HARD) ;
-        else summon();
+        summon();
         changeAllCardsToAttack();
-        if (aiState == AIState.HARD) ;
-        else attack();
+        attack();
         removeExtraCards();
         rearrangeMonsters();
     }
