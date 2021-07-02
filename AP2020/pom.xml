@@ -54,11 +54,6 @@
             <version>2.8.6</version>
         </dependency>
         <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>asciitable</artifactId>
-            <version>0.3.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.12.3</version>
@@ -72,17 +67,17 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11</version>
+            <version>16</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>16</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>11</version>
+            <version>16</version>
         </dependency>
     </dependencies>
 

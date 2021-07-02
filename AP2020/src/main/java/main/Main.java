@@ -37,6 +37,9 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import view.graphics.Menu;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 public class Main extends Application {
     public static Stage stage;
     public static void main(String[] args) {

@@ -9,8 +9,12 @@ module AP2020 {
     requires com.google.gson;
     requires opencsv;
     requires com.fasterxml.jackson.databind;
-    requires asciitable;
     opens view to javafx.fxml;
+    opens view.graphics to javafx.fxml;
+    opens view.graphics.deckmenu to javafx.fxml;
+    opens view.graphics.profile to javafx.fxml;
+    opens model.graphicalModels to javafx.fxml;
+    exports view.graphics to javafx.fxml;
     exports view;
     exports controller;
     opens controller to javafx.fxml;

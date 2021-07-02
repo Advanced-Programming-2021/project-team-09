@@ -39,7 +39,7 @@ public class Menu {
 
     public static Parent getNode(String nodeName) {
         try {
-            return FXMLLoader.load(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/" + nodeName + ".fxml").toURI().toURL());
+            return FXMLLoader.load(new File("src/main/resources/Scenes/" + nodeName + ".fxml").toURI().toURL());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -47,7 +47,7 @@ public class Menu {
     }
 
     public static Image getImage(String imageName, String format) {
-        return new Image(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/Images/" + imageName + "." + format).toURI().toString());
+        return new Image(new File("src/main/resources/Scenes/Images/" + imageName + "." + format).toURI().toString());
 
     }
 
