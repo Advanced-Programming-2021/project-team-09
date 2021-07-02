@@ -31,5 +31,4 @@ public enum CardFeatures {
     SPEED_1,
     SPEED_2,
     SPEED_3,
-
 }

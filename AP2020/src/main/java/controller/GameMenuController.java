@@ -944,6 +944,7 @@ public class GameMenuController {
         if (card != null) {
             card.activeEffect(game);
             card.addFeature(CardFeatures.USED_EFFECT);
+            if (!hasEffectForStandBy(card.getFeatures())) sendToGraveYard(game, card);
         }
     }
 
