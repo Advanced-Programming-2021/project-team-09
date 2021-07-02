@@ -43,7 +43,7 @@ public class DuelMenu {
             else if (command.matches("menu show-current"))
                 respond(StartingGameResponses.CURRENT_MENU_DUEL_MENU);
             else if (command.matches("menu exit")) {
-                System.out.println("Now Entering Main Menu");
+                System.out.println("Now Entering main.Main Menu");
                 return;
             } else respond(StartingGameResponses.INVALID_COMMAND);
         }

@@ -20,7 +20,7 @@ public class MainDeck extends PrimaryDeck {
 
     @Override
     public String toString() {
-        return "Deck: " + deckName + "\nMain Deck: \n" + PrimaryDeck.sortCardsInDecks(cards);
+        return "Deck: " + deckName + "\nmain.Main Deck: \n" + PrimaryDeck.sortCardsInDecks(cards);
     }
 
     @Override

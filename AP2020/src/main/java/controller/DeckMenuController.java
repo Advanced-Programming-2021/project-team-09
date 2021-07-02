@@ -156,7 +156,7 @@ public class DeckMenuController {
 
     private static String deckToString(Deck deck) {
         StringBuilder outputString = new StringBuilder();
-        outputString.append(deck.getDeckName() + ": Main Deck " + deck.getMainDeck().getNumberOfAllCards());
+        outputString.append(deck.getDeckName() + ": main.Main Deck " + deck.getMainDeck().getNumberOfAllCards());
         outputString.append(", side deck " + deck.getSideDeck().getNumberOfAllCards() + ", ");
         outputString.append(deck.isValid() ? "valid":"invalid");
         return outputString.toString();

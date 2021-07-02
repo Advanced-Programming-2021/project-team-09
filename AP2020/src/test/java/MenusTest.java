@@ -1,8 +1,8 @@
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
+import main.Main;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import view.LoginMenu;
 
 public class MenusTest extends TestEssentials{
 

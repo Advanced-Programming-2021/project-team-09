@@ -16,7 +16,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import view.responses.LoginMenuResponses;
 
-import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;

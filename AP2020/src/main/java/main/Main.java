@@ -1,4 +1,4 @@
-//import controller.database.CSVInfoGetter;
+package main;//import controller.database.CSVInfoGetter;
 //import controller.database.ReadAndWriteDataBase;
 //import model.User;
 //import model.exceptions.WinnerException;
@@ -8,7 +8,7 @@
 //import view.LoginMenu;
 //import view.duelMenu.OneRoundGame;
 //
-//public class Main {
+//public class main.Main {
 //
 //    public static void main(String[] args) {
 //        LoginMenu.getInstance().run();
@@ -33,15 +33,9 @@
 import controller.LoginMenuController;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
-
-import java.io.IOException;
 
 public class Main extends Application {
     public static Stage stage;
