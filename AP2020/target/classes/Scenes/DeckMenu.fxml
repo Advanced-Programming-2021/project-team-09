@@ -7,9 +7,10 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.MainDeckMenu">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.MainDeckMenu">
    <top>
       <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="900.0" style="-fx-background-radius: 7;" BorderPane.alignment="CENTER">
         <menus>
@@ -32,29 +33,7 @@
       </MenuBar>
    </top>
    <right>
-      <VBox fx:id="searchBox" prefHeight="572.5" prefWidth="120.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
-               <VBox.margin>
-                  <Insets top="150.0" />
-               </VBox.margin>
-            </Button>
-            <Button layoutX="10.0" layoutY="70.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Create Deck">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Button>
-            <Button layoutX="10.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Delete Deck">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Button>
-            <Button layoutX="10.0" layoutY="130.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Edit Deck">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Button>
-         </children>
+      <VBox fx:id="rightBox" prefHeight="572.5" prefWidth="120.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets right="10.0" />
          </BorderPane.margin>
@@ -63,4 +42,37 @@
     <stylesheets>
         <URL value="@StyleSheets/SearchMenus.css" />
     </stylesheets>
+   <bottom>
+      <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #fffff;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
+               <HBox.margin>
+                  <Insets left="180.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="editDeck" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Edit Deck">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="createDeckButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Create Deck">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="deleteDeckButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Delete Deck">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+   <left>
+      <VBox fx:id="leftBox" prefHeight="200.0" prefWidth="120.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
 </BorderPane>
