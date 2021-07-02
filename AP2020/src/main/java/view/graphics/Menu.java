@@ -8,11 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import model.enums.Cursor;
 
 import java.io.File;
@@ -89,4 +91,14 @@ public class Menu {
         return getImage("Cards/" + cardName.trim().replace(" ",""),"jpg");
     }
 
+    public static Label getLabel(String text, double width, double height) {
+        Label label = new Label(text);
+        label.setPrefWidth(width);
+        label.setMaxWidth(width);
+        label.setPrefHeight(height);
+        label.setMaxHeight(height);
+        label.getStylesheets().add("src/main/resources/Scenes/StyleSheets/Label.css");
+        label.setTextAlignment(TextAlignment.CENTER);
+        return label;
+    }
 }

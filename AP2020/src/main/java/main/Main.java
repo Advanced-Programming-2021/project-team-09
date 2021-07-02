@@ -51,8 +51,10 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
+        stage.setResizable(false);
+        
 //        Pane pane = new CardHolder();
-        BorderPane pane = (BorderPane) Menu.getNode("ShopMenu");
+        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
         stage.setScene(new Scene(pane));
