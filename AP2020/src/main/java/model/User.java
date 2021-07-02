@@ -66,12 +66,44 @@ public class User {
         this.score = score;
     }
 
+    public void setProfilePhoto(int profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
     public ArrayList<Deck> getDecks(){
         return decks;
+    }
+
+    public Deck getActiveDeck() {
+        return activeDeck;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getProfilePhoto() {
+        return profilePhoto;
     }
 
     public boolean isPasswordCorrect(String password) {
@@ -115,10 +147,6 @@ public class User {
         decks.add(new Deck(deckName));
     }
 
-    public Deck getActiveDeck() {
-        return activeDeck;
-    }
-
     public void changePassword(String newPassword) {
         password = newPassword;
     }
@@ -135,29 +163,7 @@ public class User {
         balance -= amount;
     }
 
-    public int getScore() {
-        return score;
-    }
 
-    public int getBalance() {
-        return balance;
-    }
-    
-    public String getUsername() {
-        return username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getProfilePhoto() {
-        return profilePhoto;
-    }
 
     public boolean hasEnoughBalance(int amount) {
         return balance >= amount;
