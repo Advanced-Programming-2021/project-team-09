@@ -15,6 +15,11 @@ module AP2020 {
     opens view.graphics.profile to javafx.fxml;
     opens model.graphicalModels to javafx.fxml;
     exports view.graphics to javafx.fxml;
+    exports model to com.fasterxml.jackson.databind;
+    exports model.deck to com.fasterxml.jackson.databind;
+    exports model.card to com.fasterxml.jackson.databind;
+    exports model.card.monster to com.fasterxml.jackson.databind;
+    exports model.card.spell_traps to com.fasterxml.jackson.databind;
     exports view;
     exports controller;
     opens controller to javafx.fxml;

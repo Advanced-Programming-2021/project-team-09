@@ -119,7 +119,9 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             return;
         }
         ArrayList<String> matchingCards = new ArrayList<>();
-        for (String card : cardNames) if (card.contains(searchText)) matchingCards.add(card);
+        for (String card : cardNames) if (card.toLowerCase().contains(searchText)) matchingCards.add(card);
+
+
         ArrayList<VBox> resultBoxes = getSearchResults(matchingCards);
         searchResults = new ArrayList<>();
         searchResults.addAll(resultBoxes);
