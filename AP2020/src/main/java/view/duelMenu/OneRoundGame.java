@@ -157,7 +157,8 @@ public class OneRoundGame {
             goToBattlePhase();
     }
 
-    public void goToStandByPhase() {
+    public void goToStandByPhase() throws WinnerException{
+        GameMenuController.goToStandByPhase(game);
         setCurrentPhase(Phase.STANDBY_PHASE);
         respond(OneRoundGameResponses.STANDBY_PHASE);
     }

@@ -643,6 +643,81 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
+    public static void goToStandByPhase(Game game) throws WinnerException {
+        standByEffectCheckForCards(game);
+        checkSwordOfRevealingLight(game);
+        checkCalculator(game);
+        checkScanner(game);
+    }
+
+    private static void checkScanner(Game game) throws WinnerException {
+        Cell[] cells = game.getRivalBoard().getMonsterZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Scanner")) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkCalculator(Game game) throws WinnerException {
+        Cell[] cells = game.getPlayerBoard().getMonsterZone();
+        checkForCalculatorInCells(game, cells);
+    }
+
+    private static void checkForCalculatorInCells(Game game, Cell[] cells) throws WinnerException {
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cardHasCalculatorEffect(cell.getCard().getFeatures())) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkSwordOfRevealingLight(Game game) {
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Swords of Revealing Light") && cell.getRoundCounter() == 6) {
+                    sendToGraveYard(game, cell.getCard());
+                }
+            }
+        }
+    }
+
+    private static void standByEffectCheckForCards(Game game) throws WinnerException{
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (hasEffectForStandBy(cell.getCard().getFeatures())) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean hasEffectForStandBy (ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) {
+            if (feature == CardFeatures.STANDBY_ACTION) return true;
+        }
+        return false;
+    }
+
+
     public static void rivalFlipSummon(Game game, int cellNumber) throws GameException {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
         tempCell.setState(State.FACE_UP_ATTACK);
@@ -875,6 +950,7 @@ public class GameMenuController {
         if (card != null) {
             card.activeEffect(game);
             card.addFeature(CardFeatures.USED_EFFECT);
+            if (!hasEffectForStandBy(card.getFeatures())) sendToGraveYard(game, card);
         }
     }
 
