@@ -38,7 +38,7 @@ import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
-import view.graphics.duelgraphics.MiniGameCoin;
+import view.graphics.duelgraphics.ChooseMiniGame;
 
 public class Main extends Application {
     public static Stage stage;
