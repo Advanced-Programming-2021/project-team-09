@@ -42,10 +42,7 @@ import view.graphics.duelgraphics.MiniGameCoin;
 
 public class Main extends Application {
     public static Stage stage;
-    public static void main(String[] args) {
-        System.out.println("MIReBOZORG was here");
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 
     @Override
     public void start(Stage stage) throws Exception {
