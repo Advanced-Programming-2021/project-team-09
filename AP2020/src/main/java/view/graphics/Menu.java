@@ -13,6 +13,7 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import model.enums.Cursor;
@@ -50,7 +51,11 @@ public class Menu {
 
     public static Image getImage(String imageName, String format) {
         return new Image(new File("src/main/resources/Scenes/Images/" + imageName + "." + format).toURI().toString());
+    }
 
+    public static Background getBackGround(String imageName, String format, double width, double height) {
+        return new Background(new BackgroundImage(getImage(imageName, format), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(width, height, false, false, true, true)));
     }
 
     public static Image getImage(String imageName, String format, double width, double height) {

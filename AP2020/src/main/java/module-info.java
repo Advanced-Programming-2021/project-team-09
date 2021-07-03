@@ -14,6 +14,7 @@ module AP2020 {
     opens view.graphics.deckmenu to javafx.fxml;
     opens view.graphics.profile to javafx.fxml;
     opens model.graphicalModels to javafx.fxml;
+    opens view.graphics.duelgraphics to javafx.fxml;
     exports view.graphics to javafx.fxml;
     exports model to com.fasterxml.jackson.databind;
     exports model.deck to com.fasterxml.jackson.databind;
