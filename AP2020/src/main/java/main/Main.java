@@ -35,10 +35,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import model.User;
+import model.game.MiniGame;
 import view.graphics.Menu;
-
-import java.io.File;
-import java.net.MalformedURLException;
+import view.graphics.duelgraphics.MiniGameRockPaperScissors;
 
 public class Main extends Application {
     public static Stage stage;
@@ -59,5 +59,8 @@ public class Main extends Application {
         Menu.setCurrentScene(stage.getScene());
         pane.requestFocus();
         stage.show();
+        User user = new User("ali", "ali", "ali");
+        User user2 = new User("mamad", "mamad", "mamad");
+        new MiniGameRockPaperScissors(new MiniGame(user, user2));
     }
 }
