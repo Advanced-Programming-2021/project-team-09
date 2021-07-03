@@ -1,4 +1,4 @@
-package view.graphics.profile;
+package view.graphics;
 
 import controller.database.CSVInfoGetter;
 import javafx.collections.ObservableList;
@@ -13,8 +13,10 @@ import model.enums.Cursor;
 import view.graphics.Menu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class SearchMenu extends Menu {
+
     @FXML
     protected VBox searchBox;
     @FXML
@@ -26,21 +28,8 @@ public abstract class SearchMenu extends Menu {
 
     protected abstract void search(String searchText);
 
-    protected ArrayList<VBox> getSearchResults(ArrayList<String> searchResults) {
-        ArrayList<VBox> resultBoxes = new ArrayList<>();
-        VBox currentBox = new VBox(2);
-        for (String result : searchResults) {
-            if (currentBox.getChildren().size() == 9) {
-                resultBoxes.add(currentBox);
-                currentBox = new VBox(2);
-            }
-            currentBox.getChildren().add(getOptionButton(result));
-        }
-        if (currentBox.getChildren().size() != 0) resultBoxes.add(currentBox);
-        return resultBoxes;
-    }
+    protected abstract ArrayList<VBox> getSearchResults(ArrayList<String> searchResults);
 
-    protected abstract Button getOptionButton(String searchResult);
 
     protected int getCurrentSearchStage() {
         String currentSearchStage = stageCounter.getText().split("/")[0];
