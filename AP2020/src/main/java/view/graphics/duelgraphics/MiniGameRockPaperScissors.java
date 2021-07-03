@@ -15,14 +15,15 @@ import main.Main;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MiniGameRockPaperScissors implements Initializable {
+    private static MiniGame miniGame;
     private User player;
     private User rival;
-    private static MiniGame miniGame;
     private AnchorPane anchorPane;
     private boolean playerChose = false;
     private boolean rivalChose = false;
@@ -59,7 +60,7 @@ public class MiniGameRockPaperScissors implements Initializable {
     }
 
     public MiniGameRockPaperScissors(MiniGame miniGame) {
-        this.miniGame = miniGame;
+        MiniGameRockPaperScissors.miniGame = miniGame;
         anchorPane = (AnchorPane) Menu.getNode("MiniGameRockPaperScissors");
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
     }
@@ -92,10 +93,10 @@ public class MiniGameRockPaperScissors implements Initializable {
 
     private void addFunctions() {
         EventHandler<MouseEvent> rivalEvent = mouseEvent -> {
-          rivalScissors.setDisable(true);
-          rivalRock.setDisable(true);
-          rivalPaper.setDisable(true);
-          rivalChose = true;
+            rivalScissors.setDisable(true);
+            rivalRock.setDisable(true);
+            rivalPaper.setDisable(true);
+            rivalChose = true;
             if (mouseEvent.getSource() == rivalPaper) rivalNum = 0;
             else if (mouseEvent.getSource() == rivalRock) rivalNum = 1;
             else rivalNum = 2;
@@ -134,8 +135,8 @@ public class MiniGameRockPaperScissors implements Initializable {
             button.setDisable(false);
             button.setEffect(null);
         }
-        if ((playerNum + 1)%3 == rivalNum) playerPoints++;
-        else if ((playerNum + 2)%3 == rivalNum) rivalPoints++;
+        if ((playerNum + 1) % 3 == rivalNum) playerPoints++;
+        else if ((playerNum + 2) % 3 == rivalNum) rivalPoints++;
         updatePoints();
     }
 
