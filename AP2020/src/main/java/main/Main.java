@@ -54,7 +54,7 @@ public class Main extends Application {
         BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-        stage.setScene(new Scene(pane));
+        stage.setScene(new Scene(pane,-1,-1,true));
         Menu.setCurrentScene(stage.getScene());
         pane.requestFocus();
         stage.show();

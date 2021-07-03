@@ -3,21 +3,17 @@ package view.graphics;
 import controller.LoginMenuController;
 import controller.ShopController;
 import controller.database.CSVInfoGetter;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.enums.Cursor;
 import model.graphicalModels.CardHolder;
-import view.graphics.profile.SearchMenu;
 import view.regexes.RegexFunctions;
 import view.responses.ShopMenuResponses;
 
@@ -47,10 +43,10 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     private CardHolder cardHolder;
 
     private static final String advanceSearchRegex = "^(?<type>type:\\s*[\\w /]+)?\\s*(?<price>price:\\s*\\d+(?:-?\\d+)?)?\\s*(?<attack>attack:\\s*\\d+(?:-?\\d+)?)?\\s*(?<defend>defend:\\s*\\d+(?:-?\\d*)?)?$";
+
     public static final ArrayList<String> cardNames = CSVInfoGetter.getCardNames();
     public static final ArrayList<Card> cards = new ArrayList<>();
     public static final HashMap<String, Integer> prices = new HashMap<>();
-
     {
         for (String cardName : cardNames) {
             cards.add(CSVInfoGetter.getCardByName(cardName));
@@ -130,6 +126,21 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             emptySearchBox();
             stageCounter.setText("-/-");
         }
+    }
+
+    @Override
+    protected ArrayList<VBox> getSearchResults(ArrayList<String> searchResults) {
+        ArrayList<VBox> resultBoxes = new ArrayList<>();
+        VBox currentBox = new VBox(2);
+        for (String result : searchResults) {
+            if (currentBox.getChildren().size() == 9) {
+                resultBoxes.add(currentBox);
+                currentBox = new VBox(2);
+            }
+            currentBox.getChildren().add(getOptionButton(result));
+        }
+        if (currentBox.getChildren().size() != 0) resultBoxes.add(currentBox);
+        return resultBoxes;
     }
 
     private void advancedSearch(String searchText) {
@@ -231,7 +242,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         button.setStyle("-fx-border-style: solid none solid");
         button.setOnAction(actionEvent -> {
             Card card = CSVInfoGetter.getCardByName(searchResult);
-            cardHolder.setCard(getCard(searchResult));
+            cardHolder.setCardImage(getCard(searchResult));
             priceLabel.setText(CSVInfoGetter.getPriceByCardName(searchResult) + "");
             nameLabel.setText(card.getCardName());
             typeLabel.setText(card.getCardType().toString().toLowerCase());
