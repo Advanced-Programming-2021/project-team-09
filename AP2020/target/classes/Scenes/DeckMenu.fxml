@@ -8,11 +8,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.MainDeckMenu">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.MainDeckMenu">
    <top>
-      <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="900.0" style="-fx-background-radius: 7;" BorderPane.alignment="CENTER">
+      <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="640.0" style="-fx-background-radius: 7;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -32,13 +31,6 @@
         </menus>
       </MenuBar>
    </top>
-   <right>
-      <VBox fx:id="rightBox" prefHeight="572.5" prefWidth="120.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets right="10.0" />
-         </BorderPane.margin>
-      </VBox>
-   </right>
     <stylesheets>
         <URL value="@StyleSheets/SearchMenus.css" />
     </stylesheets>
@@ -47,7 +39,7 @@
          <children>
             <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
                <HBox.margin>
-                  <Insets left="180.0" />
+                  <Insets left="55.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="editDeck" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Edit Deck">
@@ -68,11 +60,4 @@
          </children>
       </HBox>
    </bottom>
-   <left>
-      <VBox fx:id="leftBox" prefHeight="200.0" prefWidth="120.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets left="10.0" />
-         </BorderPane.margin>
-      </VBox>
-   </left>
 </BorderPane>
