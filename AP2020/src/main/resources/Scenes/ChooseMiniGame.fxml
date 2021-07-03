@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.duelgraphics.ChooseMiniGame">
+   <children>
+      <Label alignment="TOP_CENTER" layoutX="206.0" layoutY="14.0" style="-fx-background-color: Transparent;" text="Here you can choose your mini game !" textAlignment="CENTER" wrapText="true" />
+      <HBox layoutY="343.0" prefHeight="57.0" prefWidth="600.0" style="-fx-background-color: #001f7f44;">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="212.0" style="-fx-background-color: Tansparent;" text="Coin" />
+            <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="194.0" style="-fx-background-color: Transparent;" text="Dice" />
+            <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: transparent;" text="Rock Paper scissors" />
+         </children>
+      </HBox>
+      <Button layoutX="261.0" layoutY="281.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" style="-fx-background-color: #11af4455; -fx-background-radius: 10px;" text="Go !" />
+      <Label fx:id="playerName" layoutX="57.0" layoutY="45.0" textAlignment="CENTER" textFill="#3bdf59" wrapText="true" />
+      <Label fx:id="rivalName" layoutX="522.0" layoutY="45.0" textAlignment="CENTER" textFill="#e72626" wrapText="true" />
+   </children>
+</AnchorPane>
