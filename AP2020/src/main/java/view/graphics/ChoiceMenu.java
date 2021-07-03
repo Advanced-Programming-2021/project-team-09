@@ -16,7 +16,7 @@ abstract public class ChoiceMenu extends SearchMenu{
     public HBox choiceBox;
     @FXML
     public VBox decisionBox;
-    protected ArrayList<String> choiceNames = new ArrayList<>();
+    protected HashSet<String> choiceNames = new HashSet<>();
     @Override
     protected void search(String searchText) {
         searchText = searchText.trim().toLowerCase();
@@ -59,6 +59,8 @@ abstract public class ChoiceMenu extends SearchMenu{
         for (String result : searchResults) resultBoxes.add(getChoiceBox(result));
         return resultBoxes;
     }
+
+    
 
     protected abstract VBox getChoiceBox(String result);
 

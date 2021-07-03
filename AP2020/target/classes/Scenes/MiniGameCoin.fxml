@@ -15,6 +15,6 @@
             <Image url="@Images/coin none.png" />
          </image>
       </ImageView>
-      <Label fx:id="result" layoutX="258.0" layoutY="39.0" textAlignment="CENTER" wrapText="true" />
+      <Label fx:id="result" layoutX="250.0" layoutY="39.0" textAlignment="CENTER" wrapText="true" />
    </children>
 </AnchorPane>

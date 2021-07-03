@@ -39,20 +39,15 @@
          <children>
             <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
                <HBox.margin>
-                  <Insets left="55.0" />
+                  <Insets left="125.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="allDecksButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Decks">
+               <HBox.margin>
+                  <Insets left="20.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="editDeck" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Edit Deck">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="createDeckButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Create Deck">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="deleteDeckButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Delete Deck">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>

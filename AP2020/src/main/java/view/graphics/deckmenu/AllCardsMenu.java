@@ -4,6 +4,7 @@ import controller.LoginMenuController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-public class EditDeckMenu extends ChoiceMenu implements Initializable {
+public class AllCardsMenu extends ChoiceMenu implements Initializable {
     @FXML
     public ScrollPane cardsPlace;
     @FXML
@@ -44,7 +45,9 @@ public class EditDeckMenu extends ChoiceMenu implements Initializable {
         box.setSpacing(10);
         CardHolder holder = new CardHolder(getCard(cardName));
         Label name = getLabel(cardName, 150, 20);
+        name.setAlignment(Pos.CENTER);
         Label count = getLabel("#" + getNumberOfCards(cardName), 150, 20);
+        count.setAlignment(Pos.CENTER);
         box.setPrefWidth(150);
         box.setMaxWidth(150);
         box.setPrefHeight(260);
@@ -85,8 +88,4 @@ public class EditDeckMenu extends ChoiceMenu implements Initializable {
         resetChoiceBox();
     }
 
-    @Override
-    protected Button getOptionButton(String searchResult) {
-        return null;
-    }
 }
