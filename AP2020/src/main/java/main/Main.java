@@ -38,6 +38,8 @@ import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.MiniGameCoin;
+import view.graphics.duelgraphics.MiniGameDice;
 import view.graphics.duelgraphics.MiniGameRockPaperScissors;
 
 public class Main extends Application {
@@ -60,6 +62,6 @@ public class Main extends Application {
         stage.show();
         User user = new User("ali", "ali", "ali");
         User user2 = new User("mamad", "mamad", "mamad");
-        new MiniGameRockPaperScissors(new MiniGame(user, user2));
+        new MiniGameCoin(new MiniGame(user, user2));
     }
 }

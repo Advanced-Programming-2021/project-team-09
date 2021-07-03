@@ -35,7 +35,7 @@
         <URL value="@StyleSheets/SearchMenus.css" />
     </stylesheets>
    <bottom>
-      <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #fffff;" BorderPane.alignment="CENTER">
+      <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
                <HBox.margin>
