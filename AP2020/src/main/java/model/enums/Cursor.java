@@ -12,6 +12,10 @@ public enum Cursor {
     PROFILE(Menu.getImage("Cursors/ProfileCursor","png")),
     ACCEPT(Menu.getImage("Cursors/AcceptCursor","png")),
     CANCEL(Menu.getImage("Cursors/CancelCursor","png")),
+    CREATE_DECK(Menu.getImage("Cursors/CreateCursor","png")),
+    ALL_CARDS(Menu.getImage("Cursors/AllCardsCursor","png")),
+    TRASH(Menu.getImage("Cursors/TrashCursor","png")),
+    EDIT(Menu.getImage("Cursors/EditCursor","png")),
     DEFAULT(null);
     private final Image image;
 

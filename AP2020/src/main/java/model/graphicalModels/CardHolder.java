@@ -12,6 +12,11 @@ public class CardHolder extends Pane {
     private final ImageView cardPlace;
     public ImageView cardBox;
 
+    public CardHolder(Image card) {
+        setCard(card);
+    }
+
+
     public void setCard(Image card) {
         cardPlace.setImage(card);
     }
@@ -37,5 +42,10 @@ public class CardHolder extends Pane {
         this.setWidth(150);
         this.getChildren().add(cardPlace);
         this.getChildren().add(cardBox);
+    }
+
+    public void rotate(double angel) {
+        cardPlace.setRotate(angel);
+        cardBox.setRotate(angel);
     }
 }
