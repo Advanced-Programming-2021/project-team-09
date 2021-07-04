@@ -9,17 +9,20 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.AllDecksMenu">
     <center>
-        <ScrollPane fx:id="cardsPlace" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="380.0" style="-fx-background-color: transparent; -fx-border-radius: 10;">
+        <ScrollPane fx:id="cardsPlace" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="380.0" style="-fx-background-color: transparent; -fx-border-radius: 10;">
             <content>
-                <HBox fx:id="choiceBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="380.0" />
+                <HBox fx:id="choiceBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="380.0">
+               <padding>
+                  <Insets top="10.0" />
+               </padding></HBox>
             </content>
             <BorderPane.margin>
-                <Insets bottom="30.0" left="135.0" />
+                <Insets left="135.0" right="5.0" top="20.0" />
             </BorderPane.margin>
         </ScrollPane>
     </center>
     <top>
-        <VBox maxHeight="-Infinity" prefHeight="49.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+        <VBox maxHeight="-Infinity" prefHeight="50.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <children>
                 <TextField fx:id="searchField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="300.0" promptText="Search..." style="-fx-background-color: Transparent; -fx-border-color: #4b4b4b#4b4b4b; -fx-border-radius: 10;">
                     <VBox.margin>
@@ -35,8 +38,15 @@
     <right>
         <VBox fx:id="decisionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="135.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets bottom="40.0" />
+                <Insets bottom="40.0" top="105.0" />
             </BorderPane.margin>
         </VBox>
     </right>
+   <bottom>
+      <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="350.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+         <content>
+            <HBox fx:id="previewBox" prefHeight="70.0" prefWidth="200.0" />
+         </content>
+      </ScrollPane>
+   </bottom>
 </BorderPane>
