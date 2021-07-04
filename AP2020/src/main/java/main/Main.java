@@ -46,6 +46,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println(Menu.getImage("Battle OX", "jpg").getUrl());
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
         stage.setResizable(false);
