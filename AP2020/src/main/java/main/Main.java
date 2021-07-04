@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.MiniGameCoin;
 import view.graphics.duelgraphics.MiniGameDice;
 import view.graphics.duelgraphics.MiniGameRockPaperScissors;
@@ -52,16 +53,15 @@ public class Main extends Application {
         Main.stage = stage;
         stage.setResizable(false);
         
-//        Pane pane = new CardHolder();
-        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
-//        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
-//        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-        stage.setScene(new Scene(pane));
+
+        AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
+        Main.stage.setScene(new Scene(anchorPane, 600, 400));
+
         Menu.setCurrentScene(stage.getScene());
-        pane.requestFocus();
+
         stage.show();
         User user = new User("ali", "ali", "ali");
         User user2 = new User("mamad", "mamad", "mamad");
-        new MiniGameCoin(new MiniGame(user, user2));
+
     }
 }

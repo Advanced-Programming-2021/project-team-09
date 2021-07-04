@@ -16,6 +16,7 @@ public enum Cursor {
     ALL_CARDS(Menu.getImage("Cursors/AllCardsCursor","png")),
     TRASH(Menu.getImage("Cursors/TrashCursor","png")),
     EDIT(Menu.getImage("Cursors/EditCursor","png")),
+    SWORD(Menu.getImage("Cursors/SwordCursor","png")),
     DEFAULT(null);
     private final Image image;
 
