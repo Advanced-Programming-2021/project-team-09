@@ -26,24 +26,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainDeckMenu extends Menu implements Initializable {
-    public BorderPane mainPane;
     @FXML
-    private VBox rightBox;
+    private BorderPane mainPane;
+    @FXML
+    private Button allDecksButton;
     @FXML
     private Button allCardsButton;
     @FXML
     private Button editDeck;
-    @FXML
-    private Button deleteDeckButton;
-    @FXML
-    private Button createDeckButton;
-    @FXML
-    private VBox leftBox;
-    @FXML
-    private Button previousButton;
-    @FXML
-    private Button nextButton;
-    private ListView<VBox> listView;
 
 
     public void previous(ActionEvent actionEvent) {
@@ -55,36 +45,26 @@ public class MainDeckMenu extends Menu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        justifyButton(createDeckButton, Cursor.CREATE_DECK);
-        justifyButton(allCardsButton,Cursor.ALL_CARDS);
-        justifyButton(deleteDeckButton,Cursor.TRASH);
-        justifyButton(editDeck,Cursor.EDIT);
+        setAllDecks();
+        justifyButton(allCardsButton, Cursor.ALL_CARDS);
+        justifyButton(editDeck, Cursor.EDIT);
+        justifyButton(allDecksButton, Cursor.CREATE_DECK);
+        editDeck.setOnAction(actionEvent -> setEditDeck());
+        allDecksButton.setOnAction(actionEvent -> setAllDecks());
+        allCardsButton.setOnAction(actionEvent -> setAllCards());
+    }
 
+    private void setAllCards() {
+        mainPane.setCenter(getNode("AllCards"));
+    }
+
+    private void setAllDecks() {
+        mainPane.setCenter(getNode("AllDecksMenu"));
     }
 
 
-    private VBox getCardBox(String cardName) {
-        VBox box = new VBox();
-        box.setSpacing(10);
-        CardHolder holder = new CardHolder(getCard(cardName));
-        Label name = getLabel(cardName,150,20);
-        Label count = getLabel("#" + getNumberOfCards(cardName),150,20);
-        box.setPrefWidth(150);
-        box.setMaxWidth(150);
-        box.setPrefHeight(260);
-        box.setMaxWidth(260);
-        box.getChildren().add(name);
-        box.getChildren().add(holder);
-        box.getChildren().add(count);
-        return box;
-    }
-
-
-
-    private int getNumberOfCards (String cardName) {
-        ArrayList<Card> allCards = LoginMenuController.getCurrentUser().getCards();
-        return (int) allCards.stream().filter(card -> card.getCardName().equals(cardName)).count();
-
+    private void setEditDeck() {
+        mainPane.setCenter(getNode("AllCards"));
     }
 
 

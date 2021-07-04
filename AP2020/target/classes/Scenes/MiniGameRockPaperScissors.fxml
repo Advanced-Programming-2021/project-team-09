@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import java.net.URL?>
 <AnchorPane prefHeight="401.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.duelgraphics.MiniGameRockPaperScissors">
    <children>
       <Button fx:id="playerRock" layoutX="89.0" layoutY="267.0" mnemonicParsing="false" style="-fx-min-height: 30px; -fx-min-width: 30px; -fx-max-height: 30px; -fx-max-width: 30px;" />
@@ -18,4 +19,7 @@
       <Label fx:id="rivalPoint" layoutX="75.0" layoutY="35.0" textFill="#b41717" wrapText="true" />
       <Label fx:id="result" layoutX="267.0" layoutY="184.0" wrapText="true" />
    </children>
+   <stylesheets>
+      <URL value="@StyleSheets/MiniGameMenus.css" />
+   </stylesheets>
 </AnchorPane>

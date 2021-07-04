@@ -42,6 +42,7 @@ import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.MiniGameCoin;
 import view.graphics.duelgraphics.MiniGameDice;
 import view.graphics.duelgraphics.MiniGameRockPaperScissors;
+import view.graphics.duelgraphics.ChooseMiniGame;
 
 public class Main extends Application {
     public static Stage stage;
@@ -49,6 +50,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println(Menu.getImage("Battle OX", "jpg").getUrl());
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
         stage.setResizable(false);
@@ -57,11 +59,19 @@ public class Main extends Application {
         AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
 
+//        Pane pane = new CardHolder();
+        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
+//        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
+//        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
+        stage.setScene(new Scene(pane,-1,-1,true));
         Menu.setCurrentScene(stage.getScene());
 
         stage.show();
         User user = new User("ali", "ali", "ali");
         User user2 = new User("mamad", "mamad", "mamad");
 
+//        User user = new User("ali", "ali", "ali");
+//        User user2 = new User("mamad", "mamad", "mamad");
+//        new MiniGameCoin(new MiniGame(user, user2));
     }
 }
