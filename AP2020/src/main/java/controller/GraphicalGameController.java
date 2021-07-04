@@ -1,9 +1,15 @@
 package controller;
 
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.MoveTo;
+import javafx.util.Duration;
 import model.card.Card;
 import model.game.Cell;
 import model.game.Game;
@@ -30,6 +36,28 @@ public class GraphicalGameController {
     private final ImageView rivalFieldSpell;
     private final ImageView rivalGraveYard;
     private final Game game;
+
+    private class MoveToGraveYardTransition extends Transition{
+        final double gyX, gyY, ivX, ivY;
+        final ImageView imageView;
+
+        public MoveToGraveYardTransition(double gyX, double gyY, double ivX, double ivY, ImageView imageView) {
+            this.gyX = gyX;
+            this.gyY = gyY;
+            this.ivX = ivX;
+            this.ivY = ivY;
+            this.imageView = imageView;
+            this.setInterpolator(Interpolator.EASE_OUT);
+            this.setCycleDuration(Duration.millis(1000));
+            this.setCycleCount(1);
+        }
+
+        @Override
+        protected void interpolate(double v) {
+            imageView.setLayoutX(ivX + (gyX - ivX)*v);
+            imageView.setLayoutY(ivY + (gyY - ivY)*v);
+        }
+    }
 
 
 
@@ -58,13 +86,17 @@ public class GraphicalGameController {
         updateRivalSpells();
     }
 
+    public void movePlayerMonsterToGraveYard(int num) {
+        ImageView imageView = new ImageView(playerMonsters[num].getImage());
+        imageView.setLayoutX(playerMonsters[num].getLayoutX());
+        imageView.setLayoutY(playerMonsters[num].getLayoutY());
+        MoveToGraveYardTransition moveToGraveYardTransition = new MoveToGraveYardTransition(playerGraveYard.getX(),
+                playerGraveYard.getY(), playerMonsters[num].getX(), playerMonsters[num].getY(), imageView);
+        moveToGraveYardTransition.play();
+    }
+
     public void updateRivalSpells() {
-        Cell[] cells = game.getRivalBoard().getSpellZone();
-        for (int i = 0; i < 5; i++) {
-            if (cells[i].isOccupied()) {
-                rivalSpells[i].getImage().getUrl();
-            }
-        }
+
     }
 
     public void updatePlayerSpells() {
