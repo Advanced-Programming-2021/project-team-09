@@ -59,8 +59,8 @@ public class Main extends Application {
         Menu.setCurrentScene(stage.getScene());
         pane.requestFocus();
         stage.show();
-        User user = new User("ali", "ali", "ali");
-        User user2 = new User("mamad", "mamad", "mamad");
-        new ChooseMiniGame(user, user2);
+//        User user = new User("ali", "ali", "ali");
+//        User user2 = new User("mamad", "mamad", "mamad");
+//        new MiniGameCoin(new MiniGame(user, user2));
     }
 }

@@ -26,15 +26,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainDeckMenu extends Menu implements Initializable {
-    public BorderPane mainPane;
+    @FXML
+    private BorderPane mainPane;
+    @FXML
+    private Button allDecksButton;
     @FXML
     private Button allCardsButton;
     @FXML
     private Button editDeck;
-    @FXML
-    private Button deleteDeckButton;
-    @FXML
-    private Button createDeckButton;
 
 
     public void previous(ActionEvent actionEvent) {
@@ -46,18 +45,26 @@ public class MainDeckMenu extends Menu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        justifyButton(createDeckButton, Cursor.CREATE_DECK);
-        justifyButton(allCardsButton,Cursor.ALL_CARDS);
-        justifyButton(deleteDeckButton,Cursor.TRASH);
-        justifyButton(editDeck,Cursor.EDIT);
-        editDeck.setOnAction(actionEvent->setEditDeck());
+        setAllDecks();
+        justifyButton(allCardsButton, Cursor.ALL_CARDS);
+        justifyButton(editDeck, Cursor.EDIT);
+        justifyButton(allDecksButton, Cursor.CREATE_DECK);
+        editDeck.setOnAction(actionEvent -> setEditDeck());
+        allDecksButton.setOnAction(actionEvent -> setAllDecks());
+        allCardsButton.setOnAction(actionEvent -> setAllCards());
+    }
 
+    private void setAllCards() {
+        mainPane.setCenter(getNode("AllCards"));
+    }
+
+    private void setAllDecks() {
+        mainPane.setCenter(getNode("AllDecksMenu"));
     }
 
 
-
     private void setEditDeck() {
-        mainPane.setCenter(getNode("EditDeck"));
+        mainPane.setCenter(getNode("AllCards"));
     }
 
 
