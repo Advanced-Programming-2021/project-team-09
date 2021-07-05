@@ -60,6 +60,10 @@ public class Menu {
         return new Image(new File("Scenes/Images/" + imageName + format).toURI().toString(), width, height, false, false);
     }
 
+    public static Image getCardImage(String cardName) {
+        return getImage(cardName, "jpg");
+    }
+
     public static void showMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("");

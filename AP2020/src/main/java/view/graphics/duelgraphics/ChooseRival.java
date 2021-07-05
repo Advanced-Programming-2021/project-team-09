@@ -3,6 +3,8 @@ package view.graphics.duelgraphics;
 import controller.LoginMenuController;
 import controller.database.CSVInfoGetter;
 import controller.database.ReadAndWriteDataBase;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import main.Main;
@@ -99,30 +102,49 @@ public class ChooseRival extends SearchMenu {
     public void buttonFunctions(User rival){
         if (rival.getActiveDeck() == null){
             Popup noActiveDeckPopup = new Popup();
+            HBox hBox = new HBox(10);
+            hBox.setStyle(" -fx-background-color: white;" +
+                    " -fx-border-color: grey;" +
+                    " -fx-border-radius: 13;");
             Label label = new Label(rival.getUsername() + " has no active deck");
-            label.setStyle(" -fx-background-color: black;" +
-                    " -fx-font-family: Chalkboard;" +
-                    " -fx-text-fill: white;" +
-                    " -fx-border-radius: 15");
-            label.setMinWidth(80);
-            label.setMinHeight(45);
-            noActiveDeckPopup.getContent().add(label);
-            noActiveDeckPopup.show(Main.stage);
+            makePopUp(noActiveDeckPopup, hBox, label);
         }
         else if (!rival.getActiveDeck().isValid()){
             Popup noValidDeckPopUp = new Popup();
+            HBox hBox = new HBox(10);
+            hBox.setStyle(" -fx-background-color: white;" +
+                    " -fx-border-color: grey;" +
+                    " -fx-border-radius: 13;");
             Label label = new Label(rival.getUsername() + "'s deck is invalid");
-            label.setStyle(" -fx-background-color: black;" +
-                    " -fx-font-family: Chalkboard;" +
-                    " -fx-border-radius: 15;" +
-                    " -fx-text-fill: white");
-            label.setMinWidth(80);
-            label.setMinHeight(45);
-            noValidDeckPopUp.getContent().add(label);
-            noValidDeckPopUp.show(Main.stage);
+            makePopUp(noValidDeckPopUp, hBox, label);
         }
         else {
             new ChooseMiniGame(LoginMenuController.getCurrentUser(), rival);
         }
+    }
+
+    private void makePopUp(Popup noActiveDeckPopup, HBox hBox, Label label) {
+        label.setStyle(" -fx-background-color: transparent;" +
+                " -fx-font-family: Chalkboard;" +
+                " -fx-text-fill: black;" +
+                " -fx-border-radius: 15");
+        label.setMinWidth(80);
+        label.setMinHeight(45);
+        Button hide = new Button("hide");
+        hide.setCursor(javafx.scene.Cursor.HAND);
+        hide.setStyle(" -fx-border-radius: 50;" +
+                " -fx-font-family: Chalkboard;" +
+                " -fx-text-fill: white;" +
+                " -fx-background-color: black;");
+        hide.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                noActiveDeckPopup.hide();
+            }
+        });
+        hBox.getChildren().addAll(label, hide);
+        noActiveDeckPopup.getContent().add(hBox);
+        noActiveDeckPopup.show(Main.stage);
     }
 }

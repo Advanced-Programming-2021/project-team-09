@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import main.Main;
 import model.User;
@@ -21,7 +22,7 @@ import java.util.ResourceBundle;
 public class OneRoundGameGraphical implements Initializable {
     private static Game game;
     private static GraphicalGameController graphicalGameController;
-    private BorderPane pane;
+    private Pane pane;
     @FXML
     private ImageView playerMonster0;
     @FXML
@@ -33,13 +34,6 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView playerMonster4;
     private ImageView[] playerMonsters = new ImageView[5];
-    {
-        playerMonsters[0] = playerMonster0;
-        playerMonsters[1] = playerMonster1;
-        playerMonsters[2] = playerMonster2;
-        playerMonsters[3] = playerMonster3;
-        playerMonsters[4] = playerMonster4;
-    }
 
     @FXML
     private ImageView playerSpell0;
@@ -52,13 +46,6 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView playerSpell4;
     private ImageView[] playerSpells = new ImageView[5];
-    {
-        playerSpells[0] = playerSpell0;
-        playerSpells[1] = playerSpell1;
-        playerSpells[2] = playerSpell2;
-        playerSpells[3] = playerSpell3;
-        playerSpells[4] = playerSpell4;
-    }
 
     @FXML
     private ImageView rivalSpell0;
@@ -71,14 +58,6 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView rivalSpell4;
     private ImageView[] rivalSpells = new ImageView[5];
-    {
-        rivalSpells[0] = rivalSpell0;
-        rivalSpells[1] = rivalSpell1;
-        rivalSpells[2] = rivalSpell2;
-        rivalSpells[3] = rivalSpell3;
-        rivalSpells[4] = rivalSpell4;
-    }
-
     @FXML
     private ImageView rivalMonster0;
     @FXML
@@ -90,14 +69,6 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView rivalMonster4;
     private ImageView[] rivalMonsters = new ImageView[5];
-    {
-        rivalMonsters[0] = rivalMonster0;
-        rivalMonsters[1] = rivalMonster1;
-        rivalMonsters[2] = rivalMonster2;
-        rivalMonsters[3] = rivalMonster3;
-        rivalMonsters[4] = rivalMonster4;
-    }
-
     @FXML
     private HBox playerCardBox;
     @FXML
@@ -113,19 +84,44 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView rivalGraveYard;
 
+    public OneRoundGameGraphical() {
+
+    }
+
     public OneRoundGameGraphical(User player, User rival) {
         try {
             OneRoundGameGraphical.game = new Game(player, rival);
             GameMenuController.firstDraw(game);
         } catch (CloneNotSupportedException ignored) {}
-        pane = (BorderPane) Menu.getNode("OneRoundGameGraphical");
+        pane = (Pane) Menu.getNode("OneRoundGameGraphical");
         Main.stage.setScene(new Scene(pane));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        makeArrays(playerMonsters, playerMonster0, playerMonster1, playerMonster2, playerMonster3, playerMonster4,
+                playerSpells, playerSpell0, playerSpell1, playerSpell2, playerSpell3, playerSpell4);
+        makeArrays(rivalSpells, rivalSpell0, rivalSpell1, rivalSpell2, rivalSpell3, rivalSpell4,
+                rivalMonsters, rivalMonster0, rivalMonster1, rivalMonster2, rivalMonster3, rivalMonster4);
+        rivalMonsters[0].setImage(null);
+        System.out.println(rivalMonsters[0].getImage());
         graphicalGameController = new GraphicalGameController(playerMonsters, playerSpells, rivalMonsters, rivalSpells,
                 playerCardBox, rivalCardBox, buttonsMenu, playerFieldSpell, playerGraveYard, rivalFieldSpell,
                 rivalGraveYard, game);
+    }
+
+    private void makeArrays(ImageView[] rivalSpells, ImageView rivalSpell0, ImageView rivalSpell1, ImageView rivalSpell2,
+                            ImageView rivalSpell3, ImageView rivalSpell4, ImageView[] rivalMonsters, ImageView rivalMonster0,
+                            ImageView rivalMonster1, ImageView rivalMonster2, ImageView rivalMonster3, ImageView rivalMonster4) {
+        rivalSpells[0] = rivalSpell0;
+        rivalSpells[1] = rivalSpell1;
+        rivalSpells[2] = rivalSpell2;
+        rivalSpells[3] = rivalSpell3;
+        rivalSpells[4] = rivalSpell4;
+        rivalMonsters[0] = rivalMonster0;
+        rivalMonsters[1] = rivalMonster1;
+        rivalMonsters[2] = rivalMonster2;
+        rivalMonsters[3] = rivalMonster3;
+        rivalMonsters[4] = rivalMonster4;
     }
 }
