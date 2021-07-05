@@ -38,12 +38,12 @@
     <right>
         <VBox fx:id="decisionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="135.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets bottom="40.0" top="105.0" />
+                <Insets bottom="40.0" top="120.0" />
             </BorderPane.margin>
         </VBox>
     </right>
    <bottom>
-      <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="350.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+      <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="90.0" prefWidth="350.0" style="-fx-background-color: transparent;" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
          <content>
             <HBox fx:id="previewBox" prefHeight="70.0" prefWidth="200.0" />
          </content>

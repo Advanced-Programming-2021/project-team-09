@@ -31,6 +31,7 @@ package main;//import controller.database.CSVInfoGetter;
 //}
 
 import controller.LoginMenuController;
+import controller.database.ReadAndWriteDataBase;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -38,11 +39,8 @@ import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
-import view.graphics.duelgraphics.DuelMenu;
-import view.graphics.duelgraphics.MiniGameCoin;
-import view.graphics.duelgraphics.MiniGameDice;
-import view.graphics.duelgraphics.MiniGameRockPaperScissors;
 import view.graphics.duelgraphics.ChooseMiniGame;
+import view.graphics.duelgraphics.OneRoundGameGraphical;
 
 public class Main extends Application {
     public static Stage stage;
@@ -50,28 +48,21 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println(Menu.getImage("Battle OX", "jpg").getUrl());
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
         stage.setResizable(false);
         
-
-
-
 //        Pane pane = new CardHolder();
-        //BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
-        new DuelMenu(0);
+        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-      //  stage.setScene(new Scene(pane,-1,-1,true));
+        stage.setScene(new Scene(pane,-1,-1,true));
         Menu.setCurrentScene(stage.getScene());
-
+        pane.requestFocus();
         stage.show();
-        User user = new User("ali", "ali", "ali");
-        User user2 = new User("mamad", "mamad", "mamad");
-
-//        User user = new User("ali", "ali", "ali");
-//        User user2 = new User("mamad", "mamad", "mamad");
+        User user = ReadAndWriteDataBase.getUser("mir.json");
+        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+        new OneRoundGameGraphical(user, user2);
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
 }

@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 public class ShopMenuController extends SearchMenu implements Initializable {
     @FXML
     private BorderPane mainPane;
-
     @FXML
     private Label nameLabel;
     @FXML
@@ -52,7 +51,6 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             cards.add(CSVInfoGetter.getCardByName(cardName));
             prices.put(cardName, CSVInfoGetter.getPriceByCardName(cardName));
         }
-
     }
 
 
@@ -82,7 +80,6 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         System.out.println(respond);
         //ToDo
         updateBalanceLabel();
-
     }
 
     public void nextMenu(ActionEvent actionEvent) {
@@ -220,7 +217,6 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             } else cardNames.remove(cardNames.get(i--));
         }
     }
-
 
     private int[] getMinMax(String limit){
         limit =  limit.split(":")[1].trim();
