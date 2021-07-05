@@ -78,8 +78,10 @@ public class CardHolder extends Pane {
         setCardImage(Menu.getCard(card.getCardName()));
         this.card = card;
     }
+
     public Card getCard() {
         return card;
+
     }
 
     public String getCardName() {
@@ -90,5 +92,20 @@ public class CardHolder extends Pane {
 
     public void flipCard() {
 
+    }
+
+    public void scale(double multiple) {
+        cardPlace.setLayoutX(6 * multiple);
+        cardPlace.setLayoutY(6 * multiple);
+        cardPlace.setFitHeight(188.0 * multiple);
+        cardPlace.setFitWidth(138.0 * multiple);
+        cardBehind.setLayoutX(6 * multiple);
+        cardBehind.setLayoutY(6 * multiple);
+        cardBehind.setFitHeight(188.0 * multiple);
+        cardBehind.setFitWidth(138.0 * multiple);
+        cardBox.setFitWidth(150.0 * multiple);
+        cardBox.setFitHeight(200.0 * multiple);
+        super.setWidth(150 * multiple);
+        super.setHeight(150 * multiple);
     }
 }

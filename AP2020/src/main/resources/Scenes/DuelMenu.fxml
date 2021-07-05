@@ -44,5 +44,10 @@
             <Font name="Chalkboard" size="22.0" />
          </font>
       </Label>
+      <Button fx:id="back" layoutX="14.0" layoutY="335.0" mnemonicParsing="false" onMouseClicked="#goToMainMenu" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: black; -fx-background-radius: 50;" text="back" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Chalkboard" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
