@@ -85,4 +85,21 @@ abstract public class ChoiceMenu extends SearchMenu{
         if (searchField.getText().length() == 0) resetChoiceBox();
         else search(searchField.getText());
     }
+
+
+    public void setChoiceBox(HBox choiceBox) {
+        this.choiceBox = choiceBox;
+    }
+
+    public void setChoiceNames(HashSet<String> choiceNames) {
+        this.choiceNames = choiceNames;
+    }
+
+    public void setCardsPlace(ScrollPane cardsPlace) {
+        this.cardsPlace = cardsPlace;
+    }
+
+    public void setDecisionBox(VBox decisionBox) {
+        this.decisionBox = decisionBox;
+    }
 }

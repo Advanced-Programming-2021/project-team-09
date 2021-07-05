@@ -4,9 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -75,23 +73,23 @@ public class Menu {
         Menu.currentScene = currentScene;
     }
 
-    public static void enterButton(Button button, Cursor cursor, MouseEvent mouseEvent) {
+    public static void enterButton(ButtonBase button, Cursor cursor, MouseEvent mouseEvent) {
         button.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
         changeCursor(cursor, mouseEvent);
     }
 
-    public static void exitButton(Button button ,MouseEvent mouseEvent) {
+    public static void exitButton(ButtonBase button, MouseEvent mouseEvent) {
         button.setEffect(null);
         changeCursor(Cursor.DEFAULT, mouseEvent);
     }
 
     public static void justifyButton(Button button, Cursor enterCursor) {
-        button.onMouseEnteredProperty().set(mouseEvent -> enterButton(button,enterCursor,mouseEvent));
+        button.onMouseEnteredProperty().set(mouseEvent -> enterButton(button, enterCursor, mouseEvent));
         button.onMouseExitedProperty().set(mouseEvent -> exitButton(button, mouseEvent));
     }
 
     public static Image getCard(String cardName) {
-        return getImage("Cards/" + cardName.trim().replace(" ",""),"jpg");
+        return getImage("Cards/" + cardName.trim().replace(" ", ""), "jpg");
     }
 
     public static Label getLabel(String text, double width, double height) {
@@ -103,5 +101,11 @@ public class Menu {
         label.getStylesheets().add("src/main/resources/Scenes/StyleSheets/Label.css");
         label.setTextAlignment(TextAlignment.CENTER);
         return label;
+    }
+
+    protected void onSelectToggle(ToggleButton mainToggle, ToggleGroup group) {
+        for (Toggle button : group.getToggles()) ((ToggleButton) button).setEffect(null);
+        if (!mainToggle.isSelected()) mainToggle.setEffect(null);
+        else mainToggle.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
     }
 }

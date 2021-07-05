@@ -78,8 +78,10 @@ public class CardHolder extends Pane {
         setCardImage(Menu.getCard(card.getCardName()));
         this.card = card;
     }
+
     public Card getCard() {
         return card;
+
     }
 
     public String getCardName() {

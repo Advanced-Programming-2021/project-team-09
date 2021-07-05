@@ -37,6 +37,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
+import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.MiniGameCoin;
@@ -50,16 +51,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        System.out.println(Menu.getImage("Battle OX", "jpg").getUrl());
         LoginMenuController.login("sia","1234");
         Main.stage = stage;
         stage.setResizable(false);
         
 
-        AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
-        Main.stage.setScene(new Scene(anchorPane, 600, 400));
+//        AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
+//        Main.stage.setScene(new Scene(anchorPane, 600, 400));
 
-//        Pane pane = new CardHolder();
+//        Pane pane = new CardHolder("");
         BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
@@ -67,8 +67,8 @@ public class Main extends Application {
         Menu.setCurrentScene(stage.getScene());
 
         stage.show();
-        User user = new User("ali", "ali", "ali");
-        User user2 = new User("mamad", "mamad", "mamad");
+//        User user = new User("ali", "ali", "ali");
+//        User user2 = new User("mamad", "mamad", "mamad");
 
 //        User user = new User("ali", "ali", "ali");
 //        User user2 = new User("mamad", "mamad", "mamad");

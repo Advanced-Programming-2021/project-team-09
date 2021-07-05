@@ -17,9 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import main.Main;
 import model.card.Card;
 import model.deck.Deck;
 import model.enums.Cursor;
@@ -27,6 +26,9 @@ import model.graphicalModels.CardHolder;
 import org.jetbrains.annotations.NotNull;
 import view.graphics.ChoiceMenu;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +51,8 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         addToChoiceBox(choiceNames);
         searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
         decisionBox.setSpacing(10);
-
     }
+
     @Override
     protected void search(String searchText) {
         resetBoxProperties(previewBox);
@@ -112,15 +114,32 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         Button delete = getButton("Delete");
         Button edit = getButton("Edit");
         Button activate = getButton(isDeckActive ? "DeActivate" : "Activate");
-        if (!isDeckActive) activate.setOnAction(actionEvent -> activateDeck(box));
+        if (!isDeckActive) {
+            activate.setOnAction(actionEvent -> activateDeck(box));
+            addOptionToDecisionBox(activate);
+        }
         delete.setOnAction(actionEvent -> deleteDeck(deckName));
-        if (!isDeckActive) addOptionToDecisionBox(activate);
+        edit.setOnAction(actionEvent -> goToEditMenu(deckName));
         addOptionToDecisionBox(edit, delete);
+    }
+
+    private void goToEditMenu(String deckName) {
+        Deck deck = LoginMenuController.getCurrentUser().getDeckByName(deckName);
+        try {
+            FXMLLoader loader = new FXMLLoader(new File("src/main/resources/Scenes/EditDeckMenu.fxml").toURI().toURL());
+            AnchorPane pane = loader.load();
+            ((EditDeckMenu)loader.getController()).setDeck(deck);
+            ((BorderPane)Main.stage.getScene().getRoot()).setCenter(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void activateDeck(VBox box) {
         DeckMenuController.activateDeck(((Label) box.getChildren().get(0)).getText());
         updateChoiceBox();
+        resetBoxProperties(previewBox);
     }
 
 
