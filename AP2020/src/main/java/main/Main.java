@@ -56,14 +56,14 @@ public class Main extends Application {
         stage.setResizable(false);
         
 
-        AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
-        Main.stage.setScene(new Scene(anchorPane, 600, 400));
+
 
 //        Pane pane = new CardHolder();
-        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
+        //BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
+        new DuelMenu(0);
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-        stage.setScene(new Scene(pane,-1,-1,true));
+      //  stage.setScene(new Scene(pane,-1,-1,true));
         Menu.setCurrentScene(stage.getScene());
 
         stage.show();
