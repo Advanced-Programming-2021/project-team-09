@@ -17,6 +17,9 @@ abstract public class ChoiceMenu extends SearchMenu{
     @FXML
     public VBox decisionBox;
     protected HashSet<String> choiceNames = new HashSet<>();
+    private int spacing = 5;
+    private int width = 155;
+
     @Override
     protected void search(String searchText) {
         searchText = searchText.trim().toLowerCase();
@@ -44,7 +47,7 @@ abstract public class ChoiceMenu extends SearchMenu{
         choiceBox.setPrefWidth(0);
         choiceBox.setMinWidth(0);
         choiceBox.setMaxWidth(0);
-        double newWidth = 155 * resultBoxes.size() - 5;
+        double newWidth = width * resultBoxes.size() - spacing;
         choiceBox.setMaxWidth(newWidth);
         choiceBox.setMinWidth(newWidth);
         choiceBox.setPrefWidth(newWidth);
@@ -60,8 +63,26 @@ abstract public class ChoiceMenu extends SearchMenu{
         return resultBoxes;
     }
 
-    
+    protected void setSpacing(int spacing) {
+        this.spacing = spacing;
+    }
+
+    protected void setWidth(int width) {
+        this.width = width;
+    }
 
     protected abstract VBox getChoiceBox(String result);
 
+    protected void addOptionToDecisionBox(Button button,Button... args){
+        decisionBox.getChildren().add(button);
+        if (args.length != 0) decisionBox.getChildren().addAll(args);
+    }
+    protected void emptyDecisionBox() {
+        decisionBox.getChildren().removeAll(decisionBox.getChildren());
+    }
+
+    protected void updateChoiceBox() {
+        if (searchField.getText().length() == 0) resetChoiceBox();
+        else search(searchField.getText());
+    }
 }
