@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.EditDeckMenu">
    <children>
-      <ScrollPane hbarPolicy="NEVER" layoutX="125.0" layoutY="230.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="185.0" prefWidth="400.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 10;" vbarPolicy="NEVER">
+      <ScrollPane layoutX="125.0" layoutY="230.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="185.0" prefWidth="400.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 10;" vbarPolicy="NEVER">
          <content>
             <HBox fx:id="sideChoiceBox" prefHeight="100.0" prefWidth="397.0">
                <padding>
@@ -20,7 +20,7 @@
             </HBox>
          </content>
       </ScrollPane>
-      <ScrollPane hbarPolicy="NEVER" layoutX="125.0" layoutY="5.0" pannable="true" prefHeight="185.0" prefWidth="400.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 10;" vbarPolicy="NEVER">
+      <ScrollPane layoutX="125.0" layoutY="5.0" pannable="true" prefHeight="185.0" prefWidth="400.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 10;" vbarPolicy="NEVER">
          <content>
             <HBox fx:id="mainChoiceBox" prefHeight="100.0" prefWidth="399.0" />
          </content>
