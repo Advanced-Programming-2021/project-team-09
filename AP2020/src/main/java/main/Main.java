@@ -37,6 +37,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.User;
 import model.game.MiniGame;
+import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.MiniGameCoin;
@@ -58,17 +59,17 @@ public class Main extends Application {
 
 
 
-//        Pane pane = new CardHolder();
-        //BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
-        new DuelMenu(0);
+
+        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
+//        new DuelMenu(0);
 //        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
 //        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-      //  stage.setScene(new Scene(pane,-1,-1,true));
+        stage.setScene(new Scene(pane,-1,-1,true));
         Menu.setCurrentScene(stage.getScene());
 
         stage.show();
-        User user = new User("ali", "ali", "ali");
-        User user2 = new User("mamad", "mamad", "mamad");
+//        User user = new User("ali", "ali", "ali");
+//        User user2 = new User("mamad", "mamad", "mamad");
 
 //        User user = new User("ali", "ali", "ali");
 //        User user2 = new User("mamad", "mamad", "mamad");

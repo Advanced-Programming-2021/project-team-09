@@ -1,6 +1,7 @@
 package view.graphics;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import model.enums.Cursor;
 
@@ -98,14 +100,37 @@ public class Menu {
         label.setMaxWidth(width);
         label.setPrefHeight(height);
         label.setMaxHeight(height);
-        label.getStylesheets().add("src/main/resources/Scenes/StyleSheets/Label.css");
         label.setTextAlignment(TextAlignment.CENTER);
+        label.setAlignment(Pos.CENTER);
         return label;
     }
+
+    public static Label getLabel(String text, double width, double height,double fontSize) {
+        Label label = new Label(text);
+        label.setPrefWidth(width);
+        label.setMaxWidth(width);
+        label.setPrefHeight(height);
+        label.setMaxHeight(height);
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setAlignment(Pos.CENTER);
+        label.setFont(new Font("chalkboard",fontSize));
+        return label;
+    }
+
 
     protected void onSelectToggle(ToggleButton mainToggle, ToggleGroup group) {
         for (Toggle button : group.getToggles()) ((ToggleButton) button).setEffect(null);
         if (!mainToggle.isSelected()) mainToggle.setEffect(null);
         else mainToggle.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
+    }
+
+    protected Pane setDimension(Pane parent,double width, double height) {
+        parent.setPrefHeight(height);
+        parent.setMinHeight(height);
+        parent.setMaxHeight(height);
+        parent.setPrefWidth(width);
+        parent.setMinWidth(width);
+        parent.setMaxHeight(width);
+        return parent;
     }
 }

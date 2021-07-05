@@ -43,9 +43,9 @@ public class ShopMenuController extends SearchMenu implements Initializable {
 
     private static final String advanceSearchRegex = "^(?<type>type:\\s*[\\w /]+)?\\s*(?<price>price:\\s*\\d+(?:-?\\d+)?)?\\s*(?<attack>attack:\\s*\\d+(?:-?\\d+)?)?\\s*(?<defend>defend:\\s*\\d+(?:-?\\d*)?)?$";
 
-    public static final ArrayList<String> cardNames = CSVInfoGetter.getCardNames();
-    public static final ArrayList<Card> cards = new ArrayList<>();
-    public static final HashMap<String, Integer> prices = new HashMap<>();
+    public final ArrayList<String> cardNames = CSVInfoGetter.getCardNames();
+    public final ArrayList<Card> cards = new ArrayList<>();
+    public final HashMap<String, Integer> prices = new HashMap<>();
     {
         for (String cardName : cardNames) {
             cards.add(CSVInfoGetter.getCardByName(cardName));
@@ -170,7 +170,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     }
 
     private ArrayList<String> filterCards(HashMap<String, String> searchTypes) {
-        ArrayList<String> cardNames = (ArrayList<String>) ShopMenuController.cardNames.clone();
+        ArrayList<String> cardNames = (ArrayList<String>) this.cardNames.clone();
         if (searchTypes.containsKey("price")) filterPrice(cardNames, searchTypes.get("price"));
         if (searchTypes.containsKey("type")) filterType(cardNames, searchTypes.get("type"));
         if (searchTypes.containsKey("attack")) filterAttack(cardNames, searchTypes.get("attack"));

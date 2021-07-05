@@ -18,7 +18,7 @@ abstract public class ChoiceMenu extends SearchMenu{
     public VBox decisionBox;
     protected HashSet<String> choiceNames = new HashSet<>();
     private int spacing = 5;
-    private int width = 155;
+    private double width = 155;
 
     @Override
     protected void search(String searchText) {
@@ -29,31 +29,31 @@ abstract public class ChoiceMenu extends SearchMenu{
         }
         HashSet<String> matchingChoices = new HashSet<>();
         for (String choice : choiceNames) if (choice.toLowerCase().contains(searchText)) matchingChoices.add(choice);
-
         addToChoiceBox(matchingChoices);
     }
 
     protected void resetChoiceBox() {
-        choiceBox.getChildren().removeAll(choiceBox.getChildren());
-        choiceBox.setPrefWidth(0);
-        choiceBox.setMinWidth(0);
-        choiceBox.setMaxWidth(0);
+        emptyChoiceBox();
         addToChoiceBox(new HashSet<>(choiceNames));
     }
 
     protected void addToChoiceBox(HashSet<String> matchingCards) {
+        if (matchingCards.isEmpty()) {
+            emptyChoiceBox();
+            return;
+        }
         ArrayList<VBox> resultBoxes = getSearchResults(new ArrayList<>(matchingCards));
-        choiceBox.getChildren().removeAll(choiceBox.getChildren());
-        choiceBox.setPrefWidth(0);
-        choiceBox.setMinWidth(0);
-        choiceBox.setMaxWidth(0);
+        choiceBox.getChildren().clear();
         double newWidth = width * resultBoxes.size() - spacing;
-        choiceBox.setMaxWidth(newWidth);
-        choiceBox.setMinWidth(newWidth);
         choiceBox.setPrefWidth(newWidth);
         for (VBox box : resultBoxes) {
             choiceBox.getChildren().add(box);
         }
+    }
+
+    protected void emptyChoiceBox() {
+        choiceBox.getChildren().removeAll(choiceBox.getChildren());
+        choiceBox.setPrefWidth(0);
     }
 
     @Override
@@ -67,7 +67,7 @@ abstract public class ChoiceMenu extends SearchMenu{
         this.spacing = spacing;
     }
 
-    protected void setWidth(int width) {
+    protected void setWidth(double width) {
         this.width = width;
     }
 

@@ -117,6 +117,12 @@ public abstract class PrimaryDeck {
         return deckName;
     }
 
+    public HashSet<String> getCardNames() {
+        HashSet<String> names = new HashSet<>();
+        for(Card card : cards) names.add(card.getCardName());
+        return names;
+    }
+
     class CardCompare implements Comparator<Card> {
         @Override
         public int compare(Card card1, Card card2) {
