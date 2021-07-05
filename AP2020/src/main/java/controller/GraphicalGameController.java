@@ -13,6 +13,7 @@ import javafx.util.Duration;
 import model.card.Card;
 import model.game.Cell;
 import model.game.Game;
+import view.graphics.Menu;
 
 import java.util.ArrayList;
 
@@ -84,6 +85,9 @@ public class GraphicalGameController {
         updatePlayerSpells();
         updateRivalMonsters();
         updateRivalSpells();
+        // TODO: 7/4/2021 delete thses :
+        playerCards.getChildren().add(new ImageView(Menu.getCardImage("BattleOx")));
+//        movePlayerMonsterToGraveYard(0);
     }
 
     public void movePlayerMonsterToGraveYard(int num) {
