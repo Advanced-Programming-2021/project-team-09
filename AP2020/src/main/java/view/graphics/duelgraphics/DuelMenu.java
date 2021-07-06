@@ -33,7 +33,6 @@ public class DuelMenu extends Menu {
     }
     public DuelMenu(int alaki){
         AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
-        assert anchorPane != null;
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
     }
 
