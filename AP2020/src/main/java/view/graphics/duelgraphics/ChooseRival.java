@@ -26,6 +26,8 @@ public class ChooseRival extends SearchMenu {
     private TextField profileName;
     @FXML
     private ImageView imageView;
+    @FXML
+    private VBox searchBox;
 
     public static ArrayList<User> usernames = ReadAndWriteDataBase.getAllUsers();
 
@@ -46,6 +48,7 @@ public class ChooseRival extends SearchMenu {
         String command = profileName.getText();
         search(command);
         imageView.setImage(Menu.getImage("animatedDragon", "GIF"));
+        imageView.toBack();
     }
 
     @Override
@@ -58,12 +61,13 @@ public class ChooseRival extends SearchMenu {
             }
         }
         ArrayList<VBox> resultBoxes = getSearchResults(users);
+
         searchResults = new ArrayList<>();
         searchResults.addAll(resultBoxes);
+        searchBox.setSpacing(5);
         if (searchResults.size() > 0) showVBox(0);
         else {
             emptySearchBox();
-            stageCounter.setText("-/-");
         }
     }
 
@@ -72,27 +76,25 @@ public class ChooseRival extends SearchMenu {
         ArrayList<VBox> resultBoxes = new ArrayList<>();
         VBox currentBox = new VBox(2);
         for (String result : searchResults) {
-            if (currentBox.getChildren().size() == 9) {
-                resultBoxes.add(currentBox);
-                currentBox = new VBox(2);
-            }
             currentBox.getChildren().add(getOptionButton(result));
         }
-        if (currentBox.getChildren().size() != 0) resultBoxes.add(currentBox);
+        if (currentBox.getChildren().size() != 0){
+            resultBoxes.add(currentBox);
+        }
         return resultBoxes;
     }
     protected Button getOptionButton(String searchResult) {
         Button button = new Button(searchResult + "-" + ReadAndWriteDataBase.getUser(searchResult+".json").getScore());
         button.setPrefHeight(28);
         button.setPrefWidth(120);
+        button.toFront();
         button.setStyle(" -fx-background-color: white;" +
                 " -fx-border-radius: 13;" +
                 " -fx-border-color: black;" +
                 " -fx-cursor: hand;" +
                 " -fx-font-family: Chalkboard;");
         button.onMouseEnteredProperty().set(mouseEvent -> button.setStyle(" -fx-background-color: black;" +
-                " -fx-border-radius: 15;" +
-                " -fx-border-color: black;" +
+                " -fx-background-radius: 13;" +
                 " -fx-cursor: hand;" +
                 " -fx-font-family: Chalkboard;" +
                 " -fx-text-fill: white;"));
@@ -122,6 +124,7 @@ public class ChooseRival extends SearchMenu {
             Popup noValidDeckPopUp = new Popup();
             HBox hBox = new HBox(10);
             hBox.setStyle(" -fx-background-color: white;" +
+                    " -fx-background-radius: 13;" +
                     " -fx-border-color: grey;" +
                     " -fx-border-radius: 13;");
             Label label = new Label(rival.getUsername() + "'s deck is invalid");
@@ -139,7 +142,11 @@ public class ChooseRival extends SearchMenu {
                 " -fx-border-radius: 15");
         label.setMinWidth(80);
         label.setMinHeight(45);
+        label.setTranslateY(-15);
+        label.setTranslateX(25);
         Button hide = new Button("hide");
+        hide.setTranslateY(20);
+        hide.setTranslateX(-60);
         hide.setCursor(javafx.scene.Cursor.HAND);
         hide.setStyle(" -fx-border-radius: 50;" +
                 " -fx-font-family: Chalkboard;" +

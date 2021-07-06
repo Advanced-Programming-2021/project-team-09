@@ -50,7 +50,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        LoginMenuController.login("mir","mir");
+        LoginMenuController.login("sia","1234");
         Main.stage = stage;
         stage.setResizable(false);
         AnchorPane pane = (AnchorPane) Menu.getNode("DuelMenu");
