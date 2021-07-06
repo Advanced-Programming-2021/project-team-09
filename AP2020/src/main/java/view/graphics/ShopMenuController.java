@@ -83,20 +83,12 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     }
 
     public void nextMenu(ActionEvent actionEvent) {
-        int currentStage = getCurrentSearchStage();
-        if (currentStage == -1) return;
-        if (currentStage == searchResults.size()) return;
-        showVBox(currentStage);
-        setStageLabel(currentStage + 1);
+        next();
 
     }
 
     public void previousMenu(ActionEvent actionEvent) {
-        int currentStage = getCurrentSearchStage();
-        if (currentStage == -1) return;
-        if (currentStage == 1) return;
-        showVBox(currentStage - 2);
-        setStageLabel(currentStage - 1);
+        previous();
     }
 
 

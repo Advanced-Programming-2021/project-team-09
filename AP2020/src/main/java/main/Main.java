@@ -53,7 +53,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        LoginMenuController.login("sia","1234");
+        LoginMenuController.login("mmd","m");
         Main.stage = stage;
         stage.setResizable(false);
         Parent pane = Menu.getNode("ScoreboardMenu");

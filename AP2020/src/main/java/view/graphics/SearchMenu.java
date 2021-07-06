@@ -62,4 +62,20 @@ public abstract class SearchMenu extends Menu {
     protected void setStageLabel(int i) {
         stageCounter.setText(i + "/" + searchResults.size());
     }
+
+    public void previous() {
+        int currentStage = getCurrentSearchStage();
+        if (currentStage == -1) return;
+        if (currentStage == 1) return;
+        showVBox(currentStage - 2);
+        setStageLabel(currentStage - 1);
+    }
+
+    public void next() {
+        int currentStage = getCurrentSearchStage();
+        if (currentStage == -1) return;
+        if (currentStage == searchResults.size()) return;
+        showVBox(currentStage);
+        setStageLabel(currentStage + 1);
+    }
 }
