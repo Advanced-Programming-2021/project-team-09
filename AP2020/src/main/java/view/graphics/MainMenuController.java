@@ -7,7 +7,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,7 +28,7 @@ public class MainMenuController extends Menu implements Initializable {
     @FXML
     private ImageView setting;
     @FXML
-    private ImageView BabeFace;
+    private ImageView babeFace;
     boolean isHappy = false;
 
     public final static Image SETTING_MENU_IMG = getImage("SettingIcon","png");
@@ -48,11 +47,10 @@ public class MainMenuController extends Menu implements Initializable {
 
 
     public void changeFace(MouseEvent mouseEvent) {
-        if (isHappy) BabeFace.setImage(NORMAL_FACE_IMG);
-        else BabeFace.setImage(HAPPY_FACE_IMG);
+        if (isHappy) babeFace.setImage(NORMAL_FACE_IMG);
+        else babeFace.setImage(HAPPY_FACE_IMG);
         isHappy = ! isHappy;
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -60,7 +58,7 @@ public class MainMenuController extends Menu implements Initializable {
         setting.setImage(SETTING_MENU_IMG);
         scoreBoard.setImage(SCOREBOARD_MENU_IMG);
         profileMenu.setImage(PROFILE_MENU_IMG);
-        BabeFace.setImage(NORMAL_FACE_IMG);
+        babeFace.setImage(NORMAL_FACE_IMG);
         gameMenu.setImage(GAME_MENU_IMG);
         imageOfMenu.setImage(SAD_COMPUTER_IMG);
     }

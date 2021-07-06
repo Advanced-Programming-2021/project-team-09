@@ -7,9 +7,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.duelgraphics.OneRoundGameGraphical">
    <children>
+      <ImageView fitHeight="700.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/solid%20brown.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="114.0" layoutX="16.0" layoutY="104.0" stroke="BLACK" strokeType="INSIDE" width="83.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="220.0" layoutX="153.0" layoutY="108.0" stroke="BLACK" strokeType="INSIDE" width="402.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="114.0" layoutX="16.0" layoutY="464.0" stroke="BLACK" strokeType="INSIDE" width="83.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff7b" height="108.0" layoutX="61.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="77.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff7b" height="108.0" layoutX="63.0" layoutY="350.0" stroke="BLACK" strokeType="INSIDE" width="77.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="233.0" layoutX="153.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="402.0" />
       <ImageView fx:id="rivalGraveYard" fitHeight="100.0" fitWidth="70.0" layoutX="23.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/Cards/BACK.jpg" />
@@ -20,7 +32,7 @@
             <Image url="@Images/Cards/BACK.jpg" />
          </image>
       </ImageView>
-      <ImageView fx:id="playerFieldSpell" fitHeight="100.0" fitWidth="70.0" layoutX="67.0" layoutY="361.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="playerFieldSpell" fitHeight="100.0" fitWidth="70.0" layoutX="67.0" layoutY="355.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/Cards/BACK.jpg" />
          </image>
@@ -42,7 +54,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalSpell0" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -50,7 +62,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalSpell1" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -58,7 +70,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalSpell3" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -66,7 +78,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
          </children>
@@ -83,12 +95,12 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalMonster0" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalMonster1" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -96,7 +108,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="rivalMonster3" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -104,12 +116,12 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
          </children>
       </HBox>
-      <HBox layoutX="164.0" layoutY="361.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox layoutX="164.0" layoutY="355.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fx:id="playerMonster3" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -121,7 +133,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerMonster0" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -129,7 +141,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerMonster2" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -137,7 +149,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerMonster4" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -145,7 +157,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
          </children>
@@ -162,7 +174,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerSpell0" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -170,7 +182,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerSpell2" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -178,7 +190,7 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
             <ImageView fx:id="playerSpell4" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -186,14 +198,14 @@
                   <Image url="@Images/Cards/BACK.jpg" />
                </image>
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
          </children>
       </HBox>
-      <HBox fx:id="playerCardBox" layoutX="110.0" layoutY="597.0" prefHeight="100.0" prefWidth="450.0" />
-      <HBox fx:id="rivalCardBox" layoutX="132.0" layoutY="4.0" prefHeight="100.0" prefWidth="450.0" />
-      <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="66.0" prefHeight="634.0" prefWidth="141.0" />
+      <HBox fx:id="playerCardBox" layoutX="85.0" layoutY="600.0" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
+      <HBox fx:id="rivalCardBox" layoutX="163.0" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
+      <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="110.0" prefHeight="590.0" prefWidth="141.0" style="-fx-background-color: white;" />
    </children>
     <stylesheets>
         <URL value="@StyleSheets/OneRoundGraphical.css" />

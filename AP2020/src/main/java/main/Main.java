@@ -60,9 +60,9 @@ public class Main extends Application {
         Menu.setCurrentScene(stage.getScene());
         pane.requestFocus();
         stage.show();
-        User user = ReadAndWriteDataBase.getUser("mir.json");
-        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        new OneRoundGameGraphical(user, user2);
+//        User user = ReadAndWriteDataBase.getUser("mir.json");
+//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+//        new OneRoundGameGraphical(user, user2);
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
 }
