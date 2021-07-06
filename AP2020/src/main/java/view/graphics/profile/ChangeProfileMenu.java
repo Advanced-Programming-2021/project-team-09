@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static model.User.NUMBER_OF_PROFILES;
-import static view.graphics.profile.ProfileMenu.getProfilePhoto;
 
 public class ChangeProfileMenu extends ChangeMenu implements Initializable {
     @FXML

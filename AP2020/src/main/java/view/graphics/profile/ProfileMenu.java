@@ -6,19 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.enums.Cursor;
-import view.LoginMenu;
 import view.graphics.MainMenuController;
 import view.graphics.Menu;
 
@@ -42,10 +37,6 @@ public class ProfileMenu extends Menu implements Initializable {
     private Label username;
     @FXML
     private Label nickname;
-
-    public static Image getProfilePhoto(int number) {
-        return getImage("ProfilePhotos/Profile" + number, "png");
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -34,6 +34,7 @@ import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -46,14 +47,16 @@ import view.graphics.duelgraphics.OneRoundGameGraphical;
 
 public class Main extends Application {
     public static Stage stage;
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
         LoginMenuController.login("mir","mir");
         Main.stage = stage;
         stage.setResizable(false);
-        AnchorPane pane = (AnchorPane) Menu.getNode("DuelMenu");
+        Parent pane = Menu.getNode("ScoreboardMenu");
         Scene scene = new Scene(pane,-1,-1,true);
         Menu.setCurrentScene(scene);
         stage.setScene(scene);

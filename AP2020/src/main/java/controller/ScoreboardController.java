@@ -26,6 +26,10 @@ public class ScoreboardController {
         return users;
     }
 
+    public static ArrayList<User> getSortedUsers() {
+        return  sortUsers(ReadAndWriteDataBase.getAllUsers());
+    }
+
     public static String getScoreBoard(ArrayList<User> users) {
 
 //        ArrayList<User> sortedUsers = sortUsers(users);

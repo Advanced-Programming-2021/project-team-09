@@ -29,20 +29,21 @@ public class ChooseRival extends SearchMenu {
 
     public static ArrayList<User> usernames = ReadAndWriteDataBase.getAllUsers();
 
-    public ChooseRival(){
+    public ChooseRival() {
 
     }
-    public ChooseRival(int alaki){
+
+    public ChooseRival(int alaki) {
         AnchorPane anchorPane = (AnchorPane) Menu.getNode("ChooseRival");
         assert anchorPane != null;
-        Main.stage.setScene(new Scene(anchorPane,340,400));
+        Main.stage.setScene(new Scene(anchorPane, 340, 400));
     }
 
     public void goToDuelMenu() {
         new DuelMenu(0);
     }
 
-    public void getInput(){
+    public void getInput() {
         String command = profileName.getText();
         search(command);
         imageView.setImage(Menu.getImage("animatedDragon", "GIF"));
@@ -51,9 +52,9 @@ public class ChooseRival extends SearchMenu {
     @Override
     protected void search(String searchText) {
         ArrayList<String> users = new ArrayList<>();
-        for (User username: usernames) {
+        for (User username : usernames) {
             String userName = username.getUsername();
-            if (userName.contains(searchText)){
+            if (userName.contains(searchText)) {
                 users.add(username.getUsername());
             }
         }
@@ -81,8 +82,9 @@ public class ChooseRival extends SearchMenu {
         if (currentBox.getChildren().size() != 0) resultBoxes.add(currentBox);
         return resultBoxes;
     }
+
     protected Button getOptionButton(String searchResult) {
-        Button button = new Button(searchResult + "-" + ReadAndWriteDataBase.getUser(searchResult+".json").getScore());
+        Button button = new Button(searchResult + "-" + ReadAndWriteDataBase.getUser(searchResult + ".json").getScore());
         button.setPrefHeight(28);
         button.setPrefWidth(120);
         button.setStyle(" -fx-background-color: white;" +
@@ -102,14 +104,15 @@ public class ChooseRival extends SearchMenu {
                 " -fx-cursor: hand;" +
                 " -fx-font-family: Chalkboard;"));
         button.setOnAction(actionEvent -> {
-            User user = ReadAndWriteDataBase.getUser(searchResult+".json");
+            User user = ReadAndWriteDataBase.getUser(searchResult + ".json");
             assert user != null;
             buttonFunctions(user);
         });
         return button;
     }
-    public void buttonFunctions(User rival){
-        if (rival.getActiveDeck() == null){
+
+    public void buttonFunctions(User rival) {
+        if (rival.getActiveDeck() == null) {
             Popup noActiveDeckPopup = new Popup();
             HBox hBox = new HBox(10);
             hBox.setStyle(" -fx-background-color: white;" +
@@ -117,8 +120,7 @@ public class ChooseRival extends SearchMenu {
                     " -fx-border-radius: 13;");
             Label label = new Label(rival.getUsername() + " has no active deck");
             makePopUp(noActiveDeckPopup, hBox, label);
-        }
-        else if (!rival.getActiveDeck().isValid()){
+        } else if (!rival.getActiveDeck().isValid()) {
             Popup noValidDeckPopUp = new Popup();
             HBox hBox = new HBox(10);
             hBox.setStyle(" -fx-background-color: white;" +
@@ -126,8 +128,7 @@ public class ChooseRival extends SearchMenu {
                     " -fx-border-radius: 13;");
             Label label = new Label(rival.getUsername() + "'s deck is invalid");
             makePopUp(noValidDeckPopUp, hBox, label);
-        }
-        else {
+        } else {
             new ChooseMiniGame(LoginMenuController.getCurrentUser(), rival);
         }
     }

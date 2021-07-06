@@ -24,12 +24,18 @@ public abstract class SearchMenu extends Menu {
     @FXML
     protected Label stageCounter;
 
+    private int minSizeSearchBox = 1;
+
     protected ArrayList<VBox> searchResults = new ArrayList<>();
 
     protected abstract void search(String searchText);
 
     protected abstract ArrayList<VBox> getSearchResults(ArrayList<String> searchResults);
 
+
+    public void setMinSizeSearchBox(int minSizeSearchBox) {
+        this.minSizeSearchBox = minSizeSearchBox;
+    }
 
     protected int getCurrentSearchStage() {
         String currentSearchStage = stageCounter.getText().split("/")[0];
@@ -50,7 +56,7 @@ public abstract class SearchMenu extends Menu {
 
     protected void emptySearchBox() {
         ObservableList<Node> list = searchBox.getChildren();
-        if (list.size() != 1) list.remove(list.get(1));
+        if (list.size() != minSizeSearchBox) list.remove(list.get(minSizeSearchBox));
     }
 
     protected void setStageLabel(int i) {

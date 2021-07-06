@@ -141,6 +141,10 @@ public class Menu {
         return label;
     }
 
+    public static Image getProfilePhoto(int number) {
+        return getImage("ProfilePhotos/Profile" + number, "png");
+    }
+
 
     protected void onSelectToggle(ToggleButton mainToggle, ToggleGroup group) {
         for (Toggle button : group.getToggles()) ((ToggleButton) button).setEffect(null);
