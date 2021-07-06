@@ -71,9 +71,7 @@ public class DuelMenu extends Menu {
     }
 
     public void goToMainMenu() {
-        AnchorPane anchorPane = (AnchorPane) Menu.getNode("MainMenu");
-        assert anchorPane != null;
-        Main.stage.setScene(new Scene(anchorPane,600,400));
+        //TODO SIA ADD MAIN MENU
     }
 
     public boolean checkPlayerDeck(){
@@ -145,6 +143,6 @@ public class DuelMenu extends Menu {
         return false;
     }
     public void goToDeck(){
-
+        //TODO SIA ADD DECK
     }
 }

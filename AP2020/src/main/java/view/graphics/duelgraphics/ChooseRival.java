@@ -1,7 +1,6 @@
 package view.graphics.duelgraphics;
 
 import controller.LoginMenuController;
-import controller.database.CSVInfoGetter;
 import controller.database.ReadAndWriteDataBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,15 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import main.Main;
 import model.User;
-import model.card.Card;
-import model.enums.Cursor;
 import view.graphics.Menu;
 import view.graphics.SearchMenu;
 
@@ -28,7 +25,7 @@ public class ChooseRival extends SearchMenu {
     @FXML
     private TextField profileName;
     @FXML
-    private Label userScore;
+    private ImageView imageView;
 
     public static ArrayList<User> usernames = ReadAndWriteDataBase.getAllUsers();
 
@@ -45,9 +42,10 @@ public class ChooseRival extends SearchMenu {
         new DuelMenu(0);
     }
 
-    public void getInput() {
+    public void getInput(){
         String command = profileName.getText();
         search(command);
+        imageView.setImage(Menu.getImage("animatedDragon", "GIF"));
     }
 
     @Override
@@ -91,12 +89,22 @@ public class ChooseRival extends SearchMenu {
                 " -fx-border-color: black;" +
                 " -fx-cursor: hand;" +
                 " -fx-font-family: Chalkboard;");
+        button.onMouseEnteredProperty().set(mouseEvent -> button.setStyle(" -fx-background-color: black;" +
+                " -fx-border-radius: 15;" +
+                " -fx-border-color: black;" +
+                " -fx-cursor: hand;" +
+                " -fx-font-family: Chalkboard;" +
+                " -fx-text-fill: white;"));
+        button.onMouseExitedProperty().set(mouseEvent -> button.setStyle(" -fx-background-color: white;" +
+                " -fx-border-radius: 13;" +
+                " -fx-border-color: black;" +
+                " -fx-cursor: hand;" +
+                " -fx-font-family: Chalkboard;"));
         button.setOnAction(actionEvent -> {
             User user = ReadAndWriteDataBase.getUser(searchResult+".json");
             assert user != null;
             buttonFunctions(user);
         });
-        justifyButton(button, Cursor.SEARCH);
         return button;
     }
     public void buttonFunctions(User rival){
