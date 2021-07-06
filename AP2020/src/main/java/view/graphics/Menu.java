@@ -25,7 +25,7 @@ public class Menu {
     private static Scene currentScene;
 
     public static void goToMenu(String menuName) {
-
+        //add Menu to menuName
     }
 
     public static Scene getScene(Parent root) {
