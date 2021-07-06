@@ -52,7 +52,8 @@ public class ChooseRival extends SearchMenu {
     protected void search(String searchText) {
         ArrayList<String> users = new ArrayList<>();
         for (User username: usernames) {
-            if (username.getUsername().contains(searchText)){
+            String userName = username.getUsername();
+            if (userName.contains(searchText)){
                 users.add(username.getUsername());
             }
         }

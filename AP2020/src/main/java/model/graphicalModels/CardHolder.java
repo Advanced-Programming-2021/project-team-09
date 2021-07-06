@@ -29,6 +29,10 @@ public class CardHolder extends Pane {
         setCardImage(card);
     }
 
+    public CardHolder() {
+        setCardImage(BACK_OF_CARD);
+    }
+
 
     public void setCardImage(Image card) {
         cardPlace.setImage(card);

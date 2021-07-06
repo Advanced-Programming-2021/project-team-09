@@ -5,6 +5,7 @@ import controller.LoginMenuController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -70,7 +71,7 @@ public class DuelMenu extends Menu {
     }
 
     public void goToMainMenu() {
-        //TODO SIA ADD MAIN MENU
+        goToMenu("Main");
     }
 
     public boolean checkPlayerDeck(){
@@ -103,7 +104,6 @@ public class DuelMenu extends Menu {
                 " -fx-border-radius: 15");
         label.setMinWidth(80);
         label.setMinHeight(45);
-
         Button hide = new Button("hide");
         hide.setCursor(javafx.scene.Cursor.HAND);
         hide.setStyle(" -fx-border-radius: 50;" +
@@ -142,6 +142,6 @@ public class DuelMenu extends Menu {
         return false;
     }
     public void goToDeck(){
-        //TODO SIA ADD DECK
+        goToMenu("Deck");
     }
 }

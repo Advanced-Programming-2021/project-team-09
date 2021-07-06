@@ -7,6 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 abstract public class ChoiceMenu extends SearchMenu {
@@ -83,8 +85,9 @@ abstract public class ChoiceMenu extends SearchMenu {
     }
 
     protected void updateChoiceBox() {
-        if (searchField.getText().length() == 0) resetChoiceBox();
-        else search(searchField.getText());
+        String text = searchField.getText();
+        if (text.length() == 0) resetChoiceBox();
+        else search(text);
     }
 
 

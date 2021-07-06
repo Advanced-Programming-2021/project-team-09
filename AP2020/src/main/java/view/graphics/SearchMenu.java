@@ -56,5 +56,4 @@ public abstract class SearchMenu extends Menu {
     protected void setStageLabel(int i) {
         stageCounter.setText(i + "/" + searchResults.size());
     }
-
 }
