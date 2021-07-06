@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -61,7 +62,25 @@ public class Menu {
     }
 
     public static Image getCardImage(String cardName) {
-        return getImage(cardName, "jpg");
+        return getImage("Cards/" + cardName, "jpg");
+    }
+
+    public static ImageView getImageWithSizeForGame(String cardName, double x, double y) {
+        ImageView ret = new ImageView(getCardImage(cardName));
+        ret.setFitHeight(100);
+        ret.setFitWidth(70);
+        ret.setX(x);
+        ret.setY(y);
+        return ret;
+    }
+
+    public static ImageView getImageWithSizeForGame(Image image, double x, double y) {
+        ImageView ret = new ImageView(image);
+        ret.setFitHeight(100);
+        ret.setFitWidth(70);
+        ret.setX(x);
+        ret.setY(y);
+        return ret;
     }
 
     public static void showMessage(String message) {
