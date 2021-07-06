@@ -86,7 +86,7 @@ public class GraphicalGameController {
         updateRivalMonsters();
         updateRivalSpells();
         // TODO: 7/4/2021 delete thses :
-        playerCards.getChildren().add(new ImageView(Menu.getCardImage("BattleOx")));
+        playerCards.getChildren().add(new ImageView(Menu.getCardImage("Battle OX")));
 //        movePlayerMonsterToGraveYard(0);
     }
 
