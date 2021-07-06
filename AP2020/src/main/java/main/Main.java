@@ -40,6 +40,7 @@ import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.ChooseMiniGame;
+import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.OneRoundGameGraphical;
 
 public class Main extends Application {
@@ -53,16 +54,11 @@ public class Main extends Application {
         stage.setResizable(false);
         
 //        Pane pane = new CardHolder();
-        BorderPane pane = (BorderPane) Menu.getNode("DeckMenu");
-//        BorderPane pane = (BorderPane) Menu.getNode("ProfileMenu");
-//        pane.setBackground(new Background(new BackgroundImage(WelcomeMenu.BG, BackgroundRepeat.NO_REPEAT,null, BackgroundPosition.CENTER,BackgroundSize.DEFAULT)));
-        stage.setScene(new Scene(pane,-1,-1,true));
-        Menu.setCurrentScene(stage.getScene());
-        pane.requestFocus();
+        new DuelMenu(0);
         stage.show();
-//        User user = ReadAndWriteDataBase.getUser("mir.json");
-//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-//        new OneRoundGameGraphical(user, user2);
+        User user = ReadAndWriteDataBase.getUser("mir.json");
+        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
 }

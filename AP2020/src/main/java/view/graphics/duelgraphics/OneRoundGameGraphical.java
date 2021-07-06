@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 public class OneRoundGameGraphical implements Initializable {
     private static Game game;
     private static GraphicalGameController graphicalGameController;
+    @FXML
     private Pane pane;
     @FXML
     private ImageView playerMonster0;
@@ -103,11 +104,9 @@ public class OneRoundGameGraphical implements Initializable {
                 playerSpells, playerSpell0, playerSpell1, playerSpell2, playerSpell3, playerSpell4);
         makeArrays(rivalSpells, rivalSpell0, rivalSpell1, rivalSpell2, rivalSpell3, rivalSpell4,
                 rivalMonsters, rivalMonster0, rivalMonster1, rivalMonster2, rivalMonster3, rivalMonster4);
-        rivalMonsters[0].setImage(null);
-        System.out.println(rivalMonsters[0].getImage());
         graphicalGameController = new GraphicalGameController(playerMonsters, playerSpells, rivalMonsters, rivalSpells,
                 playerCardBox, rivalCardBox, buttonsMenu, playerFieldSpell, playerGraveYard, rivalFieldSpell,
-                rivalGraveYard, game);
+                rivalGraveYard, game, pane);
     }
 
     private void makeArrays(ImageView[] rivalSpells, ImageView rivalSpell0, ImageView rivalSpell1, ImageView rivalSpell2,
