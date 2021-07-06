@@ -9,6 +9,7 @@ import controller.EffectController.Destroy;
 import controller.EffectController.MonsterEffectController;
 import controller.EffectController.SpellEffectController;
 import controller.GameMenuController;
+import controller.database.CSVInfoGetter;
 import model.exceptions.GameException;
 import model.game.Game;
 import model.card.monster.Monster;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 })
 
 public abstract class Card {
+    @JsonIgnore
+    private static final ArrayList<String> cards = CSVInfoGetter.getCardNames();
     protected String cardName;
     protected String description;
     protected CardType cardType;
@@ -109,6 +112,10 @@ public abstract class Card {
         }
     }
 
+    @JsonIgnore
+    public static ArrayList<String> getCardNames() {
+        return cards;
+    }
     public abstract String toString();
 
     public void setCardName(String cardName) {

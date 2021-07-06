@@ -45,13 +45,12 @@ public class AllCardsMenu extends ChoiceMenu implements Initializable {
         box.setSpacing(10);
         CardHolder holder = new CardHolder(getCard(cardName));
         Label name = getLabel(cardName, 150, 20);
-        name.setAlignment(Pos.CENTER);
         Label count = getLabel("#" + getNumberOfCards(cardName), 150, 20);
-        count.setAlignment(Pos.CENTER);
+//        box = (VBox) setDimension(box,150,260);
+        box.setPrefHeight(200);
+        box.setMinHeight(200);
         box.setPrefWidth(150);
-        box.setMaxWidth(150);
-        box.setPrefHeight(260);
-        box.setMaxWidth(260);
+        box.setMinWidth(150);
         box.getChildren().add(name);
         box.getChildren().add(holder);
         box.getChildren().add(count);
@@ -81,6 +80,7 @@ public class AllCardsMenu extends ChoiceMenu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         choiceBox.setSpacing(5);
+        setWidth(155);
         resetChoiceBox();
         cards = LoginMenuController.getCurrentUser().getCards();
         for (Card card : cards) choiceNames.add(card.getCardName());

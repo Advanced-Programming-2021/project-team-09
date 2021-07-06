@@ -46,7 +46,7 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         previewBox.setPrefWidth(0);
         choiceBox.setSpacing(5);
-        setWidth(107);
+        setWidth(105);
         for (Deck deck : LoginMenuController.getCurrentUser().getDecks()) choiceNames.add(deck.getDeckName());
         addToChoiceBox(choiceNames);
         searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
@@ -54,13 +54,13 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
     }
 
     @Override
-    protected void search(String searchText) {
+    public void search(String searchText) {
         resetBoxProperties(previewBox);
         super.search(searchText);
     }
 
     @Override
-    protected void addToChoiceBox(HashSet<String> matchingCards) {
+    public void addToChoiceBox(HashSet<String> matchingCards) {
         super.addToChoiceBox(matchingCards);
         VBox activeBox = getActiveDeckBox();
         if (activeBox == null) return;
@@ -72,8 +72,7 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         Deck deck = LoginMenuController.getCurrentUser().getDeckByName(result);
         VBox box = new VBox();
         box.setSpacing(5);
-        box.setPrefHeight(200);
-        box.setPrefWidth(100);
+        box = (VBox) setDimension(box,100,210);
         Label deckName = getLabel(result);
         Label side = getLabel("Side Deck:");
         Label sideSize = getLabel("#" + deck.getSideDeck().getCards().size());

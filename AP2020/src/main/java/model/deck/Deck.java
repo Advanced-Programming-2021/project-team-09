@@ -5,6 +5,7 @@ import model.card.Card;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Deck implements Cloneable {
     private MainDeck mainDeck;
@@ -117,6 +118,7 @@ public class Deck implements Cloneable {
     public void setSideDeck(SideDeck sideDeck) {
         this.sideDeck = sideDeck;
     }
+
 
     public Deck() {
 
