@@ -36,13 +36,6 @@ public class MainDeckMenu extends Menu implements Initializable {
     private Button editDeck;
 
 
-    public void previous(ActionEvent actionEvent) {
-
-    }
-
-    public void next(ActionEvent actionEvent) {
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setAllDecks();

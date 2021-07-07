@@ -5,6 +5,7 @@ import controller.LoginMenuController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,16 +29,17 @@ public class DuelMenu extends Menu {
     @FXML
     private Button back;
 
-    public DuelMenu(){
+    public DuelMenu() {
 
     }
-    public DuelMenu(int alaki){
+
+    public DuelMenu(int alaki) {
         AnchorPane anchorPane = (AnchorPane) Menu.getNode("DuelMenu");
         assert anchorPane != null;
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
     }
 
-    public void initialize(){
+    public void initialize() {
         justifyButton(SINGLE_PLAYER_1_ROUND, Cursor.SWORD);
         justifyButton(SINGLE_PLAYER_3_ROUND, Cursor.SWORD);
         justifyButton(MULTIPLAYER_1_ROUND, Cursor.SWORD);
@@ -45,54 +47,53 @@ public class DuelMenu extends Menu {
         back.setCursor(javafx.scene.Cursor.HAND);
     }
 
-    public void singlePlayerOneRound(){
-        if (checkPlayerDeck()){
+    public void singlePlayerOneRound() {
+        if (checkPlayerDeck()) {
 
         }
     }
-    public void singlePlayerThreeRound(){
-        if (checkPlayerDeck()){
+
+    public void singlePlayerThreeRound() {
+        if (checkPlayerDeck()) {
 
         }
     }
-    public void multiplayerOneRound(){
-        if (checkPlayerDeck()){
+
+    public void multiplayerOneRound() {
+        if (checkPlayerDeck()) {
             goToChooseRival();
         }
     }
-    public void multiplayerThreeRound(){
-        if (checkPlayerDeck()){
+
+    public void multiplayerThreeRound() {
+        if (checkPlayerDeck()) {
             goToChooseRival();
         }
     }
 
-    public void goToChooseRival(){
+    public void goToChooseRival() {
         new ChooseRival(0);
     }
 
     public void goToMainMenu() {
-        AnchorPane anchorPane = (AnchorPane) Menu.getNode("MainMenu");
-        assert anchorPane != null;
-        Main.stage.setScene(new Scene(anchorPane,600,400));
+        goToMenu("Main");
     }
 
-    public boolean checkPlayerDeck(){
+    public boolean checkPlayerDeck() {
         User player = LoginMenuController.getCurrentUser();
-        if (player.getActiveDeck() == null){
+        if (player.getActiveDeck() == null) {
             Popup noActiveDeckPopup = new Popup();
             HBox hBox = new HBox(10);
 
             Label label = new Label("you don't have any active deck!");
             return makePopUp(noActiveDeckPopup, hBox, label);
-        }
-        else if (!player.getActiveDeck().isValid()){
+        } else if (!player.getActiveDeck().isValid()) {
             Popup noValidDeckPopUp = new Popup();
             HBox hBox = new HBox(10);
             Label label = new Label("your deck is invalid");
 
             return makePopUp(noValidDeckPopUp, hBox, label);
-        }
-        else
+        } else
             return true;
     }
 
@@ -106,7 +107,6 @@ public class DuelMenu extends Menu {
                 " -fx-border-radius: 15");
         label.setMinWidth(80);
         label.setMinHeight(45);
-
         Button hide = new Button("hide");
         hide.setCursor(javafx.scene.Cursor.HAND);
         hide.setStyle(" -fx-border-radius: 50;" +
@@ -144,7 +144,8 @@ public class DuelMenu extends Menu {
         noValidDeckPopUp.show(Main.stage);
         return false;
     }
-    public void goToDeck(){
 
+    public void goToDeck() {
+        goToMenu("Deck");
     }
 }

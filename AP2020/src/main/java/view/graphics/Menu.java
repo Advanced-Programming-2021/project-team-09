@@ -21,10 +21,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class Menu {
+    private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
     private static Scene currentScene;
 
     public static void goToMenu(String menuName) {
-
+        //add Menu to menuName
     }
 
     public static Scene getScene(Parent root) {
@@ -99,7 +100,7 @@ public class Menu {
     }
 
     public static void enterButton(ButtonBase button, Cursor cursor, MouseEvent mouseEvent) {
-        button.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
+        button.setEffect(effect);
         changeCursor(cursor, mouseEvent);
     }
 
@@ -140,11 +141,15 @@ public class Menu {
         return label;
     }
 
+    public static Image getProfilePhoto(int number) {
+        return getImage("ProfilePhotos/Profile" + number, "png");
+    }
+
 
     protected void onSelectToggle(ToggleButton mainToggle, ToggleGroup group) {
         for (Toggle button : group.getToggles()) ((ToggleButton) button).setEffect(null);
         if (!mainToggle.isSelected()) mainToggle.setEffect(null);
-        else mainToggle.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
+        else mainToggle.setEffect(effect);
     }
 
     protected Pane setDimension(Pane parent,double width, double height) {
@@ -155,5 +160,8 @@ public class Menu {
         parent.setMinWidth(width);
         parent.setMaxHeight(width);
         return parent;
+    }
+
+    protected void mio() {
     }
 }

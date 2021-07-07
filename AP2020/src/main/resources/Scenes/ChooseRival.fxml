@@ -16,7 +16,7 @@
          <TextField id="searchbar" fx:id="profileName" alignment="CENTER" onKeyReleased="#getInput" promptText="Search..." style="-fx-background-radius: 11; -fx-cursor: hand; -fx-font-family: chalkboard;" />
       </VBox>
       <Label fx:id="stageCounter" alignment="CENTER" prefHeight="30.0" prefWidth="50.0" text="Label" textFill="WHITE" />
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="84.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true" scaleZ="-1.0">
+      <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="84.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true" scaleZ="-1.0">
          <Image url="@Images/ninja.png" />
       </ImageView>
       <Button layoutX="11.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#goToDuelMenu" prefHeight="45.0" prefWidth="45.0" style="-fx-background-radius: 50; -fx-background-color: black; -fx-cursor: hand;" text="back" textAlignment="CENTER" textFill="WHITE">

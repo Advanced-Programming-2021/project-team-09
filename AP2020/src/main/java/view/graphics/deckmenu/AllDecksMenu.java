@@ -2,18 +2,15 @@ package view.graphics.deckmenu;
 
 import controller.DeckMenuController;
 import controller.LoginMenuController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,7 +25,6 @@ import view.graphics.ChoiceMenu;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +34,14 @@ import java.util.ResourceBundle;
 public class AllDecksMenu extends ChoiceMenu implements Initializable {
     private final static Image DECK_PIC1 = getImage("DeckPicture1", "png");
     private final static Image DECK_PIC2 = getImage("DeckPicture2", "png");
+
+
+    @FXML
+    private ImageView lightBulb;
+    @FXML
+    private TextArea deckNameField;
+    @FXML
+    private Button createDeck;
 
     @FXML
     private HBox previewBox;
@@ -51,6 +55,28 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         addToChoiceBox(choiceNames);
         searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
         decisionBox.setSpacing(10);
+        lightBulb.setImage(getImage("Bulb", "png"));
+        deckNameField.textProperty().addListener((observableValue, s, t1) -> setCreateButton(t1));
+        setCreateButton("");
+    }
+
+    private void setCreateButton(String deckName) {
+        if (deckName.equals("") || LoginMenuController.getCurrentUser().doesDeckExist(deckName)) {
+            createDeck.setOnAction(actionEvent -> mio());
+            createDeck.setText("Mio");
+            justifyButton(createDeck,Cursor.CANCEL);
+            return;
+        }
+        createDeck.setText("Create!");
+        createDeck.setOnAction(actionEvent -> createDeck(deckName));
+        justifyButton(createDeck,Cursor.ACCEPT);
+    }
+
+    private void createDeck(String deckName) {
+        System.out.println(DeckMenuController.createDeck(deckName));
+        choiceNames.add(deckName);
+        updateChoiceBox();
+        emptyDecisionBox();
     }
 
     @Override
@@ -72,7 +98,7 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         Deck deck = LoginMenuController.getCurrentUser().getDeckByName(result);
         VBox box = new VBox();
         box.setSpacing(5);
-        box = (VBox) setDimension(box,100,210);
+        box = (VBox) setDimension(box, 100, 210);
         Label deckName = getLabel(result);
         Label side = getLabel("Side Deck:");
         Label sideSize = getLabel("#" + deck.getSideDeck().getCards().size());
@@ -127,8 +153,8 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(new File("src/main/resources/Scenes/EditDeckMenu.fxml").toURI().toURL());
             AnchorPane pane = loader.load();
-            ((EditDeckMenu)loader.getController()).setDeck(deck);
-            ((BorderPane)Main.stage.getScene().getRoot()).setCenter(pane);
+            ((EditDeckMenu) loader.getController()).setDeck(deck);
+            ((BorderPane) Main.stage.getScene().getRoot()).setCenter(pane);
         } catch (IOException e) {
             e.printStackTrace();
         }

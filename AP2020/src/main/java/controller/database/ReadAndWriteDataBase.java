@@ -65,7 +65,8 @@ public class ReadAndWriteDataBase {
         userAddrs = usersDirectory.list();
         if (userAddrs == null) return users;
         for (String userAddr : userAddrs) {
-            users.add(ReadAndWriteDataBase.getUser(userAddr));
+            User user = ReadAndWriteDataBase.getUser(userAddr);
+            if (user != null)users.add(user);
         }
         return users;
     }
