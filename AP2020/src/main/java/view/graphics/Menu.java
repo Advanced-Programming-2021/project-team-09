@@ -15,7 +15,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import model.enums.Cursor;
 import model.enums.Media;
@@ -187,14 +186,16 @@ public class Menu {
 
     public static void showAlert(String message) {
         try {
-            Popup popup = new Popup();
             FXMLLoader loader = new FXMLLoader(ALERT_FILE.toURI().toURL());
             Parent alert = loader.load();
             AlertController controller = loader.getController();
             controller.setText(message);
-            controller.setPopup(popup);
-            popup.getContent().add(alert);
-            popup.show(getMainStage());
+            Stage stage = new Stage();
+            Scene scene = new Scene(alert,-1,-1,true);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+            controller.setStage(stage);
+            controller.showPopUp();
         } catch (IOException e) {
             e.printStackTrace();
         }

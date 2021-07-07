@@ -1,4 +1,5 @@
 package model.enums;
 
-public class Media {
+public enum Media {
+    ALERT;
 }
