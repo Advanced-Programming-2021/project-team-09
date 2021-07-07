@@ -328,7 +328,7 @@ public class GraphicalGameController {
         options.getChildren().addAll(NEXT_PHASE, SURRENDER);
     }
 
-    public void summon() {
+    public void summon(MouseEvent event) {
         // TODO: 7/7/2021
     }
     
