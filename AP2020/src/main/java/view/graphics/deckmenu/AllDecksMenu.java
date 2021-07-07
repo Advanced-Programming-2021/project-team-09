@@ -158,15 +158,14 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void activateDeck(VBox box) {
         DeckMenuController.activateDeck(((Label) box.getChildren().get(0)).getText());
         updateChoiceBox();
+        setOptionsInDecisionBox(box);
         resetBoxProperties(previewBox);
     }
-
 
     private void deleteDeck(String deckName) {
         DeckMenuController.deleteDeck(deckName);

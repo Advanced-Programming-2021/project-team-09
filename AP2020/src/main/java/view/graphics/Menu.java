@@ -15,17 +15,24 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import model.enums.Cursor;
+import model.enums.Media;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Menu {
     private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
+    private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
     private static Scene currentScene;
+    private static Stage mainStage;
 
     public static void goToMenu(String menuName) {
-        //add Menu to menuName
+        Parent root = getNode(menuName + "Menu");
+        Scene scene = new Scene(root,-1,-1,true);
+        Menu.setCurrentScene(scene);
+        mainStage.setScene(scene);
     }
 
     public static Scene getScene(Parent root) {
@@ -129,7 +136,7 @@ public class Menu {
         return label;
     }
 
-    public static Label getLabel(String text, double width, double height,double fontSize) {
+    public static Label getLabel(String text, double width, double height, double fontSize) {
         Label label = new Label(text);
         label.setPrefWidth(width);
         label.setMaxWidth(width);
@@ -137,7 +144,7 @@ public class Menu {
         label.setMaxHeight(height);
         label.setTextAlignment(TextAlignment.CENTER);
         label.setAlignment(Pos.CENTER);
-        label.setFont(new Font("chalkboard",fontSize));
+        label.setFont(new Font("chalkboard", fontSize));
         return label;
     }
 
@@ -152,7 +159,7 @@ public class Menu {
         else mainToggle.setEffect(effect);
     }
 
-    protected Pane setDimension(Pane parent,double width, double height) {
+    protected Pane setDimension(Pane parent, double width, double height) {
         parent.setPrefHeight(height);
         parent.setMinHeight(height);
         parent.setMaxHeight(height);
@@ -163,5 +170,34 @@ public class Menu {
     }
 
     protected void mio() {
+    }
+
+    public static void setStage(Stage stage) {
+        mainStage = stage;
+    }
+
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
+    public static void playMedia(Media media) {
+
+    }
+
+    public static void showAlert(String message) {
+        try {
+            FXMLLoader loader = new FXMLLoader(ALERT_FILE.toURI().toURL());
+            Parent alert = loader.load();
+            AlertController controller = loader.getController();
+            controller.setText(message);
+            Stage stage = new Stage();
+            Scene scene = new Scene(alert,-1,-1,true);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+            controller.setStage(stage);
+            controller.showPopUp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

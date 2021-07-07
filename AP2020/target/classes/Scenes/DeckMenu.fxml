@@ -9,26 +9,23 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="view.graphics.deckmenu.MainDeckMenu">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.MainDeckMenu">
     <top>
-        <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0"
-                 prefWidth="640.0" style="-fx-background-radius: 7;" BorderPane.alignment="CENTER">
+        <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="640.0" style="-fx-background-radius: 7;" BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close"/>
+                        <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About"/>
+                        <MenuItem mnemonicParsing="false" text="About" />
                     </items>
                 </Menu>
             </menus>
@@ -37,27 +34,20 @@
     <bottom>
         <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0"
-                        text="All Cards">
+                <Button fx:id="allCardsButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Cards">
                     <HBox.margin>
-                        <Insets left="125.0"/>
+                        <Insets left="195.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="allDecksButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0"
-                        text="All Decks">
+                <Button fx:id="allDecksButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="All Decks">
                     <HBox.margin>
-                        <Insets left="20.0"/>
-                    </HBox.margin>
-                </Button>
-                <Button fx:id="editDeck" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" text="Edit Deck">
-                    <HBox.margin>
-                        <Insets left="20.0"/>
+                        <Insets left="20.0" />
                     </HBox.margin>
                 </Button>
             </children>
         </HBox>
     </bottom>
     <stylesheets>
-        <URL value="@StyleSheets/SearchMenus.css"/>
+        <URL value="@StyleSheets/SearchMenus.css" />
     </stylesheets>
 </BorderPane>
