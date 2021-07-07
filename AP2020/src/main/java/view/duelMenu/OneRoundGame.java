@@ -751,7 +751,7 @@ public class OneRoundGame {
                 "attack direct\n" +
                 "active effect\n" +
                 "show graveyard\n" +
-                "show to graveyard -r\n" +
+                "show graveyard -r\n" +
                 "send to graveyard\n" +
                 "show all hand cards\n" +
                 "card show --selected\n" +
