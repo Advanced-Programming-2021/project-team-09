@@ -74,6 +74,10 @@ public class GraphicalGameController {
     private final ImageView playerGraveYard;
     private final ImageView rivalFieldSpell;
     private final ImageView rivalGraveYard;
+    private final Label playerName;
+    private final Label playerHealth;
+    private final Label rivalName;
+    private final Label rivalHealth;
     private final Game game;
     private Phase currentPhase = Phase.DRAW_PHASE;
     //private final boolean[][] isSelected = new boolean[4][5]; // 1: playerMonster, 2 : playerSpells, 3 : rivalmonster, 4 : rivalSpells
@@ -82,7 +86,8 @@ public class GraphicalGameController {
                                    ImageView[] rivalMonsters, ImageView[] rivalSpells,
                                    HBox playerCards, HBox rivalCards, VBox options,
                                    ImageView playerFieldSpell, ImageView playerGraveYard,
-                                   ImageView rivalFieldSpell, ImageView rivalGraveYard, Game game, Pane pane) {
+                                   ImageView rivalFieldSpell, ImageView rivalGraveYard, Game game, Pane pane,
+                                   Label playerName, Label playerHealth, Label rivalName, Label rivalHealth) {
         this.pane = pane;
         this.playerMonsters = playerMonsters;
         this.playerSpells = playerSpells;
@@ -95,10 +100,23 @@ public class GraphicalGameController {
         this.playerGraveYard = playerGraveYard;
         this.rivalFieldSpell = rivalFieldSpell;
         this.rivalGraveYard = rivalGraveYard;
+        this.playerName = playerName;
+        this.playerHealth = playerHealth;
+        this.rivalName = rivalName;
+        this.rivalHealth = rivalHealth;
         this.game = game;
         setImageFunctionality();
         loadCardHands();
+        loadNames();
         updateWithoutTransition();
+    }
+
+    // only in the beginning of the game
+    private void loadNames() {
+        playerName.setText(game.getPlayer().getNickname());
+        playerHealth.setText(game.getPlayerLP() + "");
+        rivalName.setText(game.getRival().getNickname());
+        rivalHealth.setText(game.getRivalLP() + "");
     }
 
     // only in the beginning of the game
@@ -119,6 +137,7 @@ public class GraphicalGameController {
         }
     }
 
+    // doesnt work for hand cards ..
     private void setImageFunctionality() {
         ArrayList<ImageView> images = new ArrayList<>(Arrays.asList(playerMonsters));
         images.addAll(Arrays.asList(playerSpells));
@@ -159,6 +178,7 @@ public class GraphicalGameController {
         } else if (rivalGraveYardIsSelected()) {
             rivalGraveYardButtons();
         }
+        // todo hand cards
     }
 
     private void removeOptions() {
@@ -381,7 +401,7 @@ public class GraphicalGameController {
         try {
             GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, attacker + 1);
         } catch (WinnerException winnerException) {
-            // TODO: 7/7/2021  
+            // TODO: 7/7/2021
         }
     }
     
@@ -578,7 +598,62 @@ public class GraphicalGameController {
     }
 
     public void updateWithoutTransition() {
-        // TODO: 7/7/2021
+        for (int i = rivalCards.getChildren().size() - 1; i >= 0; i--) {
+            rivalCards.getChildren().remove(i);
+        }
+        for (int i = playerCards.getChildren().size() - 1; i >= 0; i--) {
+            playerCards.getChildren().remove(i);
+        }
+        playerHealth.setText(String.valueOf(game.getPlayerLP()));
+        rivalHealth.setText(String.valueOf(game.getRivalLP()));
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        for (Card card : cards) {
+            playerCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
+        }
+        cards = game.getRivalHandCards();
+        for (Card card : cards) {
+            rivalCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
+        }
+        Cell[] cells = game.getPlayerBoard().getMonsterZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].isOccupied()) {
+                if (!(playerMonsters[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                    playerMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                }
+            } else {
+                playerMonsters[i].setImage(null);
+            }
+        }
+        cells = game.getPlayerBoard().getSpellZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].isOccupied()) {
+                if (!(playerSpells[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                    playerSpells[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                }
+            } else {
+                playerSpells[i].setImage(null);
+            }
+        }
+        cells = game.getRivalBoard().getMonsterZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].isOccupied()) {
+                if (!(rivalMonsters[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                    rivalMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                }
+            } else {
+                rivalMonsters[i].setImage(null);
+            }
+        }
+        cells = game.getRivalBoard().getSpellZone();
+        for (int i = 0; i < 5; i++) {
+            if (cells[i].isOccupied()) {
+                if (!(rivalSpells[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                    rivalSpells[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                }
+            } else {
+                rivalSpells[i].setImage(null);
+            }
+        }
     }
 
     private class MoveTransition extends Transition {
