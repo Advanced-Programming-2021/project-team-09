@@ -30,6 +30,7 @@ package main;//import controller.database.CSVInfoGetter;
 //    }
 //}
 
+import controller.GraphicalGameController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
 import javafx.application.Application;
@@ -64,8 +65,9 @@ public class Main extends Application {
 //        Pane pane = new CardHolder();
 //        new DuelMenu(0);
 //        stage.show();
-//        User user = ReadAndWriteDataBase.getUser("mir.json");
-//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+        User user = ReadAndWriteDataBase.getUser("mir.json");
+        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
