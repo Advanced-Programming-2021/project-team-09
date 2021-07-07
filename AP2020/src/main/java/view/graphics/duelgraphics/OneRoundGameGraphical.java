@@ -5,6 +5,7 @@ import controller.GraphicalGameController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -84,6 +85,14 @@ public class OneRoundGameGraphical implements Initializable {
     private ImageView rivalFieldSpell;
     @FXML
     private ImageView rivalGraveYard;
+    @FXML
+    private Label playerName;
+    @FXML
+    private Label playerHealth;
+    @FXML
+    private Label rivalName;
+    @FXML
+    private Label rivalHealth;
 
     public OneRoundGameGraphical() {
 
@@ -106,7 +115,7 @@ public class OneRoundGameGraphical implements Initializable {
                 rivalMonsters, rivalMonster0, rivalMonster1, rivalMonster2, rivalMonster3, rivalMonster4);
         graphicalGameController = new GraphicalGameController(playerMonsters, playerSpells, rivalMonsters, rivalSpells,
                 playerCardBox, rivalCardBox, buttonsMenu, playerFieldSpell, playerGraveYard, rivalFieldSpell,
-                rivalGraveYard, game, pane);
+                rivalGraveYard, game, pane, playerName, playerHealth, rivalName, rivalHealth);
     }
 
     private void makeArrays(ImageView[] rivalSpells, ImageView rivalSpell0, ImageView rivalSpell1, ImageView rivalSpell2,

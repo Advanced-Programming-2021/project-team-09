@@ -12,15 +12,15 @@
       <URL value="@StyleSheets/MiniGameMenus.css" />
    </stylesheets>
    <children>
-      <Label alignment="TOP_CENTER" layoutX="206.0" layoutY="14.0" style="-fx-background-color: Transparent;" text="Here you can choose your mini game !" textAlignment="CENTER" wrapText="true" />
-      <HBox layoutY="343.0" prefHeight="57.0" prefWidth="600.0" style="-fx-background-color: #001f7f44;">
+      <Label alignment="TOP_CENTER" layoutX="177.0" layoutY="14.0" style="-fx-background-color: Transparent;" text="Here you can choose your mini game !" textAlignment="CENTER" wrapText="true" />
+      <HBox layoutY="343.0" prefHeight="57.0" prefWidth="600.0" style="-fx-background-color: transparent;">
          <children>
-            <Button fx:id="chooseCoin" mnemonicParsing="false" prefHeight="58.0" prefWidth="212.0" style="-fx-background-color: Transparent;" text="Coin" />
-            <Button fx:id="chooseDice" mnemonicParsing="false" prefHeight="58.0" prefWidth="194.0" style="-fx-background-color: Transparent;" text="Dice" />
-            <Button fx:id="chooseRock" mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: transparent;" text="Rock Paper scissors" />
+            <Button fx:id="chooseCoin" mnemonicParsing="false" prefHeight="58.0" prefWidth="212.0" />
+            <Button fx:id="chooseDice" mnemonicParsing="false" prefHeight="58.0" prefWidth="194.0" />
+            <Button fx:id="chooseRock" mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0" />
          </children>
       </HBox>
-      <Button fx:id="go" defaultButton="true" layoutX="261.0" layoutY="234.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" style="-fx-background-color: #11af4455; -fx-background-radius: 10px;" text="Go !" />
+      <Button fx:id="go" defaultButton="true" layoutX="259.0" layoutY="234.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" style="-fx-background-color: #11af4455; -fx-background-radius: 10px;" text="Go !" />
       <Label fx:id="playerName" layoutX="57.0" layoutY="45.0" textAlignment="CENTER" textFill="#3bdf59" wrapText="true" />
       <Label fx:id="rivalName" layoutX="522.0" layoutY="45.0" textAlignment="CENTER" textFill="#e72626" wrapText="true" />
       <Label fx:id="mode" layoutX="286.0" layoutY="85.0" style="-fx-background-color: transparent;" textAlignment="CENTER" wrapText="true" />

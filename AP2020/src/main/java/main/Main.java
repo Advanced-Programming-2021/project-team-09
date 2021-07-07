@@ -55,7 +55,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        LoginMenuController.login("mmd","m");
+        LoginMenuController.login("mir","mir");
         Main.stage = stage;
 //        stage.initStyle(StageStyle.TRANSPARENT);
         Menu.setStage(stage);
