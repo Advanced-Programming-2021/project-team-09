@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -14,14 +15,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.card.Card;
+import model.deck.Graveyard;
+import model.exceptions.GameException;
+import model.exceptions.WinnerException;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
+import view.responses.GameMenuResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +46,7 @@ public class GraphicalGameController {
     private final Button SET_ATTACK_POSITION = new Button("Set Attack!");
     private final Button SET_DEFENSE_POSITION = new Button("Set Defense!");
     private final Button SURRENDER = new Button("Surrender!");
+    private final Button SUMMON = new Button("Summon!");
     {
         ATTACK.setOnMouseClicked(this::attack);
         DIRECT_ATTACK.setOnMouseClicked(this::directAttack);
@@ -52,6 +59,7 @@ public class GraphicalGameController {
         SET_ATTACK_POSITION.setOnMouseClicked(this::setAttackPosition);
         SET_DEFENSE_POSITION.setOnMouseClicked(this::setDefensePosition);
         SURRENDER.setOnMouseClicked(this::surrender);
+        SUMMON.setOnMouseClicked(this::summon);
     }
 
     private final Pane pane;
@@ -90,8 +98,6 @@ public class GraphicalGameController {
         this.game = game;
         setImageFunctionality();
         loadCardHands();
-        // TODO: 7/7/2021 remove
-        game.getPlayerBoard().getMonsterZone(1).addCard(CSVInfoGetter.getCardByName("Battle OX"));
         updateWithoutTransition();
     }
 
@@ -301,13 +307,82 @@ public class GraphicalGameController {
         if (game.getRivalBoard().getFieldZone().isOccupied()) options.getChildren().add(SHOW_CARD);
         options.getChildren().addAll(NEXT_PHASE, SURRENDER);
     }
+
+    public void summon() {
+        // TODO: 7/7/2021
+    }
     
     public void attack(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int attacker = -1;
+        for (int i = 0; i < 5; i++) {
+            if (playerMonsters[i].getEffect() != null) {
+                attacker = i;
+            }
+        }
+        if (attacker == -1) return;
+        final int attackFinal = attacker;
+        Rectangle rectangle = new Rectangle();
+        rectangle.setStyle("-fx-background-color: rgba(255,255,255,0.5)");
+        rectangle.setHeight(700);
+        rectangle.setWidth(700);
+        rectangle.setX(0);
+        rectangle.setY(0);
+        pane.getChildren().add(rectangle);
+        ImageView[] images = new ImageView[5];
+        for (int i = 0; i <5; i++) {
+            images[i] = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), 75*i + 200, 200);
+            pane.getChildren().add(images[i]);
+        }
+        Button attackBtn = new Button("Attack");
+        pane.getChildren().add(attackBtn);
+        rectangle.setOnMouseClicked(mouseEvent1 -> {
+            pane.getChildren().removeAll(Arrays.asList(images));
+            pane.getChildren().removeAll(rectangle, attackBtn);
+        });
+        attackBtn.setDisable(true);
+        for (ImageView image : images) {
+            image.setOnMouseClicked(mouseEvent1 -> {
+                attackBtn.setDisable(false);
+                for (ImageView imageView : images) {
+                    imageView.setEffect(null);
+                }
+                if (((ImageView)mouseEvent1.getSource()).getImage() != null)
+                    ((ImageView)mouseEvent1.getSource()).setEffect(new DropShadow(40, Color.GREEN));
+            });
+        }
+        attackBtn.setOnMouseClicked(mouseEvent1 -> {
+            int defender = -1;
+            for (int i = 0; i < 5; i++) {
+                if (images[i].getEffect() != null) defender = i;
+            }
+            if (defender == -1) return;
+            if (!game.getRivalBoard().getMonsterZone(defender).isOccupied()) return;
+            pane.getChildren().removeAll(Arrays.asList(images));
+            pane.getChildren().removeAll(rectangle, attackBtn);
+            getSelectedImageView().setEffect(null);
+            removeOptions();
+            try {
+                GameMenuResponse gameMenuResponse = GameMenuController.attack(game, attackFinal + 1, defender + 1, false);
+                // TODO: 7/7/2021
+            } catch (GameException gameException) {
+                if (gameException instanceof WinnerException) ; // TODO: 7/7/2021
+            }
+        });
     }
     
     public void directAttack(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int attacker = -1;
+        for (int i = 0; i < 5; i++) {
+            if (playerMonsters[i].getEffect() != null) {
+                attacker = i;
+            }
+        }
+        if (attacker == -1) return;
+        try {
+            GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, attacker + 1);
+        } catch (WinnerException winnerException) {
+            // TODO: 7/7/2021  
+        }
     }
     
     public void set(MouseEvent mouseEvent) {
@@ -364,7 +439,79 @@ public class GraphicalGameController {
     }
     
     public void showGraveYard(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021
+        if (playerGraveYard.getEffect() != null) {
+            Rectangle rectangle = new Rectangle();
+            rectangle.setFill(Paint.valueOf("WHITE"));
+            rectangle.setOpacity(0.36);
+            rectangle.setHeight(700);
+            rectangle.setWidth(700);
+            rectangle.setX(0);
+            rectangle.setY(0);
+            if (game.getPlayerBoard().getGraveyard().getCards().size() == 0) {
+                ImageView imageView = new ImageView(getSelectedImageView().getImage());
+                imageView.setX(280);
+                imageView.setY(200);
+                imageView.setFitWidth(140);
+                imageView.setFitHeight(200);
+                pane.getChildren().addAll(rectangle, imageView);
+                EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle);
+                rectangle.setOnMouseClicked(eventHandler);
+                imageView.setOnMouseClicked(eventHandler);
+            } else {
+                Label label = new Label("1/" + game.getPlayerBoard().getGraveyard().getCards().size());
+                label.setStyle("-fx-text-fill: green; -fx-font-size: 20px; -fx-background-color: rgba(255,255,255,0.44)");
+                label.setLayoutX(340);
+                label.setLayoutY(130);
+                ImageView imageView = new ImageView(Menu.getCard(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(0).getCardName())));
+                imageView.setX(280);
+                imageView.setY(200);
+                imageView.setFitWidth(140);
+                imageView.setFitHeight(200);
+                pane.getChildren().addAll(rectangle, imageView, label);
+                EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle, label);
+                rectangle.setOnMouseClicked(eventHandler);
+                imageView.setOnMouseClicked(event -> {
+                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0])%game.getPlayerBoard().getGraveyard().getCards().size()).getCardName())));
+                    label.setText(((Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()) + 1) + "/" + game.getPlayerBoard().getGraveyard().getCards().size());
+                });
+            }
+        } else if (rivalGraveYard.getEffect() != null) {
+            Rectangle rectangle = new Rectangle();
+            rectangle.setFill(Paint.valueOf("WHITE"));
+            rectangle.setOpacity(0.36);
+            rectangle.setHeight(700);
+            rectangle.setWidth(700);
+            rectangle.setX(0);
+            rectangle.setY(0);
+            if (game.getRivalBoard().getGraveyard().getCards().size() == 0) {
+                ImageView imageView = new ImageView(getSelectedImageView().getImage());
+                imageView.setX(280);
+                imageView.setY(200);
+                imageView.setFitWidth(140);
+                imageView.setFitHeight(200);
+                pane.getChildren().addAll(rectangle, imageView);
+                EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle);
+                rectangle.setOnMouseClicked(eventHandler);
+                imageView.setOnMouseClicked(eventHandler);
+            } else {
+                Label label = new Label("1/" + game.getRivalBoard().getGraveyard().getCards().size());
+                label.setStyle("-fx-text-fill: green; -fx-font-size: 20px; -fx-background-color: rgba(255,255,255,0.44)");
+                label.setLayoutX(340);
+                label.setLayoutY(130);
+                ImageView imageView = new ImageView(Menu.getCard(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(0).getCardName())));
+                imageView.setX(280);
+                imageView.setY(200);
+                imageView.setFitWidth(140);
+                imageView.setFitHeight(200);
+                pane.getChildren().addAll(rectangle, imageView, label);
+                EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle, label);
+                rectangle.setOnMouseClicked(eventHandler);
+                imageView.setOnMouseClicked(event -> {
+                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0])%game.getRivalBoard().getGraveyard().getCards().size()).getCardName())));
+                    label.setText(((Integer.parseInt(label.getText().split("/")[0]) % game.getRivalBoard().getGraveyard().getCards().size()) + 1) + "/" + game.getRivalBoard().getGraveyard().getCards().size());
+                });
+            }
+        }
     }
     
     public void setAttackPosition(MouseEvent mouseEvent) {
@@ -431,7 +578,7 @@ public class GraphicalGameController {
     }
 
     public void updateWithoutTransition() {
-
+        // TODO: 7/7/2021
     }
 
     private class MoveTransition extends Transition {
