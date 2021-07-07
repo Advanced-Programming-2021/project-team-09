@@ -54,10 +54,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        LoginMenuController.login("mmd","m");
+        LoginMenuController.login("mir","mir");
         Main.stage = stage;
         stage.setResizable(false);
-        Parent pane = Menu.getNode("ScoreboardMenu");
+        Parent pane = Menu.getNode("DuelMenu");
         Scene scene = new Scene(pane,-1,-1,true);
         Menu.setCurrentScene(scene);
         stage.setScene(scene);
@@ -67,7 +67,7 @@ public class Main extends Application {
 //        stage.show();
         User user = ReadAndWriteDataBase.getUser("mir.json");
         User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        new OneRoundGameGraphical(user, user2);
+        //new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }

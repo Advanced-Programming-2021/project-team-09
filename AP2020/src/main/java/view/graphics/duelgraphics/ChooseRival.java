@@ -30,7 +30,7 @@ public class ChooseRival extends SearchMenu {
     private VBox searchBox;
 
     public static ArrayList<User> usernames = ReadAndWriteDataBase.getAllUsers();
-
+    private ArrayList<Button> buttons = new ArrayList<>();
     public ChooseRival() {
 
     }
@@ -110,58 +110,66 @@ public class ChooseRival extends SearchMenu {
             assert user != null;
             buttonFunctions(user);
         });
+        buttons.add(button);
         return button;
     }
 
     public void buttonFunctions(User rival) {
         if (rival.getActiveDeck() == null) {
             Popup noActiveDeckPopup = new Popup();
-            HBox hBox = new HBox(10);
-            hBox.setStyle(" -fx-background-color: white;" +
-                    " -fx-border-color: grey;" +
-                    " -fx-border-radius: 13;");
+            VBox vBox = new VBox(10);
             Label label = new Label(rival.getUsername() + " has no active deck");
-            makePopUp(noActiveDeckPopup, hBox, label);
+            makePopUp(noActiveDeckPopup, vBox, label);
         } else if (!rival.getActiveDeck().isValid()) {
             Popup noValidDeckPopUp = new Popup();
-            HBox hBox = new HBox(10);
-            hBox.setStyle(" -fx-background-color: white;" +
-                    " -fx-background-radius: 13;" +
-                    " -fx-border-color: grey;" +
-                    " -fx-border-radius: 13;");
+            VBox vBox = new VBox(10);
             Label label = new Label(rival.getUsername() + "'s deck is invalid");
-            makePopUp(noValidDeckPopUp, hBox, label);
+            makePopUp(noValidDeckPopUp, vBox, label);
         } else {
             new ChooseMiniGame(LoginMenuController.getCurrentUser(), rival);
         }
     }
 
-    private void makePopUp(Popup noActiveDeckPopup, HBox hBox, Label label) {
+    private void makePopUp(Popup noActiveDeckPopup, VBox vBox, Label label) {
+        vBox.setStyle(" -fx-background-color: white;" +
+                " -fx-background-radius: 13;" +
+                " -fx-border-color: grey;" +
+                " -fx-border-radius: 13;");
+        ImageView imageView = new ImageView();
+        imageView.setImage(Menu.getImage("confusedNinja", "png"));
+        disableButtons(true);
         label.setStyle(" -fx-background-color: transparent;" +
+                "-fx-background-radius: 13;" +
                 " -fx-font-family: Chalkboard;" +
                 " -fx-text-fill: black;" +
-                " -fx-border-radius: 15");
-        label.setMinWidth(80);
+                " -fx-border-radius: 15;" +
+                "-fx-wrap-text: true");
+        label.setMaxWidth(80);
         label.setMinHeight(45);
-        label.setTranslateY(-15);
-        label.setTranslateX(25);
+        label.setTranslateX(10);
         Button hide = new Button("hide");
-        hide.setTranslateY(20);
-        hide.setTranslateX(-60);
         hide.setCursor(javafx.scene.Cursor.HAND);
         hide.setStyle(" -fx-border-radius: 50;" +
                 " -fx-font-family: Chalkboard;" +
                 " -fx-text-fill: white;" +
-                " -fx-background-color: black;");
+                " -fx-background-color: black;" +
+                " -fx-background-radius: 50;");
         hide.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
+                disableButtons(false);
                 noActiveDeckPopup.hide();
             }
         });
-        hBox.getChildren().addAll(label, hide);
-        noActiveDeckPopup.getContent().add(hBox);
+        vBox.getChildren().addAll(label, imageView, hide);
+        noActiveDeckPopup.getContent().add(vBox);
         noActiveDeckPopup.show(Main.stage);
+    }
+
+    public void disableButtons(boolean isDisable){
+        for (Button button:buttons) {
+            button.setDisable(isDisable);
+        }
     }
 }
