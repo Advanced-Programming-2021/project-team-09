@@ -32,17 +32,13 @@ public class MainDeckMenu extends Menu implements Initializable {
     private Button allDecksButton;
     @FXML
     private Button allCardsButton;
-    @FXML
-    private Button editDeck;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setAllDecks();
         justifyButton(allCardsButton, Cursor.ALL_CARDS);
-        justifyButton(editDeck, Cursor.EDIT);
         justifyButton(allDecksButton, Cursor.CREATE_DECK);
-        editDeck.setOnAction(actionEvent -> setEditDeck());
         allDecksButton.setOnAction(actionEvent -> setAllDecks());
         allCardsButton.setOnAction(actionEvent -> setAllCards());
     }
@@ -53,11 +49,6 @@ public class MainDeckMenu extends Menu implements Initializable {
 
     private void setAllDecks() {
         mainPane.setCenter(getNode("AllDecksMenu"));
-    }
-
-
-    private void setEditDeck() {
-        mainPane.setCenter(getNode("AllCards"));
     }
 
 

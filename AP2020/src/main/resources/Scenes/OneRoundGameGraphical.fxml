@@ -2,6 +2,7 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -206,6 +207,10 @@
       <HBox fx:id="playerCardBox" layoutX="92.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
       <HBox fx:id="rivalCardBox" layoutX="153.0" opacity="0.76" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
       <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="110.0" opacity="0.86" prefHeight="590.0" prefWidth="141.0" style="-fx-background-color: white;" />
+      <Label fx:id="rivalName" alignment="CENTER" layoutX="5.0" layoutY="7.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="rivalHealth" alignment="CENTER" layoutX="5.0" layoutY="37.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerHealth" alignment="CENTER" layoutX="6.0" layoutY="592.0" prefHeight="30.0" prefWidth="83.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerName" alignment="CENTER" layoutX="9.0" layoutY="627.0" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
    </children>
     <stylesheets>
         <URL value="@StyleSheets/OneRoundGraphical.css" />

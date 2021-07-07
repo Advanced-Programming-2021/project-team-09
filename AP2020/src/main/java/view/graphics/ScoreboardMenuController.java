@@ -35,7 +35,7 @@ import static view.graphics.MainMenuController.HAPPY_FACE_IMG;
 import static view.graphics.MainMenuController.NORMAL_FACE_IMG;
 
 public class ScoreboardMenuController extends SearchMenu implements Initializable {
-    public static final Image SAD_BABE_IMG = getImage("SadBabe","jpg");
+    public static final Image SAD_BABE_IMG = getImage("SadBabe","png");
     private final ArrayList<User> users = ScoreboardController.getSortedUsers();
     private final ArrayList<String> usernames = new ArrayList<>();
     private final HashMap<String, Parent> userOptions = new HashMap<>();
@@ -44,6 +44,7 @@ public class ScoreboardMenuController extends SearchMenu implements Initializabl
     private HBox currentUserBox;
     private User currentUser = LoginMenuController.getCurrentUser();
     private int currentPoint = currentUser.getScore();
+    private final static File FILE = new File("src/main/resources/Scenes/ScoreboardOption.fxml");
 
     @FXML private Button minusButton;
     @FXML private Button plusButton;
@@ -136,7 +137,7 @@ public class ScoreboardMenuController extends SearchMenu implements Initializabl
 
     public Parent getScoreboardOption(User user, int rank) {
         try {
-            FXMLLoader loader = new FXMLLoader(new File("src/main/resources/Scenes/ScoreboardOption.fxml").toURI().toURL());
+            FXMLLoader loader = new FXMLLoader(FILE.toURI().toURL());
             HBox parent = loader.load();
             ScoreboardOptionCreator controller = loader.getController();
             controller.setProfileCircle(user.getProfilePhoto());

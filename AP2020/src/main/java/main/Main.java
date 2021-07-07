@@ -56,18 +56,17 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         LoginMenuController.login("mir","mir");
         Main.stage = stage;
+        Menu.setStage(stage);
         stage.setResizable(false);
-        Parent pane = Menu.getNode("DuelMenu");
-        Scene scene = new Scene(pane,-1,-1,true);
-        Menu.setCurrentScene(scene);
-        stage.setScene(scene);
+        Menu.goToMenu("SignUp");
+
         stage.show();
 //        Pane pane = new CardHolder();
 //        new DuelMenu(0);
 //        stage.show();
-        User user = ReadAndWriteDataBase.getUser("mir.json");
-        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        //new OneRoundGameGraphical(user, user2);
+//        User user = ReadAndWriteDataBase.getUser("mir.json");
+//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+//        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
