@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import main.Main;
@@ -56,10 +55,11 @@ public class ChooseRival extends SearchMenu {
     protected void search(String searchText) {
         ArrayList<String> users = new ArrayList<>();
         for (User username : usernames) {
-            String userName = username.getUsername();
-            if (userName.contains(searchText)) {
-                users.add(username.getUsername());
-            }
+                String userName = username.getUsername();
+                if (userName.contains(searchText)) {
+                    if (!userName.equals(LoginMenuController.getCurrentUser().getUsername()))
+                        users.add(username.getUsername());
+                }
         }
         ArrayList<VBox> resultBoxes = getSearchResults(users);
 
