@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import model.card.Card;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import view.graphics.Menu;
 
 import java.util.ArrayList;
@@ -65,16 +66,22 @@ public abstract class SearchMenu extends Menu {
 
     public void previous() {
         int currentStage = getCurrentSearchStage();
-        if (currentStage == -1) return;
-        if (currentStage == 1) return;
+        if (currentStage == -1 || currentStage == 1) {
+            playMedia(VoiceEffects.ERROR);
+            return;
+        }
+        playMedia(VoiceEffects.CLICK);
         showVBox(currentStage - 2);
         setStageLabel(currentStage - 1);
     }
 
     public void next() {
         int currentStage = getCurrentSearchStage();
-        if (currentStage == -1) return;
-        if (currentStage == searchResults.size()) return;
+        if (currentStage == -1 || currentStage == searchResults.size()) {
+            playMedia(VoiceEffects.ERROR);
+            return;
+        }
+        playMedia(VoiceEffects.CLICK);
         showVBox(currentStage);
         setStageLabel(currentStage + 1);
     }

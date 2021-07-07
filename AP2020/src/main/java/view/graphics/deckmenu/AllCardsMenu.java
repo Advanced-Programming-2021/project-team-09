@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import model.card.Card;
+import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
 import org.jetbrains.annotations.NotNull;
 import view.graphics.ChoiceMenu;
@@ -46,7 +47,6 @@ public class AllCardsMenu extends ChoiceMenu implements Initializable {
         CardHolder holder = new CardHolder(getCard(cardName));
         Label name = getLabel(cardName, 150, 20);
         Label count = getLabel("#" + getNumberOfCards(cardName), 150, 20);
-//        box = (VBox) setDimension(box,150,260);
         box.setPrefHeight(200);
         box.setMinHeight(200);
         box.setPrefWidth(150);
@@ -59,22 +59,11 @@ public class AllCardsMenu extends ChoiceMenu implements Initializable {
     }
 
     private void setOnCardClicked(VBox box) {
-        box.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
-            TranslateTransition translate = new TranslateTransition();
-            translate.setNode(box);
-            translate.setByY(-20);
-            translate.setDuration(Duration.millis(250));
-            translate.setAutoReverse(true);
-            translate.setCycleCount(2);
-            translate.play();
-//            RotateTransition rotate = new RotateTransition();
-//            rotate.setAxis(new Point3D(0,1,0));
-//            rotate.setByAngle(180);
-//            rotate.setDuration(Duration.millis(1000));
-//            rotate.setNode(box.getChildren().get(1));
-//            rotate.play();
+        CardHolder holder = (CardHolder) box.getChildren().get(1);
+        holder.setOnMouseClicked(mouseEvent -> {
+            playMedia(VoiceEffects.CARD_FLIP);
+            holder.flipCard();
         });
-
     }
 
     @Override

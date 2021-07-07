@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import model.card.Card;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
 
@@ -44,10 +45,12 @@ public class MainDeckMenu extends Menu implements Initializable {
     }
 
     private void setAllCards() {
+        playMedia(VoiceEffects.CLICK);
         mainPane.setCenter(getNode("AllCards"));
     }
 
     private void setAllDecks() {
+        playMedia(VoiceEffects.CLICK);
         mainPane.setCenter(getNode("AllDecksMenu"));
     }
 

@@ -21,6 +21,7 @@ import model.deck.MainDeck;
 import model.deck.PrimaryDeck;
 import model.deck.SideDeck;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
 import view.graphics.ChoiceMenu;
 import view.graphics.Menu;
@@ -48,7 +49,6 @@ public class EditDeckMenu extends Menu implements Initializable {
             Label name = getLabel(cardName, width, 15, 10);
             choiceBox.getChildren().add(name);
             choiceBox.getChildren().add(holder);
-            VBox finalChoiceBox = choiceBox;
             holder.setOnMouseClicked(mouseEvent -> addOptionsToDecisionBox(cardName, true));
             cardBoxes.put(cardName, choiceBox);
         }
@@ -101,7 +101,10 @@ public class EditDeckMenu extends Menu implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initChoiceMenus();
         initToggleButtons();
-        searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
+        searchField.textProperty().addListener((observableValue, s, t1) -> {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            search(t1);
+        });
         mainChoiceMenu.resetChoiceBox();
         sideChoiceMenu.resetChoiceBox();
         mainDeckOptionBar.setSpacing(10);
@@ -113,8 +116,15 @@ public class EditDeckMenu extends Menu implements Initializable {
         group.getToggles().addAll(mainToggle, sideToggle);
         mainToggle.setSelected(true);
         mainToggle.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0));
-        mainToggle.setOnAction(actionEvent -> onSelectToggle(mainToggle, group));
-        sideToggle.setOnAction(actionEvent -> onSelectToggle(sideToggle, group));
+        mainToggle.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.CLICK);
+            onSelectToggle(mainToggle, group);
+        });
+
+        sideToggle.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.CLICK);
+            onSelectToggle(sideToggle, group);
+        });
     }
 
     private void initChoiceMenus() {

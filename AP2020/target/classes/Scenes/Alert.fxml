@@ -27,7 +27,7 @@
       </Label>
       <Label fx:id="text" alignment="CENTER" prefHeight="40.0" prefWidth="300.0" text="Nigga">
          <font>
-            <Font name="Chalkduster" size="13.0" />
+            <Font name="Chalkduster" size="11.0" />
          </font>
       </Label>
       <Button fx:id="button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="60.0" style="-fx-background-color: transparent; -fx-border-radius: 20; -fx-border-color: #000000;" text="OKAB!">

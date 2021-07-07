@@ -39,6 +39,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.User;
 import model.game.MiniGame;
 import view.graphics.Menu;
@@ -56,9 +57,10 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         LoginMenuController.login("mmd","m");
         Main.stage = stage;
+//        stage.initStyle(StageStyle.TRANSPARENT);
         Menu.setStage(stage);
         stage.setResizable(false);
-        Menu.goToMenu("SignUp");
+        Menu.goToMenu("Welcome");
 
         stage.show();
 //        Pane pane = new CardHolder();

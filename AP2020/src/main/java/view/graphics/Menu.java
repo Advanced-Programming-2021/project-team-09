@@ -12,12 +12,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaErrorEvent;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.enums.Cursor;
-import model.enums.Media;
+import model.enums.VoiceEffects;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +30,12 @@ public class Menu {
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
     private static Scene currentScene;
     private static Stage mainStage;
+    private static final String ROOT_STYLE = "-fx-border-color: #000000; -fx-border-width: 3;";
 
     public static void goToMenu(String menuName) {
+        playMedia(VoiceEffects.CLICK);
         Parent root = getNode(menuName + "Menu");
+        root.setStyle(ROOT_STYLE);
         Scene scene = new Scene(root,-1,-1,true);
         Menu.setCurrentScene(scene);
         mainStage.setScene(scene);
@@ -180,8 +186,14 @@ public class Menu {
         return mainStage;
     }
 
-    public static void playMedia(Media media) {
+    public static void playMedia(VoiceEffects voiceEffects) {
+        MediaPlayer player = new MediaPlayer(voiceEffects.getMedia());
+        player.play();
+        MediaErrorEvent event;
+    }
 
+    public static Media getVoice(String voiceName,String format) {
+        return new Media(new File("src/main/resources/Scenes/Voices/" + voiceName + "." + format).toURI().toString());
     }
 
     public static void showAlert(String message) {
