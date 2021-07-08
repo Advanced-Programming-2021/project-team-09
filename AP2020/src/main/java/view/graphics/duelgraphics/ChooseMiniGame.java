@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Reflection;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import main.Main;
@@ -40,6 +42,8 @@ public class ChooseMiniGame implements Initializable {
     @FXML
     private Button chooseDice;
 
+    private ArrayList<Button> menuButtons = new ArrayList<>();
+
     public ChooseMiniGame() {
 
     }
@@ -53,30 +57,41 @@ public class ChooseMiniGame implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        getBackGroundForButtons();
         go.setDisable(true);
         playerName.setText(miniGame.getFirstUser().getNickname());
         rivalName.setText(miniGame.getSecondUser().getNickname());
-        ArrayList<Button> menuButtons = new ArrayList<>();
         menuButtons.add(chooseRock);
         menuButtons.add(chooseCoin);
         menuButtons.add(chooseDice);
+        for (Button button: menuButtons) {
+            button.onMouseEnteredProperty().set(mouseEvent -> {
+                button.setTranslateY(-30);
+                setSize(button, 100);
+                Glow glow = new Glow();
+                glow.setLevel(0.3);
+                button.setEffect(glow);
+            });
+            button.onMouseExitedProperty().set(mouseEvent -> {
+                button.setTranslateY(-20);
+                setSize(button, 80);
+                button.setEffect(null);
+            });
+        }
         for (Button menuButton : menuButtons) menuButton.setCursor(Cursor.HAND);
         chooseCoin.setOnMouseClicked(mouseEvent -> {
-            boldSource(menuButtons, mouseEvent);
             go.setDisable(false);
             radio.setDisable(true);
             radio.setVisible(false);
             mode.setText("Coin");
         });
         chooseRock.setOnMouseClicked(mouseEvent -> {
-            boldSource(menuButtons, mouseEvent);
             go.setDisable(false);
             radio.setDisable(true);
             radio.setVisible(false);
             mode.setText("Rock Paper Scissors");
         });
         chooseDice.setOnMouseClicked(mouseEvent -> {
-            boldSource(menuButtons, mouseEvent);
             go.setDisable(false);
             radio.setDisable(false);
             radio.setVisible(true);
@@ -85,13 +100,6 @@ public class ChooseMiniGame implements Initializable {
         go.setOnMouseClicked(mouseEvent -> goToMode());
     }
 
-    private void boldSource(ArrayList<Button> menuButtons, MouseEvent mouseEvent) {
-        Button source = (Button) mouseEvent.getSource();
-        for (Button menuButton : menuButtons) {
-            menuButton.setStyle("-fx-background-color: transparent");
-        }
-        source.setStyle("-fx-background-color: #001f7f77");
-    }
 
     private void goToMode() {
         go.setDisable(true);
@@ -102,5 +110,25 @@ public class ChooseMiniGame implements Initializable {
         } else {
             new MiniGameRockPaperScissors(miniGame);
         }
+    }
+    private void getBackGroundForButtons(){
+        chooseRock.setBackground(Menu.getBackGround("rockPaperScissors","png",80,80));
+        chooseRock.setTranslateX(330);
+        chooseRock.setTranslateY(-20);
+        setSize(chooseRock,80);
+        chooseCoin.setBackground(Menu.getBackGround("throwCoin","png",80,80));
+        chooseCoin.setTranslateX(30);
+        chooseCoin.setTranslateY(-20);
+        setSize(chooseCoin,80);
+        chooseDice.setBackground(Menu.getBackGround("throwDice","png",80,80));
+        chooseDice.setTranslateX(185);
+        chooseDice.setTranslateY(-20);
+        setSize(chooseDice,80);
+    }
+    private void setSize(Button button, int size){
+        button.setMinWidth(size);
+        button.setMinHeight(size);
+        button.setMaxWidth(size);
+        button.setMaxHeight(size);
     }
 }

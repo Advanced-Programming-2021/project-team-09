@@ -1,14 +1,12 @@
 package view.graphics;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.enums.Media;
+import model.enums.VoiceEffects;
 
 public class AlertController {
     @FXML
@@ -23,7 +21,10 @@ public class AlertController {
 
     public void setStage(Stage popup) {
         this.popup = popup;
-        button.setOnMouseClicked(mouseEvent -> popup.close());
+        button.setOnMouseClicked(mouseEvent -> {
+            Menu.playMedia(VoiceEffects.CLICK);
+            popup.close();
+        });
     }
 
     public void showPopUp() {

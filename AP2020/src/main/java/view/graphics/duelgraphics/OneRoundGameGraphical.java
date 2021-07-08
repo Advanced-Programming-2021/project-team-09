@@ -15,10 +15,13 @@ import javafx.scene.layout.VBox;
 import main.Main;
 import model.User;
 import model.game.Game;
+import model.graphicalModels.ActionsWrapper;
 import view.graphics.Menu;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import model.graphicalModels.ActionsWrapper.*;
 
 public class OneRoundGameGraphical implements Initializable {
     private static Game game;
@@ -104,7 +107,8 @@ public class OneRoundGameGraphical implements Initializable {
         try {
             OneRoundGameGraphical.game = new Game(player, rival);
             GameMenuController.firstDraw(game);
-        } catch (CloneNotSupportedException ignored) {}
+        } catch (CloneNotSupportedException ignored) {
+        }
         pane = (Pane) Menu.getNode("OneRoundGameGraphical");
         Main.stage.setScene(new Scene(pane));
     }

@@ -11,20 +11,22 @@ import model.card.Card;
 import view.graphics.Menu;
 
 public class CardHolder extends Pane {
-    private final static double CARD_BOX_RATIO = (double) 4/3;
-    private final static double CARD_RATION = (double) 188/138;
-    private final static Image BORDER = Menu.getImage("CardPlace","png");
-    private final static Image BACK_OF_CARD= Menu.getCard("BACK");
+    private final static double CARD_BOX_RATIO = (double) 4 / 3;
+    private final static double CARD_RATION = (double) 188 / 138;
+    private final static Image BORDER = Menu.getImage("CardPlace", "png");
+    private final static Image BACK_OF_CARD = Menu.getCard("BACK");
     private final ImageView cardPlace;
     private final ImageView cardBehind;
     public ImageView cardBox;
     private Card card;
+    private Image cardImage;
 
     private boolean isBack = false;
 
-    public CardHolder (Card card) {
+    public CardHolder(Card card) {
         setCard(card);
     }
+
     public CardHolder(Image card) {
         setCardImage(card);
     }
@@ -35,6 +37,7 @@ public class CardHolder extends Pane {
 
 
     public void setCardImage(Image card) {
+        cardImage = card;
         cardPlace.setImage(card);
     }
 
@@ -53,13 +56,14 @@ public class CardHolder extends Pane {
         cardBox.setFitWidth(150.0);
         cardBox.setFitHeight(200.0);
     }
+
     {
         cardBehind = new ImageView();
         cardBehind.setLayoutX(6);
         cardBehind.setLayoutY(6);
         cardBehind.setFitHeight(188.0);
         cardBehind.setFitWidth(138.0);
-       // cardBehind.getTransforms().add(new Rotate(180,new Point3D(1,0,0)));
+        // cardBehind.getTransforms().add(new Rotate(180,new Point3D(1,0,0)));
         cardBehind.setImage(BACK_OF_CARD);
 
     }
@@ -85,7 +89,6 @@ public class CardHolder extends Pane {
 
     public Card getCard() {
         return card;
-
     }
 
     public String getCardName() {
@@ -95,7 +98,9 @@ public class CardHolder extends Pane {
     }
 
     public void flipCard() {
-
+        if (isBack) cardPlace.setImage(cardImage);
+        else cardPlace.setImage(BACK_OF_CARD);
+        isBack = !isBack;
     }
 
     public void scale(double multiple) {

@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
 import view.regexes.RegexFunctions;
 import view.responses.ShopMenuResponses;
@@ -56,35 +57,50 @@ public class ShopMenuController extends SearchMenu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
+        searchField.textProperty().addListener((observableValue, s, t1) -> {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            search(t1);
+        });
         justifyButton(plusButton, Cursor.RIGHT_ARROW);
         justifyButton(minusButton, Cursor.LEFT_ARROW);
-        justifyButton(shopButton, Cursor.ACCEPT);
         nameLabel.setText("None");
         typeLabel.setText("None");
         priceLabel.setText("0000");
         updateBalanceLabel();
         stageCounter.setText("-/-");
         searchBox.setSpacing(5);
-
     }
 
     private void updateBalanceLabel() {
         balanceLabel.setText(Integer.toString(LoginMenuController.getCurrentUser().getBalance()));
     }
 
-    public void buy(ActionEvent actionEvent) {
+    public void buy() {
         String cardName = nameLabel.getText();
         if (cardName.equals("None")) return;
         ShopMenuResponses respond = ShopController.buyCard(cardName);
-        System.out.println(respond);
-        //ToDo
+        showAlert(respond.toString().replace("_"," "));
         updateBalanceLabel();
+    }
+
+    private void activeButton() {
+        shopButton.setText("Buy!");
+        shopButton.setOnMouseClicked(mouseEvent -> {
+            playMedia(VoiceEffects.COIN_DROP);
+            buy();
+        });
+        justifyButton(shopButton,Cursor.ACCEPT);
+    }
+
+    private void deActiveButton() {
+        shopButton.setText("Buy!");
+        shopButton.setOnMouseClicked(mouseEvent -> playMedia(VoiceEffects.ERROR));
+        justifyButton(shopButton,Cursor.CANCEL);
+
     }
 
     public void nextMenu(ActionEvent actionEvent) {
         next();
-
     }
 
     public void previousMenu(ActionEvent actionEvent) {
@@ -231,10 +247,12 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         button.setOnAction(actionEvent -> {
             Card card = CSVInfoGetter.getCardByName(searchResult);
             cardHolder.setCardImage(getCard(searchResult));
-            priceLabel.setText(CSVInfoGetter.getPriceByCardName(searchResult) + "");
+            int price = CSVInfoGetter.getPriceByCardName(searchResult);
+            priceLabel.setText(price + "");
             nameLabel.setText(card.getCardName());
             typeLabel.setText(card.getCardType().toString().toLowerCase());
-
+            if (price > LoginMenuController.getCurrentUser().getBalance())  deActiveButton();
+            else activeButton();
         });
         justifyButton(button, Cursor.SEARCH);
         return button;
