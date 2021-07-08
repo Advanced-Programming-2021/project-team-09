@@ -213,4 +213,8 @@ public class Menu {
             e.printStackTrace();
         }
     }
+
+    public static void goToMainMenu() {
+        goToMenu("Main");
+    }
 }

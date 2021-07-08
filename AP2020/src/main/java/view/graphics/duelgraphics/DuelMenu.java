@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -76,9 +77,6 @@ public class DuelMenu extends Menu {
         new ChooseRival(0);
     }
 
-    public void goToMainMenu() {
-        goToMenu("Main");
-    }
 
     public boolean checkPlayerDeck() {
         User player = LoginMenuController.getCurrentUser();
@@ -169,5 +167,9 @@ public class DuelMenu extends Menu {
 
     public void goToDeck() {
         goToMenu("Deck");
+    }
+
+    public void goToMainMenu(MouseEvent mouseEvent) {
+        goToMainMenu();
     }
 }
