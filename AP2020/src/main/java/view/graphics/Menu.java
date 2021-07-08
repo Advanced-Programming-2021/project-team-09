@@ -176,6 +176,7 @@ public class Menu {
     }
 
     protected void mio() {
+        playMedia(VoiceEffects.MIO);
     }
 
     public static void setStage(Stage stage) {

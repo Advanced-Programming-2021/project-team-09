@@ -19,6 +19,7 @@ import main.Main;
 import model.card.Card;
 import model.deck.Deck;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
 import org.jetbrains.annotations.NotNull;
 import view.graphics.ChoiceMenu;
@@ -53,10 +54,17 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         setWidth(105);
         for (Deck deck : LoginMenuController.getCurrentUser().getDecks()) choiceNames.add(deck.getDeckName());
         addToChoiceBox(choiceNames);
-        searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
+        searchField.textProperty().addListener((observableValue, s, t1) -> {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            search(t1);
+        });
         decisionBox.setSpacing(10);
         lightBulb.setImage(getImage("Bulb", "png"));
-        deckNameField.textProperty().addListener((observableValue, s, t1) -> setCreateButton(t1));
+        deckNameField.textProperty().addListener((observableValue, s, t1) -> {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            setCreateButton(t1);
+        });
+
         setCreateButton("");
     }
 
@@ -68,7 +76,10 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
             return;
         }
         createDeck.setText("Create!");
-        createDeck.setOnAction(actionEvent -> createDeck(deckName));
+        createDeck.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.CLICK);
+            createDeck(deckName);
+        });
         justifyButton(createDeck,Cursor.ACCEPT);
     }
 
@@ -112,20 +123,19 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
     }
 
     private void setOnClickAction(VBox box) {
-        box.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                ImageView view = (ImageView) box.getChildren().get(1);
-                if (view.getImage().equals(DECK_PIC1)) {
-                    resetSelectOthers();
-                    view.setImage(DECK_PIC2);
-                    setOptionsInDecisionBox(box);
-                    addPreviewBox(getDeckName(box));
-                } else {
-                    view.setImage(DECK_PIC1);
-                    emptyDecisionBox();
-                    resetBoxProperties(previewBox);
-                }
+        box.setOnMouseClicked(mouseEvent -> {
+            ImageView view = (ImageView) box.getChildren().get(1);
+            if (view.getImage().equals(DECK_PIC1)) {
+                playMedia(VoiceEffects.SHOOW_1);
+                resetSelectOthers();
+                view.setImage(DECK_PIC2);
+                setOptionsInDecisionBox(box);
+                addPreviewBox(getDeckName(box));
+            } else {
+                playMedia(VoiceEffects.SHOOW_2);
+                view.setImage(DECK_PIC1);
+                emptyDecisionBox();
+                resetBoxProperties(previewBox);
             }
         });
     }
@@ -140,10 +150,16 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         Button edit = getButton("Edit");
         Button activate = getButton(isDeckActive ? "DeActivate" : "Activate");
         if (!isDeckActive) {
-            activate.setOnAction(actionEvent -> activateDeck(box));
+            activate.setOnAction(actionEvent -> {
+                playMedia(VoiceEffects.JINGLE);
+                activateDeck(box);
+            });
             addOptionToDecisionBox(activate);
         }
-        delete.setOnAction(actionEvent -> deleteDeck(deckName));
+        delete.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.EXPLODE);
+            deleteDeck(deckName);
+        });
         edit.setOnAction(actionEvent -> goToEditMenu(deckName));
         addOptionToDecisionBox(edit, delete);
     }
@@ -234,6 +250,7 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
             holders.add(holder);
         }
         previewBox.setSpacing(5);
+        if (holders.size() == 0) return;
         previewBox.setPrefWidth((holders.get(0).getWidth() + 5) * holders.size() - 5);
         previewBox.setPrefHeight(holders.get(0).getHeight() + 12);
         previewBox.getChildren().addAll(holders);

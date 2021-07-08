@@ -49,7 +49,10 @@ public class EditDeckMenu extends Menu implements Initializable {
             Label name = getLabel(cardName, width, 15, 10);
             choiceBox.getChildren().add(name);
             choiceBox.getChildren().add(holder);
-            holder.setOnMouseClicked(mouseEvent -> addOptionsToDecisionBox(cardName, true));
+            holder.setOnMouseClicked(mouseEvent -> {
+                playMedia(VoiceEffects.CLICK);
+                addOptionsToDecisionBox(cardName, true);
+            });
             cardBoxes.put(cardName, choiceBox);
         }
 
@@ -64,7 +67,10 @@ public class EditDeckMenu extends Menu implements Initializable {
             Label name = getLabel(cardName, width, 15, 10);
             choiceBox.getChildren().add(name);
             choiceBox.getChildren().add(holder);
-            holder.setOnMouseClicked(mouseEvent -> addOptionsToDecisionBox(cardName, false));
+            holder.setOnMouseClicked(mouseEvent -> {
+                playMedia(VoiceEffects.CLICK);
+                addOptionsToDecisionBox(cardName, false);
+            });
             cardBoxes1.put(cardName, choiceBox);
         }
     }
@@ -187,10 +193,16 @@ public class EditDeckMenu extends Menu implements Initializable {
         button.setStyle("-fx-border-style: solid none solid; -fx-border-radius: 10;");
         if (text.equals("Add")) {
             justifyButton(button, Cursor.ACCEPT);
-            button.setOnAction(actionEvent -> addCard(cardName, isMainDeck));
+            button.setOnAction(actionEvent -> {
+                playMedia(VoiceEffects.CLICK);
+                addCard(cardName, isMainDeck);
+            });
         } else {
             justifyButton(button, Cursor.TRASH);
-            button.setOnAction(actionEvent -> removeCard(cardName, isMainDeck));
+            button.setOnAction(actionEvent -> {
+                playMedia(VoiceEffects.CLEAR_CHALK);
+                removeCard(cardName, isMainDeck);
+            });
         }
         return button;
     }
