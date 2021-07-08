@@ -172,6 +172,7 @@ public class GameMenuController {
                 Spell tempSpell = (Spell) card;
                 if (tempSpell.getSpellType() == SpellType.FIELD) {
                     setCardInPlayerFieldZone(game, cardNumberInHand);
+                    cardsInHand.remove(cardNumberInHand - 1);
                     return respond(GameMenuResponsesEnum.SUCCESSFUL);
                 }
             }
@@ -536,14 +537,14 @@ public class GameMenuController {
     private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseRivalHealth(damage);
+        game.decreaseHealth(damage);
         return damage;
     }
 
     private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseHealth(damage);
+        game.decreaseRivalHealth(damage);
         return damage;
     }
 
