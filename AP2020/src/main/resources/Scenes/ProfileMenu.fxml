@@ -18,18 +18,19 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showAbout" text="Back" />
+                  <MenuItem mnemonicParsing="false" onAction="#goToMainMenu" text="Back" />
               <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Add New Pictures" />
+              <MenuItem mnemonicParsing="false" onAction="#addCustomPicture" text="Add New Pictures" />
+                  <MenuItem mnemonicParsing="false" onAction="#goToSetting" text="Setting" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About" />
             </items>
           </Menu>
         </menus>

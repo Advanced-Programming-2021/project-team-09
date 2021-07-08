@@ -13,32 +13,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import model.graphicalModels.CardHolder?>
-
 <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.ShopMenuController">
     <top>
-        <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="580.0" style="-fx-background-radius: 20;" BorderPane.alignment="CENTER">
+        <MenuBar style="-fx-background-radius: 5;" BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goToMainMenu" text="Back" />
-                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#goToSetting" text="Setting" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About" />
+                        <MenuItem mnemonicParsing="false" text="About" />
                     </items>
                 </Menu>
             </menus>
-         <BorderPane.margin>
-            <Insets top="4.0" />
-         </BorderPane.margin>
         </MenuBar>
     </top>
     <left>
@@ -112,13 +106,13 @@
         </VBox>
     </right>
     <center>
-        <VBox fx:id="cardHolderBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="150.0" BorderPane.alignment="CENTER">
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="150.0" BorderPane.alignment="CENTER">
             <children>
-                <CardHolder fx:id="cardHolder">
-                    <VBox.margin>
-                        <Insets top="80"/>
-                    </VBox.margin>
-                </CardHolder>
+                <!--                <CardHolder fx:id="cardHolder">-->
+                <!--                    <VBox.margin>-->
+                <!--                        <Insets top="80"/>-->
+                <!--                    </VBox.margin>-->
+                <!--                </CardHolder>-->
             </children>
             <children>
                 <Button fx:id="shopButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="60.0" text="Buy!!">

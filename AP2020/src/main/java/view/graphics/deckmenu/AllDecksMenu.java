@@ -84,10 +84,12 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
     }
 
     private void createDeck(String deckName) {
-        System.out.println(DeckMenuController.createDeck(deckName));
+        DeckMenuController.createDeck(deckName);
         choiceNames.add(deckName);
         updateChoiceBox();
         emptyDecisionBox();
+        deckNameField.setText("");
+        setCreateButton("");
     }
 
     @Override
