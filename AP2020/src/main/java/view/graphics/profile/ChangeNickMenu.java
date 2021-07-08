@@ -30,7 +30,11 @@ public class ChangeNickMenu extends ChangeMenu implements Initializable {
         }
         ProfileMenuResponses responses = ProfileController.changeNickname(newNickName);
         if (responses != ProfileMenuResponses.NICKNAME_CHANGED_SUCCESSFULLY) playMedia(VoiceEffects.ERROR);
-        else playMedia(VoiceEffects.JINGLE);
+        else {
+            ProfileMenu.staticNickName.setText(newNickName);
+            newNick.setText("");
+            playMedia(VoiceEffects.JINGLE);
+        }
         showAlert(responses.toString().replace("_"," "));
     }
 

@@ -34,6 +34,7 @@ public class MainMenuController extends Menu implements Initializable {
 
     public final static Image SETTING_MENU_IMG = getImage("SettingIcon", "png");
     public final static Image DECK_MENU_IMG = getImage("DeckMenuIcon", "png");
+    public final static Image SHOP_MENU_IMG = getImage("ShopMenuIcon", "png");
     public final static Image PROFILE_MENU_IMG = getImage("ProfileMenuIcon", "png");
     public final static Image SCOREBOARD_MENU_IMG = getImage("ScoreboardMenuIcon", "png");
     public final static Image HAPPY_FACE_IMG = getImage("HappyFace", "png");
@@ -41,6 +42,7 @@ public class MainMenuController extends Menu implements Initializable {
     public final static Image GAME_MENU_IMG = getImage("StartGameMenu", "png");
     public final static Image GAME_IMG = getImage("Game", "png");
     public final static Image SETTING_IMG = getImage("Setting", "png");
+    public final static Image SHOP_IMG = getImage("Shop", "png");
     public final static Image SCOREBOARD_IMG = getImage("Scoreboard", "png");
     public final static Image PROFILE_IMG = getImage("Profile", "png");
     public final static Image DECK_IMG = getImage("Deck", "png");
@@ -57,7 +59,7 @@ public class MainMenuController extends Menu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         deckMenu.setImage(DECK_MENU_IMG);
-        shop.setImage(SETTING_MENU_IMG);
+        shop.setImage(SHOP_MENU_IMG);
         scoreBoard.setImage(SCOREBOARD_MENU_IMG);
         profileMenu.setImage(PROFILE_MENU_IMG);
         babeFace.setImage(NORMAL_FACE_IMG);
@@ -113,8 +115,8 @@ public class MainMenuController extends Menu implements Initializable {
         changeFace(null);
         if (isHappy) {
             shop.setEffect(new DropShadow());
-            changeMainPicture("Setting");
-            changeLabel("Setting Menu");
+            changeMainPicture("Shop");
+            changeLabel("Shop Menu");
         } else {
             resetIcons(shop);
         }
@@ -134,8 +136,8 @@ public class MainMenuController extends Menu implements Initializable {
 
     public void changeMainPicture(String nameOfMenu) {
         switch (nameOfMenu) {
-            case "Setting":
-                imageOfMenu.setImage(SETTING_IMG);
+            case "Shop":
+                imageOfMenu.setImage(SHOP_IMG);
                 break;
             case "Profile":
                 imageOfMenu.setImage(PROFILE_IMG);

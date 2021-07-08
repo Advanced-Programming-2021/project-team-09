@@ -79,9 +79,12 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     public void buy() {
         String cardName = nameLabel.getText();
         if (cardName.equals("None")) return;
+        playMedia(VoiceEffects.COIN_DROP);
         ShopMenuResponses respond = ShopController.buyCard(cardName);
         showAlert(respond.toString().replace("_"," "));
         updateBalanceLabel();
+        int price = Integer.parseInt(priceLabel.getText());
+        if (price > LoginMenuController.getCurrentUser().getBalance()) deActiveButton();
     }
 
     private void activeButton() {
@@ -265,6 +268,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     }
 
     public void goToMainMenu(ActionEvent actionEvent) {
+        goToMainMenu();
     }
 
     public void close(ActionEvent actionEvent) {

@@ -34,7 +34,7 @@
                   <Insets top="30.0" />
                </VBox.margin>
             </ImageView>
-            <ImageView fx:id="setting" fitHeight="60.0" fitWidth="90.0" onMouseClicked="#goToSetting" onMouseEntered="#changeSetting" onMouseExited="#changeSetting" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="shop" fitHeight="60.0" fitWidth="90.0" onMouseClicked="#goToShop" onMouseEntered="#changeShop" onMouseExited="#changeShop" pickOnBounds="true" preserveRatio="true">
                <VBox.margin>
                   <Insets top="30.0" />
                </VBox.margin>
@@ -45,24 +45,27 @@
    <top>
       <VBox prefHeight="30.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="800.0" style="-fx-background-radius: 5;">
+            <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="780.0" style="-fx-background-radius: 20;">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <MenuItem mnemonicParsing="false" onAction="#goToSetting" text="Setting" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About" />
                   </items>
                 </Menu>
               </menus>
+               <VBox.margin>
+                  <Insets left="10.0" top="4.0" />
+               </VBox.margin>
             </MenuBar>
          </children>
       </VBox>
