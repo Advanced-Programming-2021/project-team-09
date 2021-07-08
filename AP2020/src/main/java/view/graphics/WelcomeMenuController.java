@@ -10,21 +10,24 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import model.enums.Cursor;
+import model.enums.VoiceEffects;
+import view.MainMenu;
 import view.responses.LoginMenuResponses;
 
-import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class WelcomeMenuController extends Menu implements Initializable {
 
     @FXML
-    private BorderPane mainPane;
+    private ImageView babeFace;
+    @FXML
+    private AnchorPane mainPane;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -34,43 +37,40 @@ public class WelcomeMenuController extends Menu implements Initializable {
     @FXML
     private Button loginButton;
 
-    //FixMe
-    private static final Image BG = new Image(new File("/Users/siasor88/Documents/GitHub/project-team-09/AP2020/src/main/resources/Scenes/Images/backgroundMolaee2.jpg").toURI().toString(),600,370,true,true);
-   // private static final Image BG = getImage("Profile","png");
+
     public void goToSignInMenu(ActionEvent actionEvent) {
+        goToMenu("SignUp");
     }
 
     public void login(ActionEvent actionEvent) {
         String password = passwordField.getText();
         String username = usernameField.getText();
         if (password.equals("") || username.equals("")) {
-            showMessage("Please Fill all the Fields!");
-        } else{
-            LoginMenuResponses respond = LoginMenuController.login(username,password);
-            showMessage(respond.toString().replace("_", " ") + "!");
+            showAlert("Please Fill all the Fields!");
+            playMedia(VoiceEffects.ERROR);
+        } else {
+            LoginMenuResponses respond = LoginMenuController.login(username, password);
+            showAlert(respond.toString().replace("_", " ") + "!");
             if (respond == LoginMenuResponses.USER_LOGIN_SUCCESSFUL) goToMainMenu();
+            else playMedia(VoiceEffects.ERROR);
         }
     }
 
-    public static void  goToMainMenu() {
-    }
-
-    public void shadowEffectButtonEnter(MouseEvent mouseEvent) {
-        loginButton.setEffect(new DropShadow(1, Color.rgb(80,80,80)));
-    }
-
-    public void shadowEffectButtonExits(MouseEvent mouseEvent) {
-        loginButton.setEffect(null);
+    public static void goToMainMenu() {
+        goToMenu("Main");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //menuBar.setOpacity(2);
-        Background background = new Background(new BackgroundImage(BG, BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,new BackgroundSize(100,100,true,true,true,true)));
-        mainPane.setBackground(background);
+        babeFace.setImage(getImage("animatedDragon","GIF"));
+        setFocus();
+        justifyButton(loginButton, Cursor.ACCEPT);
+        mainPane.setOnMouseClicked(mouseEvent -> setFocus());
+        usernameField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
+        passwordField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
     }
 
-    public void setFocuse(MouseEvent mouseEvent) {
-        loginButton.getScene().getWindow().requestFocus();
+    public void setFocus() {
+        mainPane.requestFocus();
     }
 }

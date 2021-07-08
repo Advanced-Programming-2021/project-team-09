@@ -116,7 +116,7 @@
                 </CardHolder>
             </children>
             <children>
-                <Button fx:id="shopButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#buy" prefHeight="27.0" prefWidth="60.0" text="Buy!!">
+                <Button fx:id="shopButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="60.0" text="Buy!!">
                     <VBox.margin>
                         <Insets left="45.0" top="40.0" />
                     </VBox.margin>

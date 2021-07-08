@@ -1,7 +1,6 @@
 package view.graphics;
 
 import controller.LoginMenuController;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,12 +9,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Popup;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import view.responses.LoginMenuResponses;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SignUpMenu extends Menu implements Initializable {
 
@@ -32,6 +33,7 @@ public class SignUpMenu extends Menu implements Initializable {
 
 
     public void signUp() {
+        playMedia(VoiceEffects.CLICK);
         String password = passwordField.getText();
         String passwordAgain = passwordAgainField.getText();
         String username = usernameField.getText();
@@ -43,8 +45,15 @@ public class SignUpMenu extends Menu implements Initializable {
             } else respond = LoginMenuResponses.PASSWORDS_DIDNT_MATCH;
         } else respond = LoginMenuResponses.PLEASE_FILL_ALL_OF_THE_FIELDS;
         showAlert(respond.toString().replace("_"," "));
-        if (respond != LoginMenuResponses.USER_CREATED_SUCCESSFULLY) changeBabeFace(Face.SAD);
-        else changeBabeFace(Face.HAPPY);
+        if (respond != LoginMenuResponses.USER_CREATED_SUCCESSFULLY) {
+            playMedia(VoiceEffects.ERROR);
+            changeBabeFace(Face.SAD);
+            activeTimer();
+        }
+        else {
+            changeBabeFace(Face.HAPPY);
+            goToMenu("Welcome");
+        }
         nicknameField.setText("");
         usernameField.setText("");
         passwordField.setText("");
@@ -53,16 +62,13 @@ public class SignUpMenu extends Menu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        passwordField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
+        passwordAgainField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
+        usernameField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
+        nicknameField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
         changeBabeFace(Face.SAD);
         activeButton();
     }
-
-    private boolean isUserValid() {
-        return !LoginMenuController.doesUsernameExists(usernameField.getText()) &&
-                !LoginMenuController.doesNicknameExists(nicknameField.getText()) &&
-                passwordField.getText().equals(passwordAgainField.getText());
-    }
-
 
     private void activeButton() {
         justifyButton(submitButton, Cursor.ACCEPT);
@@ -71,6 +77,16 @@ public class SignUpMenu extends Menu implements Initializable {
         changeBabeFace(Face.HAPPY);
     }
 
+    private void activeTimer() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                changeBabeFace(Face.HAPPY);
+            }
+        };
+        timer.schedule(task,1500);
+    }
 
     public void changeBabeFace(Face face) {
         if (face == Face.SAD) cubeFace.setImage(SAD_CUBE);

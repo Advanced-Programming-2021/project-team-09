@@ -24,6 +24,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.User;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +85,10 @@ public class ScoreboardMenuController extends SearchMenu implements Initializabl
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setMinSizeSearchBox(0);
         resetSearchBox();
-        searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
+        searchField.textProperty().addListener((observableValue, s, t1) -> {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            search(t1);
+        });
         plusButton.setOnAction(actionEvent -> next());
         minusButton.setOnAction(actionEvent -> previous());
         setProfileBox(currentUserBox);
@@ -154,7 +158,10 @@ public class ScoreboardMenuController extends SearchMenu implements Initializabl
     }
 
     private void justifyScoreboardOption(User user, HBox parent, Node node) {
-        node.setOnMouseClicked(mouseEvent -> setProfileBox(parent));
+        node.setOnMouseClicked(mouseEvent -> {
+            playMedia(VoiceEffects.CLICK);
+            setProfileBox(parent);
+        });
         node.setOnMouseExited(mouseEvent -> changeFace(-1));
         node.setOnMouseEntered(mouseEvent -> changeFace(user.getScore()));
     }
