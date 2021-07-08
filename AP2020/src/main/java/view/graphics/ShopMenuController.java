@@ -61,6 +61,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             playMedia(VoiceEffects.KEYBOARD_HIT);
             search(t1);
         });
+        deActiveButton();
         justifyButton(plusButton, Cursor.RIGHT_ARROW);
         justifyButton(minusButton, Cursor.LEFT_ARROW);
         nameLabel.setText("None");
@@ -96,7 +97,6 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         shopButton.setText("Buy!");
         shopButton.setOnMouseClicked(mouseEvent -> playMedia(VoiceEffects.ERROR));
         justifyButton(shopButton,Cursor.CANCEL);
-
     }
 
     public void nextMenu(ActionEvent actionEvent) {
@@ -245,6 +245,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         button.setPrefWidth(120);
         button.setStyle("-fx-border-style: solid none solid");
         button.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.CLICK);
             Card card = CSVInfoGetter.getCardByName(searchResult);
             cardHolder.setCardImage(getCard(searchResult));
             int price = CSVInfoGetter.getPriceByCardName(searchResult);

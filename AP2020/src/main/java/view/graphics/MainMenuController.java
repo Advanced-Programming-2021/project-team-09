@@ -173,6 +173,6 @@ public class MainMenuController extends Menu implements Initializable {
     }
 
     public void goToSetting(MouseEvent mouseEvent) {
-        goToMenu("Setting");
+        goToMenu("Shop");
     }
 }

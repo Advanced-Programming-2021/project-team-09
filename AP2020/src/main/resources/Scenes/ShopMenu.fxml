@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import model.graphicalModels.CardHolder?>
+<!--<?import model.graphicalModels.CardHolder?>-->
 
+<?import model.graphicalModels.CardHolder?>
 <BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.ShopMenuController">
     <top>
         <MenuBar style="-fx-background-radius: 5;" BorderPane.alignment="CENTER">
@@ -101,13 +102,13 @@
                     </VBox.margin>
                 </Label>
             </children>
-         <BorderPane.margin>
-            <Insets right="5.0" />
-         </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets right="5.0" />
+            </BorderPane.margin>
         </VBox>
     </right>
     <center>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="150.0" BorderPane.alignment="CENTER">
+        <VBox fx:id="cardHolderBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="150.0" BorderPane.alignment="CENTER">
             <children>
                 <CardHolder fx:id="cardHolder">
                     <VBox.margin>

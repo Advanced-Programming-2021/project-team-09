@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 import view.graphics.MainMenuController;
 import view.graphics.Menu;
 
@@ -60,14 +61,17 @@ public class ProfileMenu extends Menu implements Initializable {
     }
 
     public void pressChangeNick(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         setCenter("ChangeNick");
     }
 
     public void pressChangeProf(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         setCenter("ChangeProf");
     }
 
     public void pressChangePass(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         setCenter("ChangePass");
     }
 
@@ -103,4 +107,9 @@ public class ProfileMenu extends Menu implements Initializable {
         exitButton(changeProfButton,mouseEvent);
     }
 
+    public void close(ActionEvent actionEvent) {
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+    }
 }
