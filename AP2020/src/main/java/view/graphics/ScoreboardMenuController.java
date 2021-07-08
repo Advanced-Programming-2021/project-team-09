@@ -177,4 +177,19 @@ public class ScoreboardMenuController extends SearchMenu implements Initializabl
         usernameLabel.setText(username);
     }
 
+    public void goToMainMenu(ActionEvent actionEvent) {
+        goToMainMenu();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+       showAbout();
+    }
 }

@@ -111,5 +111,18 @@ public class ProfileMenu extends Menu implements Initializable {
     }
 
     public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
+
+    public void goToMainMenu(ActionEvent actionEvent) {
+        goToMainMenu();
+    }
+
+    public void addCustomPicture(ActionEvent actionEvent) {
+        //ToDo
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
     }
 }

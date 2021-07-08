@@ -1,5 +1,6 @@
 package view.graphics;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -7,7 +8,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import model.enums.VoiceEffects;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,7 +27,7 @@ public class MainMenuController extends Menu implements Initializable {
     @FXML
     private ImageView deckMenu;
     @FXML
-    private ImageView setting;
+    private ImageView shop;
     @FXML
     private ImageView babeFace;
     boolean isHappy = false;
@@ -57,7 +57,7 @@ public class MainMenuController extends Menu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         deckMenu.setImage(DECK_MENU_IMG);
-        setting.setImage(SETTING_MENU_IMG);
+        shop.setImage(SETTING_MENU_IMG);
         scoreBoard.setImage(SCOREBOARD_MENU_IMG);
         profileMenu.setImage(PROFILE_MENU_IMG);
         babeFace.setImage(NORMAL_FACE_IMG);
@@ -109,14 +109,14 @@ public class MainMenuController extends Menu implements Initializable {
         }
     }
 
-    public void changeSetting(MouseEvent mouseEvent) {
+    public void changeShop(MouseEvent mouseEvent) {
         changeFace(null);
         if (isHappy) {
-            setting.setEffect(new DropShadow());
+            shop.setEffect(new DropShadow());
             changeMainPicture("Setting");
             changeLabel("Setting Menu");
         } else {
-            resetIcons(setting);
+            resetIcons(shop);
         }
     }
 
@@ -172,7 +172,19 @@ public class MainMenuController extends Menu implements Initializable {
 
     }
 
-    public void goToSetting(MouseEvent mouseEvent) {
+    public void goToShop(MouseEvent mouseEvent) {
         goToMenu("Shop");
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
     }
 }

@@ -264,5 +264,19 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         return null;
     }
 
+    public void goToMainMenu(ActionEvent actionEvent) {
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
 }
 
