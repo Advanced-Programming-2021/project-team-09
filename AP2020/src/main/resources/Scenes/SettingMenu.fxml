@@ -1,135 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.MotionBlur?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.ShopMenuController">
-    <top>
-        <MenuBar style="-fx-background-radius: 5;" BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-    </top>
-    <left>
-        <VBox fx:id="searchBox" prefHeight="372.5" prefWidth="120.0" BorderPane.alignment="CENTER">
-            <children>
-                <TextField fx:id="searchField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" promptText="search..." style="-fx-background-radius: 10; -fx-background-color: Transparent; -fx-border-width: 2; -fx-border-color: #4b4b4b; -fx-border-radius: 10;">
-                    <VBox.margin>
-                        <Insets left="10.0" top="20.0" />
-                    </VBox.margin>
-                </TextField>
-            </children>
-            <BorderPane.margin>
-                <Insets left="5.0" />
-            </BorderPane.margin>
-        </VBox>
-    </left>
-    <right>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="120.0" BorderPane.alignment="CENTER">
-            <children>
-                <Label alignment="CENTER" prefHeight="20.0" prefWidth="120.0" text="Name">
-                    <VBox.margin>
-                        <Insets top="60.0" />
-                    </VBox.margin>
-                </Label>
-                <Label fx:id="nameLabel" alignment="CENTER" prefHeight="20.0" prefWidth="119.0">
-                    <font>
-                        <Font size="10.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets top="5.0" />
-                    </VBox.margin>
-                </Label>
-                <Label alignment="CENTER" prefHeight="20.0" prefWidth="120.0" text="Type">
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
-                </Label>
-                <Label fx:id="typeLabel" alignment="CENTER" prefHeight="20.0" prefWidth="120.0">
-                    <VBox.margin>
-                        <Insets top="5.0" />
-                    </VBox.margin>
-                </Label>
-                <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" text="Price">
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
-                </Label>
-                <Label fx:id="priceLabel" alignment="CENTER" prefHeight="20.0" prefWidth="120.0">
-                    <VBox.margin>
-                        <Insets top="5.0" />
-                    </VBox.margin>
-                </Label>
-                <Label alignment="CENTER" prefHeight="20.0" prefWidth="120.0" text="Balance">
-                    <VBox.margin>
-                        <Insets top="90.0" />
-                    </VBox.margin>
-                </Label>
-                <Label fx:id="balanceLabel" alignment="CENTER" prefHeight="20.0" prefWidth="120.0">
-                    <VBox.margin>
-                        <Insets top="5.0" />
-                    </VBox.margin>
-                </Label>
-            </children>
-        </VBox>
-    </right>
-    <center>
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.5" prefWidth="150.0" BorderPane.alignment="CENTER">
-            <children>
-                <Button fx:id="shopButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="27.0" prefWidth="60.0" text="Buy!!" onAction="#buy">
-                    <VBox.margin>
-                        <Insets left="45.0" top="40.0" />
-                    </VBox.margin></Button>
-            </children>
-        </VBox>
-    </center>
-    <bottom>
-        <HBox prefHeight="30.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
-                <Button fx:id="plusButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="-" onAction="#nextMenu">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Button>
-                <Label fx:id="stageCounter" alignment="CENTER" prefHeight="30.0" prefWidth="50.0" text="Label" />
-                <Button fx:id="minusButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="+" onAction="#previousMenu">
-                    <HBox.margin>
-                        <Insets bottom="5.0" />
-                    </HBox.margin>
-                </Button>
-            </children>
-            <BorderPane.margin>
-                <Insets bottom="5.0" />
-            </BorderPane.margin>
-        </HBox>
-    </bottom>
-    <stylesheets>
-        <URL value="@StyleSheets/ShopMenu.css" />
-    </stylesheets>
-</BorderPane>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-radius: 22.5; -fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="view.graphics.SettingController">
+   <children>
+      <Label alignment="CENTER" layoutX="100.0" layoutY="64.0" prefHeight="30.0" prefWidth="200.0" text="Settings">
+         <font>
+            <Font name="Chalkduster" size="30.0" />
+         </font>
+      </Label>
+      <Button fx:id="exitButton" layoutX="25.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 20; -fx-background-color: #ff0000;" text="X">
+         <font>
+            <Font name="Chalkduster" size="10.0" />
+         </font>
+         <effect>
+            <InnerShadow />
+         </effect>
+      </Button>
+      <Label alignment="CENTER" layoutX="24.0" layoutY="204.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="42.0" prefWidth="100.0" text="Volume">
+         <font>
+            <Font name="Chalkduster" size="20.0" />
+         </font></Label>
+      <Label alignment="CENTER" layoutX="24.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="42.0" prefWidth="100.0" text="SFX ">
+         <font>
+            <Font name="Chalkduster" size="20.0" />
+         </font></Label>
+      <Button fx:id="importExport" alignment="CENTER" layoutX="75.0" layoutY="470.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: transparetn; -fx-border-color: #000000; -fx-border-radius: 20; -fx-border-width: 1.5;" text="Import/Export">
+         <font>
+            <Font name="Chalkduster" size="13.0" />
+         </font>
+         <effect>
+            <MotionBlur radius="1.6" />
+         </effect></Button>
+      <Slider fx:id="sfxSlider" layoutX="171.0" layoutY="292.0" majorTickUnit="10.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.7960526347160339" green="0.10589465498924255" blue="0.014741715043783188" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Slider>
+      <Slider fx:id="volumeSlider" layoutX="171.0" layoutY="220.0" majorTickUnit="10.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.7960526347160339" green="0.10589465498924255" blue="0.014741715043783188" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Slider>
+      <ToggleButton fx:id="muteToggle" layoutX="150.0" layoutY="359.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 20;" text="Mute">
+         <font>
+            <Font name="Chalkduster" size="13.0" />
+         </font>
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.5723684430122375" green="0.4743238389492035" blue="0.4743238389492035" />
+               </color>
+            </InnerShadow>
+         </effect></ToggleButton>
+   </children>
+</AnchorPane>
