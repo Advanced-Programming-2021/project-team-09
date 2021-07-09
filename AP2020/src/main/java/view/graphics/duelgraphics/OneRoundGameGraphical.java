@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -139,5 +142,9 @@ public class OneRoundGameGraphical implements Initializable {
         rivalMonsters[2] = rivalMonster2;
         rivalMonsters[3] = rivalMonster3;
         rivalMonsters[4] = rivalMonster4;
+    }
+
+    public void settings(MouseEvent mouseEvent) {
+        Menu.goToSetting();
     }
 }

@@ -63,6 +63,9 @@ public class Game {
         playerBoard = new Board();
         rivalBoard = new Board();
         canSummonCard = true;
+        for (Cell cell : playerBoard.getMonsterZone()) {
+            cell.setCanAttack(false);
+        }
     }
 
     public void changeTurn() {

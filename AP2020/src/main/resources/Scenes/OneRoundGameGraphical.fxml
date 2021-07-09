@@ -211,13 +211,13 @@
             </ImageView>
          </children>
       </HBox>
-      <HBox fx:id="playerCardBox" layoutX="102.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
-      <HBox fx:id="rivalCardBox" layoutX="153.0" opacity="0.76" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
-      <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="110.0" opacity="0.86" prefHeight="475.0" prefWidth="141.0" style="-fx-background-color: white;" />
+      <HBox fx:id="playerCardBox" layoutX="118.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
+      <HBox fx:id="rivalCardBox" layoutX="146.0" layoutY="2.0" opacity="0.76" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
+      <VBox fx:id="buttonsMenu" layoutX="564.0" layoutY="235.0" opacity="0.86" prefHeight="241.0" prefWidth="141.0" style="-fx-background-color: white;" />
       <Label fx:id="rivalName" alignment="CENTER" layoutX="5.0" layoutY="7.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <Label fx:id="rivalHealth" alignment="CENTER" layoutX="5.0" layoutY="37.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerHealth" alignment="CENTER" layoutX="557.0" layoutY="612.0" prefHeight="30.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerName" alignment="CENTER" layoutX="557.0" layoutY="642.0" prefHeight="30.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerHealth" alignment="CENTER" layoutX="571.0" layoutY="612.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerName" alignment="CENTER" layoutX="571.0" layoutY="642.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <Label fx:id="phase" alignment="CENTER" layoutY="627.0" prefHeight="30.0" prefWidth="91.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#2000ff" wrapText="true" />
       <Line endX="155.50003051757812" endY="274.3999938964844" layoutX="82.0" layoutY="52.0" startX="155.50003051757812" startY="58.0" />
       <Line endX="80.0" endY="224.0" layoutX="237.0" layoutY="104.0" startX="80.0" startY="5.0" />
@@ -225,6 +225,11 @@
       <Line endX="100.80001831054688" endY="222.39999389648438" layoutX="376.0" layoutY="104.0" startX="100.80001831054688" startY="4.799995422363281" />
       <Line endX="462.70001220703125" endY="145.80001831054688" layoutX="92.0" layoutY="74.0" startX="61.00001525878906" startY="145.80001831054688" />
       <Line endX="479.5" endY="136.39999389648438" layoutX="75.0" layoutY="81.0" startX="77.99998474121094" startY="136.39999389648438" />
+      <ImageView fitHeight="46.0" fitWidth="61.0" layoutX="625.0" layoutY="29.0" onMouseClicked="#settings" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/SettingIcon.png" />
+         </image>
+      </ImageView>
    </children>
     <stylesheets>
         <URL value="@StyleSheets/OneRoundGraphical.css" />
