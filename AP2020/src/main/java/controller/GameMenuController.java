@@ -321,6 +321,10 @@ public class GameMenuController {
         }
 
 
+        if (!game.getPlayerLimits().hasControlOnMonster(attackerMonster)) {
+            return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        }
+
         if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
             ((Monster) attacker.getCard()).setAttack(0);
             defender.getCard().addFeature(CardFeatures.USED_EFFECT);
