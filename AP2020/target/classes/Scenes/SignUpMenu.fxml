@@ -4,6 +4,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
@@ -64,7 +67,17 @@
             <Insets top="10.0" />
          </padding>
       </VBox>
-      <ImageView fx:id="cubeFace" fitHeight="100.0" fitWidth="100.0" layoutX="75.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="cubeFace" fitHeight="100.0" fitWidth="100.0" layoutX="75.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
+      <MenuBar layoutX="95.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="60.0" style="-fx-background-radius: 20;">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#goToLoginMenu" text="Back" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
     </children>
     <stylesheets>
     <URL value="@StyleSheets/SignUpMenu.css" />
