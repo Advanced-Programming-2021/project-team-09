@@ -5,13 +5,22 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import model.User;
+import model.card.Card;
 import model.deck.Deck;
 import model.deck.MainDeck;
 import model.deck.SideDeck;
+import model.enums.VoiceEffects;
+import model.graphicalModels.CardHolder;
 import view.graphics.ChoiceMenu;
+import view.graphics.Menu;
 
-public class ChangeBetweenThreeRounds {
+import java.util.HashMap;
+import java.util.HashSet;
+
+public class ChangeBetweenThreeRounds extends Menu {
+
     @FXML
     private Label username;
     @FXML
@@ -20,23 +29,113 @@ public class ChangeBetweenThreeRounds {
     private HBox mainChoiceBox;
     @FXML
     private HBox sideChoiceBox;
+
     private User user;
     private Deck deck;
     private SideDeck sideDeck;
     private MainDeck mainDeck;
     private ChoiceMenu mainChoiceMenu;
     private ChoiceMenu sideChoiceMenu;
+    private Card mainCard;
+    private Card sideCard;
+
+    private final HashMap<String, VBox> mainCardBoxes = new HashMap<>();
+    private final HashMap<String, VBox> sideCardBoxes = new HashMap<>();
+
     public ChangeBetweenThreeRounds(){
 
     }
 
     public void initialize(){
         setUsername();
+        setDeck();
+        settingBoxes();
         swap.setDisable(true);
-
+        initChoiceMenus();
+        mainChoiceMenu.resetChoiceBox();
+        sideChoiceMenu.resetChoiceBox();
     }
 
+    private void settingBoxes(){
+        setBoxes(mainDeck.getCardNames(), mainCardBoxes, true);
+        setBoxes(sideDeck.getCardNames(), sideCardBoxes, false);
+    }
 
+    private void setBoxes(HashSet<String> cardNames, HashMap<String, VBox> CardBoxes, boolean isMain) {
+        for (String cardName : cardNames) {
+            VBox choiceBox = new VBox();
+            choiceBox.setSpacing(10);
+            CardHolder holder = new CardHolder(getCard(cardName));
+            holder.scale(0.65);
+            double width = holder.getWidth();
+            double height = holder.getHeight();
+            choiceBox = (VBox) setDimension(choiceBox, width, height + 50);
+            Label name = getLabel(cardName, width, 15, 10);
+            choiceBox.getChildren().add(name);
+            choiceBox.getChildren().add(holder);
+            holder.setFromMainDeck(isMain);
+            setMouseClicked(holder);
+            CardBoxes.put(cardName, choiceBox);
+        }
+    }
+
+    private void setMouseClicked(CardHolder holder){
+        holder.setOnMouseClicked(mouseEvent -> {
+            holder.rotate(10);
+            holder.setOnMouseClicked(mouseEvent1 -> {
+                if (holder.getFromMainDeck()){
+                    mainCard = null;
+                }
+                else {
+                    sideCard = null;
+                }
+                holder.rotate(0);
+                setMouseClicked(holder);
+                checkSwapButton();
+            });
+            playMedia(VoiceEffects.CLICK);
+            if (holder.getFromMainDeck()){
+                mainCard = holder.getCard();
+            }
+            else {
+                sideCard = holder.getCard();
+            }
+            checkSwapButton();
+        });
+    }
+
+    private void checkSwapButton(){
+        swap.setDisable(mainCard == null || sideCard == null);
+    }
+
+    private void initChoiceMenus() {
+        setChoiceMenu();
+        mainChoiceMenu.setChoiceNames(new HashSet<>(mainDeck.getCardNames()));
+        sideChoiceMenu.setChoiceNames(new HashSet<>(sideDeck.getCardNames()));
+        mainChoiceMenu.setSpacing(5);
+        mainChoiceBox.setSpacing(5);
+        sideChoiceMenu.setSpacing(5);
+        sideChoiceBox.setSpacing(5);
+        mainChoiceMenu.setWidth(150 * 0.65 + 5);
+        sideChoiceMenu.setWidth(150 * 0.65 + 5);
+        mainChoiceMenu.setChoiceBox(mainChoiceBox);
+        sideChoiceMenu.setChoiceBox(sideChoiceBox);
+    }
+
+    private void setChoiceMenu() {
+        mainChoiceMenu = new ChoiceMenu() {
+            @Override
+            protected VBox getChoiceBox(String result) {
+                return mainCardBoxes.get(result);
+            }
+        };
+        sideChoiceMenu = new ChoiceMenu() {
+            @Override
+            protected VBox getChoiceBox(String result) {
+                return sideCardBoxes.get(result);
+            }
+        };
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -53,6 +152,7 @@ public class ChangeBetweenThreeRounds {
     }
 
     public void done() {
+        //todo go to three round game
     }
 
     public void swap() {

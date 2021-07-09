@@ -12,6 +12,7 @@ import model.card.Card;
 import model.enums.Cursor;
 import model.enums.VoiceEffects;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.ChooseRival;
 
 import java.util.ArrayList;
 import java.util.HashMap;
