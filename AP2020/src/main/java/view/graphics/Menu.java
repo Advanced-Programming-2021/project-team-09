@@ -265,16 +265,20 @@ public class Menu {
 
     public static void goToSetting() {
        Parent parent = getNode("SettingMenu");
-       Stage stage = new Stage();
-       stage.initModality(Modality.APPLICATION_MODAL);
-       Scene scene = new Scene(parent,-1,-1,true);
-       scene.setFill(Color.TRANSPARENT);
-       stage.setScene(scene);
-       stage.initStyle(StageStyle.TRANSPARENT);
-       stage.show();
+       showNodeAssPopUp(parent);
     }
 
     public static void showAbout() {
         //ToDo
+    }
+
+    public static void showNodeAssPopUp(Parent parent) {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Scene scene = new Scene(parent,-1,-1,true);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.show();
     }
 }

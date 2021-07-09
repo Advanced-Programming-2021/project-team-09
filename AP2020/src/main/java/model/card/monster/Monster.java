@@ -92,7 +92,8 @@ public class Monster extends Card {
     }
 
     public boolean hasEffect() {
-        return this.monsterEffectType != MonsterEffectType.NONE;
+        //return this.monsterEffectType != MonsterEffectType.NONE; //FIXME
+        return this.monsterCardType == MonsterCardType.EFFECT;
     }
 
     public void setMonsterEffectType(MonsterEffectType monsterEffectType) {
