@@ -5,13 +5,11 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.effect.MotionBlur?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-radius: 22.5; -fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="view.graphics.SettingController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-radius: 22.5; -fx-border-radius: 20; -fx-border-color: #000000; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.SettingController">
    <children>
       <Label alignment="CENTER" layoutX="100.0" layoutY="64.0" prefHeight="30.0" prefWidth="200.0" text="Settings">
          <font>
@@ -37,11 +35,8 @@ fx:controller="view.graphics.SettingController">
       <Button fx:id="importExport" alignment="CENTER" layoutX="75.0" layoutY="470.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: transparetn; -fx-border-color: #000000; -fx-border-radius: 20; -fx-border-width: 1.5;" text="Import/Export">
          <font>
             <Font name="Chalkduster" size="13.0" />
-         </font>
-         <effect>
-            <MotionBlur radius="1.6" />
-         </effect></Button>
-      <Slider fx:id="sfxSlider" layoutX="171.0" layoutY="292.0" majorTickUnit="10.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
+         </font></Button>
+      <Slider fx:id="sfxSlider" layoutX="171.0" layoutY="292.0" majorTickUnit="0.1" max="1.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
          <effect>
             <InnerShadow>
                <color>
@@ -50,7 +45,7 @@ fx:controller="view.graphics.SettingController">
             </InnerShadow>
          </effect>
       </Slider>
-      <Slider fx:id="volumeSlider" layoutX="171.0" layoutY="220.0" majorTickUnit="10.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
+      <Slider fx:id="volumeSlider" layoutX="171.0" layoutY="220.0" majorTickUnit="0.1" max="1.0" minorTickCount="2" prefHeight="16.0" prefWidth="190.0" showTickMarks="true">
          <effect>
             <InnerShadow>
                <color>
@@ -62,13 +57,6 @@ fx:controller="view.graphics.SettingController">
       <ToggleButton fx:id="muteToggle" layoutX="150.0" layoutY="359.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-radius: 20;" text="Mute">
          <font>
             <Font name="Chalkduster" size="13.0" />
-         </font>
-         <effect>
-            <InnerShadow>
-               <color>
-                  <Color red="0.5723684430122375" green="0.4743238389492035" blue="0.4743238389492035" />
-               </color>
-            </InnerShadow>
-         </effect></ToggleButton>
+         </font></ToggleButton>
    </children>
 </AnchorPane>
