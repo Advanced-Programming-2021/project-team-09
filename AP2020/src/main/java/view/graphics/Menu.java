@@ -80,12 +80,8 @@ public class Menu {
         return new Image(new File("Scenes/Images/" + imageName + format).toURI().toString(), width, height, false, false);
     }
 
-    public static Image getCardImage(String cardName) {
-        return getImage("Cards/" + cardName, "jpg");
-    }
-
     public static ImageView getImageWithSizeForGame(String cardName, double x, double y) {
-        ImageView ret = new ImageView(getCardImage(cardName));
+        ImageView ret = new ImageView(getCard(cardName));
         ret.setFitHeight(100);
         ret.setFitWidth(70);
         ret.setX(x);
@@ -222,6 +218,7 @@ public class Menu {
     public static void goToMainMenu() {
         goToMenu("Main");
     }
+
     public static void goToSetting() {
        Parent parent = getNode("SettingMenu");
        Stage stage = new Stage();
@@ -232,6 +229,7 @@ public class Menu {
        stage.initStyle(StageStyle.TRANSPARENT);
        stage.show();
     }
+
     public static void showAbout() {
         //ToDo
     }
