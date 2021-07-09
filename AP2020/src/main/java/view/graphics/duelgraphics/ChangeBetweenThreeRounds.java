@@ -31,13 +31,14 @@ public class ChangeBetweenThreeRounds extends Menu {
     private HBox sideChoiceBox;
 
     private User user;
+    private Deck changedDeck;
     private Deck deck;
     private SideDeck sideDeck;
     private MainDeck mainDeck;
     private ChoiceMenu mainChoiceMenu;
     private ChoiceMenu sideChoiceMenu;
-    private Card mainCard;
-    private Card sideCard;
+    private Card mainCard = null;
+    private Card sideCard = null;
 
     private final HashMap<String, VBox> mainCardBoxes = new HashMap<>();
     private final HashMap<String, VBox> sideCardBoxes = new HashMap<>();
@@ -74,32 +75,32 @@ public class ChangeBetweenThreeRounds extends Menu {
             choiceBox.getChildren().add(name);
             choiceBox.getChildren().add(holder);
             holder.setFromMainDeck(isMain);
-            setMouseClicked(holder);
+            setMouseClicked(holder , true);
             CardBoxes.put(cardName, choiceBox);
         }
     }
 
-    private void setMouseClicked(CardHolder holder){
+    private void setMouseClicked(CardHolder holder , boolean isFirstClick){
         holder.setOnMouseClicked(mouseEvent -> {
             holder.rotate(10);
             holder.setOnMouseClicked(mouseEvent1 -> {
-                if (holder.getFromMainDeck()){
+                if (holder.getIsFromMainDeck())
                     mainCard = null;
-                }
-                else {
+                else
                     sideCard = null;
-                }
                 holder.rotate(0);
-                setMouseClicked(holder);
                 checkSwapButton();
+                playMedia(VoiceEffects.CLICK);
+                setMouseClicked(holder , !isFirstClick);
             });
             playMedia(VoiceEffects.CLICK);
-            if (holder.getFromMainDeck()){
-                mainCard = holder.getCard();
+            if (isFirstClick){
+                if (holder.getIsFromMainDeck())
+                    mainCard = holder.getCard();
+                else
+                    sideCard = holder.getCard();
             }
-            else {
-                sideCard = holder.getCard();
-            }
+
             checkSwapButton();
         });
     }
@@ -156,6 +157,10 @@ public class ChangeBetweenThreeRounds extends Menu {
     }
 
     public void swap() {
-
+        changedDeck = deck.clone();
+        changedDeck.getMainDeck().addCard(sideCard);
+        changedDeck.getMainDeck().removeCard(mainCard.getCardName());
+        changedDeck.getSideDeck().addCard(mainCard);
+        changedDeck.getSideDeck().removeCard(sideCard.getCardName());
     }
 }

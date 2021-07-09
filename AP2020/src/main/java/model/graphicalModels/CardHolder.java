@@ -87,7 +87,7 @@ public class CardHolder extends Pane {
         this.isFromMainDeck = isFromMainDeck;
     }
 
-    public boolean getFromMainDeck(){
+    public boolean getIsFromMainDeck(){
         return isFromMainDeck;
     }
 
