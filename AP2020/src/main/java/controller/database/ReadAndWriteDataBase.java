@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.Gson;
 import model.User;
-import model.card.CardFeatures;
 import model.card.FeatureWrapper;
+import model.card.monster.Monster;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
 import model.deck.Deck;
 
 import java.io.*;
@@ -75,7 +77,7 @@ public class ReadAndWriteDataBase {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
 
-    public static ArrayList<CardFeatures> getCardFeaturesByName(String cardName) {
+    public static FeatureWrapper getCardFeaturesByName(String cardName) {
         FeatureWrapper wrapper;
         Gson gson = new Gson();
         try {
@@ -84,6 +86,22 @@ public class ReadAndWriteDataBase {
         } catch (IOException e) {
             wrapper = new FeatureWrapper();
         }
-        return wrapper.features;
+        return wrapper;
     }
+
+
+
+    public static void addMonsterToCSV(Monster monster) {
+        //ToDo
+    }
+
+    public static void addSpellToCSV(Spell spell) {
+        //ToDo
+    }
+
+    public static void addSpellToCSV(Trap trap) {
+        //ToDo
+    }
+
+
 }

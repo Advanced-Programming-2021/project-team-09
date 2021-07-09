@@ -6,6 +6,7 @@ import controller.database.ReadAndWriteDataBase;
 import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.CardType;
+import model.card.FeatureWrapper;
 
 import java.util.ArrayList;
 @JsonIgnoreProperties({"description","cardType","cardID","trapType","limit"})
@@ -35,7 +36,8 @@ public class Trap extends Card {
     public void setCardName(String cardName) {
         this.cardName = cardName;
         setAttributesByName(cardName);
-        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        FeatureWrapper wrapper = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        this.features = wrapper.features;
     }
 
     public void setAttributesByName(String cardName) {
@@ -47,7 +49,11 @@ public class Trap extends Card {
         limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.TRAP;
         features = new ArrayList<>();
-        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        FeatureWrapper wrapper = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        this.features = wrapper.features;
+        this.syncedEffect = wrapper.getEffectMap();
+        this.syncedEffect = wrapper.getEffectMap();
+
     }
 
     public String toString(){

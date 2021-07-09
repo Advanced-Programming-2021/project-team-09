@@ -6,6 +6,7 @@ import controller.database.ReadAndWriteDataBase;
 import controller.database.CSVInfoGetter;
 import model.card.Card;
 import model.card.CardType;
+import model.card.FeatureWrapper;
 
 import java.util.ArrayList;
 
@@ -58,6 +59,8 @@ public class Spell extends Card {
         limit = CSVInfoGetter.getLimitation(temp.get(3));
         cardType = CardType.SPELL;
         this.features = new ArrayList<>();
-        this.features = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        FeatureWrapper wrapper = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        this.features = wrapper.features;
+        syncedEffect = wrapper.getEffectMap();
     }
 }
