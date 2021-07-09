@@ -172,6 +172,7 @@ public class GameMenuController {
                 Spell tempSpell = (Spell) card;
                 if (tempSpell.getSpellType() == SpellType.FIELD) {
                     setCardInPlayerFieldZone(game, cardNumberInHand);
+                    cardsInHand.remove(cardNumberInHand - 1);
                     return respond(GameMenuResponsesEnum.SUCCESSFUL);
                 }
             }
@@ -227,7 +228,7 @@ public class GameMenuController {
     }
 
     private static Boolean canTributeSelectedCards(Cell[] cells, int[] cellNumbers) {
-        for (int i : cellNumbers) if (!cells[i - 1].isOccupied()) return false;
+        for (int i : cellNumbers) if (!cells[i].isOccupied()) return false;
         for (int i = 0; i < cellNumbers.length; i++) {
             for (int j = i + 1; j < cellNumbers.length; j++) {
                 if (cellNumbers[j] == cellNumbers[i]) return false;
@@ -319,6 +320,10 @@ public class GameMenuController {
             }
         }
 
+
+        if (!game.getPlayerLimits().hasControlOnMonster(attackerMonster)) {
+            return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        }
 
         if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
             ((Monster) attacker.getCard()).setAttack(0);
@@ -536,14 +541,14 @@ public class GameMenuController {
     private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseRivalHealth(damage);
+        game.decreaseHealth(damage);
         return damage;
     }
 
     private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseHealth(damage);
+        game.decreaseRivalHealth(damage);
         return damage;
     }
 

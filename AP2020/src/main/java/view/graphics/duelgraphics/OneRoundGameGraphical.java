@@ -89,6 +89,8 @@ public class OneRoundGameGraphical implements Initializable {
     @FXML
     private ImageView rivalGraveYard;
     @FXML
+    private ImageView background;
+    @FXML
     private Label playerName;
     @FXML
     private Label playerHealth;
@@ -96,6 +98,8 @@ public class OneRoundGameGraphical implements Initializable {
     private Label rivalName;
     @FXML
     private Label rivalHealth;
+    @FXML
+    private Label phase;
 
     public OneRoundGameGraphical() {
 
@@ -119,7 +123,7 @@ public class OneRoundGameGraphical implements Initializable {
                 rivalMonsters, rivalMonster0, rivalMonster1, rivalMonster2, rivalMonster3, rivalMonster4);
         graphicalGameController = new GraphicalGameController(playerMonsters, playerSpells, rivalMonsters, rivalSpells,
                 playerCardBox, rivalCardBox, buttonsMenu, playerFieldSpell, playerGraveYard, rivalFieldSpell,
-                rivalGraveYard, game, pane, playerName, playerHealth, rivalName, rivalHealth);
+                rivalGraveYard, game, pane, playerName, playerHealth, rivalName, rivalHealth, phase, background);
     }
 
     private void makeArrays(ImageView[] rivalSpells, ImageView rivalSpell0, ImageView rivalSpell1, ImageView rivalSpell2,

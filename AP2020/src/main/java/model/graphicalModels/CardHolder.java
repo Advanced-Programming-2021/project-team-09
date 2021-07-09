@@ -16,7 +16,7 @@ public class CardHolder extends Pane {
     private final static Image BORDER = Menu.getImage("CardPlace", "png");
     private final static Image BACK_OF_CARD = Menu.getCard("BACK");
     private final ImageView cardPlace;
-    private final ImageView cardBehind;
+   // private final ImageView cardBehind;
     public ImageView cardBox;
     private Card card;
     private Image cardImage;
@@ -33,7 +33,7 @@ public class CardHolder extends Pane {
     }
 
     public CardHolder() {
-        setCardImage(BACK_OF_CARD);
+//        setCardImage(BACK_OF_CARD);
     }
 
 
@@ -59,20 +59,20 @@ public class CardHolder extends Pane {
     }
 
     {
-        cardBehind = new ImageView();
-        cardBehind.setLayoutX(6);
-        cardBehind.setLayoutY(6);
-        cardBehind.setFitHeight(188.0);
-        cardBehind.setFitWidth(138.0);
-        // cardBehind.getTransforms().add(new Rotate(180,new Point3D(1,0,0)));
-        cardBehind.setImage(BACK_OF_CARD);
+//        cardBehind = new ImageView();
+//        cardBehind.setLayoutX(6);
+//        cardBehind.setLayoutY(6);
+//        cardBehind.setFitHeight(188.0);
+//        cardBehind.setFitWidth(138.0);
+//        // cardBehind.getTransforms().add(new Rotate(180,new Point3D(1,0,0)));
+//        cardBehind.setImage(BACK_OF_CARD);
 
     }
 
     {
         this.setHeight(250.0);
         this.setWidth(150);
-        this.getChildren().add(cardBehind);
+       // this.getChildren().add(cardBehind);
         this.getChildren().add(cardPlace);
         this.getChildren().add(cardBox);
 
@@ -117,10 +117,10 @@ public class CardHolder extends Pane {
         cardPlace.setLayoutY(6 * multiple);
         cardPlace.setFitHeight(188.0 * multiple);
         cardPlace.setFitWidth(138.0 * multiple);
-        cardBehind.setLayoutX(6 * multiple);
-        cardBehind.setLayoutY(6 * multiple);
-        cardBehind.setFitHeight(188.0 * multiple);
-        cardBehind.setFitWidth(138.0 * multiple);
+//        cardBehind.setLayoutX(6 * multiple);
+//        cardBehind.setLayoutY(6 * multiple);
+//        cardBehind.setFitHeight(188.0 * multiple);
+//        cardBehind.setFitWidth(138.0 * multiple);
         cardBox.setFitWidth(150.0 * multiple);
         cardBox.setFitHeight(200.0 * multiple);
         super.setWidth(150 * multiple);

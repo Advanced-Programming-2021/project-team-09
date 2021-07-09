@@ -8,11 +8,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.duelgraphics.OneRoundGameGraphical">
    <children>
-      <ImageView fitHeight="700.0" fitWidth="700.0" opacity="0.64" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="background" fitHeight="700.0" fitWidth="700.0" opacity="0.6" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/solid%20brown.png" />
          </image>
@@ -43,6 +44,11 @@
             <Image url="@Images/Cards/BACK.jpg" />
          </image>
       </ImageView>
+      <Line endX="-8.600006103515625" endY="241.199951171875" layoutX="327.0" layoutY="338.0" startX="-8.600006103515625" startY="10.0" />
+      <Line endX="9.399993896484375" endY="241.199951171875" layoutX="389.0" layoutY="338.0" startX="9.399993896484375" startY="10.0" />
+      <Line endX="49.600006103515625" endY="241.199951171875" layoutX="428.0" layoutY="338.0" startX="49.600006103515625" startY="11.600006103515625" />
+      <Line endX="488.29998779296875" endY="423.8000183105469" layoutX="67.0" layoutY="37.0" startX="85.99998474121094" startY="423.8000183105469" />
+      <Line endX="488.199951171875" endY="-148.49996948242188" layoutX="67.0" layoutY="612.0" startX="85.99998474121094" startY="-148.49996948242188" />
       <HBox layoutX="163.0" layoutY="111.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fx:id="rivalSpell4" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -122,6 +128,7 @@
             </ImageView>
          </children>
       </HBox>
+      <Line endX="-8.600006103515625" endY="244.199951171875" layoutX="247.0" layoutY="335.0" startX="-8.600006103515625" startY="13.0" />
       <HBox layoutX="164.0" layoutY="355.0" prefHeight="100.0" prefWidth="200.0">
          <children>
             <ImageView fx:id="playerMonster3" fitHeight="100.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -204,13 +211,20 @@
             </ImageView>
          </children>
       </HBox>
-      <HBox fx:id="playerCardBox" layoutX="92.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
+      <HBox fx:id="playerCardBox" layoutX="102.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
       <HBox fx:id="rivalCardBox" layoutX="153.0" opacity="0.76" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: white;" />
-      <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="110.0" opacity="0.86" prefHeight="590.0" prefWidth="141.0" style="-fx-background-color: white;" />
+      <VBox fx:id="buttonsMenu" layoutX="559.0" layoutY="110.0" opacity="0.86" prefHeight="475.0" prefWidth="141.0" style="-fx-background-color: white;" />
       <Label fx:id="rivalName" alignment="CENTER" layoutX="5.0" layoutY="7.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <Label fx:id="rivalHealth" alignment="CENTER" layoutX="5.0" layoutY="37.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerHealth" alignment="CENTER" layoutX="6.0" layoutY="592.0" prefHeight="30.0" prefWidth="83.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerName" alignment="CENTER" layoutX="9.0" layoutY="627.0" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerHealth" alignment="CENTER" layoutX="557.0" layoutY="612.0" prefHeight="30.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="playerName" alignment="CENTER" layoutX="557.0" layoutY="642.0" prefHeight="30.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <Label fx:id="phase" alignment="CENTER" layoutY="627.0" prefHeight="30.0" prefWidth="91.0" style="-fx-background-color: transparent; -fx-font-size: 20px; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#2000ff" wrapText="true" />
+      <Line endX="155.50003051757812" endY="274.3999938964844" layoutX="82.0" layoutY="52.0" startX="155.50003051757812" startY="58.0" />
+      <Line endX="80.0" endY="224.0" layoutX="237.0" layoutY="104.0" startX="80.0" startY="5.0" />
+      <Line endX="0.199981689453125" endY="224.0" layoutX="396.0" layoutY="103.0" startX="0.199981689453125" startY="5.799995422363281" />
+      <Line endX="100.80001831054688" endY="222.39999389648438" layoutX="376.0" layoutY="104.0" startX="100.80001831054688" startY="4.799995422363281" />
+      <Line endX="462.70001220703125" endY="145.80001831054688" layoutX="92.0" layoutY="74.0" startX="61.00001525878906" startY="145.80001831054688" />
+      <Line endX="479.5" endY="136.39999389648438" layoutX="75.0" layoutY="81.0" startX="77.99998474121094" startY="136.39999389648438" />
    </children>
     <stylesheets>
         <URL value="@StyleSheets/OneRoundGraphical.css" />

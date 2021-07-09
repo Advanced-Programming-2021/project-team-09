@@ -61,6 +61,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
             playMedia(VoiceEffects.KEYBOARD_HIT);
             search(t1);
         });
+        deActiveButton();
         justifyButton(plusButton, Cursor.RIGHT_ARROW);
         justifyButton(minusButton, Cursor.LEFT_ARROW);
         nameLabel.setText("None");
@@ -78,9 +79,12 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     public void buy() {
         String cardName = nameLabel.getText();
         if (cardName.equals("None")) return;
+        playMedia(VoiceEffects.COIN_DROP);
         ShopMenuResponses respond = ShopController.buyCard(cardName);
         showAlert(respond.toString().replace("_"," "));
         updateBalanceLabel();
+        int price = Integer.parseInt(priceLabel.getText());
+        if (price > LoginMenuController.getCurrentUser().getBalance()) deActiveButton();
     }
 
     private void activeButton() {
@@ -96,7 +100,6 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         shopButton.setText("Buy!");
         shopButton.setOnMouseClicked(mouseEvent -> playMedia(VoiceEffects.ERROR));
         justifyButton(shopButton,Cursor.CANCEL);
-
     }
 
     public void nextMenu(ActionEvent actionEvent) {
@@ -245,6 +248,7 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         button.setPrefWidth(120);
         button.setStyle("-fx-border-style: solid none solid");
         button.setOnAction(actionEvent -> {
+            playMedia(VoiceEffects.CLICK);
             Card card = CSVInfoGetter.getCardByName(searchResult);
             cardHolder.setCardImage(getCard(searchResult));
             int price = CSVInfoGetter.getPriceByCardName(searchResult);
@@ -263,5 +267,20 @@ public class ShopMenuController extends SearchMenu implements Initializable {
         return null;
     }
 
+    public void goToMainMenu(ActionEvent actionEvent) {
+        goToMainMenu();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
 }
 

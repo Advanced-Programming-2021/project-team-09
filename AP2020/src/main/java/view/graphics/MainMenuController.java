@@ -1,5 +1,6 @@
 package view.graphics;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -7,7 +8,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import model.enums.VoiceEffects;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,13 +27,14 @@ public class MainMenuController extends Menu implements Initializable {
     @FXML
     private ImageView deckMenu;
     @FXML
-    private ImageView setting;
+    private ImageView shop;
     @FXML
     private ImageView babeFace;
     boolean isHappy = false;
 
     public final static Image SETTING_MENU_IMG = getImage("SettingIcon", "png");
     public final static Image DECK_MENU_IMG = getImage("DeckMenuIcon", "png");
+    public final static Image SHOP_MENU_IMG = getImage("ShopMenuIcon", "png");
     public final static Image PROFILE_MENU_IMG = getImage("ProfileMenuIcon", "png");
     public final static Image SCOREBOARD_MENU_IMG = getImage("ScoreboardMenuIcon", "png");
     public final static Image HAPPY_FACE_IMG = getImage("HappyFace", "png");
@@ -41,6 +42,7 @@ public class MainMenuController extends Menu implements Initializable {
     public final static Image GAME_MENU_IMG = getImage("StartGameMenu", "png");
     public final static Image GAME_IMG = getImage("Game", "png");
     public final static Image SETTING_IMG = getImage("Setting", "png");
+    public final static Image SHOP_IMG = getImage("Shop", "png");
     public final static Image SCOREBOARD_IMG = getImage("Scoreboard", "png");
     public final static Image PROFILE_IMG = getImage("Profile", "png");
     public final static Image DECK_IMG = getImage("Deck", "png");
@@ -57,7 +59,7 @@ public class MainMenuController extends Menu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         deckMenu.setImage(DECK_MENU_IMG);
-        setting.setImage(SETTING_MENU_IMG);
+        shop.setImage(SHOP_MENU_IMG);
         scoreBoard.setImage(SCOREBOARD_MENU_IMG);
         profileMenu.setImage(PROFILE_MENU_IMG);
         babeFace.setImage(NORMAL_FACE_IMG);
@@ -109,14 +111,14 @@ public class MainMenuController extends Menu implements Initializable {
         }
     }
 
-    public void changeSetting(MouseEvent mouseEvent) {
+    public void changeShop(MouseEvent mouseEvent) {
         changeFace(null);
         if (isHappy) {
-            setting.setEffect(new DropShadow());
-            changeMainPicture("Setting");
-            changeLabel("Setting Menu");
+            shop.setEffect(new DropShadow());
+            changeMainPicture("Shop");
+            changeLabel("Shop Menu");
         } else {
-            resetIcons(setting);
+            resetIcons(shop);
         }
     }
 
@@ -134,8 +136,8 @@ public class MainMenuController extends Menu implements Initializable {
 
     public void changeMainPicture(String nameOfMenu) {
         switch (nameOfMenu) {
-            case "Setting":
-                imageOfMenu.setImage(SETTING_IMG);
+            case "Shop":
+                imageOfMenu.setImage(SHOP_IMG);
                 break;
             case "Profile":
                 imageOfMenu.setImage(PROFILE_IMG);
@@ -172,7 +174,19 @@ public class MainMenuController extends Menu implements Initializable {
 
     }
 
-    public void goToSetting(MouseEvent mouseEvent) {
-        goToMenu("Setting");
+    public void goToShop(MouseEvent mouseEvent) {
+        goToMenu("Shop");
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToSetting();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
     }
 }

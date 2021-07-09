@@ -177,7 +177,7 @@ public class EditDeckMenu extends Menu implements Initializable {
         Label name = getLabel(cardName, 100, 20, 10);
         Label count = getLabel("Count:", 100, 20);
         Label count1 = getLabel("" + cardCount, 100, 20);
-        if (deck.canAddCardByName(cardName) && deck1.hasCapacity() && LoginMenuController.getCurrentUser().getCardByName(cardName) != null)
+        if (DeckMenuController.canAddCard(deck.getDeckName(),cardName) && deck1.hasCapacity() && LoginMenuController.getCurrentUser().getCardByName(cardName) != null)
             button1 = getButton(cardName, "Add", isMainDeck);
         if (cardCount != 0) button2 = getButton(cardName, "Remove", isMainDeck);
         box.getChildren().addAll(name, count, count1);
@@ -239,24 +239,6 @@ public class EditDeckMenu extends Menu implements Initializable {
         } else if (sideToggle.isSelected()) {
             sideChoiceMenu.search(searchText);
         }
-    }
-
-    private HBox getChoiceBox() {
-        if (mainToggle.isSelected()) return mainChoiceBox;
-        if (sideToggle.isSelected()) return sideChoiceBox;
-        return null;
-    }
-
-    private HashSet<String> getChoiceNames() {
-        if (mainToggle.isSelected()) return mainDeck.getCardNames();
-        if (sideToggle.isSelected()) return sideDeck.getCardNames();
-        return null;
-    }
-
-    private PrimaryDeck getDeck() {
-        if (mainToggle.isSelected()) return mainDeck;
-        if (sideToggle.isSelected()) return sideDeck;
-        return null;
     }
 
     public void setDeck(Deck deck) {

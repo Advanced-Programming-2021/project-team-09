@@ -162,7 +162,7 @@ public class DeckMenuController {
         return outputString.toString();
     }
 
-    private static boolean canAddCard(String deckName, String cardName) {
+    public static boolean canAddCard(String deckName, String cardName) {
         int numberOfCard = LoginMenuController.getCurrentUser().getDeckByName(deckName).getNumberOfCardsByName(cardName);
         Card card = CSVInfoGetter.getCardByName(cardName);
         if (card.isMonster()) return numberOfCard < 3;

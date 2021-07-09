@@ -73,7 +73,10 @@ public class AllCardsMenu extends ChoiceMenu implements Initializable {
         resetChoiceBox();
         cards = LoginMenuController.getCurrentUser().getCards();
         for (Card card : cards) choiceNames.add(card.getCardName());
-        searchField.textProperty().addListener((observableValue, s, t1) -> search(t1));
+        searchField.textProperty().addListener((observableValue, s, t1) ->  {
+            playMedia(VoiceEffects.KEYBOARD_HIT);
+            search(t1);
+        });
         resetChoiceBox();
     }
 

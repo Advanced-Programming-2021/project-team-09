@@ -39,7 +39,7 @@ public class WelcomeMenuController extends Menu implements Initializable {
 
 
     public void goToSignInMenu(ActionEvent actionEvent) {
-        goToMenu("SignUp");
+        goToMenu("Welcome");
     }
 
     public void login(ActionEvent actionEvent) {
@@ -72,5 +72,13 @@ public class WelcomeMenuController extends Menu implements Initializable {
 
     public void setFocus() {
         mainPane.requestFocus();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
     }
 }

@@ -30,6 +30,7 @@ package main;//import controller.database.CSVInfoGetter;
 //    }
 //}
 
+import com.google.gson.Gson;
 import controller.GraphicalGameController;
 import controller.LoginMenuController;
 import controller.database.ReadAndWriteDataBase;
@@ -41,9 +42,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.User;
+import model.game.Game;
 import model.game.MiniGame;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.ChangeBetweenThreeRounds;
+import view.graphics.SettingController;
 import view.graphics.duelgraphics.ChooseMiniGame;
 import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.OneRoundGameGraphical;
@@ -61,14 +64,15 @@ public class Main extends Application {
 //        stage.initStyle(StageStyle.TRANSPARENT);
         Menu.setStage(stage);
         stage.setResizable(false);
-        Menu.goToMenu("ChangeBetweenThreeRounds");
+        Menu.goToMenu("Welcome");
+        SettingController.playBG();
         stage.show();
 //        Pane pane = new CardHolder();
 //        new DuelMenu(0);
 //        stage.show();
-//        User user = ReadAndWriteDataBase.getUser("mir.json");
-//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-//        new OneRoundGameGraphical(user, user2);
+        User user = ReadAndWriteDataBase.getUser("mir.json");
+        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }

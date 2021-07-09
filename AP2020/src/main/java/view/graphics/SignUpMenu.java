@@ -1,6 +1,7 @@
 package view.graphics;
 
 import controller.LoginMenuController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -91,6 +92,14 @@ public class SignUpMenu extends Menu implements Initializable {
     public void changeBabeFace(Face face) {
         if (face == Face.SAD) cubeFace.setImage(SAD_CUBE);
         if (face == Face.HAPPY) cubeFace.setImage(HAPPY_CUBE);
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void goToLoginMenu(ActionEvent actionEvent) {
+        goToMenu("Login");
     }
 
     private enum Face{

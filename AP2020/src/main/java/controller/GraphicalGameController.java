@@ -1,10 +1,8 @@
 package controller;
 
-import controller.database.CSVInfoGetter;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,15 +17,18 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.card.Card;
-import model.deck.Graveyard;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.SpellType;
 import model.exceptions.GameException;
 import model.exceptions.WinnerException;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
+import view.duelMenu.EndPhaseMenu;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
 import view.responses.GameMenuResponse;
+import view.responses.GameMenuResponsesEnum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,27 @@ public class GraphicalGameController {
     private final Button SET_DEFENSE_POSITION = new Button("Set Defense!");
     private final Button SURRENDER = new Button("Surrender!");
     private final Button SUMMON = new Button("Summon!");
+    private final Pane pane;
+    private final ImageView[] playerMonsters;
+    private final ImageView[] playerSpells;
+    private final ImageView[] rivalMonsters;
+    private final ImageView[] rivalSpells;
+    private final HBox playerCards;
+    private final HBox rivalCards;
+    private final VBox options;
+    private final ImageView playerFieldSpell;
+    private final ImageView playerGraveYard;
+    private final ImageView rivalFieldSpell;
+    private final ImageView rivalGraveYard;
+    private final ImageView background;
+    private final Label playerName;
+    private final Label playerHealth;
+    private final Label rivalName;
+    private final Label rivalHealth;
+    private final Label phase;
+    private final Game game;
+    private Phase currentPhase = Phase.DRAW_PHASE;
+
     {
         ATTACK.setOnMouseClicked(this::attack);
         DIRECT_ATTACK.setOnMouseClicked(this::directAttack);
@@ -61,25 +83,6 @@ public class GraphicalGameController {
         SURRENDER.setOnMouseClicked(this::surrender);
         SUMMON.setOnMouseClicked(this::summon);
     }
-
-    private final Pane pane;
-    private final ImageView[] playerMonsters;
-    private final ImageView[] playerSpells;
-    private final ImageView[] rivalMonsters;
-    private final ImageView[] rivalSpells;
-    private final HBox playerCards;
-    private final HBox rivalCards;
-    private final VBox options;
-    private final ImageView playerFieldSpell;
-    private final ImageView playerGraveYard;
-    private final ImageView rivalFieldSpell;
-    private final ImageView rivalGraveYard;
-    private final Label playerName;
-    private final Label playerHealth;
-    private final Label rivalName;
-    private final Label rivalHealth;
-    private final Game game;
-    private Phase currentPhase = Phase.DRAW_PHASE;
     //private final boolean[][] isSelected = new boolean[4][5]; // 1: playerMonster, 2 : playerSpells, 3 : rivalmonster, 4 : rivalSpells
 
     public GraphicalGameController(ImageView[] playerMonsters, ImageView[] playerSpells,
@@ -87,7 +90,7 @@ public class GraphicalGameController {
                                    HBox playerCards, HBox rivalCards, VBox options,
                                    ImageView playerFieldSpell, ImageView playerGraveYard,
                                    ImageView rivalFieldSpell, ImageView rivalGraveYard, Game game, Pane pane,
-                                   Label playerName, Label playerHealth, Label rivalName, Label rivalHealth) {
+                                   Label playerName, Label playerHealth, Label rivalName, Label rivalHealth, Label phase, ImageView background) {
         this.pane = pane;
         this.playerMonsters = playerMonsters;
         this.playerSpells = playerSpells;
@@ -104,9 +107,10 @@ public class GraphicalGameController {
         this.playerHealth = playerHealth;
         this.rivalName = rivalName;
         this.rivalHealth = rivalHealth;
+        this.background = background;
+        this.phase = phase;
         this.game = game;
         setImageFunctionality();
-        loadCardHands();
         loadNames();
         updateWithoutTransition();
     }
@@ -117,24 +121,6 @@ public class GraphicalGameController {
         playerHealth.setText(game.getPlayerLP() + "");
         rivalName.setText(game.getRival().getNickname());
         rivalHealth.setText(game.getRivalLP() + "");
-    }
-
-    // only in the beginning of the game
-    private void loadCardHands() {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        for (Card card : cards) {
-            playerCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
-        }
-        for (Node child : playerCards.getChildren()) {
-            VBox.setMargin(child, new Insets(0, 0, 0, 5));
-        }
-        cards = game.getRivalHandCards();
-        for (Card card : cards) {
-            rivalCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
-        }
-        for (Node child : rivalCards.getChildren()) {
-            VBox.setMargin(child, new Insets(0, 0, 0, 5));
-        }
     }
 
     // doesnt work for hand cards ..
@@ -177,8 +163,16 @@ public class GraphicalGameController {
             rivalFieldSpellButtons();
         } else if (rivalGraveYardIsSelected()) {
             rivalGraveYardButtons();
+        } else if (playerHandCardIsSelected()) {
+            playerHandCardsButtons();
         }
-        // todo hand cards
+    }
+
+    private boolean playerHandCardIsSelected() {
+        for (Node child : playerCards.getChildren()) {
+            if (child.getEffect() != null) return true;
+        }
+        return false;
     }
 
     private void removeOptions() {
@@ -251,6 +245,9 @@ public class GraphicalGameController {
         if (cellState != State.FACE_DOWN_DEFENCE && (currentPhase == Phase.MAIN_PHASE1 || currentPhase == Phase.MAIN_PHASE2)) {
             options.getChildren().addAll(SET_ATTACK_POSITION, SET_DEFENSE_POSITION);
         }
+        if (cellState == State.FACE_DOWN_DEFENCE) {
+            options.getChildren().add(FLIP_SUMMON);
+        }
         options.getChildren().addAll(SHOW_CARD, NEXT_PHASE, SURRENDER);
     }
 
@@ -268,8 +265,11 @@ public class GraphicalGameController {
             return;
         }
         State cellState = cell.getState();
-        if (currentPhase == Phase.MAIN_PHASE1 || currentPhase == Phase.MAIN_PHASE2) {
+        if ((currentPhase == Phase.MAIN_PHASE1 || currentPhase == Phase.MAIN_PHASE2) && cellState == State.FACE_UP_SPELL) {
             options.getChildren().add(ACTIVE_EFFECT);
+        }
+        if (cellState == State.FACE_DOWN_SPELL) {
+            options.getChildren().add(FLIP_SUMMON);
         }
         options.getChildren().addAll(SHOW_CARD, NEXT_PHASE, SURRENDER);
     }
@@ -328,10 +328,132 @@ public class GraphicalGameController {
         options.getChildren().addAll(NEXT_PHASE, SURRENDER);
     }
 
-    public void summon(MouseEvent event) {
-        // TODO: 7/7/2021
+    public void playerHandCardsButtons() {
+        int i = -1;
+        for (int i1 = 0; i1 < playerCards.getChildren().size(); i1++) {
+            if (playerCards.getChildren().get(i1).getEffect() != null) {
+                i = i1;
+                break;
+            }
+        }
+        if (i == -1) {
+            options.getChildren().addAll(NEXT_PHASE, SURRENDER);
+            return;
+        }
+        Card card = game.getPlayerHandCards().get(i);
+        if (card.isSpell()) {
+            if (((Spell) card).getSpellType() == SpellType.FIELD) {
+                options.getChildren().addAll(SUMMON, SHOW_CARD, NEXT_PHASE, SURRENDER);
+                return;
+            }
+        }
+        options.getChildren().addAll(SUMMON, SET, SHOW_CARD, NEXT_PHASE, SURRENDER);
     }
-    
+
+    public void summon(MouseEvent event) {
+        int i = -1;
+        for (int i1 = 0; i1 < playerCards.getChildren().size(); i1++) {
+            if (playerCards.getChildren().get(i1).getEffect() != null) {
+                i = i1;
+                break;
+            }
+        }
+        if (i == -1) return;
+        Card card = game.getPlayerHandCards().get(i);
+        GameMenuResponse gameMenuResponse;
+        try {
+            gameMenuResponse = GameMenuController.summon(game, i + 1, false);
+        } catch (WinnerException winnerException) {
+            gameFinished(winnerException);
+            return;
+        }
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL)
+            updateSummonWithTransition(card, i);
+    }
+
+    private void updateSummonWithTransition(Card card, int index) {
+        boolean isField = false;
+        int x, y;
+        if (card.isMonster()) {
+            y = 360;
+            int i = -1;
+            Cell[] cells = game.getPlayerBoard().getMonsterZone();
+            for (int i1 = cells.length - 1; i1 >= 0; i1--) {
+                if (cells[i1].getCard() == card) {
+                    i = i1;
+                    break;
+                }
+            }
+            if (i == -1) return;
+            if (i == 0) x = 165 + 75 * 2;
+            else if (i == 1) x = 165 + 75;
+            else if (i == 2) x = 165 + 75 * 3;
+            else if (i == 3) x = 165;
+            else x = 165 + 75 * 4;
+        } else {
+            if (card.isSpell()) {
+                if (((Spell) card).getSpellType() == SpellType.FIELD) {
+                    x = 67;
+                    y = 355;
+                    isField = true;
+                } else {
+                    y = 460;
+                    int i = -1;
+                    Cell[] cells = game.getPlayerBoard().getSpellZone();
+                    for (int i1 = cells.length - 1; i1 >= 0; i1--) {
+                        if (cells[i1].getCard() == card) {
+                            i = i1;
+                            break;
+                        }
+                    }
+                    if (i == -1) return;
+                    if (i == 0) x = 165 + 75 * 2;
+                    else if (i == 1) x = 165 + 75;
+                    else if (i == 2) x = 165 + 75 * 3;
+                    else if (i == 3) x = 165;
+                    else x = 165 + 75 * 4;
+                }
+            } else {
+                y = 460;
+                int i = -1;
+                Cell[] cells = game.getPlayerBoard().getSpellZone();
+                for (int i1 = cells.length - 1; i1 >= 0; i1--) {
+                    if (cells[i1].getCard() == card) {
+                        i = i1;
+                        break;
+                    }
+                }
+                if (i == -1) return;
+                if (i == 0) x = 165 + 75 * 2;
+                else if (i == 1) x = 165 + 75;
+                else if (i == 2) x = 165 + 75 * 3;
+                else if (i == 3) x = 165;
+                else x = 165 + 75 * 4;
+            }
+        }
+        final boolean isFieldfinal = isField;
+        ImageView imageView = Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 100 + index * 75, 590);
+        pane.getChildren().add(imageView);
+        MoveTransition moveTransition = new MoveTransition(x, y, 100 + index * 75, 590, imageView, 1000);
+        moveTransition.setOnFinished(actionEvent -> {
+            if (isFieldfinal) updateBackGroundForField();
+            pane.getChildren().remove(imageView);
+            updateWithoutTransition();
+        });
+        moveTransition.play();
+    }
+
+    private void updateBackGroundForField() {
+        Card card = game.getPlayerBoard().getFieldZone().getCard();
+        if (card == null) {
+            background.setImage(Menu.getImage("solid brown", "png"));
+            background.setOpacity(0.6);
+        } else {
+            background.setImage(Menu.getImage(GameMenuController.trimName(card.getCardName()), "jpg"));
+            background.setOpacity(0.4);
+        }
+    }
+
     public void attack(MouseEvent mouseEvent) {
         int attacker = -1;
         for (int i = 0; i < 5; i++) {
@@ -340,17 +462,26 @@ public class GraphicalGameController {
             }
         }
         if (attacker == -1) return;
+        if (game.getRivalBoard().getNumberOfMonstersInMonsterZone() == 0) {
+            Menu.showAlert("Rival Monster Zone is empty!");
+            return;
+        }
         final int attackFinal = attacker;
         Rectangle rectangle = new Rectangle();
-        rectangle.setStyle("-fx-background-color: rgba(255,255,255,0.5)");
+        rectangle.setFill(Paint.valueOf("WHITE"));
+        rectangle.setOpacity(0.4);
         rectangle.setHeight(700);
         rectangle.setWidth(700);
         rectangle.setX(0);
         rectangle.setY(0);
         pane.getChildren().add(rectangle);
         ImageView[] images = new ImageView[5];
-        for (int i = 0; i <5; i++) {
-            images[i] = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), 75*i + 200, 200);
+        boolean[] playerBackUpCells = new boolean[5];
+        for (int i = 0; i < 5; i++) playerBackUpCells[i] = game.getPlayerBoard().getMonsterZone()[i].isOccupied();
+        boolean[] rivalBackUpCells = new boolean[5];
+        for (int i = 0; i < 5; i++) rivalBackUpCells[i] = game.getRivalBoard().getMonsterZone()[i].isOccupied();
+        for (int i = 0; i < 5; i++) {
+            images[i] = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), 75 * i + 200, 200);
             pane.getChildren().add(images[i]);
         }
         Button attackBtn = new Button("Attack");
@@ -366,8 +497,8 @@ public class GraphicalGameController {
                 for (ImageView imageView : images) {
                     imageView.setEffect(null);
                 }
-                if (((ImageView)mouseEvent1.getSource()).getImage() != null)
-                    ((ImageView)mouseEvent1.getSource()).setEffect(new DropShadow(40, Color.GREEN));
+                if (((ImageView) mouseEvent1.getSource()).getImage() != null)
+                    ((ImageView) mouseEvent1.getSource()).setEffect(new DropShadow(40, Color.GREEN));
             });
         }
         attackBtn.setOnMouseClicked(mouseEvent1 -> {
@@ -376,20 +507,84 @@ public class GraphicalGameController {
                 if (images[i].getEffect() != null) defender = i;
             }
             if (defender == -1) return;
+            final int defenderFinal = defender;
             if (!game.getRivalBoard().getMonsterZone(defender).isOccupied()) return;
             pane.getChildren().removeAll(Arrays.asList(images));
             pane.getChildren().removeAll(rectangle, attackBtn);
             getSelectedImageView().setEffect(null);
             removeOptions();
-            try {
-                GameMenuResponse gameMenuResponse = GameMenuController.attack(game, attackFinal + 1, defender + 1, false);
-                // TODO: 7/7/2021
-            } catch (GameException gameException) {
-                if (gameException instanceof WinnerException) ; // TODO: 7/7/2021
+
+            // moving to graveyard
+            Runnable runnable = () -> {
+                try {
+                    GameMenuResponse gameMenuResponse = GameMenuController.attack(game, attackFinal + 1, defenderFinal + 1, false);
+                    // TODO: 7/9/2021 alert
+                } catch (GameException gameException) {
+                    if (gameException instanceof WinnerException) gameFinished((WinnerException) gameException);
+                    return;
+                }
+                Cell[] playerCells = game.getPlayerBoard().getMonsterZone();
+                Cell[] rivalCells = game.getRivalBoard().getMonsterZone();
+                for (int i = 0; i < 5; i++) {
+                    if (rivalBackUpCells[i] && !rivalCells[i].isOccupied()) {
+                        int x, y = 210;
+                        if (i == 0) x = 155 + 75 * 2;
+                        else if (i == 1) x = 155 + 75 * 3;
+                        else if (i == 2) x = 155 + 75;
+                        else if (i == 3) x = 155 + 75 * 4;
+                        else x = 155;
+                        ImageView imageView = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), x, y);
+                        MoveTransition moveTransition = new MoveTransition(23, 111, imageView.getX(), imageView.getY(), imageView, 1500);
+                        pane.getChildren().add(imageView);
+                        moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
+                        moveTransition.play();
+                    }
+                }
+                for (int i = 0; i < 5; i++) {
+                    if (playerBackUpCells[i] && !playerCells[i].isOccupied()) {
+                        int x, y = 355;
+                        if (i == 0) x = 155 + 75 * 2;
+                        else if (i == 1) x = 155 + 75;
+                        else if (i == 2) x = 155 + 75 * 3;
+                        else if (i == 3) x = 155;
+                        else x = 155 + 75 * 4;
+                        ImageView imageView = Menu.getImageWithSizeForGame(playerMonsters[i].getImage(), x, y);
+                        MoveTransition moveTransition = new MoveTransition(23, 471, imageView.getX(), imageView.getY(), imageView, 1500);
+                        pane.getChildren().add(imageView);
+                        moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
+                        moveTransition.play();
+                    }
+                }
+                removeOptions();
+                resetImageEffects();
+                updateWithoutTransition();
+            };
+
+
+            if (game.getRivalBoard().getMonsterZone(defender).getState() == State.FACE_DOWN_DEFENCE) {
+                int x, y = 218;
+                if (defender == 0) x = 169 + 75 * 2;
+                else if (defender == 1) x = 169 + 75 * 3;
+                else if (defender == 2) x = 169 + 75;
+                else if (defender == 3) x = 169 + 75 * 4;
+                else x = 169;
+                rivalMonsters[defender].setImage(null);
+                ImageView imageView = Menu.getImageWithSizeForGame("back", x, y);
+                pane.getChildren().add(imageView);
+                String cardName = GameMenuController.trimName(game.getRivalBoard().getMonsterZone(defender).getCard().getCardName());
+                FlipTransition flipTransition = new FlipTransition(imageView, x, y, cardName, 1000);
+                flipTransition.setOnFinished(event -> {
+                    pane.getChildren().remove(imageView);
+                    rivalMonsters[defenderFinal].setImage(Menu.getCardImage(cardName));
+                    runnable.run();
+                });
+                flipTransition.play();
+            } else {
+                runnable.run();
             }
         });
     }
-    
+
     public void directAttack(MouseEvent mouseEvent) {
         int attacker = -1;
         for (int i = 0; i < 5; i++) {
@@ -398,36 +593,242 @@ public class GraphicalGameController {
             }
         }
         if (attacker == -1) return;
+        if (game.getRivalBoard().getNumberOfMonstersInMonsterZone() != 0) {
+            Menu.showAlert("Monster Zone is not Empty!");
+            return;
+        }
         try {
             GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, attacker + 1);
         } catch (WinnerException winnerException) {
-            // TODO: 7/7/2021
+            gameFinished(winnerException);
+            return;
+        }
+        updateWithoutTransition();
+    }
+
+    public void set(MouseEvent mouseEvent) {
+        int i = -1;
+        for (int i1 = 0; i1 < playerCards.getChildren().size(); i1++) {
+            if (playerCards.getChildren().get(i1).getEffect() != null) {
+                i = i1;
+                break;
+            }
+        }
+        if (i == -1) return;
+        Card card = game.getPlayerHandCards().get(i);
+        GameMenuResponse gameMenuResponse;
+        if (card.isMonster()) {
+            gameMenuResponse = GameMenuController.setMonsterCard(game, i + 1);
+        } else {
+            gameMenuResponse = GameMenuController.setSpellAndTrap(game, i + 1);
+        }
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            int x, y;
+            if (card.isMonster()) {
+                y = 360;
+                int j = -1;
+                Cell[] cells = game.getPlayerBoard().getMonsterZone();
+                for (int i1 = cells.length - 1; i1 >= 0; i1--) {
+                    if (cells[i1].getCard() == card) {
+                        j = i1;
+                        break;
+                    }
+                }
+                if (j == -1) return;
+                if (j == 0) x = 165 + 75 * 2;
+                else if (j == 1) x = 165 + 75;
+                else if (j == 2) x = 165 + 75 * 3;
+                else if (j == 3) x = 165;
+                else x = 165 + 75 * 4;
+            } else {
+                y = 460;
+                int j = -1;
+                Cell[] cells = game.getPlayerBoard().getSpellZone();
+                for (int i1 = cells.length - 1; i1 >= 0; i1--) {
+                    if (cells[i1].getCard() == card) {
+                        j = i1;
+                        break;
+                    }
+                }
+                if (j == -1) return;
+                if (j == 0) x = 165 + 75 * 2;
+                else if (j == 1) x = 165 + 75;
+                else if (j == 2) x = 165 + 75 * 3;
+                else if (j == 3) x = 165;
+                else x = 165 + 75 * 4;
+            }
+            ImageView imageView = Menu.getImageWithSizeForGame("back", 100 + i * 75, 590);
+            pane.getChildren().add(imageView);
+            MoveTransition moveTransition = new MoveTransition(x, y, imageView.getX(), imageView.getY(), imageView, 1000);
+            moveTransition.setOnFinished(actionEvent -> {
+                pane.getChildren().remove(imageView);
+                updateWithoutTransition();
+            });
+            moveTransition.play();
+        } else {
+            // TODO: 7/9/2021 alert
         }
     }
-    
-    public void set(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
-    }
-    
+
     public void nextPhase(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        try {
+            if (currentPhase.equals(Phase.STANDBY_PHASE))
+                goToMainPhase1();
+            else if (currentPhase.equals(Phase.END_PHASE)) {
+                goToDrawPhase();
+                GameMenuResponse gameMenuResponse;
+                if ((gameMenuResponse = GameMenuController.draw(game)).getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+                    // TODO: 7/8/2021
+                }
+            } else if (currentPhase.equals(Phase.DRAW_PHASE))
+                goToStandByPhase();
+            else if (currentPhase.equals(Phase.MAIN_PHASE2))
+                goToEndPhase();
+            else if (currentPhase.equals(Phase.BATTLE_PHASE))
+                goToMainPhase2();
+            else if (currentPhase.equals(Phase.MAIN_PHASE1))
+                goToBattlePhase();
+        } catch (WinnerException e) {
+            // TODO: 7/8/2021
+            return;
+        }
+        updateWithoutTransition();
     }
-    
+
+    public void goToStandByPhase() throws WinnerException {
+        GameMenuController.goToStandByPhase(game);
+        setCurrentPhase(Phase.STANDBY_PHASE);
+        updatePhase();
+    }
+
+    public void goToMainPhase1() {
+        setCurrentPhase(Phase.MAIN_PHASE1);
+        updatePhase();
+    }
+
+    public void goToDrawPhase() throws WinnerException {
+        resetImageEffects();
+        if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run(); // TODO: 7/8/2021
+        game.changeTurn();
+        resetImageEffects();
+        setCurrentPhase(Phase.DRAW_PHASE);
+        updatePhase();
+    }
+
+    public void goToMainPhase2() {
+        setCurrentPhase(Phase.MAIN_PHASE2);
+        updatePhase();
+    }
+
+    public void goToBattlePhase() {
+        setCurrentPhase(Phase.BATTLE_PHASE);
+        updatePhase();
+    }
+
+    public void goToEndPhase() {
+        setCurrentPhase(Phase.END_PHASE);
+        updatePhase();
+    }
+
+    public void setCurrentPhase(Phase currentPhase) {
+        this.currentPhase = currentPhase;
+    }
+
+    public void updatePhase() {
+        if (currentPhase.equals(Phase.STANDBY_PHASE))
+            phase.setText("StandBy");
+        else if (currentPhase.equals(Phase.END_PHASE))
+            phase.setText("End phase");
+        else if (currentPhase.equals(Phase.DRAW_PHASE))
+            phase.setText("Draw");
+        else if (currentPhase.equals(Phase.MAIN_PHASE2))
+            phase.setText("Main 2");
+        else if (currentPhase.equals(Phase.BATTLE_PHASE))
+            phase.setText("Battle");
+        else if (currentPhase.equals(Phase.MAIN_PHASE1))
+            phase.setText("Main 1");
+    }
+
     public void activeEffect(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerSpells.length; i1++) {
+            if (playerSpells[i1].getEffect() != null) ; // TODO: 7/9/2021
+        }
     }
-    
+
     public void flipSummon(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) {
+                i = i1;
+                break;
+            }
+        }
+        if (i == -1) return;
+        GameMenuResponse gameMenuResponse;
+        try {
+            gameMenuResponse = GameMenuController.flipSummon(game, i + 1, false);
+        } catch (GameException gameException) {
+            if (gameException instanceof WinnerException) ; // TODO: 7/9/2021
+            return;
+        }
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            int x, y = 358;
+            if (i == 0) x = 168 + 75 * 2;
+            else if (i == 1) x = 168 + 75;
+            else if (i == 2) x = 168 + 75 * 3;
+            else if (i == 3) x = 168;
+            else x = 168 + 75 * 4;
+            playerMonsters[i].setImage(null);
+            ImageView imageView = Menu.getImageWithSizeForGame("back", x, y);
+            pane.getChildren().add(imageView);
+            String cardName = GameMenuController.trimName(game.getPlayerBoard().getMonsterZone(i).getCard().getCardName());
+            FlipTransition flipTransition = new FlipTransition(imageView, x, y, cardName, 1000);
+            final int iFinal = i;
+            flipTransition.setOnFinished(actionEvent -> {
+                pane.getChildren().remove(imageView);
+                playerMonsters[iFinal].setImage(Menu.getCardImage(cardName));
+            });
+            flipTransition.play();
+        } else {
+            System.out.println(gameMenuResponse.getGameMenuResponseEnum());
+        }
     }
-    
+
     public void showCard(MouseEvent mouseEvent) {
         Rectangle rectangle = new Rectangle();
-        rectangle.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
+        rectangle.setFill(Paint.valueOf("WHITE"));
+        rectangle.setOpacity(0.4);
         rectangle.setHeight(700);
         rectangle.setWidth(700);
         rectangle.setX(0);
         rectangle.setY(0);
+        if (playerSpellIsSelected() || playerMonsterIsSelected()) {
+            if (getSelectedImageView().getImage().getUrl().contains("back")) {
+                Card card;
+                int i = -1;
+                for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+                    if (playerMonsters[i1].getEffect() != null) i = i1;
+                }
+                if (i != -1) card = game.getPlayerBoard().getMonsterZone(i).getCard();
+                else {
+                    for (int i1 = 0; i1 < playerSpells.length; i1++) {
+                        if (playerSpells[i1].getEffect() != null) i = i1;
+                    }
+                    card = game.getPlayerBoard().getSpellZone(i).getCard();
+                }
+                ImageView imageView = new ImageView(Menu.getCardImage(GameMenuController.trimName(card.getCardName())));
+                imageView.setX(280);
+                imageView.setY(200);
+                imageView.setFitWidth(140);
+                imageView.setFitHeight(200);
+                pane.getChildren().addAll(rectangle, imageView);
+                EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle);
+                rectangle.setOnMouseClicked(eventHandler);
+                imageView.setOnMouseClicked(eventHandler);
+                return;
+            }
+        }
         ImageView imageView = new ImageView(getSelectedImageView().getImage());
         imageView.setX(280);
         imageView.setY(200);
@@ -438,7 +839,7 @@ public class GraphicalGameController {
         rectangle.setOnMouseClicked(eventHandler);
         imageView.setOnMouseClicked(eventHandler);
     }
-    
+
     public ImageView getSelectedImageView() {
         for (ImageView playerMonster : playerMonsters) {
             if (playerMonster.getEffect() != null) return playerMonster;
@@ -452,12 +853,15 @@ public class GraphicalGameController {
         for (ImageView rivalSpell : rivalSpells) {
             if (rivalSpell.getEffect() != null) return rivalSpell;
         }
+        for (Node child : playerCards.getChildren()) {
+            if (child.getEffect() != null) return (ImageView) child;
+        }
         if (rivalFieldSpell.getEffect() != null) return rivalFieldSpell;
         if (rivalGraveYard.getEffect() != null) return rivalGraveYard;
         if (playerFieldSpell.getEffect() != null) return playerFieldSpell;
         return playerGraveYard;
     }
-    
+
     public void showGraveYard(MouseEvent mouseEvent) {
         if (playerGraveYard.getEffect() != null) {
             Rectangle rectangle = new Rectangle();
@@ -491,7 +895,7 @@ public class GraphicalGameController {
                 EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle, label);
                 rectangle.setOnMouseClicked(eventHandler);
                 imageView.setOnMouseClicked(event -> {
-                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0])%game.getPlayerBoard().getGraveyard().getCards().size()).getCardName())));
+                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()).getCardName())));
                     label.setText(((Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()) + 1) + "/" + game.getPlayerBoard().getGraveyard().getCards().size());
                 });
             }
@@ -527,23 +931,48 @@ public class GraphicalGameController {
                 EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle, label);
                 rectangle.setOnMouseClicked(eventHandler);
                 imageView.setOnMouseClicked(event -> {
-                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0])%game.getRivalBoard().getGraveyard().getCards().size()).getCardName())));
+                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0]) % game.getRivalBoard().getGraveyard().getCards().size()).getCardName())));
                     label.setText(((Integer.parseInt(label.getText().split("/")[0]) % game.getRivalBoard().getGraveyard().getCards().size()) + 1) + "/" + game.getRivalBoard().getGraveyard().getCards().size());
                 });
             }
         }
     }
-    
+
     public void setAttackPosition(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) i = i1;
+        }
+        if (i == -1) return;
+        if (game.getPlayerBoard().getMonsterZone(i).getState() != State.FACE_UP_DEFENCE) return;
+        GameMenuResponse gameMenuResponse;
+        gameMenuResponse = GameMenuController.setMonsterPosition(game, i + 1, "attack");
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            playerMonsters[i].setRotate(0);
+        }
     }
-    
+
     public void setDefensePosition(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) i = i1;
+        }
+        if (i == -1) return;
+        if (game.getPlayerBoard().getMonsterZone(i).getState() != State.FACE_UP_ATTACK) return;
+        GameMenuResponse gameMenuResponse;
+        gameMenuResponse = GameMenuController.setMonsterPosition(game, i + 1, "defense");
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            playerMonsters[i].setRotate(90);
+
+        }
     }
-    
+
     public void surrender(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        gameFinished(new WinnerException(game.getRival(), game.getPlayer(), game.getRivalLP(), game.getPlayerLP()));
+    }
+
+    public void gameFinished(WinnerException winnerException) {
+        // TODo
     }
 
     private void resetImageEffects() {
@@ -559,42 +988,13 @@ public class GraphicalGameController {
         for (ImageView rivalSpell : rivalSpells) {
             rivalSpell.setEffect(null);
         }
+        for (Node child : playerCards.getChildren()) {
+            child.setEffect(null);
+        }
         rivalFieldSpell.setEffect(null);
         rivalGraveYard.setEffect(null);
         playerFieldSpell.setEffect(null);
         playerGraveYard.setEffect(null);
-    }
-
-    public void movePlayerMonsterToGraveYard(int num) {
-        ImageView imageView = Menu.getImageWithSizeForGame(playerMonsters[num].getImage(), playerMonsters[num].getLayoutX(),
-                playerMonsters[num].getLayoutY());
-        pane.getChildren().add(imageView);
-        MoveTransition moveTransition = new MoveTransition(playerGraveYard.getLayoutX(),
-                playerGraveYard.getLayoutY(), playerMonsters[num].getLayoutX(), playerMonsters[num].getLayoutY(), imageView);
-        moveTransition.play();
-    }
-
-    public void updateRivalSpells() {
-
-    }
-
-    public void updatePlayerSpells() {
-
-    }
-
-    public void updateRivalMonsters() {
-
-    }
-
-    public void updatePlayerMonsters() {
-
-    }
-
-    public void updatePlayerHand() {
-
-    }
-
-    public void updateRivalHand() {
     }
 
     public void updateWithoutTransition() {
@@ -605,20 +1005,38 @@ public class GraphicalGameController {
             playerCards.getChildren().remove(i);
         }
         playerHealth.setText(String.valueOf(game.getPlayerLP()));
+        playerName.setText(game.getPlayer().getNickname());
+        rivalName.setText(game.getRival().getNickname());
         rivalHealth.setText(String.valueOf(game.getRivalLP()));
         ArrayList<Card> cards = game.getPlayerHandCards();
         for (Card card : cards) {
-            playerCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
+            ImageView imageView;
+            playerCards.getChildren().add(imageView = Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
+            imageView.setOnMouseClicked(mouseEvent -> {
+                resetImageEffects();
+                removeOptions();
+                if (((ImageView) mouseEvent.getSource()).getImage() != null)
+                    ((ImageView) mouseEvent.getSource()).setEffect(new DropShadow(40, Color.RED));
+                updateButtons();
+            });
         }
         cards = game.getRivalHandCards();
         for (Card card : cards) {
-            rivalCards.getChildren().add(Menu.getImageWithSizeForGame(GameMenuController.trimName(card.getCardName()), 0, 0));
+            rivalCards.getChildren().add(Menu.getImageWithSizeForGame("back", 0, 0));
         }
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         for (int i = 0; i < 5; i++) {
             if (cells[i].isOccupied()) {
-                if (!(playerMonsters[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                State cellState = cells[i].getState();
+                if (cellState == State.FACE_UP_ATTACK) {
                     playerMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                    playerMonsters[i].setRotate(0);
+                } else if (cellState == State.FACE_UP_DEFENCE) {
+                    playerMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                    playerMonsters[i].setRotate(90);
+                } else if (cellState == State.FACE_DOWN_DEFENCE) {
+                    playerMonsters[i].setImage(Menu.getCardImage("back"));
+                    playerMonsters[i].setRotate(0);
                 }
             } else {
                 playerMonsters[i].setImage(null);
@@ -627,8 +1045,11 @@ public class GraphicalGameController {
         cells = game.getPlayerBoard().getSpellZone();
         for (int i = 0; i < 5; i++) {
             if (cells[i].isOccupied()) {
-                if (!(playerSpells[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                State cellState = cells[i].getState();
+                if (cellState == State.FACE_UP_SPELL) {
                     playerSpells[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                } else if (cellState == State.FACE_DOWN_SPELL) {
+                    playerSpells[i].setImage(Menu.getCardImage("back"));
                 }
             } else {
                 playerSpells[i].setImage(null);
@@ -637,8 +1058,16 @@ public class GraphicalGameController {
         cells = game.getRivalBoard().getMonsterZone();
         for (int i = 0; i < 5; i++) {
             if (cells[i].isOccupied()) {
-                if (!(rivalMonsters[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                State cellState = cells[i].getState();
+                if (cellState == State.FACE_UP_ATTACK) {
                     rivalMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                    rivalMonsters[i].setRotate(0);
+                } else if (cellState == State.FACE_UP_DEFENCE) {
+                    rivalMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                    rivalMonsters[i].setRotate(90);
+                } else if (cellState == State.FACE_DOWN_DEFENCE) {
+                    rivalMonsters[i].setImage(Menu.getCardImage("back"));
+                    rivalMonsters[i].setRotate(0);
                 }
             } else {
                 rivalMonsters[i].setImage(null);
@@ -647,27 +1076,105 @@ public class GraphicalGameController {
         cells = game.getRivalBoard().getSpellZone();
         for (int i = 0; i < 5; i++) {
             if (cells[i].isOccupied()) {
-                if (!(rivalSpells[i].getImage().getUrl().toLowerCase().contains(GameMenuController.trimName(cells[i].getCard().getCardName()).toLowerCase()))) {
+                State cellState = cells[i].getState();
+                if (cellState == State.FACE_UP_SPELL) {
                     rivalSpells[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
+                } else if (cellState == State.FACE_DOWN_SPELL) {
+                    rivalSpells[i].setImage(Menu.getCardImage("back"));
                 }
             } else {
                 rivalSpells[i].setImage(null);
             }
         }
+        if (game.getPlayerBoard().getFieldZone().isOccupied())
+            playerFieldSpell.setImage(Menu.getCardImage(GameMenuController.trimName(game.getPlayerBoard().getFieldZone().getCard().getCardName())));
+        else playerFieldSpell.setImage(Menu.getCardImage("back"));
+        if (game.getRivalBoard().getFieldZone().isOccupied())
+            rivalFieldSpell.setImage(Menu.getCardImage(GameMenuController.trimName(game.getRivalBoard().getFieldZone().getCard().getCardName())));
+        else rivalFieldSpell.setImage(Menu.getCardImage("back"));
+        if (game.getPlayerBoard().getGraveyard().getCards().size() == 0)
+            playerGraveYard.setImage(Menu.getCardImage("back"));
+        else
+            playerGraveYard.setImage(Menu.getCardImage(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(game.getPlayerBoard().getGraveyard().getCards().size() - 1).getCardName())));
+        if (game.getRivalBoard().getGraveyard().getCards().size() == 0)
+            rivalGraveYard.setImage(Menu.getCardImage("back"));
+        else
+            rivalGraveYard.setImage(Menu.getCardImage(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(game.getRivalBoard().getGraveyard().getCards().size() - 1).getCardName())));
+        updatePhase();
+        updateBackGroundForField();
+    }
+
+    public void response(GameMenuResponse gameMenuResponse) {
+        GameMenuResponsesEnum response = gameMenuResponse.getGameMenuResponseEnum();
+        String str;
+        if (response == GameMenuResponsesEnum.INVALID_SELECTION)
+            str = "Invalid Selection!";
+        else if (response == GameMenuResponsesEnum.NO_CARD_FOUND)
+            str = "No card found!";
+        else if (response == GameMenuResponsesEnum.SUCCESSFUL)
+            str = "Successful!";
+        else if (response == GameMenuResponsesEnum.CARD_IS_HIDDEN)
+            str = "Card Is hidden!";
+        else if (response == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL)
+            str = "Spell zone is full!";
+        else if (response == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL)
+            str = "Monster Zone is full!";
+        else if (response == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS)
+            str = "Not enough monsters";
+        else if (response == GameMenuResponsesEnum.CANT_NORMAL_SUMMON)
+            str = "Cant normal summon!";
+        else if (response == GameMenuResponsesEnum.CANT_ATTACK)
+            str = "Cant attack!";
+        else if (response == GameMenuResponsesEnum.ALREADY_SUMMONED)
+            str = "Already summoned!";
+        else if (response == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET)
+            str = "You haven't summoned Yed!";
+        else if (response == GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION)
+            str = "Already in this position!";
+        else if (response == GameMenuResponsesEnum.CANT_FLIP_SUMMON)
+            str = "Cant Flip Summon!";
+        else if (response == GameMenuResponsesEnum.ALREADY_ATTACKED)
+            str = "Already Attacked!";
+        else if (response == GameMenuResponsesEnum.PLEASE_SELECT_MONSTER)
+            str = "Please Select Monster!";
+        else if (response == GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP)
+            str = "Please Select spell or trap!";
+        else if (response == GameMenuResponsesEnum.CANT_RITUAL_SUMMON)
+            str = "Cant ritual summon!";
+        else if (response == GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH)
+            str = "Selected levels don't match!";
+        else if (response == GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL)
+            str = "Select monster is not ritual!";
+        else if (response == GameMenuResponsesEnum.NO_RITUAL_SPELL_IN_SPELLZONE)
+            str = "No ritual spell in spellzone!";
+        else if (response == GameMenuResponsesEnum.PLAYER_HAND_IS_FULL)
+            str = "Player hand is full!";
+        else if (response == GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK)
+            str = "No cards in main deck!";
+        else if (response == GameMenuResponsesEnum.ABORTED)
+            str = "Aborted!";
+        else if (response == GameMenuResponsesEnum.CANT_SPECIAL_SUMMON)
+            str = "Cant special Summon!";
+        else if (response == GameMenuResponsesEnum.ALREADY_CHANGED)
+            str = "Already changed!";
+        else if (response == GameMenuResponsesEnum.CANT_CHANGE)
+            str = "Can't change right now!";
+        else return;
+        Menu.showAlert(str);
     }
 
     private class MoveTransition extends Transition {
         final double xDes, yDes, xStart, yStart;
         final ImageView imageView;
 
-        public MoveTransition(double xDes, double yDes, double xStart, double yStart, ImageView imageView) {
+        public MoveTransition(double xDes, double yDes, double xStart, double yStart, ImageView imageView, int time) {
             this.xDes = xDes;
             this.yDes = yDes;
             this.xStart = xStart;
             this.yStart = yStart;
             this.imageView = imageView;
             this.setInterpolator(Interpolator.EASE_OUT);
-            this.setCycleDuration(Duration.millis(2000));
+            this.setCycleDuration(Duration.millis(time));
             this.setCycleCount(1);
         }
 
@@ -675,6 +1182,38 @@ public class GraphicalGameController {
         protected void interpolate(double v) {
             imageView.setX(xStart + (xDes - xStart) * v);
             imageView.setY(yStart + (yDes - yStart) * v);
+        }
+    }
+
+    private class FlipTransition extends Transition {
+        private final ImageView imageView;
+        private final int x, y;
+        private final String imageName;
+        private boolean isReversed = false;
+
+        public FlipTransition(ImageView imageView, int x, int y, String imageName, int time) {
+            this.imageView = imageView;
+            this.x = x;
+            this.y = y;
+            this.imageName = imageName;
+            this.setCycleDuration(Duration.millis(time));
+            this.setCycleCount(1);
+            this.setInterpolator(Interpolator.EASE_OUT);
+        }
+
+        @Override
+        protected void interpolate(double v) {
+            if (v > 0.5) {
+                if (!isReversed) {
+                    imageView.setImage(Menu.getCardImage(imageName));
+                    isReversed = true;
+                }
+                imageView.setFitWidth(70 * (2 * v - 1));
+                imageView.setX(x + 70 * (1 - v));
+            } else {
+                imageView.setFitWidth(70 * (1 - 2 * v));
+                imageView.setX(x + 70 * v);
+            }
         }
     }
 }

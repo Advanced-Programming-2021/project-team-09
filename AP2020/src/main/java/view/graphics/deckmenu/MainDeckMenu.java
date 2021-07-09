@@ -53,4 +53,20 @@ public class MainDeckMenu extends Menu implements Initializable {
         playMedia(VoiceEffects.CLICK);
         mainPane.setCenter(getNode("AllDecksMenu"));
     }
+
+    public void goToMainMenu(ActionEvent actionEvent) {
+        goToMainMenu();
+    }
+
+    public void close(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    public void goToSetting(ActionEvent actionEvent) {
+        goToMenu("Setting");
+    }
+
+    public void showAbout(ActionEvent actionEvent) {
+        showAbout();
+    }
 }

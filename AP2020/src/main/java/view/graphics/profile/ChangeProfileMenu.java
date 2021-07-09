@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.enums.Cursor;
+import model.enums.VoiceEffects;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +35,7 @@ public class ChangeProfileMenu extends ChangeMenu implements Initializable {
 
     @Override
     public void change() {
+        playMedia(VoiceEffects.JINGLE);
         ProfileController.changeProfilePhoto(currentProfile);
         setProfileInCircle((Circle) ((VBox) ((BorderPane) getCurrentScene().getRoot()).getLeft()).getChildren().get(0));
     }
@@ -43,7 +45,6 @@ public class ChangeProfileMenu extends ChangeMenu implements Initializable {
         currentProfile = LoginMenuController.getCurrentUser().getProfilePhoto();
         setLabel();
         setProfileInCircle(profilePlace);
-
     }
 
     private void setLabel() {
@@ -57,6 +58,7 @@ public class ChangeProfileMenu extends ChangeMenu implements Initializable {
 
 
     public void previousProfile(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         currentProfile--;
         if (currentProfile == -1) currentProfile = NUMBER_OF_PROFILES - 1;
         setProfileInCircle(profilePlace);
@@ -64,6 +66,7 @@ public class ChangeProfileMenu extends ChangeMenu implements Initializable {
     }
 
     public void nextProfile(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         currentProfile++;
         if (currentProfile == NUMBER_OF_PROFILES) currentProfile = 0;
         setProfileInCircle(profilePlace);
