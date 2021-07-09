@@ -48,7 +48,7 @@ public class SettingController extends Menu implements Initializable {
         exitButton.setOnMouseEntered(mouseEvent -> changeCursor(Cursor.CANCEL,mouseEvent));
         exitButton.setOnMouseExited(mouseEvent -> changeCursor(Cursor.DEFAULT,mouseEvent));
         justifyButton(importExport,Cursor.TRASH);
-        importExport.setOnMouseExited(mouseEvent -> {
+        importExport.setOnMouseClicked(mouseEvent -> {
             playMedia(VoiceEffects.CLICK);
             goToImportExport();
         });

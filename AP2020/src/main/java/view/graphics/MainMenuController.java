@@ -1,5 +1,6 @@
 package view.graphics;
 
+import controller.LoginMenuController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -188,5 +189,11 @@ public class MainMenuController extends Menu implements Initializable {
 
     public void close(ActionEvent actionEvent) {
         System.exit(0);
+    }
+
+    public void logout(ActionEvent actionEvent) {
+        LoginMenuController.logout();
+        showAlert("LOGGED OUT!!!");
+        goToMenu("Welcome");
     }
 }
