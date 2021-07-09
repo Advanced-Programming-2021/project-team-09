@@ -4,6 +4,7 @@ import controller.database.CSVInfoGetter;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -1082,10 +1083,7 @@ public class GraphicalGameController {
         for (int i = playerCards.getChildren().size() - 1; i >= 0; i--) {
             playerCards.getChildren().remove(i);
         }
-        playerHealth.setText(String.valueOf(game.getPlayerLP()));
-        playerName.setText(game.getPlayer().getNickname());
-        rivalName.setText(game.getRival().getNickname());
-        rivalHealth.setText(String.valueOf(game.getRivalLP()));
+        loadNames();
         ArrayList<Card> cards = game.getPlayerHandCards();
         for (Card card : cards) {
             ImageView imageView;
@@ -1096,11 +1094,14 @@ public class GraphicalGameController {
                     ((ImageView) mouseEvent.getSource()).setEffect(new DropShadow(40, Color.RED));
                 updateButtons();
             });
+            HBox.setMargin(imageView, new Insets(0, 0, 0, 9));
             addDragForHandCard(imageView);
         }
         cards = game.getRivalHandCards();
         for (Card card : cards) {
-            rivalCards.getChildren().add(Menu.getImageWithSizeForGame("back", 0, 0));
+            ImageView imageView;
+            rivalCards.getChildren().add(imageView = Menu.getImageWithSizeForGame("back", 0, 0));
+            HBox.setMargin(imageView, new Insets(0, 0, 0, 9));
         }
         Cell[] cells = game.getPlayerBoard().getMonsterZone();
         for (int i = 0; i < 5; i++) {

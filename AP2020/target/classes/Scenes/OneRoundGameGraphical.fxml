@@ -14,12 +14,12 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.duelgraphics.OneRoundGameGraphical">
    <children>
-      <ImageView fx:id="background" fitHeight="700.0" fitWidth="700.0" opacity="0.6" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="background" fitHeight="700.0" fitWidth="700.0" opacity="0.45" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/solid brown.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="700.0" opacity="0.4" stroke="BLACK" strokeType="INSIDE" width="700.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#919191" height="700.0" opacity="0.3" stroke="BLACK" strokeType="INSIDE" width="700.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6a90b1bf" height="114.0" layoutX="16.0" layoutY="104.0" stroke="BLACK" strokeType="INSIDE" width="83.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="220.0" layoutX="153.0" layoutY="108.0" opacity="0.4" stroke="BLACK" strokeType="INSIDE" width="402.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6a90b1" height="114.0" layoutX="16.0" layoutY="464.0" stroke="BLACK" strokeType="INSIDE" width="83.0" />
@@ -216,11 +216,11 @@
       <HBox fx:id="playerCardBox" layoutX="118.0" layoutY="592.0" opacity="0.75" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: transparent;" />
       <HBox fx:id="rivalCardBox" layoutX="146.0" layoutY="2.0" opacity="0.76" prefHeight="100.0" prefWidth="450.0" style="-fx-background-color: transparent;" />
       <VBox fx:id="buttonsMenu" layoutX="564.0" layoutY="235.0" opacity="0.7" prefHeight="241.0" prefWidth="141.0" style="-fx-background-color: white;" />
-      <Label fx:id="rivalName" alignment="CENTER" layoutX="5.0" layoutY="7.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="rivalHealth" alignment="CENTER" layoutX="5.0" layoutY="37.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerHealth" alignment="CENTER" layoutX="571.0" layoutY="592.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="playerName" alignment="CENTER" layoutX="571.0" layoutY="631.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <Label fx:id="phase" alignment="CENTER" layoutX="564.0" layoutY="507.0" prefHeight="45.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#e8ff00" wrapText="true" />
+      <Label fx:id="rivalName" alignment="CENTER" layoutX="5.0" layoutY="7.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#b70000" wrapText="true" />
+      <Label fx:id="rivalHealth" alignment="CENTER" layoutX="5.0" layoutY="52.0" prefHeight="24.0" prefWidth="141.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#b70000" wrapText="true" />
+      <Label fx:id="playerHealth" alignment="CENTER" layoutX="571.0" layoutY="585.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#b70000" wrapText="true" />
+      <Label fx:id="playerName" alignment="CENTER" layoutX="571.0" layoutY="631.0" prefHeight="30.0" prefWidth="127.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" textAlignment="CENTER" textFill="#b70000" wrapText="true" />
+      <Label fx:id="phase" alignment="CENTER" layoutX="564.0" layoutY="507.0" prefHeight="45.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-font: 30px Chalkboard; -fx-text-alignment: right;" text="Draw" textAlignment="CENTER" textFill="#2b1a7a" wrapText="true" />
       <Line endX="155.50003051757812" endY="274.3999938964844" layoutX="82.0" layoutY="52.0" startX="155.50003051757812" startY="58.0" />
       <Line endX="80.0" endY="224.0" layoutX="237.0" layoutY="104.0" startX="80.0" startY="5.0" />
       <Line endX="0.199981689453125" endY="224.0" layoutX="396.0" layoutY="103.0" startX="0.199981689453125" startY="5.799995422363281" />
