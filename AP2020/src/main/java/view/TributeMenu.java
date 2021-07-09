@@ -24,7 +24,7 @@ public class TributeMenu {
             String[] stringArray = command.split(" ");
             int[] temp = new int[stringArray.length];
             for (int i = 0; i < temp.length; i++) {
-                temp[i] = Integer.parseInt(stringArray[i]);
+                temp[i] = Integer.parseInt(stringArray[i]) - 1;
             }
             if (temp.length == numberOfTributes) return temp;
             else System.out.println("Invalid Command");

@@ -1,6 +1,5 @@
 package controller;
 
-import com.google.gson.Gson;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.event.EventHandler;
@@ -365,7 +364,7 @@ public class GraphicalGameController {
         try {
             gameMenuResponse = GameMenuController.summon(game, i + 1, false);
         } catch (WinnerException winnerException) {
-            // TODO: 7/8/2021
+            gameFinished(winnerException);
             return;
         }
         if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL)
@@ -456,8 +455,6 @@ public class GraphicalGameController {
     }
 
     public void attack(MouseEvent mouseEvent) {
-        Gson gson = new Gson();
-        Game prevGame = gson.fromJson(gson.toJson(game), Game.class);
         int attacker = -1;
         for (int i = 0; i < 5; i++) {
             if (playerMonsters[i].getEffect() != null) {
@@ -466,7 +463,7 @@ public class GraphicalGameController {
         }
         if (attacker == -1) return;
         if (game.getRivalBoard().getNumberOfMonstersInMonsterZone() == 0) {
-            // TODO: 7/8/2021
+            Menu.showAlert("Rival Monster Zone is empty!");
             return;
         }
         final int attackFinal = attacker;
@@ -510,100 +507,82 @@ public class GraphicalGameController {
                 if (images[i].getEffect() != null) defender = i;
             }
             if (defender == -1) return;
+            final int defenderFinal = defender;
             if (!game.getRivalBoard().getMonsterZone(defender).isOccupied()) return;
             pane.getChildren().removeAll(Arrays.asList(images));
             pane.getChildren().removeAll(rectangle, attackBtn);
             getSelectedImageView().setEffect(null);
             removeOptions();
-            try {
-                GameMenuResponse gameMenuResponse = GameMenuController.attack(game, attackFinal + 1, defender + 1, false);
-                // TODO: 7/7/2021
-            } catch (GameException gameException) {
-                if (gameException instanceof WinnerException) ; // TODO: 7/7/2021
-                return;
-            }
-            updateWithGraveyardAndFlipTransitions(prevGame, game);
-//            Cell[] playerCells = game.getPlayerBoard().getMonsterZone();
-//            Cell[] rivalCells = game.getRivalBoard().getMonsterZone();
-//            for (int i = 0; i < 5; i++) {
-//                if (rivalBackUpCells[i] && !rivalCells[i].isOccupied()) {
-//                    int x, y = 210;
-//                    if (i == 0) x = 155 + 75 * 2;
-//                    else if (i == 1) x = 155 + 75 * 3;
-//                    else if (i == 2) x = 155 + 75;
-//                    else if (i == 3) x = 155 + 75 * 4;
-//                    else x = 155;
-//                    ImageView imageView = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), x, y);
-//                    MoveTransition moveTransition = new MoveTransition(23, 111, imageView.getX(), imageView.getY(), imageView, 1500);
-//                    pane.getChildren().add(imageView);
-//                    moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
-//                    moveTransition.play();
-//                }
-//            }
-//            for (int i = 0; i < 5; i++) {
-//                if (playerBackUpCells[i] && !playerCells[i].isOccupied()) {
-//                    int x, y = 355;
-//                    if (i == 0) x = 155 + 75 * 2;
-//                    else if (i == 1) x = 155 + 75;
-//                    else if (i == 2) x = 155 + 75 * 3;
-//                    else if (i == 3) x = 155;
-//                    else x = 155 + 75 * 4;
-//                    ImageView imageView = Menu.getImageWithSizeForGame(playerMonsters[i].getImage(), x, y);
-//                    MoveTransition moveTransition = new MoveTransition(23, 471, imageView.getX(), imageView.getY(), imageView, 1500);
-//                    pane.getChildren().add(imageView);
-//                    moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
-//                    moveTransition.play();
-//                }
-//            }
-            removeOptions();
-            resetImageEffects();
-            updateWithoutTransition();
-        });
-    }
 
-    public void updateWithGraveyardAndFlipTransitions(Game gamePrevious, Game gameNew) {
-        for (int i = 0; i < 5; i++) {
-            if (gamePrevious.getPlayerBoard().getMonsterZone(i).isOccupied() && !gameNew.getPlayerBoard().getMonsterZone(i).isOccupied()) {
-                int x, y = 355;
-                if (i == 0) x = 155 + 75 * 2;
-                else if (i == 1) x = 155 + 75;
-                else if (i == 2) x = 155 + 75 * 3;
-                else if (i == 3) x = 155;
-                else x = 155 + 75 * 4;
-                ImageView imageView = Menu.getImageWithSizeForGame(playerMonsters[i].getImage(), x, y);
-                MoveTransition moveTransition = new MoveTransition(23, 471, imageView.getX(), imageView.getY(), imageView, 1500);
+            // moving to graveyard
+            Runnable runnable = () -> {
+                try {
+                    GameMenuResponse gameMenuResponse = GameMenuController.attack(game, attackFinal + 1, defenderFinal + 1, false);
+                    // TODO: 7/9/2021 alert
+                } catch (GameException gameException) {
+                    if (gameException instanceof WinnerException) gameFinished((WinnerException) gameException);
+                    return;
+                }
+                Cell[] playerCells = game.getPlayerBoard().getMonsterZone();
+                Cell[] rivalCells = game.getRivalBoard().getMonsterZone();
+                for (int i = 0; i < 5; i++) {
+                    if (rivalBackUpCells[i] && !rivalCells[i].isOccupied()) {
+                        int x, y = 210;
+                        if (i == 0) x = 155 + 75 * 2;
+                        else if (i == 1) x = 155 + 75 * 3;
+                        else if (i == 2) x = 155 + 75;
+                        else if (i == 3) x = 155 + 75 * 4;
+                        else x = 155;
+                        ImageView imageView = Menu.getImageWithSizeForGame(rivalMonsters[i].getImage(), x, y);
+                        MoveTransition moveTransition = new MoveTransition(23, 111, imageView.getX(), imageView.getY(), imageView, 1500);
+                        pane.getChildren().add(imageView);
+                        moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
+                        moveTransition.play();
+                    }
+                }
+                for (int i = 0; i < 5; i++) {
+                    if (playerBackUpCells[i] && !playerCells[i].isOccupied()) {
+                        int x, y = 355;
+                        if (i == 0) x = 155 + 75 * 2;
+                        else if (i == 1) x = 155 + 75;
+                        else if (i == 2) x = 155 + 75 * 3;
+                        else if (i == 3) x = 155;
+                        else x = 155 + 75 * 4;
+                        ImageView imageView = Menu.getImageWithSizeForGame(playerMonsters[i].getImage(), x, y);
+                        MoveTransition moveTransition = new MoveTransition(23, 471, imageView.getX(), imageView.getY(), imageView, 1500);
+                        pane.getChildren().add(imageView);
+                        moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
+                        moveTransition.play();
+                    }
+                }
+                removeOptions();
+                resetImageEffects();
+                updateWithoutTransition();
+            };
+
+
+            if (game.getRivalBoard().getMonsterZone(defender).getState() == State.FACE_DOWN_DEFENCE) {
+                int x, y = 218;
+                if (defender == 0) x = 169 + 75 * 2;
+                else if (defender == 1) x = 169 + 75 * 3;
+                else if (defender == 2) x = 169 + 75;
+                else if (defender == 3) x = 169 + 75 * 4;
+                else x = 169;
+                rivalMonsters[defender].setImage(null);
+                ImageView imageView = Menu.getImageWithSizeForGame("back", x, y);
                 pane.getChildren().add(imageView);
-                moveTransition.setOnFinished(actionEvent -> pane.getChildren().remove(imageView));
-                moveTransition.play();
+                String cardName = GameMenuController.trimName(game.getRivalBoard().getMonsterZone(defender).getCard().getCardName());
+                FlipTransition flipTransition = new FlipTransition(imageView, x, y, cardName, 1000);
+                flipTransition.setOnFinished(event -> {
+                    pane.getChildren().remove(imageView);
+                    rivalMonsters[defenderFinal].setImage(Menu.getCardImage(cardName));
+                    runnable.run();
+                });
+                flipTransition.play();
+            } else {
+                runnable.run();
             }
-            if (gamePrevious.getPlayerBoard().getMonsterZone(i).getState() == State.FACE_DOWN_DEFENCE && gameNew.getPlayerBoard().getMonsterZone(i).getState() == State.FACE_UP_ATTACK) {
-
-            }
-        }
-        for (int i = 0; i < 5; i++) {
-            if (gamePrevious.getRivalBoard().getMonsterZone(i).isOccupied() && !game.getRivalBoard().getMonsterZone(i).isOccupied()) {
-
-            }
-            if (gamePrevious.getRivalBoard().getMonsterZone(i).getState() == State.FACE_DOWN_DEFENCE && gameNew.getRivalBoard().getMonsterZone(i).getState() == State.FACE_UP_ATTACK) {
-
-            }
-        }
-        for (int i = 0; i < 5; i++) {
-            if (gamePrevious.getPlayerBoard().getSpellZone(i).isOccupied() && !game.getPlayerBoard().getSpellZone(i).isOccupied()) {
-
-            }
-            if (gamePrevious.getPlayerBoard().getSpellZone(i).getState() == State.FACE_DOWN_SPELL && gameNew.getPlayerBoard().getSpellZone(i).getState() == State.FACE_UP_SPELL) {
-
-            }
-        }
-        for (int i = 0; i < 5; i++) {
-            if (gamePrevious.getRivalBoard().getSpellZone(i).isOccupied() && !game.getRivalBoard().getSpellZone(i).isOccupied()) {
-
-            }
-            if (gamePrevious.getRivalBoard().getSpellZone(i).getState() == State.FACE_DOWN_SPELL && gameNew.getRivalBoard().getSpellZone(i).getState() == State.FACE_UP_SPELL) {
-
-            }
-        }
+        });
     }
 
     public void directAttack(MouseEvent mouseEvent) {
@@ -615,13 +594,14 @@ public class GraphicalGameController {
         }
         if (attacker == -1) return;
         if (game.getRivalBoard().getNumberOfMonstersInMonsterZone() != 0) {
-            // TODO: 7/8/2021
+            Menu.showAlert("Monster Zone is not Empty!");
             return;
         }
         try {
             GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, attacker + 1);
         } catch (WinnerException winnerException) {
-            // TODO: 7/7/2021
+            gameFinished(winnerException);
+            return;
         }
         updateWithoutTransition();
     }
@@ -686,7 +666,7 @@ public class GraphicalGameController {
             });
             moveTransition.play();
         } else {
-            // TODO: 7/9/2021
+            // TODO: 7/9/2021 alert
         }
     }
 
@@ -730,11 +710,6 @@ public class GraphicalGameController {
         resetImageEffects();
         if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run(); // TODO: 7/8/2021
         game.changeTurn();
-//        if (ai != null){
-//            ai.run(game);
-//            System.out.println("It's " + game.getRival().getNickname() + "'s turn ..");
-//            game.changeTurn();
-//        } // TODO: 7/8/2021
         resetImageEffects();
         setCurrentPhase(Phase.DRAW_PHASE);
         updatePhase();
@@ -775,11 +750,49 @@ public class GraphicalGameController {
     }
 
     public void activeEffect(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerSpells.length; i1++) {
+            if (playerSpells[i1].getEffect() != null) ; // TODO: 7/9/2021
+        }
     }
 
     public void flipSummon(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) {
+                i = i1;
+                break;
+            }
+        }
+        if (i == -1) return;
+        GameMenuResponse gameMenuResponse;
+        try {
+            gameMenuResponse = GameMenuController.flipSummon(game, i + 1, false);
+        } catch (GameException gameException) {
+            if (gameException instanceof WinnerException) ; // TODO: 7/9/2021
+            return;
+        }
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            int x, y = 358;
+            if (i == 0) x = 168 + 75 * 2;
+            else if (i == 1) x = 168 + 75;
+            else if (i == 2) x = 168 + 75 * 3;
+            else if (i == 3) x = 168;
+            else x = 168 + 75 * 4;
+            playerMonsters[i].setImage(null);
+            ImageView imageView = Menu.getImageWithSizeForGame("back", x, y);
+            pane.getChildren().add(imageView);
+            String cardName = GameMenuController.trimName(game.getPlayerBoard().getMonsterZone(i).getCard().getCardName());
+            FlipTransition flipTransition = new FlipTransition(imageView, x, y, cardName, 1000);
+            final int iFinal = i;
+            flipTransition.setOnFinished(actionEvent -> {
+                pane.getChildren().remove(imageView);
+                playerMonsters[iFinal].setImage(Menu.getCardImage(cardName));
+            });
+            flipTransition.play();
+        } else {
+            System.out.println(gameMenuResponse.getGameMenuResponseEnum());
+        }
     }
 
     public void showCard(MouseEvent mouseEvent) {
@@ -926,11 +939,32 @@ public class GraphicalGameController {
     }
 
     public void setAttackPosition(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) i = i1;
+        }
+        if (i == -1) return;
+        if (game.getPlayerBoard().getMonsterZone(i).getState() != State.FACE_UP_DEFENCE) return;
+        GameMenuResponse gameMenuResponse;
+        gameMenuResponse = GameMenuController.setMonsterPosition(game, i + 1, "attack");
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            playerMonsters[i].setRotate(0);
+        }
     }
 
     public void setDefensePosition(MouseEvent mouseEvent) {
-        // TODO: 7/7/2021  
+        int i = -1;
+        for (int i1 = 0; i1 < playerMonsters.length; i1++) {
+            if (playerMonsters[i1].getEffect() != null) i = i1;
+        }
+        if (i == -1) return;
+        if (game.getPlayerBoard().getMonsterZone(i).getState() != State.FACE_UP_ATTACK) return;
+        GameMenuResponse gameMenuResponse;
+        gameMenuResponse = GameMenuController.setMonsterPosition(game, i + 1, "defense");
+        if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL) {
+            playerMonsters[i].setRotate(90);
+
+        }
     }
 
     public void surrender(MouseEvent mouseEvent) {
@@ -938,7 +972,7 @@ public class GraphicalGameController {
     }
 
     public void gameFinished(WinnerException winnerException) {
-        // TODO: 7/8/2021
+        // TODo
     }
 
     private void resetImageEffects() {
@@ -997,15 +1031,12 @@ public class GraphicalGameController {
                 if (cellState == State.FACE_UP_ATTACK) {
                     playerMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
                     playerMonsters[i].setRotate(0);
-                    playerMonsters[i].setFitHeight(100);
                 } else if (cellState == State.FACE_UP_DEFENCE) {
                     playerMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
-                    playerMonsters[i].setRotate(70);
-                    playerMonsters[i].setFitHeight(90);
+                    playerMonsters[i].setRotate(90);
                 } else if (cellState == State.FACE_DOWN_DEFENCE) {
                     playerMonsters[i].setImage(Menu.getCardImage("back"));
                     playerMonsters[i].setRotate(0);
-                    playerMonsters[i].setFitHeight(100);
                 }
             } else {
                 playerMonsters[i].setImage(null);
@@ -1031,15 +1062,12 @@ public class GraphicalGameController {
                 if (cellState == State.FACE_UP_ATTACK) {
                     rivalMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
                     rivalMonsters[i].setRotate(0);
-                    rivalMonsters[i].setFitHeight(100);
                 } else if (cellState == State.FACE_UP_DEFENCE) {
                     rivalMonsters[i].setImage(Menu.getCardImage(GameMenuController.trimName(cells[i].getCard().getCardName())));
                     rivalMonsters[i].setRotate(90);
-                    rivalMonsters[i].setFitHeight(70);
                 } else if (cellState == State.FACE_DOWN_DEFENCE) {
                     rivalMonsters[i].setImage(Menu.getCardImage("back"));
                     rivalMonsters[i].setRotate(0);
-                    rivalMonsters[i].setFitHeight(100);
                 }
             } else {
                 rivalMonsters[i].setImage(null);
@@ -1074,6 +1102,65 @@ public class GraphicalGameController {
             rivalGraveYard.setImage(Menu.getCardImage(GameMenuController.trimName(game.getRivalBoard().getGraveyard().getCards().get(game.getRivalBoard().getGraveyard().getCards().size() - 1).getCardName())));
         updatePhase();
         updateBackGroundForField();
+    }
+
+    public void response(GameMenuResponse gameMenuResponse) {
+        GameMenuResponsesEnum response = gameMenuResponse.getGameMenuResponseEnum();
+        String str;
+        if (response == GameMenuResponsesEnum.INVALID_SELECTION)
+            str = "Invalid Selection!";
+        else if (response == GameMenuResponsesEnum.NO_CARD_FOUND)
+            str = "No card found!";
+        else if (response == GameMenuResponsesEnum.SUCCESSFUL)
+            str = "Successful!";
+        else if (response == GameMenuResponsesEnum.CARD_IS_HIDDEN)
+            str = "Card Is hidden!";
+        else if (response == GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL)
+            str = "Spell zone is full!";
+        else if (response == GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL)
+            str = "Monster Zone is full!";
+        else if (response == GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS)
+            str = "Not enough monsters";
+        else if (response == GameMenuResponsesEnum.CANT_NORMAL_SUMMON)
+            str = "Cant normal summon!";
+        else if (response == GameMenuResponsesEnum.CANT_ATTACK)
+            str = "Cant attack!";
+        else if (response == GameMenuResponsesEnum.ALREADY_SUMMONED)
+            str = "Already summoned!";
+        else if (response == GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET)
+            str = "You haven't summoned Yed!";
+        else if (response == GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION)
+            str = "Already in this position!";
+        else if (response == GameMenuResponsesEnum.CANT_FLIP_SUMMON)
+            str = "Cant Flip Summon!";
+        else if (response == GameMenuResponsesEnum.ALREADY_ATTACKED)
+            str = "Already Attacked!";
+        else if (response == GameMenuResponsesEnum.PLEASE_SELECT_MONSTER)
+            str = "Please Select Monster!";
+        else if (response == GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP)
+            str = "Please Select spell or trap!";
+        else if (response == GameMenuResponsesEnum.CANT_RITUAL_SUMMON)
+            str = "Cant ritual summon!";
+        else if (response == GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH)
+            str = "Selected levels don't match!";
+        else if (response == GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL)
+            str = "Select monster is not ritual!";
+        else if (response == GameMenuResponsesEnum.NO_RITUAL_SPELL_IN_SPELLZONE)
+            str = "No ritual spell in spellzone!";
+        else if (response == GameMenuResponsesEnum.PLAYER_HAND_IS_FULL)
+            str = "Player hand is full!";
+        else if (response == GameMenuResponsesEnum.NO_CARDS_IN_MAIN_DECK)
+            str = "No cards in main deck!";
+        else if (response == GameMenuResponsesEnum.ABORTED)
+            str = "Aborted!";
+        else if (response == GameMenuResponsesEnum.CANT_SPECIAL_SUMMON)
+            str = "Cant special Summon!";
+        else if (response == GameMenuResponsesEnum.ALREADY_CHANGED)
+            str = "Already changed!";
+        else if (response == GameMenuResponsesEnum.CANT_CHANGE)
+            str = "Can't change right now!";
+        else return;
+        Menu.showAlert(str);
     }
 
     private class MoveTransition extends Transition {

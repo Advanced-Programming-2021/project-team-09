@@ -228,7 +228,7 @@ public class GameMenuController {
     }
 
     private static Boolean canTributeSelectedCards(Cell[] cells, int[] cellNumbers) {
-        for (int i : cellNumbers) if (!cells[i - 1].isOccupied()) return false;
+        for (int i : cellNumbers) if (!cells[i].isOccupied()) return false;
         for (int i = 0; i < cellNumbers.length; i++) {
             for (int j = i + 1; j < cellNumbers.length; j++) {
                 if (cellNumbers[j] == cellNumbers[i]) return false;
