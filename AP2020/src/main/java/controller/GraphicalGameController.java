@@ -16,7 +16,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.card.Card;
@@ -31,6 +33,7 @@ import model.game.State;
 import view.duelMenu.EndPhaseMenu;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.EndPhaseMenuGraphical;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
@@ -71,6 +74,8 @@ public class GraphicalGameController {
     private final Label rivalHealth;
     private final Label phase;
     private final Game game;
+    private final Circle playerPic;
+    private final Circle rivalPic;
     private Phase currentPhase = Phase.DRAW_PHASE;
 
     {
@@ -105,7 +110,8 @@ public class GraphicalGameController {
                                    HBox playerCards, HBox rivalCards, VBox options,
                                    ImageView playerFieldSpell, ImageView playerGraveYard,
                                    ImageView rivalFieldSpell, ImageView rivalGraveYard, Game game, Pane pane,
-                                   Label playerName, Label playerHealth, Label rivalName, Label rivalHealth, Label phase, ImageView background) {
+                                   Label playerName, Label playerHealth, Label rivalName, Label rivalHealth, Label phase, ImageView background,
+                                   Circle playerPic, Circle rivalPic) {
         this.pane = pane;
         this.playerMonsters = playerMonsters;
         this.playerSpells = playerSpells;
@@ -123,6 +129,8 @@ public class GraphicalGameController {
         this.rivalName = rivalName;
         this.rivalHealth = rivalHealth;
         this.background = background;
+        this.playerPic = playerPic;
+        this.rivalPic = rivalPic;
         this.phase = phase;
         this.game = game;
         setImageFunctionality();
@@ -156,12 +164,13 @@ public class GraphicalGameController {
         }
     }
 
-    // only in the beginning of the game
     private void loadNames() {
         playerName.setText(game.getPlayer().getNickname());
         playerHealth.setText(game.getPlayerLP() + "");
         rivalName.setText(game.getRival().getNickname());
         rivalHealth.setText(game.getRivalLP() + "");
+        playerPic.setFill(new ImagePattern(Menu.getProfilePhoto(game.getPlayer().getProfilePhoto())));
+        rivalPic.setFill(new ImagePattern(Menu.getProfilePhoto(game.getRival().getProfilePhoto())));
     }
 
     // doesnt work for hand cards ..
@@ -763,7 +772,7 @@ public class GraphicalGameController {
 
     public void goToDrawPhase() throws WinnerException {
         resetImageEffects();
-        if (game.getPlayerHandCards().size() > 6) new EndPhaseMenu(game).run();
+        if (game.getPlayerHandCards().size() > 6) new EndPhaseMenuGraphical(game).run();
         game.changeTurn();
         resetImageEffects();
         setCurrentPhase(Phase.DRAW_PHASE);

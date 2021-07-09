@@ -3,6 +3,7 @@ package view.graphics;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,6 +17,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaErrorEvent;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -28,6 +31,8 @@ import view.graphics.deckmenu.EditDeckMenu;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Stack;
 
 public class Menu {
     private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
@@ -80,12 +85,51 @@ public class Menu {
         return new Image(new File("Scenes/Images/" + imageName + format).toURI().toString(), width, height, false, false);
     }
 
+    public static ArrayList<Node> getRectangleAndButtonForGameMenus(String buttonString) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setFill(Paint.valueOf("WHITE"));
+        rectangle.setOpacity(0.6);
+        rectangle.setHeight(700);
+        rectangle.setWidth(700);
+        rectangle.setX(0);
+        rectangle.setY(0);
+        Button button = new Button(buttonString);
+        button.setWrapText(true);
+        String notClicked = "-fx-background-color: transparent;-fx-font: 15px Chalkboard;";
+        String clicked = "-fx-background-color: rgba(78,80,190,0.53);-fx-font: 15px Chalkboard;";
+        button.setStyle(notClicked);
+        button.setOnMouseEntered(mouseEvent -> button.setStyle(clicked));
+        button.setOnMouseExited(mouseEvent -> button.setStyle(notClicked));
+        button.setLayoutX(300);
+        button.setLayoutY(375);
+        button.setOnMouseClicked(mouseEvent -> playMedia(VoiceEffects.CLICK));
+        ArrayList<Node> ret = new ArrayList<>();
+        ret.add(rectangle);
+        ret.add(button);
+        return ret;
+    }
+
     public static ImageView getImageWithSizeForGame(String cardName, double x, double y) {
         ImageView ret = new ImageView(getCard(cardName));
         ret.setFitHeight(100);
         ret.setFitWidth(70);
         ret.setX(x);
         ret.setY(y);
+        return ret;
+    }
+
+    public static Stage copyStage(Stage stage) {
+        Stage ret = new Stage();
+        ret.setTitle(stage.getTitle());
+        if (stage.getIcons().size() != 0) ret.getIcons().add(stage.getIcons().get(0));
+        return ret;
+    }
+
+    public static Pane copyPane(Pane pane) {
+        Pane ret = new Pane();
+        ret.setPrefSize(pane.getWidth(), pane.getHeight());
+        ret.setMaxSize(pane.getWidth(), pane.getHeight());
+        ret.setMinSize(pane.getWidth(), pane.getHeight());
         return ret;
     }
 
