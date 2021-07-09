@@ -77,7 +77,7 @@ public class AllDecksMenu extends ChoiceMenu implements Initializable {
         }
         createDeck.setText("Create!");
         createDeck.setOnAction(actionEvent -> {
-            playMedia(VoiceEffects.CLICK);
+            playMedia(VoiceEffects.JINGLE);
             createDeck(deckName);
         });
         justifyButton(createDeck,Cursor.ACCEPT);

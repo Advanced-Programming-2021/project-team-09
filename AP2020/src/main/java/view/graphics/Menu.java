@@ -18,16 +18,21 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.enums.Cursor;
 import model.enums.VoiceEffects;
+import view.graphics.deckmenu.EditDeckMenu;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class Menu {
     private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
+    private static final File SETTING_FILE = new File("src/main/resources/Scenes/SettingMenu.fxml");
     private static Scene currentScene;
     private static Stage mainStage;
     private static final String ROOT_STYLE = "-fx-border-color: #000000; -fx-border-width: 3;";
@@ -189,8 +194,8 @@ public class Menu {
 
     public static void playMedia(VoiceEffects voiceEffects) {
         MediaPlayer player = new MediaPlayer(voiceEffects.getMedia());
+        player.setVolume(SettingController.getSFX());
         player.play();
-        MediaErrorEvent event;
     }
 
     public static Media getVoice(String voiceName,String format) {
@@ -218,7 +223,14 @@ public class Menu {
         goToMenu("Main");
     }
     public static void goToSetting() {
-        goToMenu("Setting");
+       Parent parent = getNode("SettingMenu");
+       Stage stage = new Stage();
+       stage.initModality(Modality.APPLICATION_MODAL);
+       Scene scene = new Scene(parent,-1,-1,true);
+       scene.setFill(Color.TRANSPARENT);
+       stage.setScene(scene);
+       stage.initStyle(StageStyle.TRANSPARENT);
+       stage.show();
     }
     public static void showAbout() {
         //ToDo

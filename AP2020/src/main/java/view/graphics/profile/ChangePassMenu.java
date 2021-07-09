@@ -38,5 +38,6 @@ public class ChangePassMenu extends ChangeMenu implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         newPass.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
         oldPass.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
+        changeButton.setOnMouseClicked(mouseEvent -> change());
     }
 }

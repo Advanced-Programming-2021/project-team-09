@@ -9,7 +9,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.deckmenu.AllCardsMenu">
     <center>
-        <ScrollPane fx:id="cardsPlace" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="280.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-border-radius: 10;">
+        <ScrollPane fx:id="cardsPlace" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="280.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-border-radius: 20; -fx-border-color: #000000;" vbarPolicy="NEVER">
             <content>
                 <HBox fx:id="choiceBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="448.0" />
             </content>

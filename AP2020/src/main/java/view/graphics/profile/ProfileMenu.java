@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProfileMenu extends Menu implements Initializable {
+    protected static Label staticNickName;
     @FXML
     private BorderPane mainPane;
     @FXML
@@ -41,6 +42,7 @@ public class ProfileMenu extends Menu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        staticNickName = nickname;
         AKALabel.setStyle("-fx-font: Bold 12px Chalkboard;");
         setImageInCircle(LoginMenuController.getCurrentUser().getProfilePhoto());
         username.setText(LoginMenuController.getCurrentUser().getUsername());
