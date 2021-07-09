@@ -45,6 +45,7 @@ import model.User;
 import model.game.Game;
 import model.game.MiniGame;
 import view.graphics.Menu;
+import view.graphics.SettingController;
 import view.graphics.duelgraphics.ChooseMiniGame;
 import view.graphics.duelgraphics.DuelMenu;
 import view.graphics.duelgraphics.OneRoundGameGraphical;
@@ -63,7 +64,7 @@ public class Main extends Application {
         Menu.setStage(stage);
         stage.setResizable(false);
         Menu.goToMenu("Welcome");
-
+        SettingController.playBG();
         stage.show();
 //        Pane pane = new CardHolder();
 //        new DuelMenu(0);

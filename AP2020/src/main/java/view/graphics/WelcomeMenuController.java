@@ -39,7 +39,7 @@ public class WelcomeMenuController extends Menu implements Initializable {
 
 
     public void goToSignInMenu(ActionEvent actionEvent) {
-        goToMenu("SignUp");
+        goToMenu("Welcome");
     }
 
     public void login(ActionEvent actionEvent) {
