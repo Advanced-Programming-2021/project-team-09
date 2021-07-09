@@ -34,6 +34,13 @@ import java.util.ArrayList;
 public abstract class Card {
     @JsonIgnore
     private static final ArrayList<String> cards = CSVInfoGetter.getCardNames();
+    @JsonIgnore
+    private static final ArrayList<Card> allCards = new ArrayList<>();
+    static {
+        for (String cardName : cards) {
+            allCards.add(CSVInfoGetter.getCardByName(cardName));
+        }
+    }
     protected String cardName;
     protected String description;
     protected CardType cardType;
@@ -138,6 +145,10 @@ public abstract class Card {
     @JsonIgnore
     public static ArrayList<String> getCardNames() {
         return cards;
+    }
+    @JsonIgnore
+    public static ArrayList<Card> getAllCards() {
+        return allCards;
     }
     public abstract String toString();
 

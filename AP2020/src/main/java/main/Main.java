@@ -60,13 +60,14 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         LoginMenuController.login("mir","mir");
-        Main.stage = stage;
-//        stage.initStyle(StageStyle.TRANSPARENT);
-        Menu.setStage(stage);
-        stage.setResizable(false);
-        Menu.goToMenu("Welcome");
-        SettingController.playBG();
-        stage.show();
+//        Main.stage = stage;
+////        stage.initStyle(StageStyle.TRANSPARENT);
+//        Menu.setStage(stage);
+//        stage.setResizable(false);
+//        Menu.goToMenu("Welcome");
+//        SettingController.playBG();
+//        stage.show();
+        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
 //        Pane pane = new CardHolder();
 //        new DuelMenu(0);
 //        stage.show();
