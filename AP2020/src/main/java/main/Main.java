@@ -45,6 +45,7 @@ import model.User;
 import model.game.Game;
 import model.game.MiniGame;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.ChangeBetweenThreeRounds;
 import view.graphics.SettingController;
 import view.graphics.duelgraphics.ChooseMiniGame;
 import view.graphics.duelgraphics.DuelMenu;

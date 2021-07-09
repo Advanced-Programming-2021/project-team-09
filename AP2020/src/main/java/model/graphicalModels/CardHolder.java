@@ -20,6 +20,7 @@ public class CardHolder extends Pane {
     public ImageView cardBox;
     private Card card;
     private Image cardImage;
+    private boolean isFromMainDeck;
 
     private boolean isBack = false;
 
@@ -80,6 +81,14 @@ public class CardHolder extends Pane {
     public void rotate(double angel) {
         cardPlace.setRotate(angel);
         cardBox.setRotate(angel);
+    }
+
+    public void setFromMainDeck(boolean isFromMainDeck){
+        this.isFromMainDeck = isFromMainDeck;
+    }
+
+    public boolean getIsFromMainDeck(){
+        return isFromMainDeck;
     }
 
     public void setCard(Card card) {
