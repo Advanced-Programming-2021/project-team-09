@@ -60,6 +60,7 @@ public class MiniGameRockPaperScissors implements Initializable {
     }
 
     public MiniGameRockPaperScissors(MiniGame miniGame) {
+        WinnerExceptionHolder.resetExceptions();
         MiniGameRockPaperScissors.miniGame = miniGame;
         anchorPane = (AnchorPane) Menu.getNode("MiniGameRockPaperScissors");
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
@@ -154,6 +155,7 @@ public class MiniGameRockPaperScissors implements Initializable {
             User winner = rivalPoints == 3 ? rival : player;
             result.setText(winner.getNickname() + " is the winner !");
             miniGame.setWinner(winner);
+            Main.stage.getScene().getRoot().setOnMouseClicked(mouseEvent -> new OneRoundGameGraphical(miniGame.getWinner(), miniGame.getWinner() == miniGame.getFirstUser() ? miniGame.getSecondUser() : miniGame.getFirstUser()));
         }
     }
 

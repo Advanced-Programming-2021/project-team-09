@@ -47,6 +47,7 @@ public class MiniGameDice implements Initializable {
     }
 
     public MiniGameDice(MiniGame miniGame, boolean higherWins) {
+        WinnerExceptionHolder.resetExceptions();
         MiniGameDice.miniGame = miniGame;
         MiniGameDice.higherWins = higherWins;
         anchorPane = (AnchorPane) Menu.getNode("MiniGameDice");
@@ -84,6 +85,7 @@ public class MiniGameDice implements Initializable {
                 else miniGame.setWinner(rival);
             }
             result.setText(miniGame.getWinner().getNickname() + " Won the mini game !");
+            Main.stage.getScene().getRoot().setOnMouseClicked(mouseEvent -> new OneRoundGameGraphical(miniGame.getWinner(), miniGame.getWinner() == miniGame.getFirstUser() ? miniGame.getSecondUser() : miniGame.getFirstUser()));
         }
     }
 

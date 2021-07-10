@@ -13,6 +13,7 @@ import model.deck.MainDeck;
 import model.deck.SideDeck;
 import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
+import view.duelMenu.OneRoundGame;
 import view.graphics.ChoiceMenu;
 import view.graphics.Menu;
 
@@ -153,7 +154,16 @@ public class ChangeBetweenThreeRounds extends Menu {
     }
 
     public void done() {
-        //todo go to three round game
+        User player;
+        User rival;
+        if (WinnerExceptionHolder.winnerException2 == null) {
+            player = WinnerExceptionHolder.winnerException1.getLoser();
+            rival = WinnerExceptionHolder.winnerException1.getWinner();
+        } else {
+            player = WinnerExceptionHolder.winnerException2.getLoser();
+            rival = WinnerExceptionHolder.winnerException2.getWinner();
+        }
+        new OneRoundGameGraphical(player, rival);
     }
 
     public void swap() {

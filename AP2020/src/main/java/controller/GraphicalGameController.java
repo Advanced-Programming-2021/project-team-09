@@ -1,6 +1,7 @@
 package controller;
 
 import controller.database.CSVInfoGetter;
+import controller.database.ReadAndWriteDataBase;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.event.EventHandler;
@@ -34,6 +35,7 @@ import model.game.State;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.EndPhaseMenuGraphical;
+import view.graphics.duelgraphics.WinnerExceptionHolder;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
@@ -1130,7 +1132,78 @@ public class GraphicalGameController {
     }
 
     public void gameFinished(WinnerException winnerException) {
-        // TODo
+        if (WinnerExceptionHolder.gameMode == WinnerExceptionHolder.GameMode.ONE_ROUND) {
+            ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
+            pane.getChildren().add(nodes.get(0));
+            Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 1000");
+            label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
+            label.setWrapText(true);
+            label.setLayoutX(300);
+            label.setLayoutY(100);
+            pane.getChildren().add(label);
+            GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner(), winnerException.getLoser());
+            ReadAndWriteDataBase.updateUser(game.getPlayer());
+            ReadAndWriteDataBase.updateUser(game.getRival());
+            nodes.get(0).setOnMouseClicked(mouseEvent -> Menu.goToMenu("Duel"));
+        } else if (WinnerExceptionHolder.gameMode == WinnerExceptionHolder.GameMode.THREE_ROUND) {
+            WinnerException winnerException1 = WinnerExceptionHolder.winnerException1;
+            WinnerException winnerException2 = WinnerExceptionHolder.winnerException2;
+            WinnerException winnerException3 = WinnerExceptionHolder.winnerException3;
+            if (winnerException1 == null) {
+                WinnerExceptionHolder.winnerException1 = winnerException;
+                ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
+                pane.getChildren().add(nodes.get(0));
+                Label label = new Label("This game has ended!");
+                label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
+                label.setWrapText(true);
+                label.setLayoutX(300);
+                label.setLayoutY(100);
+                pane.getChildren().add(label);
+//                nodes.get(0).setOnMouseClicked(mouseEvent -> // TODO: 7/10/2021 go to change cards menu);
+            } else if (winnerException2 == null) {
+                if (winnerException1.getWinner() == winnerException.getWinner()) {
+                    ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
+                    pane.getChildren().add(nodes.get(0));
+                    Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 3000");
+                    label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
+                    label.setWrapText(true);
+                    label.setLayoutX(300);
+                    label.setLayoutY(100);
+                    pane.getChildren().add(label);
+                    GameMenuController.cashOut(Math.max(winnerException.getWinnerLP(), winnerException1.getWinnerLP()), true, winnerException.getWinner(), winnerException.getLoser());
+                    ReadAndWriteDataBase.updateUser(game.getPlayer());
+                    ReadAndWriteDataBase.updateUser(game.getRival());
+                    nodes.get(0).setOnMouseClicked(mouseEvent -> Menu.goToMenu("Duel"));
+                } else {
+                    WinnerExceptionHolder.winnerException2 = winnerException;
+                    ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
+                    pane.getChildren().add(nodes.get(0));
+                    Label label = new Label("This game has ended!");
+                    label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
+                    label.setWrapText(true);
+                    label.setLayoutX(300);
+                    label.setLayoutY(100);
+                    pane.getChildren().add(label);
+//                    nodes.get(0).setOnMouseClicked(mouseEvent -> // TODO: 7/10/2021 go to change cards menu);
+                }
+            } else if (winnerException3 == null) {
+                ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
+                pane.getChildren().add(nodes.get(0));
+                Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 3000");
+                label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
+                label.setWrapText(true);
+                label.setLayoutX(300);
+                label.setLayoutY(100);
+                pane.getChildren().add(label);
+                int maxLp = winnerException1.getWinnerLP();
+                maxLp = Math.max(winnerException2.getWinnerLP(), maxLp);
+                maxLp = Math.max(winnerException.getWinnerLP(), maxLp);
+                GameMenuController.cashOut(maxLp, true, winnerException.getWinner(), winnerException.getLoser());
+                ReadAndWriteDataBase.updateUser(game.getPlayer());
+                ReadAndWriteDataBase.updateUser(game.getRival());
+                nodes.get(0).setOnMouseClicked(mouseEvent -> Menu.goToMenu("Duel"));
+            }
+        }
     }
 
     public void adjustButton(Button button) {
