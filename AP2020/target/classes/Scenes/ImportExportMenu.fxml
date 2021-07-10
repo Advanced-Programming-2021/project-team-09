@@ -6,12 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="382.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.ImportExportController">
+<AnchorPane prefHeight="382.0" prefWidth="490.0" style="-fx-background-radius: 22.5; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphics.ImportExportController">
    <Label layoutX="179.0" layoutY="14.0" text="Import/Export">
       <font>
          <Font name="Chalkboard" size="20.0" />
@@ -20,7 +21,7 @@
    <ImageView fitHeight="177.0" fitWidth="210.0" layoutX="145.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@Images/importExportMenu.png" />
    </ImageView>
-   <TextField fx:id="importSearchbar" layoutX="165.0" layoutY="234.0" prefHeight="26.0" prefWidth="162.0" promptText="import ..." style="-fx-background-radius: 15;">
+   <TextField fx:id="importSearchbar" layoutX="165.0" layoutY="234.0" prefHeight="26.0" prefWidth="162.0" promptText="import..." style="-fx-background-radius: 15; -fx-background-color: transparent; -fx-border-radius: 20; -fx-border-color: black;">
       <font>
          <Font name="Chalkboard" size="15.0" />
       </font>
@@ -36,10 +37,13 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </ChoiceBox>
-   <Button layoutX="2.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#exit" style="-fx-background-color: red; -fx-background-radius: 50; -fx-opacity: 0.7;" text="X" textFill="WHITE">
+   <Button layoutX="20.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #ff0000; -fx-background-radius: 50;" text="X">
       <font>
-         <Font name="Chalkduster" size="12.0" />
+         <Font name="Chalkduster" size="10.0" />
       </font>
+      <effect>
+         <InnerShadow />
+      </effect>
    </Button>
    <Button fx:id="importButton" layoutX="165.0" layoutY="343.0" mnemonicParsing="false" style="-fx-background-color: black; -fx-background-radius: 50;" text="IMPORT" textFill="WHITE">
       <font>
@@ -57,7 +61,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Button>
-   <Label layoutX="158.0" layoutY="274.0" text="for export ... :">
+   <Label layoutX="205.0" layoutY="274.0" text="for export... :">
       <font>
          <Font name="Chalkboard" size="13.0" />
       </font>

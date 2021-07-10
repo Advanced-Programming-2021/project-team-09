@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.enums.Cursor;
 import model.enums.VoiceEffects;
@@ -106,8 +107,8 @@ public class SettingController extends Menu implements Initializable {
 
     private void goToImportExport() {
         Scene scene = new Scene(getNode("ImportExportMenu"),-1,-1,true);
+        scene.setFill(Color.TRANSPARENT);
         Menu.setCurrentScene(scene);
         ((Stage)mainPane.getScene().getWindow()).setScene(scene);
     }
-
 }
