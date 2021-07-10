@@ -33,6 +33,7 @@ public class MiniGameCoin implements Initializable {
     }
 
     public MiniGameCoin(MiniGame miniGame) {
+        WinnerExceptionHolder.resetExceptions();
         MiniGameCoin.miniGame = miniGame;
         anchorPane = (AnchorPane) Menu.getNode("MiniGameCoin");
         Main.stage.setScene(new Scene(anchorPane, 600, 400));
@@ -54,11 +55,13 @@ public class MiniGameCoin implements Initializable {
         imageView.setImage(Menu.getImage("tail coin", "png"));
         miniGame.setWinner(miniGame.getSecondUser());
         result.setText(miniGame.getWinner().getNickname() + " won the mini game !");
+        Main.stage.getScene().getRoot().setOnMouseClicked(mouseEvent -> new OneRoundGameGraphical(miniGame.getWinner(), miniGame.getWinner() == miniGame.getFirstUser() ? miniGame.getSecondUser() : miniGame.getFirstUser()));
     }
 
     private void head() {
         imageView.setImage(Menu.getImage("head coin", "png"));
         miniGame.setWinner(miniGame.getFirstUser());
         result.setText(miniGame.getWinner().getNickname() + " won the mini game !");
+        Main.stage.getScene().getRoot().setOnMouseClicked(mouseEvent -> new OneRoundGameGraphical(miniGame.getWinner(), miniGame.getWinner() == miniGame.getFirstUser() ? miniGame.getSecondUser() : miniGame.getFirstUser()));
     }
 }

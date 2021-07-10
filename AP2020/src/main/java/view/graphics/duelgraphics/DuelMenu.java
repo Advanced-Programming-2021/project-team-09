@@ -63,12 +63,14 @@ public class DuelMenu extends Menu {
 
     public void multiplayerOneRound() {
         if (checkPlayerDeck()) {
+            WinnerExceptionHolder.gameMode = WinnerExceptionHolder.GameMode.ONE_ROUND;
             goToChooseRival();
         }
     }
 
     public void multiplayerThreeRound() {
         if (checkPlayerDeck()) {
+            WinnerExceptionHolder.gameMode = WinnerExceptionHolder.GameMode.THREE_ROUND;
             goToChooseRival();
         }
     }

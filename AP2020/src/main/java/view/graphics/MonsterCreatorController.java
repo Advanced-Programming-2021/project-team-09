@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.card.Attribute;
 import model.card.Card;
+import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterType;
@@ -25,7 +26,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
 
     {
         for (Card card : Card.getAllCards()) {
-            if (card.isMonster() && ((Monster) card).hasEffect()) effectMonsters.add(card.getCardName());
+            if (card.isMonster() && ((Monster) card).hasEffect() && !((Monster) card).getFeatures().contains(CardFeatures.CUSTOM_CARD)) effectMonsters.add(card.getCardName());
         }
     }
 
@@ -64,6 +65,9 @@ public class MonsterCreatorController extends Menu implements Initializable {
         initTextFields();
         initButtons();
         initChoiceBoxes();
+        attackLabel.setText("?!?");
+        defenceLabel.setText("?!?");
+        priceLabel.setText("?!?");
     }
 
     private void initChoiceBoxes() {
@@ -73,12 +77,12 @@ public class MonsterCreatorController extends Menu implements Initializable {
             playMedia(VoiceEffects.CLICK);
             priceLabel.setText(getPrice() + "");
         });
-        effects.setValue("None");
         typeBox.getItems().addAll(monsterTypes);
-        typeBox.setValue("WARRIOR");
         typeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
         attributeBox.getItems().addAll(attributes);
         attributeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
+        effects.setValue("None");
+        typeBox.setValue("WARRIOR");
         attributeBox.setValue("DARK");
     }
 
@@ -141,13 +145,24 @@ public class MonsterCreatorController extends Menu implements Initializable {
     }
 
     private void resetEveryThing() {
+        effects.setValue("None");
+        typeBox.setValue("WARRIOR");
+        attributeBox.setValue("DARK");
+        nameField.setText("");
+        attackField.setText("");
+        defenceField.setText("");
+        attackLabel.setText("?!?");
+        defenceLabel.setText("?!?");
+        priceLabel.setText("?!?");
     }
 
 
     private void changeDefField(String t1) {
         if (t1.matches("^1?\\d{1,4}$")) {
             defenceLabel.setText(t1);
-            priceLabel.setText(getPrice() + "");
+            int price = getPrice();
+            String priceS = price == -1 ? "?!?" : price + "";
+            priceLabel.setText(priceS);
         } else defenceLabel.setText("?!?");
 
     }
@@ -194,12 +209,12 @@ public class MonsterCreatorController extends Menu implements Initializable {
             }
             return CardCreator.getMonsterPrice(atk, def, type);
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 
     private MonsterType getMonsterType() {
-        return MonsterType.valueOf((String) typeBox.getSelectionModel().getSelectedItem());
+        return MonsterType.valueOf(((String) typeBox.getSelectionModel().getSelectedItem()).replace(" ","_"));
     }
 
     private Attribute getAttribute() {

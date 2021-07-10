@@ -120,7 +120,7 @@ public class CardEffectsViewGraphical {
         ArrayList<Card> output = new ArrayList<>(cards);
         output.addAll(graveyard.getCards());
         output.addAll(deck.getMainDeck().getCards());
-        return selectCardFromArrayList(output);
+        return chooseCardFromList(output, "Please Choose from list of cards. if not it will be randomly choosed!");
     }
 
     private static Card selectCardFromArrayList(ArrayList<Card> cards) {
@@ -142,15 +142,15 @@ public class CardEffectsViewGraphical {
         }
     }
 
-    static public boolean doSpecialSummon() { // no usage
-        return true;
-    }
-
     static public String getCardName(){
-        System.out.println("Please enter a card name .. Available card names :");
         ArrayList<String> names = CSVInfoGetter.getCardNames();
-        for (String s : names) System.out.println(s);
-        return LoginMenu.getInstance().getScanner().nextLine();
+        ArrayList<Card> cards = new ArrayList<>();
+        for (String name : names) {
+            cards.add(CSVInfoGetter.getCardByName(name));
+        }
+        Card card = chooseCardFromList(cards, "Please Choose a card from the list of cards. if not it will be randomly choosed!");
+        if (card == null) return names.get(0);
+        else return card.getCardName();
     }
 
     static public int getNumberOfCardInHand(ArrayList<Card> cards) {
