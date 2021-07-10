@@ -7,6 +7,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import main.Main;
 import model.User;
 import model.card.Card;
@@ -26,7 +27,7 @@ public class SpellSelectMenuGraphics {
     }
 
     public void run() {
-        Card chosenCard;
+        Cell chosenCell = new Cell();
         ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("Active Effect!");
         Pane pane = (Pane)Main.stage.getScene().getRoot();
         pane.getChildren().add(nodes.get(0));
@@ -68,6 +69,9 @@ public class SpellSelectMenuGraphics {
                 }
             }
             if (i == -1) return;
+            Card card = game.getPlayerBoard().getSpellZone(i).getCard();
+            if (card == null) return;
+            chosenCell.addCard(card);
 
         });
     }

@@ -283,6 +283,7 @@ public class Menu {
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.show();
+
     }
 
     public static Scene getSceneBuffer() {
