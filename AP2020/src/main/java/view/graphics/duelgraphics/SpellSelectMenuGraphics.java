@@ -48,6 +48,7 @@ public class SpellSelectMenuGraphics {
         label.setWrapText(true);
         label.setLayoutX(10);
         label.setLayoutY(100);
+        newPane.getChildren().add(label);
         Cell[] cells = playerToChoose == game.getPlayer() ? game.getPlayerBoard().getSpellZone() : game.getRivalBoard().getSpellZone();
         int temp = 0;
         for (int j = 0; j < 5; j++) {
