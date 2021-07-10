@@ -12,6 +12,7 @@ import model.exceptions.WinnerException;
 import model.game.*;
 import view.CardEffectsView;
 import view.TributeMenu;
+import view.graphics.duelgraphics.TributeMenuGraphical;
 import view.responses.CardEffectsResponses;
 import view.responses.HowToSummon;
 
@@ -53,7 +54,7 @@ public class MonsterEffectController extends EffectController {
         if (board.getNumberOfMonstersInMonsterZone() < 3) CardEffectsView.respond(CardEffectsResponses.NO_MONSTERS);
         else {
             while (true) {
-                int[] cellNumbers = TributeMenu.run(3);
+                int[] cellNumbers = new TributeMenuGraphical(game).run(3);
                 if (cellNumbers == null) return;
                 for (int i = 0; i < 3; i++) cellNumbers[i]--;
                 if (cellNumbers[0] != cellNumbers[1] &&

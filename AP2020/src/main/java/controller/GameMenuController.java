@@ -16,6 +16,7 @@ import view.TributeMenu;
 import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
 import view.graphics.duelgraphics.SpellSelectMenuGraphics;
+import view.graphics.duelgraphics.TributeMenuGraphical;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
@@ -157,11 +158,11 @@ public class GameMenuController {
                 if (numberOfTributes > occupied) return respond(GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS);
                 if (normalAndSpecialSummonChecker(card.getFeatures()))
                     return specialSummon(game, card);
-                int[] tributes = TributeMenu.run(numberOfTributes);
+                int[] tributes = new TributeMenuGraphical(game).run(numberOfTributes);
                 if (tributes == null) return respond(GameMenuResponsesEnum.ABORTED);
                 while (!canTributeSelectedCards(tempCells, tributes)) {
                     TributeMenu.invalidTributes();
-                    tributes = TributeMenu.run(numberOfTributes);
+                    tributes = new TributeMenuGraphical(game).run(numberOfTributes);
                     if (tributes == null) return respond(GameMenuResponsesEnum.ABORTED);
                 }
                 tribute(game, tributes);
