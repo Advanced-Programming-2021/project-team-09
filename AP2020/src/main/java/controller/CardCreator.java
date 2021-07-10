@@ -44,7 +44,7 @@ public class CardCreator {
         return (int) Math.ceil(price);
     }
 
-    public static void createMonster(String cardName, String cardDescription, int attack, int defend, int price, MonsterCardType type, Attribute attribute, MonsterType monsterType,String syncedEffect) {
+    public static void createMonster(String cardName, String cardDescription, int attack, int defend, int price, MonsterCardType type, Attribute attribute, MonsterType monsterType, String syncedEffect) {
         FeatureWrapper features = new FeatureWrapper();
         features.setEffectMap("");
         if (type == MonsterCardType.RITUAL) features.addFeature(CardFeatures.RITUAL_SUMMON);
@@ -56,8 +56,8 @@ public class CardCreator {
         if (type == MonsterCardType.NORMAL) features.addFeature(CardFeatures.NORMAL_SUMMON);
 
         try {
-            FileWriter writer = new FileWriter(monsterFileName,true);
-            writer.write("\n" + cardName +"," + Math.ceil((double) price/1000) + "," + attribute.toString() + "," + monsterType.toString() + "," + type.toString() + "," + attack + "," + defend + "," + cardDescription + "," + price);
+            FileWriter writer = new FileWriter(monsterFileName, true);
+            writer.write("\n" + cardName + "," + (int) Math.ceil((double) price / 1000) + "," + attribute.toString() + "," + monsterType.toString() + "," + type.toString() + "," + attack + "," + defend + "," + cardDescription + "," + price);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,8 +79,8 @@ public class CardCreator {
     public static void createSpellOrTrap(String cardName, String description, String syncedEffect, Limitation limitation, int price, boolean isTrap) {
         try {
             CardType type = isTrap ? CardType.TRAP : CardType.SPELL;
-            FileWriter writer = new FileWriter(monsterFileName,true);
-            writer.write("\n" + cardName +"," + type.toString() + "," + description + "," + limitation.toString() + "," + price);
+            FileWriter writer = new FileWriter(monsterFileName, true);
+            writer.write("\n" + cardName + "," + type.toString() + "," + description + "," + limitation.toString() + "," + price);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,5 +113,6 @@ public class CardCreator {
         user.decreaseBalance(price);
         ReadAndWriteDataBase.updateUser(user);
     }
+
 
 }

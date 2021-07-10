@@ -4,9 +4,11 @@ import controller.CardCreator;
 import controller.database.CSVInfoGetter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.card.Attribute;
 import model.card.Card;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
@@ -20,74 +22,73 @@ import java.util.ResourceBundle;
 
 public class MonsterCreatorController extends Menu implements Initializable {
     private static ArrayList<String> effectMonsters = new ArrayList<>();
+
     {
         for (Card card : Card.getAllCards()) {
-            if (card.isMonster() && ((Monster)card).hasEffect()) effectMonsters.add(card.getCardName());
+            if (card.isMonster() && ((Monster) card).hasEffect()) effectMonsters.add(card.getCardName());
         }
     }
-    public Label nameLabel;
-    public Label attackLabel;
-    public Label defenceLabel;
-    public Label priceLabel;
-    public Button exitButton;
-    public TextField nameField;
-    public TextArea descriptionField;
-    public TextField attackField;
-    public TextField defenceField;
-    public ChoiceBox effects;
-    public Button createButton;
+
+    private static String[] monsterTypes = {"WARRIOR", "BEAST WARRIOR", "FIEND", "AQUA", "BEAST", "PYRO", "SPELLCASTER", "THUNDER", "DRAGON", "MACHINE", "ROCK", "INSECT", "CYBERSE", "FAIRY", "SEA SERPENT"};
+    private static String[] attributes = {"DARK", "EARTH", "FIRE", "LIGHT", "WATER", "WIND"};
+    @FXML
+    private ChoiceBox typeBox;
+    @FXML
+    private ChoiceBox attributeBox;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label attackLabel;
+    @FXML
+    private Label defenceLabel;
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextArea descriptionField;
+    @FXML
+    private TextField attackField;
+    @FXML
+    private TextField defenceField;
+    @FXML
+    private ChoiceBox effects;
+    @FXML
+    private Button createButton;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initTextFields();
         initButtons();
+        initChoiceBoxes();
+    }
+
+    private void initChoiceBoxes() {
+        effects.getItems().addAll("None", "Ritual");
         effects.getItems().addAll(effectMonsters);
+        effects.selectionModelProperty().addListener((observableValue, o, t1) -> {
+            playMedia(VoiceEffects.CLICK);
+            priceLabel.setText(getPrice() + "");
+        });
+        typeBox.getItems().addAll(monsterTypes);
+        typeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
+        attributeBox.getItems().addAll(attributes);
+        attributeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
     }
 
     private void initButtons() {
-        exitButton.setOnMouseEntered(mouseEvent -> changeCursor(Cursor.CANCEL,mouseEvent));
-        exitButton.setOnMouseExited(mouseEvent -> changeCursor(Cursor.DEFAULT,mouseEvent));
+        exitButton.setOnMouseEntered(mouseEvent -> changeCursor(Cursor.CANCEL, mouseEvent));
+        exitButton.setOnMouseExited(mouseEvent -> changeCursor(Cursor.DEFAULT, mouseEvent));
         exitButton.setOnMouseClicked(mouseEvent -> close());
-        justifyButton(createButton,Cursor.SWORD);
+        justifyButton(createButton, Cursor.SWORD);
         createButton.setOnMouseClicked(mouseEvent -> {
             if (isDataValid()) {
                 createMonster();
             } else playMedia(VoiceEffects.ERROR);
         });
-    }
-
-    private void close() {
-        playMedia(VoiceEffects.EXPLODE);
-        ((Stage)createButton.getScene().getWindow()).close();
-    }
-    private void createMonster() {
-        int atk = Integer.parseInt(attackField.getText());
-        int def = Integer.parseInt(defenceField.getText());
-        MonsterCardType type = MonsterCardType.NORMAL;
-        String typeEffect = (String) effects.getSelectionModel().getSelectedItem();
-        System.out.println(typeEffect);
-        //CardCreator.getMonsterPrice(atk,def,null);
-        //ToDo
-    }
-
-    private boolean isDataValid() {
-        if (Card.getCardNames().contains(nameField.getText())) {
-            showAlert("ESM ET KHARABE!");
-            return false;
-        }
-        if (!attackField.getText().matches("^\\d+$")) {
-            showAlert("ATTACK ET KHARABE!!!");
-            return false;
-        }
-
-        if (!defenceField.getText().matches("^\\d+$")) {
-            showAlert("DEFENCE ET KHARABE!!!");
-            return false;
-        }
-
-        return true;
-
     }
 
     private void initTextFields() {
@@ -106,14 +107,48 @@ public class MonsterCreatorController extends Menu implements Initializable {
         descriptionField.textProperty().addListener(((observableValue, s, t1) -> playMedia(VoiceEffects.KEYBOARD_HIT)));
     }
 
+
+    private void close() {
+        playMedia(VoiceEffects.EXPLODE);
+        ((Stage) createButton.getScene().getWindow()).close();
+        goToMenu("Shop");
+    }
+
+    private void createMonster() {
+        int atk = Integer.parseInt(attackField.getText());
+        int def = Integer.parseInt(defenceField.getText());
+        String cardName = nameField.getText();
+        String description = descriptionField.getText();
+        MonsterCardType type = MonsterCardType.NORMAL;
+        String typeEffect = (String) effects.getSelectionModel().getSelectedItem();
+        if (typeEffect != null && !typeEffect.equals("None")) {
+            type = typeEffect.equals("Ritual") ? MonsterCardType.RITUAL : MonsterCardType.EFFECT;
+        }
+        int price = CardCreator.getMonsterPrice(atk, def, type);
+        if (CardCreator.canCreate(price)) {
+            if (typeEffect == null || typeEffect.equals("None") || typeEffect.equals("Ritual")) typeEffect = "";
+            CardCreator.createMonster(cardName, description, atk, def, price, type, getAttribute(), getMonsterType(), typeEffect);
+            playMedia(VoiceEffects.JINGLE);
+        } else {
+            playMedia(VoiceEffects.ERROR);
+            showAlert("NOT ENOUGH MONEY NIGGA!!!");
+        }
+    }
+
+
     private void changeDefField(String t1) {
-        if (t1.matches("^[12]?\\d{1,4}$")) defenceLabel.setText(t1);
-        else defenceLabel.setText("?!?");
+        if (t1.matches("^1?\\d{1,4}$")) {
+            defenceLabel.setText(t1);
+            priceLabel.setText(getPrice() + "");
+        } else defenceLabel.setText("?!?");
+
     }
 
     private void changeAttackField(String t1) {
-        if (t1.matches("^[12]?\\d{1,4}$")) attackField.setText(t1);
-        else attackLabel.setText("?!?");
+        if (t1.matches("^1?\\d{1,4}$")) {
+            attackLabel.setText(t1);
+            priceLabel.setText(getPrice() + "");
+        } else attackLabel.setText("?!?");
     }
 
     private void changeNameField(String t1) {
@@ -122,4 +157,44 @@ public class MonsterCreatorController extends Menu implements Initializable {
     }
 
 
+    private boolean isDataValid() {
+        if (Card.getCardNames().contains(nameField.getText()) || nameField.getText().equals("")) {
+            showAlert("ESM ET KHARABE!");
+            return false;
+        }
+        if (!attackField.getText().matches("^1?\\d{1,4}$")) {
+            showAlert("ATTACK ET KHARABE!!!");
+            return false;
+        }
+
+        if (!defenceField.getText().matches("^1?\\d{1,4}$")) {
+            showAlert("DEFENCE ET KHARABE!!!");
+            return false;
+        }
+        return true;
+
+    }
+
+    private int getPrice() {
+        try {
+            int atk = Integer.parseInt(attackField.getText());
+            int def = Integer.parseInt(defenceField.getText());
+            MonsterCardType type = MonsterCardType.NORMAL;
+            String typeEffect = (String) effects.getSelectionModel().getSelectedItem();
+            if (typeEffect != null) {
+                type = typeEffect.equals("Ritual") ? MonsterCardType.RITUAL : MonsterCardType.EFFECT;
+            }
+            return CardCreator.getMonsterPrice(atk, def, type);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private MonsterType getMonsterType() {
+        return MonsterType.valueOf((String) typeBox.getSelectionModel().getSelectedItem());
+    }
+
+    private Attribute getAttribute() {
+        return Attribute.valueOf((String) attributeBox.getSelectionModel().getSelectedItem());
+    }
 }

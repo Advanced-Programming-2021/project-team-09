@@ -61,16 +61,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-//        LoginMenuController.login("mir","mir");
+        LoginMenuController.login("mir","mir");
         Main.stage = stage;
 //        stage.initStyle(StageStyle.TRANSPARENT);
-//        Menu.setStage(stage);
-//        stage.setResizable(false);
-//        Menu.goToMenu("Welcome");
+        Menu.setStage(stage);
+        stage.setResizable(false);
+        Menu.goToMenu("Welcome");
         SettingController.playBG();
         stage.show();
-        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
-        stage.show();
+//        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
+//        stage.show();
 //        User user = ReadAndWriteDataBase.getUser("mir.json");
 //        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
 //        new OneRoundGameGraphical(user, user2);
