@@ -39,6 +39,7 @@ public class Menu {
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
     private static final File SETTING_FILE = new File("src/main/resources/Scenes/SettingMenu.fxml");
     private static Scene currentScene;
+    private static Scene sceneBuffer;
     private static Stage mainStage;
     private static final String ROOT_STYLE = "-fx-border-color: #000000; -fx-border-width: 3;";
 
@@ -273,12 +274,23 @@ public class Menu {
     }
 
     public static void showNodeAssPopUp(Parent parent) {
+        sceneBuffer = getCurrentScene();
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(parent,-1,-1,true);
+        setCurrentScene(scene);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.show();
     }
+
+    public static Scene getSceneBuffer() {
+        return sceneBuffer;
+    }
+
+    public static void setSceneBuffer(Scene sceneBuffer) {
+        Menu.sceneBuffer = sceneBuffer;
+    }
 }
+

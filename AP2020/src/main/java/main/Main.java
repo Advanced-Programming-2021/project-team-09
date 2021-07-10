@@ -42,8 +42,10 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.User;
+import model.enums.Cursor;
 import model.game.Game;
 import model.game.MiniGame;
+import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.ChangeBetweenThreeRounds;
 import view.graphics.SettingController;
@@ -61,19 +63,17 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 //        LoginMenuController.login("mir","mir");
         Main.stage = stage;
-////        stage.initStyle(StageStyle.TRANSPARENT);
+//        stage.initStyle(StageStyle.TRANSPARENT);
 //        Menu.setStage(stage);
 //        stage.setResizable(false);
 //        Menu.goToMenu("Welcome");
-//        SettingController.playBG();
+        SettingController.playBG();
         stage.show();
-//        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
-//        Pane pane = new CardHolder();
-//        new DuelMenu(0);
-//        stage.show();
-        User user = ReadAndWriteDataBase.getUser("mir.json");
-        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        new OneRoundGameGraphical(user, user2);
+        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
+        stage.show();
+//        User user = ReadAndWriteDataBase.getUser("mir.json");
+//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+//        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
