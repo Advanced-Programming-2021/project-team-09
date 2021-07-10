@@ -95,8 +95,8 @@ public class Menu {
         rectangle.setY(0);
         Button button = new Button(buttonString);
         button.setWrapText(true);
-        String notClicked = "-fx-background-color: transparent;-fx-font: 15px Chalkboard;";
-        String clicked = "-fx-background-color: rgba(78,80,190,0.53);-fx-font: 15px Chalkboard;";
+        String notClicked = "-fx-background-color: transparent;-fx-font: 19px Chalkboard;";
+        String clicked = "-fx-background-color: rgba(78,80,190,0.53);-fx-font: 19px Chalkboard;";
         button.setStyle(notClicked);
         button.setOnMouseEntered(mouseEvent -> button.setStyle(clicked));
         button.setOnMouseExited(mouseEvent -> button.setStyle(notClicked));
