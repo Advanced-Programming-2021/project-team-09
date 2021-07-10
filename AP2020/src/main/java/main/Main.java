@@ -47,11 +47,8 @@ import model.game.Game;
 import model.game.MiniGame;
 import model.graphicalModels.CardHolder;
 import view.graphics.Menu;
-import view.graphics.duelgraphics.ChangeBetweenThreeRounds;
+import view.graphics.duelgraphics.*;
 import view.graphics.SettingController;
-import view.graphics.duelgraphics.ChooseMiniGame;
-import view.graphics.duelgraphics.DuelMenu;
-import view.graphics.duelgraphics.OneRoundGameGraphical;
 
 public class Main extends Application {
     public static Stage stage;
@@ -67,13 +64,16 @@ public class Main extends Application {
         Menu.setStage(stage);
 //        stage.setResizable(false);
         Menu.goToMenu("Welcome");
-        SettingController.playBG();
+//        SettingController.playBG();
         stage.show();
 //        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
         stage.show();
+        WinnerExceptionHolder.setGameMode(WinnerExceptionHolder.GameMode.THREE_ROUND);
+
         User user = ReadAndWriteDataBase.getUser("mir.json");
+        LoginMenuController.setCurrentUser(user);
         User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        //new OneRoundGameGraphical(user, user2);
+        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
