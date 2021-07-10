@@ -106,8 +106,10 @@ public abstract class Card {
             method.invoke(null, game, this);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             try {
-                Method method = Destroy.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
-                method.invoke(null, game, this);
+                if (syncedEffect != null) {
+                    Method method = Destroy.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
+                    method.invoke(null, game, this);
+                }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
 
             }
@@ -121,8 +123,10 @@ public abstract class Card {
                 method.invoke(null, game, this);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                 try {
-                    Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
-                    method.invoke(null, game, this);
+                    if (syncedEffect != null) {
+                        Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
+                        method.invoke(null, game, this);
+                    }
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
 
                 }
