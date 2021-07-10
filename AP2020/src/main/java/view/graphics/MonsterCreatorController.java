@@ -141,6 +141,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
     }
 
     private void resetEveryThing() {
+
     }
 
 
