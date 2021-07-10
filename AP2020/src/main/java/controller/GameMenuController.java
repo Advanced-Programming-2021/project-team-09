@@ -15,6 +15,7 @@ import model.game.*;
 import view.TributeMenu;
 import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
+import view.graphics.duelgraphics.SpellSelectMenuGraphics;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
 
@@ -929,7 +930,7 @@ public class GameMenuController {
         User rival = getOtherUser(game, player);
         if (card != null) faceUpCard(game, card);
         if (speed != 0) {
-            Card chosenCard = new SpellSelectMenu(game).run(speed);
+            Card chosenCard = new SpellSelectMenuGraphics(game, rival).run(speed);
             if (chosenCard != null) {
                 try {
                     activeEffect(game, chosenCard, rival, getSpeed(chosenCard.getFeatures()));

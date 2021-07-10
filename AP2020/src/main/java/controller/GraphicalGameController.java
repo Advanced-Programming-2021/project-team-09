@@ -133,6 +133,8 @@ public class GraphicalGameController {
         this.rivalPic = rivalPic;
         this.phase = phase;
         this.game = game;
+        game.getPlayerHandCards().add(CSVInfoGetter.getCardByName("Monster Reborn"));
+        game.getRivalHandCards().add(CSVInfoGetter.getCardByName("Monster Reborn"));
         setImageFunctionality();
         loadNames();
         initReceiveDrag();
