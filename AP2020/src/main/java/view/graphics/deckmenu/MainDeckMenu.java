@@ -63,7 +63,7 @@ public class MainDeckMenu extends Menu implements Initializable {
     }
 
     public void goToSetting(ActionEvent actionEvent) {
-        goToMenu("Setting");
+        goToSetting();
     }
 
     public void showAbout(ActionEvent actionEvent) {

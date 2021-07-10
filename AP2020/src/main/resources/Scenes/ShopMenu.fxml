@@ -27,6 +27,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#goToMonsterCreator" text="Monster Creator" />
+                        <MenuItem mnemonicParsing="false" onAction="#goToSpellCreator" text="Spell Creator" />
                         <MenuItem mnemonicParsing="false" onAction="#goToSetting" text="Setting" />
                     </items>
                 </Menu>
