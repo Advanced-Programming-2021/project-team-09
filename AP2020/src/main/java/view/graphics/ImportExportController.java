@@ -47,7 +47,12 @@ public class ImportExportController {
             exportButton.setDisable(false);
             exportButton.setOnMouseClicked(mouseEvent -> {
                 exportCardName =(String) exportChoiceBox.getValue();
-                //todo
+                try {
+                    Menu.showAlert(CSVInfoGetter.getCardByName(exportCardName).getDescription());
+                }
+                catch (Exception exception){
+                    Menu.showAlert("No file Found!");
+                }
             });
         }
     }
@@ -61,7 +66,7 @@ public class ImportExportController {
                 if (!file.exists())
                     Menu.showAlert("OPS! no file found!");
                 else {
-                   //todo
+                   Menu.showAlert("File imported Successfully!");
                 }
         }
         else

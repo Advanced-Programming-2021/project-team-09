@@ -291,6 +291,8 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     }
 
     public void goToSpellCreator(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
+        showNodeAssPopUp(getNode("SpellCreator"));
     }
 }
 
