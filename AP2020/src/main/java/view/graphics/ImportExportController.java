@@ -3,15 +3,17 @@ package view.graphics;
 import controller.database.CSVInfoGetter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ImportExportController {
+public class ImportExportController extends Menu{
     @FXML
     private TextField importSearchbar;
     @FXML
@@ -22,6 +24,7 @@ public class ImportExportController {
     private Button exportButton;
 
     private String exportCardName;
+
     private String importText;
 
     public ImportExportController(){
@@ -68,6 +71,8 @@ public class ImportExportController {
             importButton.setDisable(true);
     }
     public void exit() {
-
+        Scene scene = new Scene(getNode("ImportExportMenu"),-1,-1,true);
+        Menu.setCurrentScene(scene);
+        ((Stage)importButton.getScene().getWindow()).setScene(scene);
     }
 }
