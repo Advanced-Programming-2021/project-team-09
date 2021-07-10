@@ -67,13 +67,13 @@ public class Main extends Application {
 //        Menu.setStage(stage);
 //        stage.setResizable(false);
 //        Menu.goToMenu("Welcome");
-        SettingController.playBG();
+//        SettingController.playBG();
         stage.show();
-        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
+//        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
         stage.show();
-//        User user = ReadAndWriteDataBase.getUser("mir.json");
-//        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-//        new OneRoundGameGraphical(user, user2);
+        User user = ReadAndWriteDataBase.getUser("mir.json");
+        User user2 = ReadAndWriteDataBase.getUser("mmd.json");
+        new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
