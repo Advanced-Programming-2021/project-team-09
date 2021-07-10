@@ -31,14 +31,17 @@ import view.graphics.deckmenu.EditDeckMenu;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Stack;
 
 public class Menu {
     private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
-     private static final File CONFIRM_FILE = new File("src/main/resources/Scenes/Confirmation.fxml");
+    private static final File CONFIRM_FILE = new File("src/main/resources/Scenes/Confirmation.fxml");
     private static final File SETTING_FILE = new File("src/main/resources/Scenes/SettingMenu.fxml");
+    private final static Image CUSTOM_CARD_IMG = getImage("Cards/Custom Card", "pmg");
+
     private static Scene currentScene;
     private static Scene sceneBuffer;
     private static Stage mainStage;
@@ -48,7 +51,7 @@ public class Menu {
         playMedia(VoiceEffects.CLICK);
         Parent root = getNode(menuName + "Menu");
         root.setStyle(ROOT_STYLE);
-        Scene scene = new Scene(root,-1,-1,true);
+        Scene scene = new Scene(root, -1, -1, true);
         Menu.setCurrentScene(scene);
         mainStage.setScene(scene);
     }
@@ -175,7 +178,14 @@ public class Menu {
     }
 
     public static Image getCard(String cardName) {
-        return getImage("Cards/" + cardName.trim().replace(" ", ""), "jpg");
+        Image image = getImage("Cards/" + cardName.trim().replace(" ", ""), "jpg");
+        try {
+            URL url = new URL(image.getUrl());
+            return image;
+        } catch (MalformedURLException e) {
+            return CUSTOM_CARD_IMG;
+        }
+        //FIXME ishala narine
     }
 
     public static Label getLabel(String text, double width, double height) {
@@ -240,7 +250,7 @@ public class Menu {
         player.play();
     }
 
-    public static Media getVoice(String voiceName,String format) {
+    public static Media getVoice(String voiceName, String format) {
         return new Media(new File("src/main/resources/Scenes/Voices/" + voiceName + "." + format).toURI().toString());
     }
 
@@ -251,7 +261,7 @@ public class Menu {
             AlertController controller = loader.getController();
             controller.setText(message);
             Stage stage = new Stage();
-            Scene scene = new Scene(alert,-1,-1,true);
+            Scene scene = new Scene(alert, -1, -1, true);
             scene.setFill(Color.TRANSPARENT);
             stage.setScene(scene);
             controller.setStage(stage);
@@ -266,19 +276,19 @@ public class Menu {
     }
 
     public static void goToSetting() {
-       Parent parent = getNode("SettingMenu");
-       showNodeAssPopUp(parent);
+        Parent parent = getNode("SettingMenu");
+        showNodeAssPopUp(parent);
     }
 
     public static void showAbout() {
-        //ToDo
+        showAlert("Created Buy Big Niggers With Help Of Our Beloved Haj Ehsan:)");
     }
 
     public static void showNodeAssPopUp(Parent parent) {
         sceneBuffer = getCurrentScene();
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(parent,-1,-1,true);
+        Scene scene = new Scene(parent, -1, -1, true);
         setCurrentScene(scene);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
@@ -298,7 +308,7 @@ public class Menu {
             Parent root = loader.load();
             ((ConfirmController) loader.getController()).setText(text);
 
-            Scene scene = new Scene(root,-1,-1,true);
+            Scene scene = new Scene(root, -1, -1, true);
             scene.setFill(Color.TRANSPARENT);
             sceneBuffer = getCurrentScene();
             currentScene = scene;
@@ -309,7 +319,8 @@ public class Menu {
 
             stage.showAndWait();
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public static void setSceneBuffer(Scene sceneBuffer) {

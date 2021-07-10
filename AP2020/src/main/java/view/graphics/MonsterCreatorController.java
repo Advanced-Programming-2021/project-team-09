@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.card.Attribute;
 import model.card.Card;
+import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterType;
@@ -25,7 +26,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
 
     {
         for (Card card : Card.getAllCards()) {
-            if (card.isMonster() && ((Monster) card).hasEffect()) effectMonsters.add(card.getCardName());
+            if (card.isMonster() && ((Monster) card).hasEffect() && !((Monster) card).getFeatures().contains(CardFeatures.CUSTOM_CARD)) effectMonsters.add(card.getCardName());
         }
     }
 
@@ -213,7 +214,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
     }
 
     private MonsterType getMonsterType() {
-        return MonsterType.valueOf((String) typeBox.getSelectionModel().getSelectedItem());
+        return MonsterType.valueOf(((String) typeBox.getSelectionModel().getSelectedItem()).replace(" ","_"));
     }
 
     private Attribute getAttribute() {

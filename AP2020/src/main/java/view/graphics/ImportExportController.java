@@ -24,6 +24,7 @@ public class ImportExportController extends Menu{
     private Button exportButton;
 
     private String exportCardName;
+
     private String importText;
 
     public ImportExportController(){

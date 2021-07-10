@@ -47,6 +47,7 @@ public class CardCreator {
     public static void createMonster(String cardName, String cardDescription, int attack, int defend, int price, MonsterCardType type, Attribute attribute, MonsterType monsterType, String syncedEffect) {
         FeatureWrapper features = new FeatureWrapper();
         features.setEffectMap("");
+        features.addFeature(CardFeatures.CUSTOM_CARD);
         if (type == MonsterCardType.RITUAL) features.addFeature(CardFeatures.RITUAL_SUMMON);
         if (type == MonsterCardType.EFFECT) {
             ArrayList<CardFeatures> features1 = CSVInfoGetter.getCardByName(syncedEffect).getFeatures();
@@ -79,13 +80,14 @@ public class CardCreator {
     public static void createSpellOrTrap(String cardName, String description, String syncedEffect, Limitation limitation, int price, boolean isTrap) {
         try {
             CardType type = isTrap ? CardType.TRAP : CardType.SPELL;
-            FileWriter writer = new FileWriter(monsterFileName, true);
+            FileWriter writer = new FileWriter(spellTrapFileName, true);
             writer.write("\n" + cardName + "," + type.toString() + "," + description + "," + limitation.toString() + "," + price);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         FeatureWrapper features = new FeatureWrapper();
+        features.addFeature(CardFeatures.CUSTOM_CARD);
         ArrayList<CardFeatures> features1 = CSVInfoGetter.getCardByName(syncedEffect).getFeatures();
         features.addFeatures(features1);
         features.setEffectMap(syncedEffect);
