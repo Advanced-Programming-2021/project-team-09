@@ -8,10 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import main.Main;
 import model.User;
 import model.game.Game;
@@ -100,6 +104,10 @@ public class OneRoundGameGraphical implements Initializable {
     private Label rivalHealth;
     @FXML
     private Label phase;
+    @FXML
+    private Circle playerPic;
+    @FXML
+    private Circle rivalPic;
 
     public OneRoundGameGraphical() {
 
@@ -123,7 +131,7 @@ public class OneRoundGameGraphical implements Initializable {
                 rivalMonsters, rivalMonster0, rivalMonster1, rivalMonster2, rivalMonster3, rivalMonster4);
         graphicalGameController = new GraphicalGameController(playerMonsters, playerSpells, rivalMonsters, rivalSpells,
                 playerCardBox, rivalCardBox, buttonsMenu, playerFieldSpell, playerGraveYard, rivalFieldSpell,
-                rivalGraveYard, game, pane, playerName, playerHealth, rivalName, rivalHealth, phase, background);
+                rivalGraveYard, game, pane, playerName, playerHealth, rivalName, rivalHealth, phase, background, playerPic, rivalPic);
     }
 
     private void makeArrays(ImageView[] rivalSpells, ImageView rivalSpell0, ImageView rivalSpell1, ImageView rivalSpell2,
@@ -139,5 +147,9 @@ public class OneRoundGameGraphical implements Initializable {
         rivalMonsters[2] = rivalMonster2;
         rivalMonsters[3] = rivalMonster3;
         rivalMonsters[4] = rivalMonster4;
+    }
+
+    public void settings(MouseEvent mouseEvent) {
+        Menu.goToSetting();
     }
 }

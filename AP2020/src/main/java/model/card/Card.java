@@ -34,6 +34,13 @@ import java.util.ArrayList;
 public abstract class Card {
     @JsonIgnore
     private static final ArrayList<String> cards = CSVInfoGetter.getCardNames();
+    @JsonIgnore
+    private static final ArrayList<Card> allCards = new ArrayList<>();
+    static {
+        for (String cardName : cards) {
+            allCards.add(CSVInfoGetter.getCardByName(cardName));
+        }
+    }
     protected String cardName;
     protected String description;
     protected CardType cardType;
@@ -99,8 +106,10 @@ public abstract class Card {
             method.invoke(null, game, this);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             try {
-                Method method = Destroy.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
-                method.invoke(null, game, this);
+                if (syncedEffect != null) {
+                    Method method = Destroy.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
+                    method.invoke(null, game, this);
+                }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
 
             }
@@ -114,8 +123,10 @@ public abstract class Card {
                 method.invoke(null, game, this);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
                 try {
-                    Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
-                    method.invoke(null, game, this);
+                    if (syncedEffect != null) {
+                        Method method = MonsterEffectController.class.getDeclaredMethod(GameMenuController.trimName(this.syncedEffect), Game.class, Card.class);
+                        method.invoke(null, game, this);
+                    }
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
 
                 }
@@ -138,6 +149,10 @@ public abstract class Card {
     @JsonIgnore
     public static ArrayList<String> getCardNames() {
         return cards;
+    }
+    @JsonIgnore
+    public static ArrayList<Card> getAllCards() {
+        return allCards;
     }
     public abstract String toString();
 

@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import controller.database.CSVInfoGetter;
 import controller.database.ReadAndWriteDataBase;
 import model.User;
-import model.card.Attribute;
-import model.card.CardFeatures;
-import model.card.CardType;
-import model.card.FeatureWrapper;
+import model.card.*;
 import model.card.monster.MonsterCardType;
 import model.card.monster.MonsterEffectType;
 import model.card.monster.MonsterType;
@@ -75,6 +72,8 @@ public class CardCreator {
             e.printStackTrace();
         }
         reduceMoney(price);
+        Card.getAllCards().add(CSVInfoGetter.getCardByName(cardName));
+        Card.getCardNames().add(cardName);
     }
 
     public static void createSpellOrTrap(String cardName, String description, String syncedEffect, Limitation limitation, int price, boolean isTrap) {
