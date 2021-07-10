@@ -73,10 +73,13 @@ public class MonsterCreatorController extends Menu implements Initializable {
             playMedia(VoiceEffects.CLICK);
             priceLabel.setText(getPrice() + "");
         });
+        effects.setValue("None");
         typeBox.getItems().addAll(monsterTypes);
+        typeBox.setValue("WARRIOR");
         typeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
         attributeBox.getItems().addAll(attributes);
         attributeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
+        attributeBox.setValue("DARK");
     }
 
     private void initButtons() {
@@ -129,10 +132,15 @@ public class MonsterCreatorController extends Menu implements Initializable {
             if (typeEffect == null || typeEffect.equals("None") || typeEffect.equals("Ritual")) typeEffect = "";
             CardCreator.createMonster(cardName, description, atk, def, price, type, getAttribute(), getMonsterType(), typeEffect);
             playMedia(VoiceEffects.JINGLE);
+            showAlert("SUCCESSFUL!!!");
+            resetEveryThing();
         } else {
             playMedia(VoiceEffects.ERROR);
             showAlert("NOT ENOUGH MONEY NIGGA!!!");
         }
+    }
+
+    private void resetEveryThing() {
     }
 
 
