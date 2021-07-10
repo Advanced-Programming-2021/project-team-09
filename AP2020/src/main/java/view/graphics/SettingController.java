@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
@@ -79,7 +80,10 @@ public class SettingController extends Menu implements Initializable {
     }
 
     private void close() {
-        ((Stage)mainPane.getScene().getWindow()).close();
+        Scene scene = mainPane.getScene();
+        setCurrentScene(mainPane.getScene());
+        setSceneBuffer(null);
+        ((Stage)scene.getWindow()).close();
     }
 
     public static void playBG() {

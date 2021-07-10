@@ -47,7 +47,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
 
     private void initButtons() {
         exitButton.setOnMouseEntered(mouseEvent -> changeCursor(Cursor.CANCEL,mouseEvent));
-        exitButton.setOnMouseExited(mouseEvent -> changeCursor(Cursor.DEFAULT,mouseEvent));//FIXME
+        exitButton.setOnMouseExited(mouseEvent -> changeCursor(Cursor.DEFAULT,mouseEvent));
         exitButton.setOnMouseClicked(mouseEvent -> close());
         justifyButton(createButton,Cursor.SWORD);
         createButton.setOnMouseClicked(mouseEvent -> {
