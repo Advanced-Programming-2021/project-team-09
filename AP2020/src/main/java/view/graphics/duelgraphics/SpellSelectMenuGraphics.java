@@ -1,6 +1,8 @@
 package view.graphics.duelgraphics;
 
+import controller.GameMenuController;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -26,7 +28,7 @@ public class SpellSelectMenuGraphics {
         this.playerToChoose = PlayerToChoose;
     }
 
-    public void run() {
+    public Card run(int speed) {
         Cell chosenCell = new Cell();
         ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("Active Effect!");
         Pane pane = (Pane)Main.stage.getScene().getRoot();
@@ -46,33 +48,53 @@ public class SpellSelectMenuGraphics {
         label.setWrapText(true);
         label.setLayoutX(10);
         label.setLayoutY(100);
+        newPane.getChildren().add(label);
         Cell[] cells = playerToChoose == game.getPlayer() ? game.getPlayerBoard().getSpellZone() : game.getRivalBoard().getSpellZone();
+        int temp = 0;
+        for (int j = 0; j < 5; j++) {
+            if (cells[j].isOccupied()) {
+                temp++;
+            }
+        }
+        if (temp == 0) {
+            pane.getChildren().remove(nodes.get(0));
+            return null;
+        }
         ImageView[] images = new ImageView[5];
+        Stage newStage = Menu.copyStage(Main.stage);
+        newStage.setScene(new Scene(newPane));
         for (int i = 0; i < 5; i++) {
             if (!cells[i].isOccupied()) continue;
             images[i] = Menu.getImageWithSizeForGame(cells[i].getCard().getCardName(), 200 + i * 80, 200);
             newPane.getChildren().add(images[i]);
             images[i].setOnMouseClicked(mouseEvent -> {
-                for (ImageView image : images) {
-                    image.setEffect(null);
+                for (int j = 0; j < 5; j++) {
+                    if (cells[j].isOccupied()) {
+                        images[j].setEffect(null);
+                    }
                 }
-                ((ImageView)mouseEvent.getSource()).setEffect(new DropShadow(40, Color.AZURE));
+                ((ImageView)mouseEvent.getSource()).setEffect(new DropShadow(40, Color.RED));
             });
         }
-        newPane.getChildren().add(button);
         button.setOnMouseClicked(mouseEvent -> {
             int i = -1;
             for (int i1 = 0; i1 < images.length; i1++) {
-                if (images[i1].getEffect() != null) {
-                    i = i1;
-                    break;
+                if (cells[i1].isOccupied()) {
+                    if (images[i1].getEffect() != null) {
+                        i = i1;
+                        break;
+                    }
                 }
             }
             if (i == -1) return;
-            Card card = game.getPlayerBoard().getSpellZone(i).getCard();
-            if (card == null) return;
-            chosenCell.addCard(card);
-
+            chosenCell.addCard(game.getPlayerBoard().getSpellZone(i).getCard());
+            newStage.close();
         });
+        newStage.showAndWait();
+        pane.getChildren().remove(nodes.get(0));
+        if (chosenCell.getCard() == null) return null;
+        int cardSpeed = GameMenuController.getSpeed(chosenCell.getCard().getFeatures());
+        if (cardSpeed < speed) return null;
+        return chosenCell.getCard();
     }
 }
