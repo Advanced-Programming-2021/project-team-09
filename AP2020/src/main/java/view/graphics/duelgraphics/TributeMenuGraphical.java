@@ -36,6 +36,6 @@ public class TributeMenuGraphical {
         iv.setFitWidth(700);
         iv.setOpacity(0.18);
         newPane.getChildren().add(iv);
-
+        return null;
     }
 }
