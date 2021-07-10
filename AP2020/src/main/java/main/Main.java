@@ -18,7 +18,7 @@ public class Main extends Application {
         Menu.setStage(stage);
         stage.setResizable(false);
         Menu.goToMenu("Welcome");
-//        SettingController.playBG();
+        SettingController.playBG();
         stage.show();
     }
 }
