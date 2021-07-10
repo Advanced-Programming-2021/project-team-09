@@ -276,11 +276,21 @@ public class ShopMenuController extends SearchMenu implements Initializable {
     }
 
     public void goToSetting(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         goToSetting();
     }
 
     public void showAbout(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
         showAbout();
+    }
+
+    public void goToMonsterCreator(ActionEvent actionEvent) {
+        playMedia(VoiceEffects.CLICK);
+        showNodeAssPopUp(getNode("MonsterCreator"));
+    }
+
+    public void goToSpellCreator(ActionEvent actionEvent) {
     }
 }
 

@@ -71,22 +71,26 @@
                 <InnerShadow />
             </effect>
         </Button>
-        <TextField fx:id="nameField" alignment="CENTER" layoutX="53.0" layoutY="112.0" promptText="Name" />
-        <TextArea fx:id="descriptionField" layoutX="53.0" layoutY="210.0" prefHeight="90.0" prefWidth="174.0" promptText="NIGGA KILLER..." />
-        <Label alignment="CENTER" layoutX="65.0" layoutY="74.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Name" />
-        <Label alignment="CENTER" layoutX="65.0" layoutY="170.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Description" />
-        <Label alignment="CENTER" layoutX="269.0" layoutY="74.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Attack" />
-        <Label alignment="CENTER" layoutX="269.0" layoutY="149.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Defence" />
-        <TextField fx:id="attackField" alignment="CENTER" layoutX="257.0" layoutY="112.0" promptText="0000" />
+        <TextField fx:id="nameField" alignment="CENTER" layoutX="53.0" layoutY="97.0" promptText="Name" />
+        <TextArea fx:id="descriptionField" layoutX="53.0" layoutY="165.0" prefHeight="70.0" prefWidth="174.0" promptText="NIGGA KILLER..." />
+        <Label alignment="CENTER" layoutX="65.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Name" />
+        <Label alignment="CENTER" layoutX="65.0" layoutY="134.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Description" />
+        <Label alignment="CENTER" layoutX="269.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Attack" />
+        <Label alignment="CENTER" layoutX="269.0" layoutY="150.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" text="Defence" />
+        <TextField fx:id="attackField" alignment="CENTER" layoutX="257.0" layoutY="97.0" promptText="0000" />
         <TextField fx:id="defenceField" alignment="CENTER" layoutX="257.0" layoutY="185.0" promptText="0000" />
         <ChoiceBox fx:id="effects" layoutX="257.0" layoutY="265.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="174.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 20;" />
-        <Label alignment="CENTER" layoutX="257.0" layoutY="229.0" prefHeight="26.0" prefWidth="174.0" text="Effect" />
-        <Button fx:id="createButton" alignment="CENTER" contentDisplay="CENTER" layoutX="172.0" layoutY="338.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" style="-fx-border-color: black; -fx-border-width: 1.5; -fx-border-radius: 20;" text="Button" textAlignment="CENTER">
+        <Label alignment="CENTER" layoutX="257.0" layoutY="235.0" prefHeight="26.0" prefWidth="174.0" text="Effect" />
+        <Button fx:id="createButton" alignment="CENTER" contentDisplay="CENTER" layoutX="172.0" layoutY="338.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" style="-fx-border-color: black; -fx-border-width: 1.5; -fx-border-radius: 20;" text="Create" textAlignment="CENTER">
             <font>
                 <Font name="Chalkduster" size="18.0" />
             </font>
         </Button>
         <Label alignment="CENTER" layoutX="107.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" style="-fx-background-color: gold; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20;" text="Monster Sazii SIA" />
+      <ChoiceBox fx:id="typeBox" layoutX="53.0" layoutY="272.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="64.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 20;" />
+      <ChoiceBox fx:id="attributeBox" layoutX="153.0" layoutY="272.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="64.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 20;" />
+      <Label alignment="CENTER" layoutX="53.0" layoutY="239.0" prefHeight="26.0" prefWidth="64.0" text="Type" />
+      <Label alignment="CENTER" layoutX="140.0" layoutY="239.0" prefHeight="26.0" prefWidth="90.0" text="Attribute" />
     </children>
     <stylesheets>
         <URL value="@StyleSheets/CardCreator.css" />
