@@ -104,7 +104,9 @@ public class SettingController extends Menu implements Initializable {
     }
 
     private void goToImportExport() {
-        //ToDo
+        Scene scene = new Scene(getNode("ImportExportMenu"),-1,-1,true);
+        Menu.setCurrentScene(scene);
+        ((Stage)mainPane.getScene().getWindow()).setScene(scene);
     }
 
 }
