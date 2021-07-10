@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
 public class SettingController extends Menu implements Initializable {
     private final static MediaPlayer PLAYER = new MediaPlayer(getVoice("BackGroundMusic","mp3"));
     private static boolean isMute = false;
-    private static double sfxVolume = 1;
-    private static double volume = 1;
+    private static double sfxVolume = 0.5;
+    private static double volume = 0.5;
     @FXML
     private AnchorPane mainPane;
     @FXML
@@ -87,6 +87,7 @@ public class SettingController extends Menu implements Initializable {
     }
 
     public static void playBG() {
+        PLAYER.setVolume(0.5);
         PLAYER.setCycleCount(-1);
         PLAYER.play();
     }
