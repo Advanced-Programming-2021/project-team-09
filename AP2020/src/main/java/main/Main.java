@@ -73,7 +73,7 @@ public class Main extends Application {
         stage.show();
         User user = ReadAndWriteDataBase.getUser("mir.json");
         User user2 = ReadAndWriteDataBase.getUser("mmd.json");
-        new OneRoundGameGraphical(user, user2);
+        //new OneRoundGameGraphical(user, user2);
 
 //        new MiniGameCoin(new MiniGame(user, user2));
     }
