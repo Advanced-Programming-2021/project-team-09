@@ -34,6 +34,7 @@ import model.game.Game;
 import model.game.State;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
+import view.graphics.duelgraphics.ChangeBetweenThreeRounds;
 import view.graphics.duelgraphics.EndPhaseMenuGraphical;
 import view.graphics.duelgraphics.WinnerExceptionHolder;
 import view.responses.GameMenuResponse;
@@ -1138,8 +1139,8 @@ public class GraphicalGameController {
             Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 1000");
             label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
             label.setWrapText(true);
-            label.setLayoutX(300);
-            label.setLayoutY(100);
+            label.setLayoutX(225);
+            label.setLayoutY(225);
             pane.getChildren().add(label);
             GameMenuController.cashOut(winnerException.getWinnerLP(), false, winnerException.getWinner(), winnerException.getLoser());
             ReadAndWriteDataBase.updateUser(game.getPlayer());
@@ -1156,10 +1157,10 @@ public class GraphicalGameController {
                 Label label = new Label("This game has ended!");
                 label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
                 label.setWrapText(true);
-                label.setLayoutX(300);
-                label.setLayoutY(100);
+                label.setLayoutX(225);
+                label.setLayoutY(225);
                 pane.getChildren().add(label);
-//                nodes.get(0).setOnMouseClicked(mouseEvent -> // TODO: 7/10/2021 go to change cards menu);
+                nodes.get(0).setOnMouseClicked(mouseEvent -> new ChangeBetweenThreeRounds(game.getPlayer()));
             } else if (winnerException2 == null) {
                 if (winnerException1.getWinner() == winnerException.getWinner()) {
                     ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
@@ -1167,8 +1168,8 @@ public class GraphicalGameController {
                     Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 3000");
                     label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
                     label.setWrapText(true);
-                    label.setLayoutX(300);
-                    label.setLayoutY(100);
+                    label.setLayoutX(225);
+                    label.setLayoutY(225);
                     pane.getChildren().add(label);
                     GameMenuController.cashOut(Math.max(winnerException.getWinnerLP(), winnerException1.getWinnerLP()), true, winnerException.getWinner(), winnerException.getLoser());
                     ReadAndWriteDataBase.updateUser(game.getPlayer());
@@ -1181,10 +1182,10 @@ public class GraphicalGameController {
                     Label label = new Label("This game has ended!");
                     label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
                     label.setWrapText(true);
-                    label.setLayoutX(300);
-                    label.setLayoutY(100);
+                    label.setLayoutX(225);
+                    label.setLayoutY(225);
                     pane.getChildren().add(label);
-//                    nodes.get(0).setOnMouseClicked(mouseEvent -> // TODO: 7/10/2021 go to change cards menu);
+                    nodes.get(0).setOnMouseClicked(mouseEvent -> new ChangeBetweenThreeRounds(game.getPlayer()));
                 }
             } else if (winnerException3 == null) {
                 ArrayList<Node> nodes = Menu.getRectangleAndButtonForGameMenus("abbas");
@@ -1192,8 +1193,8 @@ public class GraphicalGameController {
                 Label label = new Label("Player " + winnerException.getWinner().getNickname() + " Won with score 3000");
                 label.setStyle("-fx-background-color: transparent;-fx-font: 22px Chalkboard;-fx-text-fill: red;");
                 label.setWrapText(true);
-                label.setLayoutX(300);
-                label.setLayoutY(100);
+                label.setLayoutX(225);
+                label.setLayoutY(225);
                 pane.getChildren().add(label);
                 int maxLp = winnerException1.getWinnerLP();
                 maxLp = Math.max(winnerException2.getWinnerLP(), maxLp);

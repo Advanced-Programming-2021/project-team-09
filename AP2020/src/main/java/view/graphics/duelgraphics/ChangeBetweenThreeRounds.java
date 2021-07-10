@@ -2,10 +2,12 @@ package view.graphics.duelgraphics;
 
 import controller.LoginMenuController;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import main.Main;
 import model.User;
 import model.card.Card;
 import model.deck.Deck;
@@ -13,7 +15,6 @@ import model.deck.MainDeck;
 import model.deck.SideDeck;
 import model.enums.VoiceEffects;
 import model.graphicalModels.CardHolder;
-import view.duelMenu.OneRoundGame;
 import view.graphics.ChoiceMenu;
 import view.graphics.Menu;
 
@@ -31,11 +32,11 @@ public class ChangeBetweenThreeRounds extends Menu {
     @FXML
     private HBox sideChoiceBox;
 
-    private User user;
-    private Deck changedDeck;
-    private Deck deck;
-    private SideDeck sideDeck;
-    private MainDeck mainDeck;
+    private static User user;
+    private static Deck changedDeck;
+    private static Deck deck;
+    private static SideDeck sideDeck;
+    private static MainDeck mainDeck;
     private ChoiceMenu mainChoiceMenu;
     private ChoiceMenu sideChoiceMenu;
     private Card mainCard = null;
@@ -44,8 +45,13 @@ public class ChangeBetweenThreeRounds extends Menu {
     private final HashMap<String, VBox> mainCardBoxes = new HashMap<>();
     private final HashMap<String, VBox> sideCardBoxes = new HashMap<>();
 
-    public ChangeBetweenThreeRounds(){
+    public ChangeBetweenThreeRounds() {
 
+    }
+
+    public ChangeBetweenThreeRounds(User user){
+        ChangeBetweenThreeRounds.user = user;
+        Main.stage.setScene(new Scene(Menu.getNode("ChangeBetweenThreeRoundsMenu")));
     }
 
     public void initialize(){
@@ -142,6 +148,7 @@ public class ChangeBetweenThreeRounds extends Menu {
     public void setUser(User user) {
         this.user = user;
     }
+
     public void setUsername(){
         user = LoginMenuController.getCurrentUser();
         username.setText(user.getUsername());
