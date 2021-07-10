@@ -64,6 +64,9 @@ public class MonsterCreatorController extends Menu implements Initializable {
         initTextFields();
         initButtons();
         initChoiceBoxes();
+        attackLabel.setText("?!?");
+        defenceLabel.setText("?!?");
+        priceLabel.setText("?!?");
     }
 
     private void initChoiceBoxes() {
@@ -73,12 +76,12 @@ public class MonsterCreatorController extends Menu implements Initializable {
             playMedia(VoiceEffects.CLICK);
             priceLabel.setText(getPrice() + "");
         });
-        effects.setValue("None");
         typeBox.getItems().addAll(monsterTypes);
-        typeBox.setValue("WARRIOR");
         typeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
         attributeBox.getItems().addAll(attributes);
         attributeBox.selectionModelProperty().addListener(((observableValue, o, t1) -> playMedia(VoiceEffects.CLICK)));
+        effects.setValue("None");
+        typeBox.setValue("WARRIOR");
         attributeBox.setValue("DARK");
     }
 
@@ -141,14 +144,24 @@ public class MonsterCreatorController extends Menu implements Initializable {
     }
 
     private void resetEveryThing() {
-
+        effects.setValue("None");
+        typeBox.setValue("WARRIOR");
+        attributeBox.setValue("DARK");
+        nameField.setText("");
+        attackField.setText("");
+        defenceField.setText("");
+        attackLabel.setText("?!?");
+        defenceLabel.setText("?!?");
+        priceLabel.setText("?!?");
     }
 
 
     private void changeDefField(String t1) {
         if (t1.matches("^1?\\d{1,4}$")) {
             defenceLabel.setText(t1);
-            priceLabel.setText(getPrice() + "");
+            int price = getPrice();
+            String priceS = price == -1 ? "?!?" : price + "";
+            priceLabel.setText(priceS);
         } else defenceLabel.setText("?!?");
 
     }
@@ -195,7 +208,7 @@ public class MonsterCreatorController extends Menu implements Initializable {
             }
             return CardCreator.getMonsterPrice(atk, def, type);
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 
