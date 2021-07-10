@@ -37,6 +37,7 @@ import java.util.Stack;
 public class Menu {
     private static final DropShadow effect = new DropShadow(BlurType.ONE_PASS_BOX, Color.rgb(138, 138, 138, 1), 0.5, 0.0, 1, 0);
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
+     private static final File CONFIRM_FILE = new File("src/main/resources/Scenes/Confirmation.fxml");
     private static final File SETTING_FILE = new File("src/main/resources/Scenes/SettingMenu.fxml");
     private static Scene currentScene;
     private static Scene sceneBuffer;
@@ -288,6 +289,27 @@ public class Menu {
 
     public static Scene getSceneBuffer() {
         return sceneBuffer;
+    }
+
+    public static void getConfirm(String text) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(CONFIRM_FILE.toURI().toURL());
+            Parent root = loader.load();
+            ((ConfirmController) loader.getController()).setText(text);
+
+            Scene scene = new Scene(root,-1,-1,true);
+            scene.setFill(Color.TRANSPARENT);
+            sceneBuffer = getCurrentScene();
+            currentScene = scene;
+
+            Stage stage = new Stage();
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+            stage.showAndWait();
+
+        } catch (Exception e) {}
     }
 
     public static void setSceneBuffer(Scene sceneBuffer) {
