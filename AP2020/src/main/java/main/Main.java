@@ -64,10 +64,10 @@ public class Main extends Application {
 //        LoginMenuController.login("mir","mir");
         Main.stage = stage;
 //        stage.initStyle(StageStyle.TRANSPARENT);
-//        Menu.setStage(stage);
+        Menu.setStage(stage);
 //        stage.setResizable(false);
-//        Menu.goToMenu("Welcome");
-//        SettingController.playBG();
+        Menu.goToMenu("Welcome");
+        SettingController.playBG();
         stage.show();
 //        Menu.showNodeAssPopUp(Menu.getNode("MonsterCreator"));
         stage.show();

@@ -81,7 +81,7 @@ public class SettingController extends Menu implements Initializable {
 
     private void close() {
         Scene scene = mainPane.getScene();
-        setCurrentScene(mainPane.getScene());
+        setCurrentScene(Menu.getSceneBuffer());
         setSceneBuffer(null);
         ((Stage)scene.getWindow()).close();
     }
