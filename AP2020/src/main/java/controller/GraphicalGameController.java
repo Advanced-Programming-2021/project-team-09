@@ -31,7 +31,6 @@ import model.exceptions.WinnerException;
 import model.game.Cell;
 import model.game.Game;
 import model.game.State;
-import view.duelMenu.EndPhaseMenu;
 import view.duelMenu.Phase;
 import view.graphics.Menu;
 import view.graphics.duelgraphics.EndPhaseMenuGraphical;
@@ -318,11 +317,8 @@ public class GraphicalGameController {
             return;
         }
         State cellState = cell.getState();
-        if ((currentPhase == Phase.MAIN_PHASE1 || currentPhase == Phase.MAIN_PHASE2) && cellState == State.FACE_UP_SPELL) {
+        if (currentPhase == Phase.MAIN_PHASE1 || currentPhase == Phase.MAIN_PHASE2) {
             options.getChildren().add(ACTIVE_EFFECT);
-        }
-        if (cellState == State.FACE_DOWN_SPELL) {
-            options.getChildren().add(FLIP_SUMMON);
         }
         options.getChildren().addAll(SHOW_CARD, NEXT_PHASE, SURRENDER);
     }
@@ -658,6 +654,8 @@ public class GraphicalGameController {
         }
         try {
             GameMenuResponse gameMenuResponse = GameMenuController.directAttack(game, attacker + 1);
+            if (gameMenuResponse.getGameMenuResponseEnum() == GameMenuResponsesEnum.SUCCESSFUL)
+                Menu.playMedia(VoiceEffects.EXPLODE);
             response(gameMenuResponse);
         } catch (WinnerException winnerException) {
             gameFinished(winnerException);
@@ -1053,7 +1051,7 @@ public class GraphicalGameController {
                 EventHandler<MouseEvent> eventHandler = mouseEvent1 -> pane.getChildren().removeAll(imageView, rectangle, label);
                 rectangle.setOnMouseClicked(eventHandler);
                 imageView.setOnMouseClicked(event -> {
-                    imageView.setImage(Menu.getCard(GameMenuController.trimName(game.getPlayerBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()).getCardName())));
+                    imageView.setImage(Menu.getCard(game.getPlayerBoard().getGraveyard().getCards().get(Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()).getCardName()));
                     label.setText(((Integer.parseInt(label.getText().split("/")[0]) % game.getPlayerBoard().getGraveyard().getCards().size()) + 1) + "/" + game.getPlayerBoard().getGraveyard().getCards().size());
                 });
             }
