@@ -116,50 +116,6 @@ public class CardEffectsViewGraphical {
         return getCellNumbers(1)[0];
     }
 
-    static public void respond(CardEffectsResponses response) {
-        if (response == CardEffectsResponses.CANT_RITUAL_SUMMON)
-            System.out.println("You cant ritual summon !");
-        else if (response == CardEffectsResponses.HAVE_NO_CARDS)
-            System.out.println("You have no cards !");
-        else if (response == CardEffectsResponses.INVALID_CELL_NUMBER)
-            System.out.println("Invalid Cell number !");
-        else if (response == CardEffectsResponses.MONSTER_ZONE_IS_FULL)
-            System.out.println("Monster zone is full !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_A_FIELD_SPELL)
-            System.out.println("Please select a field spell !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_AN_SPELL)
-            System.out.println("Please select a spell !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_A_VALID_TYPE)
-            System.out.println("Please select a valid type ! ");
-        else if (response == CardEffectsResponses.YOU_DONT_HAVE_ANY_FIELD_SPELL)
-            System.out.println("You dont have any field spell !");
-        else if (response == CardEffectsResponses.NO_MONSTERS)
-            System.out.println("You have no monsters !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_MONSTER)
-            System.out.println("Please select monster !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_A_VALID_NUMBER)
-            System.out.println("Please select a valid number !");
-        else if (response == CardEffectsResponses.SPECIAL_SUMMON_NOW)
-            System.out.println("You have to special summon now !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_LEVEL_7_OR_MORE)
-            System.out.println("Please select level 7 or more monster !");
-        else if (response == CardEffectsResponses.PLEASE_SELECT_A_VALID_MONSTER)
-            System.out.println("Please select a valid monster !");
-        else if (response == CardEffectsResponses.CANT_ACTIVATE_TRAP)
-            System.out.println("You cant activate trap !");
-    }
-
-    static public boolean doYouWantTo(String message) {
-        Scanner scanner = LoginMenu.getInstance().getScanner();
-        while (true) {
-            System.out.println(message);
-            String command = scanner.nextLine().trim().toLowerCase();
-            if (command.matches("^no$")) return false;
-            else if (command.matches("^yes$")) return true;
-            System.out.println("Invalid response .. please say yes or no ..");
-        }
-    }
-
     static public Card getCardFrom(Graveyard graveyard, Deck deck, ArrayList<Card> cards) {
         ArrayList<Card> output = new ArrayList<>(cards);
         output.addAll(graveyard.getCards());
