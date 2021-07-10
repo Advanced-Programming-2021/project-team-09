@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.enums.Cursor;
 import model.enums.VoiceEffects;
@@ -24,8 +25,8 @@ import java.util.ResourceBundle;
 public class SettingController extends Menu implements Initializable {
     private final static MediaPlayer PLAYER = new MediaPlayer(getVoice("BackGroundMusic","mp3"));
     private static boolean isMute = false;
-    private static double sfxVolume = 1;
-    private static double volume = 1;
+    private static double sfxVolume = 0.5;
+    private static double volume = 0.5;
     @FXML
     private AnchorPane mainPane;
     @FXML
@@ -87,6 +88,7 @@ public class SettingController extends Menu implements Initializable {
     }
 
     public static void playBG() {
+        PLAYER.setVolume(0.5);
         PLAYER.setCycleCount(-1);
         PLAYER.play();
     }
@@ -105,8 +107,8 @@ public class SettingController extends Menu implements Initializable {
 
     private void goToImportExport() {
         Scene scene = new Scene(getNode("ImportExportMenu"),-1,-1,true);
+        scene.setFill(Color.TRANSPARENT);
         Menu.setCurrentScene(scene);
         ((Stage)mainPane.getScene().getWindow()).setScene(scene);
     }
-
 }

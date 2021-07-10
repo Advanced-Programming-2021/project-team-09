@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -50,7 +51,12 @@ public class ImportExportController extends Menu{
             exportButton.setDisable(false);
             exportButton.setOnMouseClicked(mouseEvent -> {
                 exportCardName =(String) exportChoiceBox.getValue();
-                //todo
+                try {
+                    Menu.showAlert(CSVInfoGetter.getCardByName(exportCardName).getDescription());
+                }
+                catch (Exception exception){
+                    Menu.showAlert("No file Found!");
+                }
             });
         }
     }
@@ -64,14 +70,15 @@ public class ImportExportController extends Menu{
                 if (!file.exists())
                     Menu.showAlert("OPS! no file found!");
                 else {
-                   //todo
+                   Menu.showAlert("File imported Successfully!");
                 }
         }
         else
             importButton.setDisable(true);
     }
     public void exit() {
-        Scene scene = new Scene(getNode("ImportExportMenu"),-1,-1,true);
+        Scene scene = new Scene(getNode("SettingMenu"),-1,-1,true);
+        scene.setFill(Color.TRANSPARENT);
         Menu.setCurrentScene(scene);
         ((Stage)importButton.getScene().getWindow()).setScene(scene);
     }
