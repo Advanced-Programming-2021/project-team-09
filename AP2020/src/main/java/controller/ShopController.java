@@ -3,7 +3,6 @@ package controller;
 import controller.database.ReadAndWriteDataBase;
 import controller.database.CSVInfoGetter;
 import model.User;
-import model.card.Card;
 import view.responses.ShopMenuResponses;
 
 import java.util.ArrayList;

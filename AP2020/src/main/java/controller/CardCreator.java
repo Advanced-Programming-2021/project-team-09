@@ -6,9 +6,10 @@ import controller.database.ReadAndWriteDataBase;
 import model.User;
 import model.card.*;
 import model.card.monster.MonsterCardType;
-import model.card.monster.MonsterEffectType;
 import model.card.monster.MonsterType;
 import model.card.spell_traps.Limitation;
+import model.card.spell_traps.SpellType;
+import model.card.spell_traps.TrapType;
 
 
 import java.io.FileWriter;
@@ -77,11 +78,12 @@ public class CardCreator {
         Card.getCardNames().add(cardName);
     }
 
-    public static void createSpellOrTrap(String cardName, String description, String syncedEffect, Limitation limitation, int price, boolean isTrap) {
+    public static void createSpellOrTrap(String cardName, String description, String syncedEffect, Limitation limitation, SpellType spellType, TrapType trapType, int price, boolean isTrap) {
         try {
             CardType type = isTrap ? CardType.TRAP : CardType.SPELL;
+            String type1 = isTrap ? trapType.toString() : spellType.toString();
             FileWriter writer = new FileWriter(spellTrapFileName, true);
-            writer.write("\n" + cardName + "," + type.toString() + "," + description + "," + limitation.toString() + "," + price);
+            writer.write("\n" + cardName + "," + type.toString() + "," + type1 + "," + description + "," + limitation.toString() + "," + price);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,6 +117,4 @@ public class CardCreator {
         user.decreaseBalance(price);
         ReadAndWriteDataBase.updateUser(user);
     }
-
-
 }

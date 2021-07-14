@@ -99,7 +99,7 @@ public class SignUpMenu extends Menu implements Initializable {
     }
 
     public void goToLoginMenu(ActionEvent actionEvent) {
-        goToMenu("Login");
+        goToMenu("Welcome");
     }
 
     private enum Face{

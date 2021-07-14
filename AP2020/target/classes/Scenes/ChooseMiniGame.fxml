@@ -21,9 +21,9 @@
          </children>
       </HBox>
       <Button fx:id="go" defaultButton="true" layoutX="259.0" layoutY="234.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" style="-fx-background-color: #11af4455; -fx-background-radius: 10px;" text="Go !" />
-      <Label fx:id="playerName" layoutX="57.0" layoutY="45.0" textAlignment="CENTER" textFill="#3bdf59" wrapText="true" />
-      <Label fx:id="rivalName" layoutX="522.0" layoutY="45.0" textAlignment="CENTER" textFill="#e72626" wrapText="true" />
-      <Label fx:id="mode" layoutX="286.0" layoutY="85.0" style="-fx-background-color: transparent;" textAlignment="CENTER" wrapText="true" />
-      <RadioButton fx:id="radio" disable="true" layoutX="265.0" layoutY="299.0" mnemonicParsing="false" selected="true" style="-fx-background-color: transparent;" text="Higher ?" textAlignment="CENTER" visible="false" wrapText="true" />
+      <Label fx:id="playerName" alignment="CENTER" layoutX="57.0" layoutY="45.0" textAlignment="CENTER" textFill="#3bdf59" wrapText="true" />
+      <Label fx:id="rivalName" alignment="CENTER" layoutX="522.0" layoutY="45.0" textAlignment="CENTER" textFill="#e72626" wrapText="true" />
+      <Label fx:id="mode" alignment="CENTER" layoutX="292.0" layoutY="87.0" style="-fx-background-color: transparent;" textAlignment="CENTER" wrapText="true" />
+      <RadioButton fx:id="radio" disable="true" layoutX="265.0" layoutY="190.0" mnemonicParsing="false" selected="true" style="-fx-background-color: transparent;" text="Higher ?" textAlignment="CENTER" visible="false" wrapText="true" />
    </children>
 </AnchorPane>

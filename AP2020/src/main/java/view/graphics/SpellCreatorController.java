@@ -56,7 +56,8 @@ public class SpellCreatorController extends Menu{
         String syncedEffect = (String) effects.getValue();
         Limitation limitation = getLimit();
         assert limitation != null;
-        CardCreator.createSpellOrTrap(name,description,syncedEffect,limitation,getPrice(),isTrap.isSelected());
+        CardCreator.createSpellOrTrap(name,description,syncedEffect,limitation,null,null,getPrice(),isTrap.isSelected());
+        //FIXME
     }
     private void setChoiceBoxes(){
         typeBox.setItems(FXCollections.observableArrayList(spellTypes));
