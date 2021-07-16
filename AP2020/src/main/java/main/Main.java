@@ -16,6 +16,8 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         Main.stage = stage;
         Menu.setStage(stage);
+        stage.setTitle("Fanta-Oh!");
+        stage.getIcons().add(Menu.getImage("icon", "png"));
         stage.setResizable(false);
         Menu.goToMenu("Welcome");
         SettingController.playBG();
