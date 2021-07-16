@@ -26,4 +26,5 @@ public enum GameMenuResponsesEnum {
     ABORTED,
     CANT_SPECIAL_SUMMON,
     ALREADY_CHANGED,
+    CANT_CHANGE,
 }

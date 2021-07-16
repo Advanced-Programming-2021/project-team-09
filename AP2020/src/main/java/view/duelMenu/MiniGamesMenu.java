@@ -33,8 +33,7 @@ public class MiniGamesMenu {
     }
 
     public static MiniGamesMenu getInstance(Scanner scanner, MiniGame miniGame) {
-        if (miniGameMenu == null) miniGameMenu = new MiniGamesMenu(scanner, miniGame);
-        return miniGameMenu;
+        return miniGameMenu = new MiniGamesMenu(scanner, miniGame);
     }
 
     public void run() {
@@ -47,18 +46,18 @@ public class MiniGamesMenu {
             command = scanner.nextLine().trim();
             if (command.matches("rock paper scissors")) {
                 playRockPaperScissor();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("dice")) {
                 playDice();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + "won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("throw coin")) {
                 playCoin();
-                System.out.println(ANSI_CYAN_BACKGROUND + ANSI_PURPLE +
-                        miniGame.getWinner().getUsername() + " won the mini game!");
+                System.out.println(ANSI_YELLOW + ANSI_BLACK_BACKGROUND +
+                        miniGame.getWinner().getUsername() + " won the mini game!" + ANSI_RESET);
                 return;
             } else if (command.matches("help"))
                 showHelp();
@@ -75,7 +74,7 @@ public class MiniGamesMenu {
             userChoice = scanner.nextLine().trim();
             if (userChoice.equals("higher"))
                 break;
-            else if (userChoice.equals("lowe"))
+            else if (userChoice.equals("lower"))
                 break;
             else
                 System.out.println("please chose higher or lower!");

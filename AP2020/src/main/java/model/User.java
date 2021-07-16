@@ -10,11 +10,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class User {
+    @JsonIgnore
+    public static final int NUMBER_OF_PROFILES = 5;
     private String username;
     private String nickname;
     private String password;
     private int balance;
     private int score;
+    private int profilePhoto;
     private ArrayList<Card> cards;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
@@ -25,10 +28,12 @@ public class User {
         this.balance = 0;
         this.score = 0;
         this.nickname = nickname;
+        this.profilePhoto = 0;
         this.cards = new ArrayList<>();
         this.decks = new ArrayList<>();
         activeDeck  = null;
     }
+
     public User(){
 
     }
@@ -61,6 +66,10 @@ public class User {
         this.score = score;
     }
 
+    public void setProfilePhoto(int profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -68,6 +77,35 @@ public class User {
     public ArrayList<Deck> getDecks(){
         return decks;
     }
+
+    public Deck getActiveDeck() {
+        return activeDeck;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getProfilePhoto() {
+        return profilePhoto;
+    }
+
     public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
     }
@@ -97,19 +135,16 @@ public class User {
 
     @JsonIgnore
     public Card getCardByName(String cardName) {
+        if (cardName == null) return null;
         ArrayList<Card> cards = getCards();
         for (Card card : cards) {
-            if (card.getCardName().equals(cardName)) return card;
+            if (cardName.equals(card.getCardName())) return card;
         }
         return null;
     }
 
     public void createDeck(String deckName) {
         decks.add(new Deck(deckName));
-    }
-
-    public Deck getActiveDeck() {
-        return activeDeck;
     }
 
     public void changePassword(String newPassword) {
@@ -128,13 +163,7 @@ public class User {
         balance -= amount;
     }
 
-    public int getScore() {
-        return score;
-    }
 
-    public int getBalance() {
-        return balance;
-    }
 
     public boolean hasEnoughBalance(int amount) {
         return balance >= amount;
@@ -143,7 +172,7 @@ public class User {
     public void addCardToMainDeck(Card card, String deckName) {
         Deck deck = getDeckByName(deckName);
         if (deck.canAddCardByName(card.getCardName())) {
-           deck.addCardToSideDeck(card);
+           deck.addCardToMainDeck(card);
         }
     }
 
@@ -195,17 +224,7 @@ public class User {
         return decks;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     class sortDeckByName implements Comparator<Deck> {
         @Override

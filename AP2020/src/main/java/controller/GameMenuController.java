@@ -1,22 +1,25 @@
 package controller;
 
 import controller.EffectController.EffectController;
-import controller.EffectController.MonsterEffectController;
 import model.User;
 import model.card.Card;
 import model.card.CardFeatures;
 import model.card.monster.Monster;
 import model.card.monster.MonsterCardType;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.SpellType;
 import model.deck.Graveyard;
+import model.deck.MainDeck;
 import model.exceptions.*;
 import model.game.*;
-import view.CardEffectsView;
 import view.TributeMenu;
 import view.duelMenu.SelectState;
 import view.duelMenu.SpellSelectMenu;
-import view.responses.CardEffectsResponses;
+import view.graphics.duelgraphics.SpellSelectMenuGraphics;
+import view.graphics.duelgraphics.TributeMenuGraphical;
 import view.responses.GameMenuResponse;
 import view.responses.GameMenuResponsesEnum;
+
 import java.util.ArrayList;
 
 public class GameMenuController {
@@ -72,7 +75,7 @@ public class GameMenuController {
 
     // for easier application of selectSpellAndTrapFromRival & selectMonsterFromRival
     private static GameMenuResponse selectFromRivalArray(int cellNumber, Cell[] cells) {
-        if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.SUCCESSFUL);
+        if (cellNumber < 1 || cellNumber > 5) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = cells[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
         State tempState = tempCell.getState();
@@ -96,7 +99,6 @@ public class GameMenuController {
 
     // returns the name of card which was added to hand
     public static GameMenuResponse draw(Game game) throws WinnerException {
-        if (!game.playerHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getPlayerDeck().getMainDeck().getNumberOfAllCards() == 0) {
             game.setWinner(game.getRival());
             throw new WinnerException(game.getRival(), game.getPlayer(), game.getPlayerLP(), game.getRivalLP());
@@ -105,6 +107,7 @@ public class GameMenuController {
         game.playerDrawCard();
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
+
     public static GameMenuResponse drawRival(Game game) throws WinnerException {
         if (!game.rivalHasCapacityToDraw()) return respond(GameMenuResponsesEnum.PLAYER_HAND_IS_FULL);
         if (game.getRivalDeck().getMainDeck().getNumberOfAllCards() == 0) {
@@ -116,13 +119,24 @@ public class GameMenuController {
         return respondWithObj(temp, GameMenuResponsesEnum.SUCCESSFUL);
     }
 
+    public static void firstDraw(Game game) {
+        ArrayList<Card> playerCards = game.getPlayerHandCards();
+        ArrayList<Card> rivalCards = game.getRivalHandCards();
+        MainDeck playerMainDeck = game.getPlayerDeck().getMainDeck();
+        MainDeck rivalMainDeck = game.getRivalDeck().getMainDeck();
+        for (int i = 0; i < 5; i++) {
+            playerCards.add(playerMainDeck.getCards().remove(0));
+            rivalCards.add(rivalMainDeck.getCards().remove(0));
+        }
+    }
+
     public static GameMenuResponse selectCardFromHand(Game game, int cardNumber) {
         ArrayList<Card> tempCards = game.getPlayerHandCards();
         if (cardNumber > tempCards.size() || cardNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         return respondWithObj(tempCards.get(cardNumber - 1), GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse summon(Game game, int cardNumberInHand) {
+    public static GameMenuResponse summon(Game game, int cardNumberInHand, boolean ai) throws WinnerException {
         ArrayList<Card> cardsInHand = game.getPlayerHandCards();
         if (cardNumberInHand > cardsInHand.size() || cardNumberInHand < 1)
             return respond(GameMenuResponsesEnum.INVALID_SELECTION);
@@ -144,25 +158,34 @@ public class GameMenuController {
                 if (numberOfTributes > occupied) return respond(GameMenuResponsesEnum.NOT_ENOUGH_MONSTERS);
                 if (normalAndSpecialSummonChecker(card.getFeatures()))
                     return specialSummon(game, card);
-                int[] tributes = TributeMenu.run(numberOfTributes);
+                int[] tributes = new TributeMenuGraphical(game).run(numberOfTributes);
                 if (tributes == null) return respond(GameMenuResponsesEnum.ABORTED);
                 while (!canTributeSelectedCards(tempCells, tributes)) {
                     TributeMenu.invalidTributes();
-                    tributes = TributeMenu.run(numberOfTributes);
+                    tributes = new TributeMenuGraphical(game).run(numberOfTributes);
                     if (tributes == null) return respond(GameMenuResponsesEnum.ABORTED);
                 }
                 tribute(game, tributes);
             }
-            putCardInNearestCell(card, game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
+            putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), game.getPlayerBoard().getMonsterZone(), State.FACE_UP_ATTACK);
             game.setCanSummonCard(false);
-        } else {
+        } else { // card is spell or trap
+            if (card.isSpell()) {
+                Spell tempSpell = (Spell) card;
+                if (tempSpell.getSpellType() == SpellType.FIELD) {
+                    setCardInPlayerFieldZone(game, cardNumberInHand);
+                    cardsInHand.remove(cardNumberInHand - 1);
+                    return respond(GameMenuResponsesEnum.SUCCESSFUL);
+                }
+            }
             if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
             Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-            putCardInNearestCell(card, tempCells, State.FACE_UP_SPELL);
+            putCardInNearestCell(cardsInHand.remove(cardNumberInHand - 1), tempCells, State.FACE_UP_SPELL);
         }
         if (cardHasSummonEffect(card.getFeatures())) {
             try {
-                activeEffect(game, card, game.getRival(), 1);
+                if (!ai) activeEffect(game, card, game.getRival(), 1);
+                else activeEffect(game, card, game.getRival(), 0);
             } catch (GameException e) {
                 if (e instanceof StopSpell) {
                     StopSpell stopSpell = (StopSpell) e;
@@ -176,6 +199,15 @@ public class GameMenuController {
         if (hasSpecialSummonAfterNormalSummon(card.getFeatures()))
             specialSummon(game, card);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
+    }
+
+    public static void sendToGraveyardFromFieldZone(Game game, boolean fromPlayer) {
+        Card tempCard;
+        if (fromPlayer)
+            game.getPlayerBoard().getGraveyard().addCard(tempCard = game.getPlayerBoard().getFieldZone().removeCard());
+        else
+            game.getRivalBoard().getGraveyard().addCard(tempCard = game.getPlayerBoard().getFieldZone().removeCard());
+        tempCard.destroy(game);
     }
 
     private static boolean hasSpecialSummonAfterNormalSummon(ArrayList<CardFeatures> cardFeatures) {
@@ -198,7 +230,7 @@ public class GameMenuController {
     }
 
     private static Boolean canTributeSelectedCards(Cell[] cells, int[] cellNumbers) {
-        for (int i : cellNumbers) if (!cells[i - 1].isOccupied()) return false;
+        for (int i : cellNumbers) if (!cells[i].isOccupied()) return false;
         for (int i = 0; i < cellNumbers.length; i++) {
             for (int j = i + 1; j < cellNumbers.length; j++) {
                 if (cellNumbers[j] == cellNumbers[i]) return false;
@@ -208,8 +240,11 @@ public class GameMenuController {
     }
 
     public static void tribute(Game game, int[] cellNumbers) {
+        Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (int i : cellNumbers) {
-            game.getGraveyard().addCard(game.getPlayerBoard().getMonsterZone(i - 1).removeCard());
+            if (tempCells[i].isOccupied()) {
+                sendToGraveYard(game, tempCells[i].getCard());
+            }
         }
     }
 
@@ -239,7 +274,7 @@ public class GameMenuController {
         return false;
     }
 
-    public static GameMenuResponse attack(Game game, int attackerCellNumber, int defenderCellNumber) throws GameException {
+    public static GameMenuResponse attack(Game game, int attackerCellNumber, int defenderCellNumber, boolean ai) throws GameException {
         //ToDo extract check!
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         if (attackerCellNumber > 5 || attackerCellNumber < 1 || defenderCellNumber > 5 || defenderCellNumber < 1)
@@ -249,6 +284,8 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
         if (tempCells[attackerCellNumber - 1].getState() == State.FACE_DOWN_DEFENCE)
             return respond(GameMenuResponsesEnum.YOU_HAVENT_SUMMONED_YET);
+        if (tempCells[attackerCellNumber - 1].isDefence())
+            return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (!tempCells[attackerCellNumber - 1].canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Cell defender = game.getRivalBoard().getMonsterZone(defenderCellNumber - 1);
@@ -264,7 +301,8 @@ public class GameMenuController {
 
 
         try {
-            activeEffect(game,null,game.getRival(),1);
+            if (!ai) activeEffect(game, null, game.getRival(), 1);
+            else activeEffect(game, null, game.getRival(), 0);
         } catch (GameException e) {
             if (e instanceof StopAttackException) {
                 StopAttackException stopAttackException = (StopAttackException) e;
@@ -275,7 +313,8 @@ public class GameMenuController {
                     case END_BATTLE_PHASE:
                         throw e;
                     case REDUCE_FROM_ATTACKERS_LP:
-                        if (EffectController.doesCardBelongsToPlayer(game,attackerMonster)) game.decreaseHealth(attackerMonster.getAttack());
+                        if (EffectController.doesCardBelongsToPlayer(game, attackerMonster))
+                            game.decreaseHealth(attackerMonster.getAttack());
                         else game.decreaseRivalHealth(attackerMonster.getAttack());
                 }
             } else if (e instanceof WinnerException) {
@@ -284,6 +323,9 @@ public class GameMenuController {
         }
 
 
+        if (!game.getPlayerLimits().hasControlOnMonster(attackerMonster)) {
+            return respond(GameMenuResponsesEnum.CANT_ATTACK);
+        }
 
         if (hasMakeAttackerZeroEffect(defender.getCard().getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
             ((Monster) attacker.getCard()).setAttack(0);
@@ -294,7 +336,8 @@ public class GameMenuController {
         if (cardHasStopAttackFeature(defenderMonster.getFeatures()) && hasNotUsedEffect(defender.getCard().getFeatures())) {
             if (cardHasSpecialAfterDefending(defenderMonster.getFeatures())) {
                 try {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 } catch (GameException e) {
                     if (e instanceof WinnerException) {
                         throw e;
@@ -307,13 +350,13 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.ABORTED);
         }
 
-        if (cardHasVariableATKAndDEF(defenderMonster.getFeatures())){
+        if (cardHasVariableATKAndDEF(defenderMonster.getFeatures())) {
             try {
                 activeEffect(game, defenderMonster, game.getRival(), 0);
             } catch (Exception ignored) {
             }
         }
-        if (cardHasVariableATKAndDEF(attackerMonster.getFeatures())){
+        if (cardHasVariableATKAndDEF(attackerMonster.getFeatures())) {
             try {
                 activeEffect(game, attackerMonster, game.getPlayer(), 0);
             } catch (Exception ignored) {
@@ -348,7 +391,8 @@ public class GameMenuController {
                     }
                 } else answer = " and the defense position monster was not destroyed";
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName()
                                 + answer + tempString,
@@ -357,7 +401,8 @@ public class GameMenuController {
                 int damage = decreasePlayerLP(game, defenderPoint - attackerPoint, attackerMonster, defenderMonster);
                 attacker.setCanAttack(false);
                 if (hasLPReductionAfterDamage(defenderMonster.getFeatures())) {
-                    activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    if (!ai) activeEffect(game, defenderMonster, game.getPlayer(), 1);
+                    else activeEffect(game, defenderMonster, game.getPlayer(), 0);
                 }
                 return respondWithObj("opponent’s monster card was " + defenderMonster.getCardName() + " and no card is destroyed and you received "
                         + damage + " battle damage", GameMenuResponsesEnum.SUCCESSFUL);
@@ -464,7 +509,14 @@ public class GameMenuController {
     }
 
     public static boolean hasNotUsedEffect(ArrayList<CardFeatures> features) {
-        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) return false;
+        boolean used = false;
+        boolean oneUse = false;
+        boolean oneUseRound = false;
+        for (CardFeatures feature : features) if (feature == CardFeatures.USED_EFFECT) used = true;
+        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_USE_ONLY) oneUse = true;
+        for (CardFeatures feature : features) if (feature == CardFeatures.ONE_EFFECT_PER_ROUND) oneUseRound = true;
+        if (oneUse && used) return false;
+        if (oneUseRound && used) return false;
         return true;
     }
 
@@ -488,17 +540,17 @@ public class GameMenuController {
         return false;
     }
 
-    private static int decreasePlayerLP (Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
+    private static int decreasePlayerLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseRivalHealth(damage);
+        game.decreaseHealth(damage);
         return damage;
     }
 
     private static int decreaseRivalLP(Game game, int damage, Monster attacker, Monster defender) throws WinnerException {
         if (cardHasChangeLPBanned(attacker.getFeatures())) damage = 0;
         if (cardHasChangeLPBanned(defender.getFeatures())) damage = 0;
-        game.decreaseHealth(damage);
+        game.decreaseRivalHealth(damage);
         return damage;
     }
 
@@ -514,7 +566,7 @@ public class GameMenuController {
             return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
         if (game.isMonsterZoneFull()) return respond(GameMenuResponsesEnum.MONSTER_ZONE_IS_FULL);
         if (!game.canSummon()) return respond(GameMenuResponsesEnum.ALREADY_SUMMONED);
-        Card card = handCards.get(cardNumberInHand - 1);
+        Card card = handCards.remove(cardNumberInHand - 1);
         Cell[] tempCells = game.getPlayerBoard().getMonsterZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) continue;
@@ -536,19 +588,31 @@ public class GameMenuController {
         State tempState = attackOrDefence.equals("attack") ? State.FACE_UP_ATTACK : State.FACE_UP_DEFENCE;
         if (tempCells[cellNumber - 1].getState() == tempState)
             return respond(GameMenuResponsesEnum.ALREADY_IN_THIS_POSITION);
+        Cell cardCell = tempCells[cellNumber - 1];
+        if (cardCell.getRoundCounter() == 0) return respond(GameMenuResponsesEnum.CANT_CHANGE);
         if (tempCells[cellNumber - 1].isChangedPosition()) return respond(GameMenuResponsesEnum.ALREADY_CHANGED);
-        tempCells[cellNumber - 1].setState(tempState);
-        tempCells[cellNumber - 1].setChangedPosition(true);
+        cardCell.setState(tempState);
+        cardCell.setChangedPosition(true);
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse setSpellAndTrap(Game game, int cardNumberInHand) {
         ArrayList<Card> handCards = game.getPlayerHandCards();
-        if (cardNumberInHand < handCards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (cardNumberInHand > handCards.size() || cardNumberInHand == 0)
+            return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         if (handCards.get(cardNumberInHand - 1).isMonster())
             return respond(GameMenuResponsesEnum.PLEASE_SELECT_SPELL_OR_TRAP);
         if (game.isSpellZoneFull()) return respond(GameMenuResponsesEnum.SPELL_AND_TRAP_ZONE_IS_FULL);
-        Card tempCard = handCards.get(cardNumberInHand - 1);
+        Card tempCard = handCards.remove(cardNumberInHand - 1);
+        if (tempCard.isSpell()) {
+            Spell tempSpell = (Spell) tempCard;
+            if (tempSpell.getSpellType() == SpellType.FIELD) {
+                game.getPlayerBoard().getFieldZone().removeCard();
+                game.getPlayerBoard().getFieldZone().addCard(tempCard);
+                game.getPlayerBoard().getFieldZone().setState(State.FACE_UP_SPELL);
+                return respond(GameMenuResponsesEnum.SUCCESSFUL);
+            }
+        }
         Cell[] tempCells = game.getPlayerBoard().getSpellZone();
         for (Cell cell : tempCells) {
             if (cell.isOccupied()) continue;
@@ -559,7 +623,7 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
-    public static GameMenuResponse flipSummon(Game game, int cellNumber) throws GameException {
+    public static GameMenuResponse flipSummon(Game game, int cellNumber, boolean ai) throws GameException {
         if (cellNumber > 5 || cellNumber < 1) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
         Cell tempCell = game.getPlayerBoard().getMonsterZone()[cellNumber - 1];
         if (!tempCell.isOccupied()) return respond(GameMenuResponsesEnum.NO_CARD_FOUND);
@@ -568,7 +632,8 @@ public class GameMenuController {
         tempCell.setState(State.FACE_UP_ATTACK);
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
             try {
-                activeEffect(game, tempCell.getCard(), game.getRival(), 1);
+                if (!ai) activeEffect(game, tempCell.getCard(), game.getRival(), 1);
+                else activeEffect(game, tempCell.getCard(), game.getRival(), 0);
             } catch (GameException e) {
                 if (e instanceof StopSpell) {
                     StopSpell stopSpell = (StopSpell) e;
@@ -576,7 +641,7 @@ public class GameMenuController {
                     switch (state) {
                         case STOP_SUMMON:
                             Card card = game.getPlayerBoard().getMonsterZone(cellNumber - 1).getCard();
-                            sendToGraveYard(game,card);
+                            sendToGraveYard(game, card);
                         default:
                             break;
                     }
@@ -585,16 +650,91 @@ public class GameMenuController {
         return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
+    public static void goToStandByPhase(Game game) throws WinnerException {
+        standByEffectCheckForCards(game);
+        checkSwordOfRevealingLight(game);
+        checkCalculator(game);
+        checkScanner(game);
+    }
+
+    private static void checkScanner(Game game) throws WinnerException {
+        Cell[] cells = game.getRivalBoard().getMonsterZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Scanner")) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkCalculator(Game game) throws WinnerException {
+        Cell[] cells = game.getPlayerBoard().getMonsterZone();
+        checkForCalculatorInCells(game, cells);
+    }
+
+    private static void checkForCalculatorInCells(Game game, Cell[] cells) throws WinnerException {
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cardHasCalculatorEffect(cell.getCard().getFeatures())) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkSwordOfRevealingLight(Game game) {
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (cell.getCard().getCardName().equals("Swords of Revealing Light") && cell.getRoundCounter() == 6) {
+                    sendToGraveYard(game, cell.getCard());
+                }
+            }
+        }
+    }
+
+    private static void standByEffectCheckForCards(Game game) throws WinnerException{
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (Cell cell : cells) {
+            if (cell.isOccupied()) {
+                if (hasEffectForStandBy(cell.getCard().getFeatures())) {
+                    try {
+                        activeEffect(game, cell.getCard(), game.getPlayer(), 0);
+                    } catch (GameException gameException) {
+                        if (gameException instanceof WinnerException) throw (WinnerException) gameException;
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean hasEffectForStandBy (ArrayList<CardFeatures> features) {
+        for (CardFeatures feature : features) {
+            if (feature == CardFeatures.STANDBY_ACTION) return true;
+        }
+        return false;
+    }
+
+
     public static void rivalFlipSummon(Game game, int cellNumber) throws GameException {
         Cell tempCell = game.getRivalBoard().getMonsterZone(cellNumber - 1);
-        tempCell.setState(State.FACE_UP_DEFENCE);
+        tempCell.setState(State.FACE_UP_ATTACK);
 
         if (cardHasFlipEffect(tempCell.getCard().getFeatures()))
-           try {
-               activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
-           } catch (GameException e) {
-               if (e instanceof  WinnerException) throw e;
-        }
+            try {
+                activeEffect(game, tempCell.getCard(), game.getPlayer(), 0);
+            } catch (GameException e) {
+                if (e instanceof WinnerException) throw e;
+            }
     }
 
     private static boolean cardHasFlipEffect(ArrayList<CardFeatures> cardFeatures) {
@@ -605,37 +745,6 @@ public class GameMenuController {
     private static boolean monsterHasFlipEffect(ArrayList<CardFeatures> features) {
         for (CardFeatures feature : features) if (feature == CardFeatures.FLIP_EFFECT) return true;
         return false;
-    }
-
-    // todo tribute level check
-    public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
-        ArrayList<Card> cards = game.getPlayerHandCards();
-        if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
-        if (!cards.get(cardNumberInHand - 1).isMonster()) return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
-        if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
-            return respond(GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL);
-        if (game.getPlayerBoard().getSumLevel(new int[]{1, 2, 3, 4, 5}) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
-            return respond(GameMenuResponsesEnum.CANT_RITUAL_SUMMON);
-        if (game.getPlayerBoard().getSumLevel(tributeCellNumbers) != ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
-            return respond(GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH);
-        tribute(game, tributeCellNumbers);
-        Cell[] cells = game.getPlayerBoard().getSpellZone();
-        for (int i = 1; i <= 5; i++) {
-            if (cells[i - 1].isOccupied()) {
-                if (cells[i - 1].getCard().getCardName().equals("Advanced Ritual Art")) {
-                    moveToPlayerGraveyard(game, i, false);
-                    break;
-                }
-            }
-        }
-        cells = game.getPlayerBoard().getMonsterZone();
-        for (Cell cell : cells) {
-            if (!cell.isOccupied()) {
-                cell.addCard(game.getPlayerHandCards().get(cardNumberInHand - 1));
-                break;
-            }
-        }
-        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 
     public static GameMenuResponse directAttack(Game game, int cellNumber) throws WinnerException {
@@ -649,11 +758,12 @@ public class GameMenuController {
                 hasMonster = true;
                 break;
             }
+        tempCells = game.getPlayerBoard().getMonsterZone();
         if (hasMonster) return respond(GameMenuResponsesEnum.CANT_ATTACK);
         if (!game.getPlayerBoard().getMonsterZone(cellNumber - 1).canAttack())
             return respond(GameMenuResponsesEnum.ALREADY_ATTACKED);
         Card tempCard = tempCells[cellNumber - 1].getCard();
-        int ATK = ((Monster)tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard);
+        int ATK = ((Monster) tempCard).getAttack() + game.getPlayerLimits().getATKAddition(tempCard);
         game.decreaseRivalHealth(ATK);
         tempCells[cellNumber - 1].setCanAttack(false);
         return respondWithObj(ATK, GameMenuResponsesEnum.SUCCESSFUL);
@@ -674,8 +784,8 @@ public class GameMenuController {
         return false;
     }
 
-    private static String trimName(String name) {
-        return name.replace(" ", "").replace(",", "").replace("-", "");
+    public static String trimName(String name) {
+        return name.replace(" ", "").replace(",", "").replace("-", "").replace("'", "");
     }
 
     public static GameMenuResponse showPlayerGraveYard(Game game) {
@@ -798,14 +908,14 @@ public class GameMenuController {
         GameMenuResponse temp = selectPlayerFieldZone(game);
         Card card = game.getPlayerHandCards().get(cardNumberInHand - 1);
         if (temp.getGameMenuResponseEnum() != GameMenuResponsesEnum.NO_CARD_FOUND) {
-            sendToGraveYard(game, ((Cell)temp.getObj()).getCard());
+            sendToGraveYard(game, ((Cell) temp.getObj()).getCard());
         }
         Cell tempCell = game.getPlayerBoard().getFieldZone();
         tempCell.addCard(card);
         tempCell.setState(State.FACE_UP_SPELL);
         try {
             activeEffect(game, card, game.getRival(), 0);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
     }
 
@@ -819,12 +929,10 @@ public class GameMenuController {
 
     public static void activeEffect(Game game, Card card, User player, int speed) throws GameException {
         User rival = getOtherUser(game, player);
-        if (card!= null) faceUpCard(game, card);
-        //ToDo never leaves loop
+        if (card != null) faceUpCard(game, card);
         if (speed != 0) {
-            Card chosenCard = new SpellSelectMenu(game).run(speed);
-            if (chosenCard == null) return;
-            else {
+            Card chosenCard = new SpellSelectMenuGraphics(game, rival).run(speed);
+            if (chosenCard != null) {
                 try {
                     activeEffect(game, chosenCard, rival, getSpeed(chosenCard.getFeatures()));
                 } catch (GameException e) {
@@ -849,6 +957,7 @@ public class GameMenuController {
         if (card != null) {
             card.activeEffect(game);
             card.addFeature(CardFeatures.USED_EFFECT);
+            if (!hasEffectForStandBy(card.getFeatures())) sendToGraveYard(game, card);
         }
     }
 
@@ -904,64 +1013,107 @@ public class GameMenuController {
             gy = game.getPlayerBoard().getGraveyard();
             equippedSpells = game.getPlayerLimits().getSpellsThatEquipped(card);
             for (Cell cell : cells) {
-                if (cell.getCard() == card) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getPlayerLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
             cells = game.getRivalBoard().getMonsterZone();
             gy = game.getRivalBoard().getGraveyard();
             equippedSpells = game.getRivalLimits().getSpellsThatEquipped(card);
-            //ToDo duplicate code
             for (Cell cell : cells) {
-                if (cell.getCard() == card) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    Cell[] tempCells = game.getPlayerBoard().getSpellZone();
-                    for (Cell spellCell : tempCells) {
-                        if (spellCell.isOccupied()) {
-                            for (Card spellCard : equippedSpells) {
-                                if (spellCard.equals(spellCell.getCard())) {
-                                    sendToGraveYard(game, spellCard);
-                                    break;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        Cell[] tempCells = game.getPlayerBoard().getSpellZone();
+                        for (Cell spellCell : tempCells) {
+                            if (spellCell.isOccupied()) {
+                                for (Card spellCard : equippedSpells) {
+                                    if (spellCard.equals(spellCell.getCard())) {
+                                        sendToGraveYard(game, spellCard);
+                                        game.getRivalLimits().unEquipMonster(spellCard);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        tempCard.destroy(game);
+                        return;
                     }
-                    tempCard.destroy(game);
-                    return;
                 }
             }
         } else {
             cells = game.getPlayerBoard().getSpellZone();
             gy = game.getPlayerBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
             cells = game.getRivalBoard().getSpellZone();
             gy = game.getRivalBoard().getGraveyard();
             for (Cell cell : cells) {
-                if (cell.getCard().equals(card)) {
-                    gy.addCard(tempCard = cell.removeCard());
-                    tempCard.destroy(game);
-                    return;
+                if (cell.isOccupied()) {
+                    if (cell.getCard().equals(card)) {
+                        gy.addCard(tempCard = cell.removeCard());
+                        tempCard.destroy(game);
+                        return;
+                    }
                 }
             }
         }
+    }
+
+    public static void sendToGraveYardFromHand(Game game) {
+        game.getPlayerBoard().getGraveyard().addCard(game.getPlayerHandCards().remove(cellNumber - 1));
+    }
+
+    public GameMenuResponse ritualSummon(Game game, int[] tributeCellNumbers, int cardNumberInHand) {
+        ArrayList<Card> cards = game.getPlayerHandCards();
+        if (cardNumberInHand > cards.size()) return respond(GameMenuResponsesEnum.INVALID_SELECTION);
+        if (!cards.get(cardNumberInHand - 1).isMonster()) return respond(GameMenuResponsesEnum.PLEASE_SELECT_MONSTER);
+        if (((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getMonsterCardType() != MonsterCardType.RITUAL)
+            return respond(GameMenuResponsesEnum.SELECTED_MONSTER_IS_NOT_RITUAL);
+        if (game.getPlayerBoard().getSumLevel(new int[]{1, 2, 3, 4, 5}) < ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+            return respond(GameMenuResponsesEnum.CANT_RITUAL_SUMMON);
+        if (game.getPlayerBoard().getSumLevel(tributeCellNumbers) != ((Monster) game.getPlayerHandCards().get(cardNumberInHand - 1)).getLevel())
+            return respond(GameMenuResponsesEnum.SELECTED_LEVELS_DONT_MATCH);
+        tribute(game, tributeCellNumbers);
+        Cell[] cells = game.getPlayerBoard().getSpellZone();
+        for (int i = 1; i <= 5; i++) {
+            if (cells[i - 1].isOccupied()) {
+                if (cells[i - 1].getCard().getCardName().equals("Advanced Ritual Art")) {
+                    moveToPlayerGraveyard(game, i, false);
+                    break;
+                }
+            }
+        }
+        cells = game.getPlayerBoard().getMonsterZone();
+        for (Cell cell : cells) {
+            if (!cell.isOccupied()) {
+                cell.addCard(game.getPlayerHandCards().get(cardNumberInHand - 1));
+                break;
+            }
+        }
+        return respond(GameMenuResponsesEnum.SUCCESSFUL);
     }
 }

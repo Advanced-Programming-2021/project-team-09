@@ -56,6 +56,6 @@ public enum OneRoundGameResponses {
     NOT_SUMMONED_YET,
     ABORTED,
     CANT_NORMAL_SUMMON,
-
+    SELECT_FROM_TABLE
 
 }

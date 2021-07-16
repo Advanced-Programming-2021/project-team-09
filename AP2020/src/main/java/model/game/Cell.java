@@ -1,7 +1,7 @@
 package model.game;
 
+import controller.database.CSVInfoGetter;
 import model.card.Card;
-import org.jetbrains.annotations.NotNull;
 
 public class Cell {
     private Card card;
@@ -32,7 +32,7 @@ public class Cell {
         return returningCard;
     }
 
-    public void addCard(@NotNull Card card) {
+    public void addCard(Card card) {
         this.card = card;
         changedPosition = false;
         roundCounter = 0;
@@ -44,11 +44,11 @@ public class Cell {
     }
 
     public boolean isFaceUp() {
-        return state.equals(State.FACE_UP_ATTACK) || state.equals(State.FACE_UP_DEFENCE);
+        return state.equals(State.FACE_UP_ATTACK) || state.equals(State.FACE_UP_DEFENCE) || state.equals(State.FACE_UP_SPELL);
     }
 
     public boolean isFaceDown() {
-        return state.equals(State.FACE_DOWN_DEFENCE);
+        return state.equals(State.FACE_DOWN_DEFENCE) || state.equals(State.FACE_DOWN_SPELL);
     }
 
     public boolean isAttack() {
@@ -91,6 +91,22 @@ public class Cell {
         return canAttack;
     }
 
+    public void setRoundCounter(int roundCounter) {
+        this.roundCounter = roundCounter;
+    }
 
+    @Override
+    public Cell clone() {
+        Cell temp = new Cell();
+        if (this.isOccupied()) {
+            Card tempCard = CSVInfoGetter.getCardByName(this.getCard().getCardName());
+            if (tempCard == null) return temp;
+            temp.addCard(tempCard);
+            temp.setState(this.getState());
+            temp.setChangedPosition(this.isChangedPosition());
+            temp.setRoundCounter(this.getRoundCounter());
+        }
+        return temp;
+    }
 
 }

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import model.User;
 import model.card.Card;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 
 public abstract class PrimaryDeck {
@@ -20,25 +17,24 @@ public abstract class PrimaryDeck {
     @JsonIgnore
     protected String deckName;
 
-
-    public boolean hasCapacity(){
+    public boolean hasCapacity() {
         if (cards == null) System.out.println("fik");
         return cards.size() < maxCapacity;
     }
 
     @JsonIgnore
-    public int getCardCount(String cardName){
+    public int getCardCount(String cardName) {
         int temp = 0;
         for (Card tempCard : cards) if (tempCard.getCardName().equals(cardName)) temp++;
         return temp;
     }
 
-    public void addCard(Card card){
+    public void addCard(Card card) {
         cards.add(card);
     }
 
-    public Card removeCard(String cardName){
-        for (int i = cards.size() - 1; i >= 0 ; i--){
+    public Card removeCard(String cardName) {
+        for (int i = 0; i < cards.size(); i++) {
             if (cards.get(i).getCardName().equals(cardName)) {
                 Card card = cards.get(i);
                 cards.remove(i);
@@ -48,14 +44,14 @@ public abstract class PrimaryDeck {
         return null;
     }
 
-    public static ArrayList<String> sortCardsByName(ArrayList<Card> cards){
+    public static ArrayList<String> sortCardsByName(ArrayList<Card> cards) {
         ArrayList<String> cardNames = new ArrayList<>();
         for (Card card : cards) cardNames.add(card.getCardName());
         Collections.sort(cardNames);
-        return  cardNames;
+        return cardNames;
     }
 
-    protected static String sortCardsInDecks(ArrayList<Card> cards){
+    protected static String sortCardsInDecks(ArrayList<Card> cards) {
         StringBuilder temp = new StringBuilder();
         temp.append("Monsters:\n");
         HashMap<String, String> cardNameToDescription = new HashMap<>();
@@ -72,7 +68,8 @@ public abstract class PrimaryDeck {
         return temp.toString();
     }
 
-    public abstract String toString(String deckName);
+    @Override
+    public abstract String toString();
 
     @JsonIgnore
     public boolean isValid() {
@@ -80,37 +77,24 @@ public abstract class PrimaryDeck {
         return false;
     }
 
-    public ArrayList<Card> getCards(){
+    public ArrayList<Card> getCards() {
         return cards;
     }
 
+    public ArrayList<Card> getSortedCards() {
+        ArrayList<Card> cards1 = new ArrayList<>(cards);
+        cards1.sort(new CardCompare());
+        return cards1;
+    }
+
     public void shuffle() {
-        shuffle(this.cards);
-    }
-
-    public static void shuffle(ArrayList<Card> cards) {
-        int elementsCount = cards.size();
-        if (elementsCount <= 1) return;
-        int index1 = 0, index2 = 0;
-        Random rand = new Random();
-        for (int i = 0; i < elementsCount*elementsCount; i ++){
-            while(index1 == index2){
-                index1 = rand.nextInt(elementsCount);
-                index2 = rand.nextInt(elementsCount);
-            }
-            swap(index1, index2, cards);
+        ArrayList<Card> newCards = new ArrayList<>();
+        Random random = new Random();
+        while (cards.size() != 0) {
+            int rand = random.nextInt(cards.size());
+            newCards.add(cards.remove(rand));
         }
-    }
-
-    public static void swap(int index1, int index2, ArrayList<Card> cards){
-        int min = Math.min(index1, index2);
-        int max = Math.max(index1, index2);
-        Card tempMin = cards.get(min);
-        Card tempMax = cards.get(max);
-        cards.remove(max);
-        cards.remove(min);
-        cards.add(min, tempMax);
-        cards.add(max, tempMin);
+        cards.addAll(newCards);
     }
 
     @JsonIgnore
@@ -118,6 +102,8 @@ public abstract class PrimaryDeck {
         return cards.size();
     }
 
+    @Override
+    public abstract PrimaryDeck clone();
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;
@@ -129,5 +115,23 @@ public abstract class PrimaryDeck {
 
     public String getDeckName() {
         return deckName;
+    }
+
+    public HashSet<String> getCardNames() {
+        HashSet<String> names = new HashSet<>();
+        for(Card card : cards) names.add(card.getCardName());
+        return names;
+    }
+
+    class CardCompare implements Comparator<Card> {
+        @Override
+        public int compare(Card card1, Card card2) {
+            if (card1.isMonster() && !card2.isMonster()) return -1;
+            if (!card1.isMonster() && card2.isMonster()) return 1;
+            if (card1.isSpell() && !card2.isSpell()) return -1;
+            if (!card1.isSpell() && card2.isSpell()) return 1;
+            if (card1.isTrap() && !card2.isTrap()) return 1;
+            return card1.getCardName().compareTo(card2.getCardName());
+        }
     }
 }

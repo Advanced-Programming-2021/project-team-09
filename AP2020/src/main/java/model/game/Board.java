@@ -11,13 +11,14 @@ public class Board {
     private Graveyard graveyard = new Graveyard();
 
     public Board() {
-        for (int i = 0; i <monsterZone.length; ++i) {
+        for (int i = 0; i < monsterZone.length; ++i) {
             monsterZone[i] = new Cell();
         }
-        for (int i = 0; i <spellZone.length; ++i) {
+        for (int i = 0; i < spellZone.length; ++i) {
             spellZone[i] = new Cell();
         }
     }
+
     public boolean isMonsterZoneFull() {
         for (int i = 0; i < 5; i++) {
             if (!monsterZone[i].isOccupied()) return false;
@@ -44,21 +45,24 @@ public class Board {
             }
         }
     }
-    public Cell getMonsterZoneCellByCard(Card card){
+
+    public Cell getMonsterZoneCellByCard(Card card) {
         for (int i = 0; i < 5; i++) {
-            if ( monsterZone[i].getCard() == card ) return monsterZone[i];
+            if (monsterZone[i].getCard() == card) return monsterZone[i];
         }
         return null;
     }
-    public Cell getSpellZoneCellByCard(Card card){
+
+    public Cell getSpellZoneCellByCard(Card card) {
         for (int i = 0; i < 5; i++) {
-            if( spellZone[i].getCard().equals(card)) return spellZone[i];
+            if (spellZone[i].isOccupied() && spellZone[i].getCard().equals(card)) return spellZone[i];
         }
         return null;
     }
+
     public void addCardToSpellZone(Card card) {
         for (int i = 0; i < 5; i++) {
-            if (!spellZone[i].isOccupied() && card.isSpell()) {
+            if (!spellZone[i].isOccupied() && (card.isSpell() || card.isTrap())) {
                 spellZone[i].addCard(card);
                 break;
             }
@@ -97,12 +101,8 @@ public class Board {
     }
 
     public void addCardToFieldZone(Card card) {
-        if (!fieldZone.isOccupied())
-            fieldZone.addCard(card);
-        else {
-            removeCardFromFieldZone(fieldZone.getCard());
-            fieldZone.addCard(card);
-        }
+        if (fieldZone.isOccupied()) removeCardFromFieldZone(fieldZone.getCard());
+        fieldZone.addCard(card);
     }
 
     public Card removeCardFromFieldZone(Card card) {
@@ -117,7 +117,7 @@ public class Board {
         int sumLevel = 0;
         for (int i : cellNumbers) {
             if (monsterZone[i - 1].isOccupied()) {
-                sumLevel += ((Monster)monsterZone[i].getCard()).getLevel();
+                sumLevel += ((Monster) monsterZone[i - 1].getCard()).getLevel();
             }
         }
         return sumLevel;
@@ -134,6 +134,7 @@ public class Board {
         }
         return count;
     }
+
     public Cell[] getSpellZone() {
         return spellZone;
     }
@@ -148,5 +149,42 @@ public class Board {
 
     public Cell getSpellZone(int spellZoneNumber) {
         return spellZone[spellZoneNumber];
+    }
+
+    @Override
+    public Board clone() {
+        Board outputBoard = new Board();
+        outputBoard.setMonsterZone(cloneCells(this.getMonsterZone()));
+        outputBoard.setSpellZone(cloneCells(this.getSpellZone()));
+        outputBoard.setGraveyard(this.graveyard.clone());
+        outputBoard.setFieldZone(this.fieldZone.clone());
+        return outputBoard;
+    }
+
+    private static Cell[] cloneCells(Cell[] cells) {
+        Cell[] outputCells = new Cell[5];
+        for (int i = 0; i < 5; i++) {
+            outputCells[i] = new Cell();
+            if (cells[i].isOccupied()) {
+                outputCells[i] = cells[i].clone();
+            }
+        }
+        return outputCells;
+    }
+
+    public void setMonsterZone(Cell[] monsterZone) {
+        this.monsterZone = monsterZone;
+    }
+
+    public void setSpellZone(Cell[] spellZone) {
+        this.spellZone = spellZone;
+    }
+
+    public void setFieldZone(Cell fieldZone) {
+        this.fieldZone = fieldZone;
+    }
+
+    public void setGraveyard(Graveyard graveyard) {
+        this.graveyard = graveyard;
     }
 }

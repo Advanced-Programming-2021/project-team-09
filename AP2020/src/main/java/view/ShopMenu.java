@@ -1,6 +1,8 @@
 package view;
 
+import controller.LoginMenuController;
 import controller.ShopController;
+import view.regexes.CheatRegex;
 import view.regexes.RegexFunctions;
 import view.regexes.ShopMenuRegexes;
 import view.responses.ShopMenuResponses;
@@ -17,13 +19,13 @@ public class ShopMenu {
     }
 
     public static ShopMenu getInstance(Scanner scanner) {
-        if (shopMenu == null)  shopMenu = new ShopMenu(scanner);
+        if (shopMenu == null) shopMenu = new ShopMenu(scanner);
         return shopMenu;
     }
 
-    public void run(){
+    public void run() {
         String command;
-        while (true){
+        while (true) {
             command = scanner.nextLine().trim();
             if (ShopMenuRegexes.isItShowAllCards(command))
                 showAllCards();
@@ -34,8 +36,12 @@ public class ShopMenu {
             else if (command.matches("menu show-current"))
                 respond(ShopMenuResponses.CURRENT_MENU_SHOP_MENU);
             else if (command.matches("menu exit")) {
+                System.out.println("Entering main menu");
                 return;
-            }
+            } else if (command.matches(CheatRegex.INCREASE_MONEY))
+                LoginMenuController.getCurrentUser().increaseBalance(MainMenu.getInt(command));
+            else if (command.matches(CheatRegex.ADD_ALL_CARDS))
+                ShopController.addAllCards();
             else respond(ShopMenuResponses.INVALID_COMMAND);
 
         }
@@ -52,26 +58,28 @@ public class ShopMenu {
             System.out.println("invalid command!");
         else if (response.equals(ShopMenuResponses.CURRENT_MENU_SHOP_MENU))
             System.out.println("you are in shop menu");
+        else if (response.equals(ShopMenuResponses.INVALID_CARD_NUMBER))
+            System.out.println("Invalid card number !");
     }
 
-    private void buyCard (String command) {
+    private void buyCard(String command) {
         Matcher matcher = RegexFunctions.getCommandMatcher(command, ShopMenuRegexes.shopCardRegex);
         if (matcher.find()) {
             String cardName = matcher.group("cardName");
-            ShopMenuResponses response = ShopController.BuyCard(cardName);
+            ShopMenuResponses response = ShopController.buyCard(cardName);
             respond(response);
         }
     }
 
-    private void showAllCards () {
+    private void showAllCards() {
         String allCardsInfo = ShopController.showAllCards();
         System.out.println(allCardsInfo);
     }
 
     public void showHelp() {
-        String help = "shop buy <card name>\n";
+        String help = "shop buy <card name> (You can also enter card number in the list of card ) ..\n";
         help += "shop show --all\n";
-        help += "menu show-current";
+        help += "menu show-current\n";
         help += "menu exit";
         System.out.println(help);
     }

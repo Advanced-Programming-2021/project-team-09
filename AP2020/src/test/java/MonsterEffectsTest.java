@@ -25,7 +25,7 @@ import java.util.HashSet;
 public class MonsterEffectsTest {
     static User user1, user2;
     static Game game;
-    static PrintStream defaultStream = System.out;
+    public static PrintStream defaultStream = System.out;
     static InputStream defaultInputStream = System.in;
 
     @BeforeEach
@@ -375,70 +375,6 @@ public class MonsterEffectsTest {
             GameMenuController.sendToGraveYard(game, card12);
             GameMenuController.sendToGraveYard(game, card13);
             Assertions.assertDoesNotThrow(executable);
-            Assertions.assertEquals("do you want to summon a normal cyberse card?\n" +
-                    "Please select one of the following cards : \n" +
-                    "1 : Leotron\n" +
-                    "2 : Leotron\n" +
-                    "3 : Leotron\n" +
-                    "4 : Command Knight\n" +
-                    "5 : Battle OX\n" +
-                    "6 : Battle OX\n" +
-                    "7 : Magnum Shield\n" +
-                    "8 : Magnum Shield\n" +
-                    "9 : Magnum Shield\n" +
-                    "10 : Advanced Ritual Art\n" +
-                    "11 : Advanced Ritual Art\n" +
-                    "12 : Battle OX\n" +
-                    "13 : Magnum Shield\n" +
-                    "14 : Texchanger\n" +
-                    "Please select a valid type ! \n" +
-                    "Please select one of the following cards : \n" +
-                    "1 : Leotron\n" +
-                    "2 : Leotron\n" +
-                    "3 : Leotron\n" +
-                    "4 : Command Knight\n" +
-                    "5 : Battle OX\n" +
-                    "6 : Battle OX\n" +
-                    "7 : Magnum Shield\n" +
-                    "8 : Magnum Shield\n" +
-                    "9 : Magnum Shield\n" +
-                    "10 : Advanced Ritual Art\n" +
-                    "11 : Advanced Ritual Art\n" +
-                    "12 : Battle OX\n" +
-                    "13 : Magnum Shield\n" +
-                    "14 : Texchanger\n" +
-                    "Please select monster !\n" +
-                    "Please select one of the following cards : \n" +
-                    "1 : Leotron\n" +
-                    "2 : Leotron\n" +
-                    "3 : Leotron\n" +
-                    "4 : Command Knight\n" +
-                    "5 : Battle OX\n" +
-                    "6 : Battle OX\n" +
-                    "7 : Magnum Shield\n" +
-                    "8 : Magnum Shield\n" +
-                    "9 : Magnum Shield\n" +
-                    "10 : Advanced Ritual Art\n" +
-                    "11 : Advanced Ritual Art\n" +
-                    "12 : Battle OX\n" +
-                    "13 : Magnum Shield\n" +
-                    "14 : Texchanger\n" +
-                    "Please select a valid monster !\n" +
-                    "Please select one of the following cards : \n" +
-                    "1 : Leotron\n" +
-                    "2 : Leotron\n" +
-                    "3 : Leotron\n" +
-                    "4 : Command Knight\n" +
-                    "5 : Battle OX\n" +
-                    "6 : Battle OX\n" +
-                    "7 : Magnum Shield\n" +
-                    "8 : Magnum Shield\n" +
-                    "9 : Magnum Shield\n" +
-                    "10 : Advanced Ritual Art\n" +
-                    "11 : Advanced Ritual Art\n" +
-                    "12 : Battle OX\n" +
-                    "13 : Magnum Shield\n" +
-                    "14 : Texchanger", stream.toString().trim());
         }
         Assertions.assertNotNull(board.getMonsterZoneCellByCard(card11));
         Assertions.assertFalse(board.getGraveyard().getCards().contains(card11));

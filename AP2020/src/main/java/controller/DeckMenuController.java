@@ -17,7 +17,7 @@ import java.util.Comparator;
 public class DeckMenuController {
 
     public static DeckMenuResponses createDeck(String deckName) {
-        User user = LoginMenuController.getCurrentUser(); // todo ina bayad static shan
+        User user = LoginMenuController.getCurrentUser();
         Deck tempDeck = user.getDeckByName(deckName);
         if (tempDeck != null) return DeckMenuResponses.DECK_ALREADY_EXISTS;
         user.createDeck(deckName);
@@ -43,24 +43,29 @@ public class DeckMenuController {
 
     public static DeckMenuResponses addCardToMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
-        PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
-        Deck deck = user.getDeckByName(deckName);
-        DeckMenuResponses response = DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck,deck);
-        return response;
+        if (user.doesDeckExist(deckName)) {
+            PrimaryDeck primaryDeck = user.getDeckByName(deckName).getMainDeck();
+            Deck deck = user.getDeckByName(deckName);
+            return DeckMenuController.addCardToDeck(deckName, cardName, primaryDeck, deck);
+        } else return DeckMenuResponses.DECK_DOESNT_EXIST;
     }
 
     public static DeckMenuResponses addCardToSideDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return addCardToDeck(deckName, cardName, user.getDeckByName(deckName).getSideDeck(), user.getDeckByName(deckName));
     }
 
-    public static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
+    private static DeckMenuResponses addCardToDeck(String deckName, String cardName, PrimaryDeck primaryDeck, Deck deck) {
         User user = LoginMenuController.getCurrentUser();
         if (!CSVInfoGetter.cardNameExists(cardName)) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!arrayContainsCard(cardName, user.getCards())) return DeckMenuResponses.CARD_DOESNT_EXIST;
         if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
-        if (!primaryDeck.hasCapacity()) return DeckMenuResponses.MAIN_DECK_IS_FULL;//ToDo bug!
-        if (!deck.canAddCardByName(cardName) && !canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
+        if (!primaryDeck.hasCapacity()) {
+            if (primaryDeck instanceof MainDeck) return DeckMenuResponses.MAIN_DECK_IS_FULL;
+            else return DeckMenuResponses.SIDE_DECK_IS_FULL;
+        }
+        if (!canAddCard(deckName,cardName)) return DeckMenuResponses.CANT_ADD_MORE_OF_THIS_CARD;
         Card card = user.removeCard(cardName);
         primaryDeck.addCard(card);
         ReadAndWriteDataBase.updateUser(user);
@@ -74,11 +79,13 @@ public class DeckMenuController {
 
     public static DeckMenuResponses removeCardFromMainDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return removeCardFromDeck(deckName, cardName, user.getDeckByName(deckName).getMainDeck(), user.getDeckByName(deckName));
     }
 
     public static DeckMenuResponses removeCardFromSideDeck(String deckName, String cardName) {
         User user = LoginMenuController.getCurrentUser();
+        if (!user.doesDeckExist(deckName)) return DeckMenuResponses.DECK_DOESNT_EXIST;
         return removeCardFromDeck(deckName, cardName, user.getDeckByName(deckName).getSideDeck(), user.getDeckByName(deckName));
     }
 
@@ -88,10 +95,11 @@ public class DeckMenuController {
         StringBuilder outputString = new StringBuilder("Decks:\nActive Deck:\n");
         Deck activeDeck = user.getActiveDeck();
         if (activeDeck != null) {
-            outputString.append(deckToString(activeDeck));
+            outputString.append(deckToString(activeDeck) + "\n");
         }
+        outputString.append("Other decks :\n");
         for (Deck deck : temp) {
-            outputString.append("\n" + deckToString(deck));
+            outputString.append(deckToString(deck) + "\n");
         }
         return outputString.toString();
     }
@@ -148,13 +156,13 @@ public class DeckMenuController {
 
     private static String deckToString(Deck deck) {
         StringBuilder outputString = new StringBuilder();
-        outputString.append(deck.getDeckName() + ": Main Deck " + deck.getMainDeck().getNumberOfAllCards());
+        outputString.append(deck.getDeckName() + ": main.Main Deck " + deck.getMainDeck().getNumberOfAllCards());
         outputString.append(", side deck " + deck.getSideDeck().getNumberOfAllCards() + ", ");
         outputString.append(deck.isValid() ? "valid":"invalid");
         return outputString.toString();
     }
 
-    private static boolean canAddCard(String deckName, String cardName) {
+    public static boolean canAddCard(String deckName, String cardName) {
         int numberOfCard = LoginMenuController.getCurrentUser().getDeckByName(deckName).getNumberOfCardsByName(cardName);
         Card card = CSVInfoGetter.getCardByName(cardName);
         if (card.isMonster()) return numberOfCard < 3;

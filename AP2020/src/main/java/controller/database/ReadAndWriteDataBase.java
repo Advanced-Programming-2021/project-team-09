@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.Gson;
 import model.User;
-import model.card.CardFeatures;
 import model.card.FeatureWrapper;
+import model.card.monster.Monster;
+import model.card.spell_traps.Spell;
+import model.card.spell_traps.Trap;
+import model.deck.Deck;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +26,22 @@ public class ReadAndWriteDataBase {
         } catch (IOException e) {
             return null;
         }
-        return user;
+        ArrayList<Deck> decks = user.getDecks();
+        for (Deck deck : decks) {
+            deck.getMainDeck().setDeckName(deck.getDeckName());
+            deck.getSideDeck().setDeckName(deck.getDeckName());
+        }
+        if (user.getActiveDeck() == null) return user;
+        else {
+            Deck activeDeck = user.getActiveDeck();
+            for (Deck deck : decks) {
+                if (deck.getDeckName().equals(activeDeck.getDeckName())) {
+                    user.setActiveDeck(deck);
+                    break;
+                }
+            }
+            return user;
+        }
     }
 
 
@@ -49,7 +67,8 @@ public class ReadAndWriteDataBase {
         userAddrs = usersDirectory.list();
         if (userAddrs == null) return users;
         for (String userAddr : userAddrs) {
-            users.add(ReadAndWriteDataBase.getUser(userAddr));
+            User user = ReadAndWriteDataBase.getUser(userAddr);
+            if (user != null)users.add(user);
         }
         return users;
     }
@@ -58,7 +77,7 @@ public class ReadAndWriteDataBase {
         ReadAndWriteDataBase.writeUserToUsersDirectory(user);
     }
 
-    public static ArrayList<CardFeatures> getCardFeaturesByName(String cardName) {
+    public static FeatureWrapper getCardFeaturesByName(String cardName) {
         FeatureWrapper wrapper;
         Gson gson = new Gson();
         try {
@@ -67,9 +86,22 @@ public class ReadAndWriteDataBase {
         } catch (IOException e) {
             wrapper = new FeatureWrapper();
         }
-        return wrapper.features;
+        return wrapper;
     }
 
+
+
+    public static void addMonsterToCSV(Monster monster) {
+        //ToDo
+    }
+
+    public static void addSpellToCSV(Spell spell) {
+        //ToDo
+    }
+
+    public static void addSpellToCSV(Trap trap) {
+        //ToDo
+    }
 
 
 }

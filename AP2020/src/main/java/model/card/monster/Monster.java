@@ -92,7 +92,8 @@ public class Monster extends Card {
     }
 
     public boolean hasEffect() {
-        return this.monsterEffectType != MonsterEffectType.NONE;
+        //return this.monsterEffectType != MonsterEffectType.NONE; //FIXME
+        return this.monsterCardType == MonsterCardType.EFFECT;
     }
 
     public void setMonsterEffectType(MonsterEffectType monsterEffectType) {
@@ -172,6 +173,8 @@ public class Monster extends Card {
         this.cardName = cardName;
         this.cardType = CardType.MONSTER;
         this.features = new ArrayList<>();
-        this.features.addAll(ReadAndWriteDataBase.getCardFeaturesByName(cardName));
+        FeatureWrapper wrapper = ReadAndWriteDataBase.getCardFeaturesByName(cardName);
+        this.features.addAll(wrapper.features);
+        this.syncedEffect = wrapper.getEffectMap();
     }
 }
