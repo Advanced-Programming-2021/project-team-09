@@ -5,13 +5,18 @@ import controller.LoginMenuController;
 import controller.database.CSVInfoGetter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -36,6 +41,7 @@ import java.util.ResourceBundle;
 public class EditDeckMenu extends Menu implements Initializable {
     private final HashMap<String, VBox> cardBoxes = new HashMap<>();
     private final HashMap<String, VBox> cardBoxes1 = new HashMap<>();
+
 
     {
         for (String cardName : Card.getCardNames()) {
@@ -131,6 +137,7 @@ public class EditDeckMenu extends Menu implements Initializable {
             playMedia(VoiceEffects.CLICK);
             onSelectToggle(sideToggle, group);
         });
+
     }
 
     private void initChoiceMenus() {
@@ -247,6 +254,6 @@ public class EditDeckMenu extends Menu implements Initializable {
         sideDeck = deck.getSideDeck();
         nameLabel.setText(deck.getDeckName());
     }
-
-
 }
+
+

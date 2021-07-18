@@ -24,6 +24,6 @@ module AP2020 {
     exports view;
     exports controller;
     opens controller to javafx.fxml;
-    opens main to javafx.graphics;
+    opens main to javafx.graphics, javafx.fxml, javafx.controls;
 
 }

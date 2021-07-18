@@ -40,7 +40,7 @@ public class Menu {
     private static final File ALERT_FILE = new File("src/main/resources/Scenes/Alert.fxml");
     private static final File CONFIRM_FILE = new File("src/main/resources/Scenes/Confirmation.fxml");
     private static final File SETTING_FILE = new File("src/main/resources/Scenes/SettingMenu.fxml");
-    private final static Image CUSTOM_CARD_IMG = getImage("Cards/Custom Card", "pmg");
+    private final static Image CUSTOM_CARD_IMG = getImage("Cards/Custom Card", "png");
 
     private static Scene currentScene;
     private static Scene sceneBuffer;
