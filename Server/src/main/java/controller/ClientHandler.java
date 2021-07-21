@@ -38,6 +38,21 @@ public class ClientHandler {
             objectOutputStream.flush();
             while (true) {
                 String string = (String) objectInputStream.readObject();
+                String[] strings = string.split("~");
+                if (string.startsWith("login~doesUsernameExists~")){
+                    objectOutputStream.writeObject(String.valueOf(LoginMenuController.doesUsernameExists(strings[2])));
+                    objectOutputStream.flush();
+                } else if (string.startsWith("login~doesNicknameExists~")) {
+                    objectOutputStream.writeObject(String.valueOf(LoginMenuController.doesNicknameExists(strings[2])));
+                    objectOutputStream.flush();
+                } else if (string.startsWith("login~isPasswordCorrect~")) {
+                    objectOutputStream.writeObject(String.valueOf(LoginMenuController.isPasswordCorrect(strings[2], strings[3])));
+                    objectOutputStream.flush();
+                } else if (string.startsWith("login~createUser~")) {
+                    objectOutputStream.writeObject(LoginMenuController.createUser(strings[2], strings[3], strings[4]));
+                    objectOutputStream.flush();
+                } else if (string.startsWith(""));
+
             }
         } catch (IOException | ClassNotFoundException e) {
             if (e instanceof EOFException) {
