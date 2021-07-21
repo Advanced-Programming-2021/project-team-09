@@ -5,6 +5,9 @@ import javafx.stage.Stage;
 import view.graphics.Menu;
 import view.graphics.SettingController;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class Main extends Application {
     public static Stage stage;
 
